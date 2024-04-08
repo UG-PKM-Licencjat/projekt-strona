@@ -8,8 +8,12 @@ interface TagProps {
 }
 
 /**
- * Primary UI component for user interaction
+ * Tag opisujący profil użytkownika bądź ofertę
  */
 export const Tag = ({ label }: TagProps) => {
-  return <div className="h-10 bg-purple-400 px-2 ">{label}</div>;
+  return (
+    <div className="flex h-10 items-center rounded-lg bg-purple-400 px-4 font-normal text-white">
+      {label}
+    </div>
+  );
 };

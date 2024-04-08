@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
+import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -23,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
+        {SvgSymbols}
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>

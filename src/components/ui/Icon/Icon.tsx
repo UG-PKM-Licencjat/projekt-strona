@@ -1,11 +1,13 @@
-import React from "react"; // Path to your icons.svg
+import React from "react";
 
 interface IconProps {
   name: string;
+  style?: string;
+  fill?: string;
 }
 
-export const Icon = ({ name }: IconProps) => (
-  <svg className="h-4 w-4" fill="#FFFFFF" width={50} height={50}>
+export const Icon = ({ name, style, fill }: IconProps) => (
+  <svg className={`${style}`} fill={fill}>
     <use xlinkHref={`#${name}`} />
   </svg>
 );

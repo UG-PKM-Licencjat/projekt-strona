@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "../ui/Icon/Icon";
 
 interface SearchEngine {}
 
@@ -13,7 +14,9 @@ export const SearchEngine = ({}: SearchEngine) => {
         <div> tagi </div>
       </div>
       <div>lokalizacja</div>
-      <div>wyszukaj</div>
+      <button>
+        <Icon style="w-4 h-4 text-white" name="magnifier" fill="#FFFFFF" />
+      </button>
     </div>
   );
 };

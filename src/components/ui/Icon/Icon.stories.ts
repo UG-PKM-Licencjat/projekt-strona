@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Icon } from "./Icon";
+import SvgSymbols from "../SvgSymbols/SvgSymbols";
 
-const meta = {
+const meta: Meta<typeof Icon> = {
   title: "Components/Icon",
   component: Icon,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof Icon>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

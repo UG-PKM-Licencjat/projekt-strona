@@ -20,7 +20,7 @@ const meta = {
     },
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof Input>;
+} satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

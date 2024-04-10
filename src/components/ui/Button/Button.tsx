@@ -9,7 +9,7 @@ interface ButtonProps {
   /*
    * Funkcja wywoływana po kliknięciu przycisku
    */
-  onClick: () => void;
+  onClick?: () => void;
   /*
    * Dodatkowe stylowanie tailwind dla przycisku
    */

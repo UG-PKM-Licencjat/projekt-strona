@@ -21,7 +21,7 @@ export const SearchEngine = ({}: SearchEngine) => {
   ];
 
   return (
-    <div className="flex w-[500px] gap-4">
+    <div className="flex gap-4">
       <div className="flex min-h-10 w-[300px] flex-col justify-center rounded-lg bg-white font-normal">
         <Input type="text" placeholder="Enter any tag, category or name" />
         <ul className="flex flex-wrap gap-2 p-2">

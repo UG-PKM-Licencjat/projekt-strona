@@ -1,5 +1,7 @@
 import React from "react";
 import { Icon } from "../ui/Icon/Icon";
+import { Input } from "../ui/Input/Input";
+import { Tag } from "../Tag/Tag";
 
 interface SearchEngine {}
 
@@ -7,15 +9,28 @@ interface SearchEngine {}
  * Główna wyszukiwarka ofert i profili
  */
 export const SearchEngine = ({}: SearchEngine) => {
+  const tags = [
+    "producent",
+    "pro",
+    "gitarzysta",
+    "dj",
+    "wokalista",
+    "zespół",
+    "rock",
+    "jazz",
+  ];
+
   return (
     <div className="flex w-[500px] gap-4">
-      <div className="flex min-h-10 w-[300px] flex-col justify-center rounded-lg bg-white px-4 font-normal">
-        <input
-          className="h-10"
-          type="text"
-          placeholder="Enter any tag, category or name"
-        />
-        <div hidden>tags</div>
+      <div className="flex min-h-10 w-[300px] flex-col justify-center rounded-lg bg-white font-normal">
+        <Input type="text" placeholder="Enter any tag, category or name" />
+        <ul className="flex flex-wrap gap-2 p-2">
+          {tags.map((tag, i) => (
+            <li key={i}>
+              <Tag label={tag} />
+            </li>
+          ))}
+        </ul>
       </div>
       <button className="font-lg h-10 items-center rounded-lg bg-white px-4 text-lg">
         Location

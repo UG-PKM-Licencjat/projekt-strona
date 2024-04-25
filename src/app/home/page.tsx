@@ -19,8 +19,9 @@ export default function Home() {
         >
           <Image
             src="/img/kontrabas.jpg"
-            layout="fill"
-            priority={true}
+            className="object-cover"
+            height={500}
+            width={600}
             alt="zdjęcie kontrabasisty grającego koncert"
           />
           {/* TODO naprawić to zdjęcie */}

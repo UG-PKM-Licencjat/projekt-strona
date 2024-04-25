@@ -1,38 +1,55 @@
 import React from "react";
 import { cn } from "~/utils/cn";
+import { type VariantProps, cva } from "class-variance-authority";
 
-interface ButtonProps {
-  /*
-   * Zawartość przycisku, wewnętrzny tekst i/lub ikona/y
-   */
-  children: React.ReactNode;
-  /*
-   * Funkcja wywoływana po kliknięciu przycisku
-   */
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   onClick?: () => void;
-  /*
-   * Dodatkowe stylowanie tailwind dla przycisku
-   */
-  className?: string;
-  /*
-   * Wariant przycisku
-   */
-  variant?: "primary" | "secondary" | "ghost";
 }
+const buttonVariants = cva(
+  "rounded-md border-2 border-transparent transition duration-200 text-center",
+  {
+    variants: {
+      variant: {
+        primary:
+          "bg-violet-900 text-white hover:bg-white hover:border-violet-900 hover:text-violet-900",
+        secondary:
+          "bg-blue-950 text-white hover:bg-white hover:border-blue-950 hover:text-blue-950",
+        outline:
+          "bg-transparent text-violet-900 border-violet-900 hover:bg-violet-900 hover:text-white",
+        error:
+          "bg-orange-500 text-white hover:bg-white hover:border-orange-500 hover:text-orange-500",
+        success:
+          "bg-green-900 text-white hover:bg-white hover:border-green-900 hover:text-green-900",
+        warning:
+          "bg-amber-500 text-white hover:bg-white hover:border-amber-500 hover:text-amber-500",
+      },
+      size: {
+        sm: "h-[32px] w-[96px] text-sm",
+        md: "h-[44px] w-[132px] text-base",
+        lg: "h-[60px] w-[160px] text-xl",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+    },
+  },
+);
 
-export const Button = ({ ...props }: ButtonProps) => {
-  const { children, onClick, className, variant } = props;
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "rounded-md border-2 border-transparent bg-violet-900 px-8 py-2 text-white transition duration-200 hover:border-violet-900 hover:bg-white hover:text-violet-900",
-        className,
-      )}
-    >
-      {children}
-    </button>
-  );
-};
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, ...props }, ref) => {
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
+);
 
-// stworzenie klas dla różnych buttonów i zastanowić się jak to zaimplementować, czy może zrobić custom klasy w tailwindzie?
+Button.displayName = "Button";
+
+export { Button };

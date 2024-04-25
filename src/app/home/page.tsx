@@ -1,6 +1,7 @@
 import React from "react";
 import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
 import { Button } from "~/components/ui/Button/Button";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -14,8 +15,16 @@ export default function Home() {
           style={{
             clipPath: "polygon(0 0, 100% 0, 100% 100%, 20% 100%)",
           }}
-          className="bg-kontrabas h-full w-2/5 bg-cover bg-center bg-no-repeat"
-        ></div>
+          className="h-full w-2/5"
+        >
+          <Image
+            src="/img/kontrabas.jpg"
+            layout="fill"
+            priority={true}
+            alt="zdjęcie kontrabasisty grającego koncert"
+          />
+          {/* TODO naprawić to zdjęcie */}
+        </div>
       </header>
       <main>
         <section className="flex bg-white p-10">

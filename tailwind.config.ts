@@ -8,6 +8,9 @@ export default {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      backgroundImage: {
+        kontrabas: "url('/img/kontrabas.jpg')",
+      },
     },
   },
   plugins: [],

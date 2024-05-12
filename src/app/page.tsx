@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
+import { SearchEngine } from "~/components/searchEngine/SearchEngine";
 import { Button } from "~/components/ui/Button/Button";
 import Image from "next/image";
 
@@ -15,16 +15,15 @@ export default function Home() {
           style={{
             clipPath: "polygon(0 0, 100% 0, 100% 100%, 20% 100%)",
           }}
-          className="h-full w-2/5"
+          className="h-full w-fit"
         >
           <Image
             src="/img/kontrabas.jpg"
-            className="object-cover"
+            className="hidden object-cover lg:block"
             height={500}
             width={600}
             alt="zdjęcie kontrabasisty grającego koncert"
           />
-          {/* TODO naprawić to zdjęcie */}
         </div>
       </header>
       <main>

@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  doublePrecision,
   index,
   integer,
   pgTableCreator,
@@ -18,41 +19,6 @@ import { type AdapterAccount } from "next-auth/adapters";
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `projekt-strona_${name}`);
-
-// Example schema
-
-// export const posts = createTable(
-//   "post",
-//   {
-//     id: serial("id").primaryKey(),
-//     name: varchar("name", { length: 256 }),
-//     createdById: varchar("createdById", { length: 255 })
-//       .notNull()
-//       .references(() => users.id),
-//     createdAt: timestamp("created_at")
-//       .default(sql`CURRENT_TIMESTAMP`)
-//       .notNull(),
-//     updatedAt: timestamp("updatedAt"),
-//   },
-//   (example) => ({
-//     createdByIdIdx: index("createdById_idx").on(example.createdById),
-//     nameIndex: index("name_idx").on(example.name),
-//   })
-// );
-
-// export const users = createTable("user", {
-//   id: varchar("id", { length: 255 }).notNull().primaryKey(),
-//   name: varchar("name", { length: 255 }),
-//   email: varchar("email", { length: 255 }).notNull(),
-//   emailVerified: timestamp("emailVerified", {
-//     mode: "date",
-//   }).default(sql`CURRENT_TIMESTAMP`),
-//   image: varchar("image", { length: 255 }),
-// });
-
-// export const usersRelations = relations(users, ({ many }) => ({
-//   accounts: many(accounts),
-// }));
 
 export const accounts = createTable(
   "account",
@@ -118,7 +84,6 @@ export const verificationTokens = createTable(
 );
 
 // Project schema
-// accounts, session, verificationTokens shared from example schema
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -167,8 +132,10 @@ export const userTagsRelations = relations(userTags, ({ one }) => ({
 
 export const offers = createTable("offer", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  testData: varchar("testData", { length: 255 }),
-  // TODO add data
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  price: doublePrecision("price"),
+  // TODO figure out location
 });
 
 export const offerRelations = relations(offers, ({ many }) => ({

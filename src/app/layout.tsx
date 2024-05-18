@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
-import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
+import SvgSymbols from "~/components/common/SvgSymbols/SvgSymbols";
 
 const inter = Inter({
   subsets: ["latin"],

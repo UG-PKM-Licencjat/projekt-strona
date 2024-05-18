@@ -1,86 +1,78 @@
-import { unstable_noStore as noStore } from "next/cache";
-import Link from "next/link";
+import React from "react";
+import { SearchEngine } from "~/components/searchEngine/SearchEngine";
+import { Button } from "~/components/ui/Button/Button";
+import Image from "next/image";
 
-import { CreatePost } from "~/app/_components/create-post";
-import { getServerAuthSession } from "~/server/auth";
-import { api } from "~/trpc/server";
-import { Icon } from "~/components/ui/Icon/Icon";
-
-export default async function Home() {
-  noStore();
-  const hello = await api.post.hello.query({ text: "from tRPC" });
-  const session = await getServerAuthSession();
-
+export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <Icon name={"magnifier"} />
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+    <>
+      <header className="flex h-[500px] justify-between bg-pink-700">
+        <div className="flex h-full w-3/5 flex-col justify-around pl-20">
+          <h1 className="text-4xl text-white">ARTYŚCI-APKA</h1>
+          <SearchEngine />
         </div>
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-2xl text-white">
-            {hello ? hello.greeting : "Loading tRPC query..."}
-          </p>
-
-          <div className="flex flex-col items-center justify-center gap-4">
-            <p className="text-center text-2xl text-white">
-              {session && <span>Logged in as {session.user?.name}</span>}
+        <div
+          style={{
+            clipPath: "polygon(0 0, 100% 0, 100% 100%, 20% 100%)",
+          }}
+          className="h-full w-fit"
+        >
+          <Image
+            src="/img/kontrabas.jpg"
+            className="hidden object-cover lg:block"
+            height={500}
+            width={600}
+            alt="zdjęcie kontrabasisty grającego koncert"
+          />
+        </div>
+      </header>
+      <main className="mt-5">
+        <section className="flex gap-52 bg-white p-10">
+          <div className="flex w-1/2 flex-col items-center justify-around gap-7">
+            <h1 className="text-4xl">Kim jesteśmy?</h1>
+            <p className="text-center">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
+              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
+              fugiat quas quos aperiam doloribus nemo doloremque autem. Quisquam
+              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
+              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
+              fugiat quas quos aperiam doloribus nemo doloremque autem.
             </p>
-            <Link
-              href={session ? "/api/auth/signout" : "/api/auth/signin"}
-              className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-            >
-              {session ? "Sign out" : "Sign in"}
-            </Link>
           </div>
-        </div>
-
-        <CrudShowcase />
-      </div>
-    </main>
-  );
-}
-
-async function CrudShowcase() {
-  const session = await getServerAuthSession();
-  if (!session?.user) return null;
-
-  const latestPost = await api.post.getLatest.query();
-
-  return (
-    <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
-
-      <CreatePost />
-    </div>
+          <div className="flex w-1/2 flex-col items-center justify-around gap-7">
+            <h1 className="text-4xl">Dołącz do nas</h1>
+            <div className="flex justify-around gap-24">
+              <Button>Zaloguj się</Button>
+              <Button>Zarejestruj się</Button>
+            </div>
+          </div>
+        </section>
+        <section className="bg-gray-100 p-10">
+          <div className="flex flex-col justify-around gap-7">
+            <h2 className="text-2xl">Nasze cele</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
+              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
+              fugiat quas quos aperiam doloribus nemo doloremque autem. Quisquam
+              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
+              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
+              fugiat quas quos aperiam doloribus nemo doloremque autem.
+            </p>
+          </div>
+        </section>
+        <section className="bg-white p-10">
+          <div className="flex flex-col justify-around gap-7">
+            <h2 className="text-2xl">Nasza misja</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
+              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod, fug
+            </p>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

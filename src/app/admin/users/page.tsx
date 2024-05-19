@@ -1,6 +1,6 @@
 "use client";
 
-import { trpc } from "../_trpc/client";
+import { trpc } from "../../_trpc/client";
 
 export default function AdminPanel() {
   const hello = trpc.getHello.useQuery();
@@ -8,6 +8,7 @@ export default function AdminPanel() {
   if (!hello.data) {
     return <div>Loading...</div>;
   }
+
   return (
     <div>
       <p>{hello.data.greeting}</p>

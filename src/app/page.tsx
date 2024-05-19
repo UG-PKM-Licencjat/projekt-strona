@@ -1,6 +1,6 @@
 import React from "react";
 import { SearchEngine } from "~/components/searchEngine/SearchEngine";
-import { Button } from "~/components/ui/Button/Button";
+import { Button } from "~/components/common/Button/Button";
 import Image from "next/image";
 
 export default function Home() {

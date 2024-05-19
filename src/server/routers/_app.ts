@@ -6,6 +6,11 @@ export const appRouter = router({
       greeting: `Hello!`,
     };
   }),
+
+  getUsers: procedure.query(() => {
+    // TODO: implement
+    return ["piotr", "lukasz", "marcin"];
+  }),
 });
 
 export type AppRouter = typeof appRouter;

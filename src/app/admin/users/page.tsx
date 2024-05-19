@@ -3,15 +3,17 @@
 import { trpc } from "../../_trpc/client";
 
 export default function AdminPanel() {
-  const hello = trpc.getHello.useQuery();
+  const users = trpc.getUsers.useQuery();
 
-  if (!hello.data) {
+  if (!users.data) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
-      <p>{hello.data.greeting}</p>
+      {users.data.map((user) => (
+        <p key={user}>{user}</p>
+      ))}
     </div>
   );
 }

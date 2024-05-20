@@ -23,6 +23,7 @@
     "@trpc/server": "^10.45.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.29.3",
     "next": "^14.0.4",
     "next-auth": "^4.24.5",
@@ -32,6 +33,7 @@
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.2.2",
+    "tsx": "^4.10.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {

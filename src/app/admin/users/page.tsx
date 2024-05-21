@@ -1,18 +1,49 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { trpc } from "../../_trpc/client";
 
 export default function AdminPanel() {
-  const users = trpc.getUsers.useQuery();
+  const [users, setUsers] = useState<
+    {
+      id: string;
+      name: string | null;
+      email: string;
+      emailVerified: string | null;
+      image: string | null;
+    }[]
+  >([]);
 
-  if (!users.data) {
+  const { data: getUsers, refetch } = trpc.getUsers.useQuery();
+  const addUsers = trpc.addUsers.useMutation();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (getUsers && getUsers.length > 0) {
+        console.log("Fetched users");
+        setUsers(getUsers);
+      } else {
+        console.log("No users fetched");
+        await addUsers.mutateAsync();
+        const refetchedUsers = await refetch();
+        setUsers(refetchedUsers.data!);
+        console.log("Refetched users ", refetchedUsers.data);
+      }
+    };
+
+    void fetchUsers();
+  }, []);
+
+  if (!users || users.length === 0) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
-      {users.data.map((user) => (
-        <p key={user}>{user}</p>
+      {users.map((user) => (
+        <p key={user.id}>
+          {user.id} - {user.name} - {user.email}
+        </p>
       ))}
     </div>
   );

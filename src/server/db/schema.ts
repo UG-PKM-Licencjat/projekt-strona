@@ -14,6 +14,8 @@ import { type AdapterAccount } from "next-auth/adapters";
 
 export const createTable = pgTableCreator((name) => `projekt-strona_${name}`);
 
+// NextAuth basics
+
 export const accounts = createTable(
   "account",
   {
@@ -93,35 +95,33 @@ export const users = createTable("user", {
   // image: varchar("image", { length: 255 }), // TODO figure out image storage
 });
 
-// Don't know if these will work, eyeballing it
-
 export const tags = createTable("tag", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
 });
 
 export const tagRelations = relations(tags, ({ many }) => ({
-  userTags: many(userTags),
+  offerTags: many(offerTags),
 }));
 
-export const userTags = createTable(
-  "user_tag",
+export const offerTags = createTable(
+  "offer_tag",
   {
-    userId: varchar("userId", { length: 255 })
+    offerId: varchar("offerId", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => offers.id),
     tagId: varchar("tagId", { length: 255 })
       .notNull()
       .references(() => tags.id),
   },
   (userTag) => ({
-    compoundKey: primaryKey({ columns: [userTag.userId, userTag.tagId] }),
+    compoundKey: primaryKey({ columns: [userTag.offerId, userTag.tagId] }),
   }),
 );
 
-export const userTagsRelations = relations(userTags, ({ one }) => ({
-  user: one(users, { fields: [userTags.userId], references: [users.id] }),
-  tag: one(tags, { fields: [userTags.tagId], references: [tags.id] }),
+export const offerTagsRelations = relations(offerTags, ({ one }) => ({
+  offer: one(offers, { fields: [offerTags.offerId], references: [offers.id] }),
+  tag: one(tags, { fields: [offerTags.tagId], references: [tags.id] }),
 }));
 
 export const offers = createTable("offer", {
@@ -134,6 +134,7 @@ export const offers = createTable("offer", {
 
 export const offerRelations = relations(offers, ({ many }) => ({
   userOffers: many(userOffers),
+  offerTags: many(offerTags),
 }));
 
 export const userOffers = createTable(
@@ -158,6 +159,5 @@ export const userOffersRelations = relations(userOffers, ({ one }) => ({
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
-  userTags: many(userTags),
   userOffers: many(userOffers),
 }));

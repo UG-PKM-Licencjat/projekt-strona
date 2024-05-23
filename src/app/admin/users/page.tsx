@@ -17,6 +17,7 @@ export default function AdminPanel() {
   const { data: getUsers, refetch } = trpc.getUsers.useQuery();
   const addUsers = trpc.addUsers.useMutation();
 
+  // TODO: useMemo?
   useEffect(() => {
     const fetchUsers = async () => {
       if (getUsers && getUsers.length > 0) {

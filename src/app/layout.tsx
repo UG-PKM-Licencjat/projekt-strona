@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 
-import SvgSymbols from "~/components/common/SvgSymbols/SvgSymbols";
+import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
 import { trpc } from "~/utils/trpc";
 import Provider from "./_trpc/Provider";
 

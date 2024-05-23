@@ -1,6 +1,6 @@
 import React from "react";
-import { Icon } from "../common/Icon/Icon";
-import { Input } from "../common/Input/Input";
+import { Icon } from "../ui/Icon/Icon";
+import { Input } from "../ui/Input/Input";
 import { Tag } from "../Tag/Tag";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

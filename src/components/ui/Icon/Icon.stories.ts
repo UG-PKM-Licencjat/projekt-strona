@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 export const Magnifier: Story = {
   args: {
     name: "magnifier",
-    style: "w-4 h-4",
+    className: "w-4 h-4",
     fill: "#000000",
   },
 };

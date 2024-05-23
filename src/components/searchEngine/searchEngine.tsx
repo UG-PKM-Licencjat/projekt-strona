@@ -37,7 +37,7 @@ export const SearchEngine = ({}: SearchEngine) => {
         Location
       </button>
       <button className="h-10">
-        <Icon style="w-8 h-8 text-white" name="magnifier" fill="#FFFFFF" />
+        <Icon className="h-8 w-8 text-white" name="magnifier" fill="#FFFFFF" />
       </button>
     </div>
   );

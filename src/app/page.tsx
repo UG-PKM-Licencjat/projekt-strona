@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchEngine } from "~/components/searchEngine/SearchEngine";
+import { SearchEngine } from "~/components/searchEngine/searchEngine";
 import { Button } from "~/components/ui/Button/Button";
 import Image from "next/image";
 

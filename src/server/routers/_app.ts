@@ -21,14 +21,14 @@ export const appRouter = router({
     console.log("Adding users");
     await db.insert(users).values([
       {
-        // id: "1",
+        id: "1",
         name: "Piotr",
         email: "piotr@example.com",
         image:
           "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg",
       },
       {
-        // id: "2",
+        id: "2",
         name: "Lukasz",
         email: "lukasz@example.com",
         image:

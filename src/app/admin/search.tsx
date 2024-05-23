@@ -25,12 +25,12 @@ export function Search(props: { value?: string }) {
     startTransition(() => {
       // All navigations are transitions automatically
       // But wrapping this allow us to observe the pending state
-      router.replace(`/?${params.toString()}`);
+      router.replace(`/admin?${params.toString()}`);
     });
   }, [router, value]);
 
   return (
-    <div className="relative">
+    <div className="relative flex flex-col justify-center items-center">
       <Icon
          name="magnifier"
          className="absolute left-2.5 top-3 h-4 w-4 text-gray-500"
@@ -45,7 +45,7 @@ export function Search(props: { value?: string }) {
         className="w-full bg-white shadow-none appearance-none pl-8"
         placeholder="Search users..."
       />
-      {isPending && <Icon name="spinner" />}
+      {isPending && <Icon name="spinner" className="h-8 w-8 m-32"/>}
     </div>
   );
 }

@@ -1,8 +1,11 @@
+"use client";
+
 import { trpc } from "~/app/_trpc/client";
 import { UsersTable } from "./users-table";
 import { Search } from "./search";
+import { Icon } from "~/components/ui/Icon/Icon";
 
-export default async function IndexPage({
+export default function IndexPage({
   searchParams,
 }: {
   searchParams: { q: string; offset: string };
@@ -19,7 +22,11 @@ export default async function IndexPage({
       <div className="mb-4 w-full">
         <Search value={searchParams.q} />
       </div>
-      <UsersTable users={data} offset={0} />
+      {data ? (
+        <UsersTable users={data} offset={0} />
+      ) : (
+        <Icon name="spinner" className="m-32 h-8 w-8" />
+      )}
     </main>
   );
 }

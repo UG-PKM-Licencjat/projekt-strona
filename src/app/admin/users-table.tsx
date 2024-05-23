@@ -9,9 +9,16 @@ import {
   Table,
 } from "~/components/ui/Table/Table";
 import { Button } from "~/components/ui/Button/Button";
-import type { SelectUser } from "~/server/db/schema";
 // import { deleteUser } from './actions';
 import { useRouter } from "next/navigation";
+
+interface SelectUser {
+  id: string;
+  image: string | null;
+  name: string | null;
+  email: string;
+  emailVerified: string | null;
+}
 
 export function UsersTable({
   users,
@@ -59,20 +66,22 @@ export function UsersTable({
 }
 
 function UserRow({ user }: { user: SelectUser }) {
-  const userId = user.id;
-  const deleteUserWithId = deleteUser.bind(null, userId);
+  // const userId = user.id;
+  // const deleteUserWithId = deleteUser.bind(null, userId);
 
   return (
     <TableRow>
       <TableCell className="font-medium">{user.name}</TableCell>
       <TableCell className="hidden md:table-cell">{user.email}</TableCell>
-      <TableCell>{user.username}</TableCell>
+      <TableCell>{user.name}</TableCell>
       <TableCell>
         <Button
           className="w-full"
           size="sm"
           variant="outline"
-          formAction={deleteUserWithId}
+          formAction={() => {
+            alert("Delete");
+          }}
           disabled
         >
           Delete

@@ -9,13 +9,12 @@ import Provider from "./_trpc/Provider";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
 });
 
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pl">
-      <body className={`font-sans ${inter.variable}`}>
+      <body className={inter.className}>
         {SvgSymbols}
         <Provider>{children}</Provider>
       </body>

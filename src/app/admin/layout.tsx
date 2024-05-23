@@ -1,68 +1,63 @@
 import "~/styles/globals.css";
 
-import Link from 'next/link';
+import Link from "next/link";
 import { Icon } from "~/components/ui/Icon/Icon";
-import { NavItem } from './nav-item';
+import { NavItem } from "./nav-item";
 
 export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
+  title: "Next.js App Router + NextAuth + Tailwind CSS",
   description:
-    'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
+    "A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-gray-50">
-      <body>
-        <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-          <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
-            <div className="flex h-full max-h-screen flex-col gap-2">
-              <div className="flex h-[60px] items-center border-b px-5">
-                <Link
-                  className="flex items-center gap-2 font-semibold"
-                  href="/"
-                >
-                  <Icon name="logo" className="h-6 w-6" />
-                  <span className="">ACME</span>
-                </Link>
-              </div>
-              <div className="flex-1 overflow-auto py-2">
-                <nav className="grid items-start px-4 text-sm font-medium">
-                  <NavItem href="/">
-                  <Icon name="users" className="h-4 w-4" />
-                    Users
-                  </NavItem>
-                  <NavItem href="/settings">
-                  <Icon name="settings" className="h-4 w-4" />
-                    Settings
-                  </NavItem>
-                  <NavItem href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs">
-                  <Icon name="logo" className="h-4 w-4" />
-                    Deploy
-                  </NavItem>
-                </nav>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40 justify-between lg:justify-end">
-              <Link
-                className="flex items-center gap-2 font-semibold lg:hidden"
-                href="/"
-              >
+    <div lang="en" className="h-full bg-gray-50">
+      <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
+        <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
+          <div className="flex h-full max-h-screen flex-col gap-2">
+            <div className="flex h-[60px] items-center border-b px-5">
+              <Link className="flex items-center gap-2 font-semibold" href="/">
                 <Icon name="logo" className="h-6 w-6" />
                 <span className="">ACME</span>
               </Link>
-              {/* <User /> */}
-            </header>
-            {children}
+            </div>
+            <div className="flex-1 overflow-auto py-2">
+              <nav className="grid items-start px-4 text-sm font-medium">
+                <NavItem href="/">
+                  <Icon name="users" className="h-4 w-4" />
+                  Users
+                </NavItem>
+                <NavItem href="/settings">
+                  <Icon name="settings" className="h-4 w-4" />
+                  Settings
+                </NavItem>
+                <NavItem href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs">
+                  <Icon name="logo" className="h-4 w-4" />
+                  Deploy
+                </NavItem>
+              </nav>
+            </div>
           </div>
         </div>
-      </body>
-    </html>
+        <div className="flex flex-col">
+          <header className="flex h-14 items-center justify-between gap-4 border-b bg-gray-100/40 px-6 lg:h-[60px] lg:justify-end dark:bg-gray-800/40">
+            <Link
+              className="flex items-center gap-2 font-semibold lg:hidden"
+              href="/"
+            >
+              <Icon name="logo" className="h-6 w-6" />
+              <span className="">ACME</span>
+            </Link>
+            {/* <User /> */}
+          </header>
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }

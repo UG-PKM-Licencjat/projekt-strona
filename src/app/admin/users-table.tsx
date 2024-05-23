@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   TableHead,
@@ -6,18 +6,18 @@ import {
   TableHeader,
   TableCell,
   TableBody,
-  Table
-} from '~/components/ui/Table/Table';
-import { Button } from '~/components/ui/Button/Button';
-// import { SelectUser } from '@/lib/db';
+  Table,
+} from "~/components/ui/Table/Table";
+import { Button } from "~/components/ui/Button/Button";
+import type { SelectUser } from "~/server/db/schema";
 // import { deleteUser } from './actions';
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export function UsersTable({
-//   users,
-  offset
+  users,
+  offset,
 }: {
-//   users: SelectUser[];
+  users: SelectUser[];
   offset: number | null;
 }) {
   const router = useRouter();
@@ -28,7 +28,7 @@ export function UsersTable({
 
   return (
     <>
-      <form className="border shadow-sm rounded-lg">
+      <form className="rounded-lg border shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
@@ -39,9 +39,9 @@ export function UsersTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {users.map((user) => (
+            {users.map((user) => (
               <UserRow key={user.id} user={user} />
-            ))} */}
+            ))}
           </TableBody>
         </Table>
       </form>
@@ -58,26 +58,26 @@ export function UsersTable({
   );
 }
 
-// function UserRow({ user }: { user: SelectUser }) {
-//   const userId = user.id;
-//   const deleteUserWithId = deleteUser.bind(null, userId);
+function UserRow({ user }: { user: SelectUser }) {
+  const userId = user.id;
+  const deleteUserWithId = deleteUser.bind(null, userId);
 
-//   return (
-//     <TableRow>
-//       <TableCell className="font-medium">{user.name}</TableCell>
-//       <TableCell className="hidden md:table-cell">{user.email}</TableCell>
-//       <TableCell>{user.username}</TableCell>
-//       <TableCell>
-//         <Button
-//           className="w-full"
-//           size="sm"
-//           variant="outline"
-//           formAction={deleteUserWithId}
-//           disabled
-//         >
-//           Delete
-//         </Button>
-//       </TableCell>
-//     </TableRow>
-//   );
-// }
+  return (
+    <TableRow>
+      <TableCell className="font-medium">{user.name}</TableCell>
+      <TableCell className="hidden md:table-cell">{user.email}</TableCell>
+      <TableCell>{user.username}</TableCell>
+      <TableCell>
+        <Button
+          className="w-full"
+          size="sm"
+          variant="outline"
+          formAction={deleteUserWithId}
+          disabled
+        >
+          Delete
+        </Button>
+      </TableCell>
+    </TableRow>
+  );
+}

@@ -9,8 +9,8 @@ import {
   Table,
 } from "~/components/ui/Table/Table";
 import { Button } from "~/components/ui/Button/Button";
-// import { deleteUser } from './actions';
 import { useRouter } from "next/navigation";
+import { trpc } from "~/app/_trpc/client";
 
 interface SelectUser {
   id: string;
@@ -66,8 +66,8 @@ export function UsersTable({
 }
 
 function UserRow({ user }: { user: SelectUser }) {
-  // const userId = user.id;
-  // const deleteUserWithId = deleteUser.bind(null, userId);
+  const userId = user.id;
+  const deleteUserWithId = trpc.deleteUser.useMutation();
 
   return (
     <TableRow>
@@ -79,10 +79,7 @@ function UserRow({ user }: { user: SelectUser }) {
           className="w-full"
           size="sm"
           variant="outline"
-          formAction={() => {
-            alert("Delete");
-          }}
-          disabled
+          formAction={() => deleteUserWithId.mutate({ id: userId })}
         >
           Delete
         </Button>

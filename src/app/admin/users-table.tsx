@@ -23,9 +23,11 @@ interface SelectUser {
 export function UsersTable({
   users,
   offset,
+  refetch,
 }: {
   users: SelectUser[];
   offset: number | null;
+  refetch: () => void;
 }) {
   const router = useRouter();
 
@@ -47,7 +49,7 @@ export function UsersTable({
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <UserRow key={user.id} user={user} />
+              <UserRow key={user.id} user={user} refetch={refetch} />
             ))}
           </TableBody>
         </Table>
@@ -65,7 +67,7 @@ export function UsersTable({
   );
 }
 
-function UserRow({ user }: { user: SelectUser }) {
+function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
   const userId = user.id;
   const deleteUserWithId = trpc.deleteUser.useMutation();
 
@@ -79,7 +81,10 @@ function UserRow({ user }: { user: SelectUser }) {
           className="w-full"
           size="sm"
           variant="outline"
-          formAction={() => deleteUserWithId.mutate({ id: userId })}
+          formAction={() => {
+            deleteUserWithId.mutate({ id: userId });
+            refetch();
+          }}
         >
           Delete
         </Button>

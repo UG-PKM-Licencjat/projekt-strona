@@ -20,7 +20,7 @@ export const Offer = ({ name, description, tags }: OfferProps) => (
           {tags.map((tag) => (
             <div
               key={tag}
-              className="cursor-pointer rounded bg-indigo-400 px-2 py-[0.1rem] text-xs font-semibold text-white hover:bg-indigo-500"
+              className="cursor-pointer rounded bg-purple-400 px-2 py-[0.1rem] text-xs font-semibold text-white hover:bg-purple-500"
             >
               {tag}
             </div>

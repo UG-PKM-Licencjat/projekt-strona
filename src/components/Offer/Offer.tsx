@@ -10,7 +10,7 @@ export const Offer = ({ name, description, tags }: OfferProps) => (
   <div className="m-4 flex flex-col items-start justify-center gap-4 rounded-lg border-2 border-pink-700 px-10 py-6">
     <div className="flex items-center justify-center gap-6">
       {/* Image placeholder */}
-      <div className="h-24 w-24 rounded-full bg-gray-200 bg-cover bg-center" />
+      <div className="h-24 w-24 flex-shrink-0 rounded-full bg-gray-200 bg-cover bg-center" />
       <div className="flex flex-col items-start justify-around">
         <div className="text-3xl font-bold uppercase text-slate-600">
           {name}

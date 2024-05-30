@@ -1,6 +1,8 @@
-import React from "react";
+import * as React from "react";
 
-interface IconProps {
+type DefaultProps = React.SVGProps<SVGSVGElement>;
+
+interface IconProps extends DefaultProps {
   /**
    * Icon name
    */
@@ -37,6 +39,7 @@ export const Icon = ({
   strokeLinejoin = "round",
   viewBox = "0 0 24 24",
   xmlns = "http://www.w3.org/2000/svg",
+  ...props
 }: IconProps) => (
   <svg
     className={`${className}`}
@@ -47,6 +50,7 @@ export const Icon = ({
     strokeLinejoin={strokeLinejoin}
     viewBox={viewBox}
     xmlns={xmlns}
+    {...props}
   >
     <use xlinkHref={`#${name}`} />
   </svg>

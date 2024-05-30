@@ -2,7 +2,6 @@ import React from "react";
 import { Navbar } from "~/components/Navbar/Navbar";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { Offer } from "~/components/Offer/Offer";
-
 const placeholderOffers = [
   {
     name: "IMIE NAZWISKO",
@@ -37,19 +36,18 @@ export default function Page() {
         <div className="flex flex-col items-start gap-20">
           <h1 className="text-6xl font-semibold text-blue-950">ARTYŚCI-APKA</h1>
           <div className="flex items-center gap-20 font-semibold">
-            <div className="flex items-center rounded-lg border-2 border-blue-950">
+            <div className="flex items-center divide-x-2 divide-blue-950 rounded-lg border-2 border-blue-950 drop-shadow-md">
               <input
                 type="text"
                 placeholder="Wpisz nazwę oferty"
                 className="rounded-lg p-2 focus:outline-none"
               />
-              <div className="h-full border-r-2 border-blue-950"></div>
-              <Icon name="magnifier" className="m-2 h-6 w-6" />
+              <Icon name="magnifier" className="size-10 p-2" />
             </div>
             {/* TODO: add logic and popover? */}
             <button className="flex gap-2 rounded-lg border-2 border-blue-950 p-2">
               Lokalizacja
-              <Icon name="arrow-down" className="h-6 w-6" />
+              <Icon name="arrow-down" className="size-6" />
             </button>
           </div>
         </div>

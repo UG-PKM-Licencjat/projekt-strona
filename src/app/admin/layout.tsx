@@ -18,11 +18,16 @@ export default function RootLayout({
   return (
     <div lang="en" className="h-full bg-gray-50">
       <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-        <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
+        <div className="hidden border-r bg-gray-100/40 dark:bg-gray-800/40 lg:block">
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex h-[60px] items-center border-b px-5">
               <Link className="flex items-center gap-2 font-semibold" href="/">
-                <Icon name="logo" className="h-6 w-6" />
+                <Icon
+                  name="logo"
+                  className="h-6 w-6"
+                  fill="currentColor"
+                  stroke="none"
+                />
                 <span className="">ACME</span>
               </Link>
             </div>
@@ -37,7 +42,12 @@ export default function RootLayout({
                   Settings
                 </NavItem>
                 <NavItem href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs">
-                  <Icon name="logo" className="h-4 w-4" />
+                  <Icon
+                    name="logo"
+                    className="h-4 w-4"
+                    fill="currentColor"
+                    stroke="none"
+                  />
                   Deploy
                 </NavItem>
               </nav>
@@ -45,7 +55,7 @@ export default function RootLayout({
           </div>
         </div>
         <div className="flex flex-col">
-          <header className="flex h-14 items-center justify-between gap-4 border-b bg-gray-100/40 px-6 lg:h-[60px] lg:justify-end dark:bg-gray-800/40">
+          <header className="flex h-14 items-center justify-between gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40 lg:h-[60px] lg:justify-end">
             <Link
               className="flex items-center gap-2 font-semibold lg:hidden"
               href="/"

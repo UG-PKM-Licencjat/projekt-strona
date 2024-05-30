@@ -33,7 +33,7 @@ export default function IndexPage({
       {data ? (
         <UsersTable users={data} offset={0} refetch={refetch} />
       ) : (
-        <Icon name="spinner" className="m-32 h-8 w-8" />
+        <Icon name="spinner" className="m-32 h-8 w-8 animate-spin" />
       )}
     </main>
   );

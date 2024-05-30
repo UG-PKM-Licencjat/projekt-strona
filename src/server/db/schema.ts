@@ -12,16 +12,16 @@ import {
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
-export const createTable = pgTableCreator((name) => `projekt-strona_${name}`);
+export const createTable = pgTableCreator((name) => `${name}`);
 
 // NextAuth basics
 
 export const accounts = createTable(
   "account",
   {
-    userId: varchar("userId", { length: 255 })
+    userId: text("userId")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 })
       .$type<AdapterAccount["type"]>()
       .notNull(),
@@ -83,6 +83,7 @@ export const verificationTokens = createTable(
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }),
   firstName: varchar("firstName", { length: 255 }),
   lastName: varchar("lastName", { length: 255 }),
   nickname: varchar("nickname", { length: 255 }),
@@ -92,7 +93,7 @@ export const users = createTable("user", {
   emailVerified: timestamp("emailVerified", {
     mode: "date",
   }).default(sql`CURRENT_TIMESTAMP`),
-  // image: varchar("image", { length: 255 }), // TODO figure out image storage
+  image: varchar("image", { length: 255 }), // TODO figure out image storage
 });
 
 export const tags = createTable("tag", {

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Input } from '~/components/ui/Input/Input';
-import { Icon } from '~/components/ui/Icon/Icon';
-import { useRouter } from 'next/navigation';
-import { useTransition, useEffect, useRef, useState } from 'react';
+import { Input } from "~/components/ui/Input/Input";
+import { Icon } from "~/components/ui/Icon/Icon";
+import { useRouter } from "next/navigation";
+import { useTransition, useEffect, useRef, useState } from "react";
 
 export function Search(props: { value?: string }) {
   const router = useRouter();
@@ -13,13 +13,13 @@ export function Search(props: { value?: string }) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    console.log('value', value);
+    console.log("value", value);
     if (value === undefined) {
       return;
     } else if (value) {
-      params.set('q', value);
+      params.set("q", value);
     } else {
-      params.delete('q');
+      params.delete("q");
     }
 
     startTransition(() => {
@@ -30,22 +30,24 @@ export function Search(props: { value?: string }) {
   }, [router, value]);
 
   return (
-    <div className="relative flex flex-col justify-center items-center">
+    <div className="relative flex flex-col items-center justify-center">
       <Icon
-         name="magnifier"
-         className="absolute left-2.5 top-3 h-4 w-4 text-gray-500"
-       />
+        name="magnifier"
+        className="absolute left-2.5 top-3 h-4 w-4 text-gray-500"
+      />
       <Input
         ref={inputRef}
-        value={value ?? ''}
+        value={value ?? ""}
         onInput={(e) => {
           setValue(e.currentTarget.value);
         }}
         spellCheck={false}
-        className="w-full bg-white shadow-none appearance-none pl-8"
+        className="w-full appearance-none bg-white pl-8 shadow-none"
         placeholder="Search users..."
       />
-      {isPending && <Icon name="spinner" className="h-8 w-8 m-32"/>}
+      {isPending && (
+        <Icon name="spinner" className="m-32 h-8 w-8 animate-spin" />
+      )}
     </div>
   );
 }

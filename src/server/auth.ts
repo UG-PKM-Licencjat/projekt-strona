@@ -7,6 +7,11 @@ import {
 import { type Adapter } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "~/server/db";
+import type User from "next-auth";
+import { Session } from "next-auth";
+import { accounts } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
+
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -17,6 +22,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      admin: boolean;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -35,13 +41,29 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: async ({ session, user }) => {
+      const result = await db
+        .select({
+          admin: accounts.admin,
+        })
+        .from(accounts)
+        .where(eq(accounts.userId, user.id))
+        .limit(1);
+      console.log("result", result[0]?.admin ? true : false);
+      console.log("result", result);
+      console.log(
+        "user",
+        await db.select().from(accounts).where(eq(accounts.userId, user.id)),
+      );
+
+      return {
+        ...session,
+        user: {
+          id: user.id,
+          admin: result[0]?.admin ? true : false,
+        },
+      };
+    },
   },
   adapter: DrizzleAdapter(db) as Adapter,
   providers: [
@@ -49,6 +71,7 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
+
     /**
      * ...add more providers here.
      *

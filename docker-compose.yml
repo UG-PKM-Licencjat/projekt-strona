@@ -10,19 +10,9 @@ services:
       - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
+
     env_file:
       - .env
 
-  # nextjs:
-  #   build: .
-  #   restart: always
-  #   ports:
-  #     - 3000:3000
-  #   environment:
-  #     DATABASE_URL: postgres://postgres:password@db:5432/postgres
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - db
 volumes:
   postgres-data:

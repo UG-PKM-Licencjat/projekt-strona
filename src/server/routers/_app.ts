@@ -1,14 +1,14 @@
 import { db } from "../db";
 import { users } from "../db/schema";
-import { procedure, router } from "../trpc";
+import { procedure, router, authedProcedure } from "../trpc";
 
 export const appRouter = router({
-  getUsers: procedure.query(async () => {
+  getUsers: authedProcedure.query(async () => {
     // TODO: implement with pagination etc
     try {
-      console.log("Fetching users");
+      // console.log("Fetching users");
       const fetchedUsers = await db.select().from(users);
-      console.log("Fetched users", fetchedUsers);
+      // console.log("Fetched users", fetchedUsers);
       return fetchedUsers;
     } catch (error) {
       console.log("Error fetching users", error);
@@ -17,24 +17,29 @@ export const appRouter = router({
   }),
 
   // Only for easy mock
-  addUsers: procedure.mutation(async () => {
+  addUsers: authedProcedure.mutation(async () => {
     console.log("Adding users");
-    await db.insert(users).values([
-      {
-        id: "1",
-        name: "Piotr",
-        email: "piotr@example.com",
-        image:
-          "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg",
-      },
-      {
-        id: "2",
-        name: "Lukasz",
-        email: "lukasz@example.com",
-        image:
-          "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg",
-      },
-    ]);
+
+    try {
+      await db.insert(users).values([
+        {
+          id: "199",
+          name: "Piotr",
+          email: "piotr@example.com",
+          image:
+            "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg",
+        },
+        {
+          id: "299",
+          name: "Lukasz",
+          email: "lukasz@example.com",
+          image:
+            "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg",
+        },
+      ]);
+    } catch (error) {
+      console.log("Error adding users", error);
+    }
     return;
   }),
 });

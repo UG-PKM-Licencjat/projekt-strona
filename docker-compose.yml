@@ -11,5 +11,8 @@ services:
     environment:
       POSTGRES_PASSWORD: password
 
+    env_file:
+      - .env
+
 volumes:
   postgres-data:

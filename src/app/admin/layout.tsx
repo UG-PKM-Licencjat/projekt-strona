@@ -1,20 +1,24 @@
+"use client";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { Button } from "~/components/ui/Button/Button";
+
 import "~/styles/globals.css";
 
 import Link from "next/link";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { NavItem } from "./nav-item";
 
-export const metadata = {
-  title: "Next.js App Router + NextAuth + Tailwind CSS",
-  description:
-    "A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.",
-};
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = useSession();
+  if (!session) {
+    redirect("/");
+  }
   return (
     <div lang="en" className="h-full bg-gray-50">
       <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
@@ -50,6 +54,14 @@ export default function RootLayout({
                   />
                   Deploy
                 </NavItem>
+                <Button
+                  onClick={async () => {
+                    await signOut({ callbackUrl: window.location.origin });
+                  }}
+                >
+                  {" "}
+                  Wyloguj się
+                </Button>
               </nav>
             </div>
           </div>

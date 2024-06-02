@@ -3,8 +3,9 @@ import { users } from "../db/schema";
 import { procedure, router, authedProcedure } from "../trpc";
 
 export const appRouter = router({
-  getUsers: authedProcedure.query(async () => {
+  getUsers: authedProcedure.query(async ({ ctx }) => {
     // TODO: implement with pagination etc
+    console.log(ctx.session);
     try {
       // console.log("Fetching users");
       const fetchedUsers = await db.select().from(users);

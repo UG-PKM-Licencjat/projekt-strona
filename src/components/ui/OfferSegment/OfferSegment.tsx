@@ -8,7 +8,7 @@ export const OfferSegment = ({
   type = "list",
 }: {
   heading: string;
-  info: string[];
+  info?: string[];
   type?: "list" | "video" | "link";
 }) => {
   return (
@@ -17,7 +17,11 @@ export const OfferSegment = ({
         {heading}
       </h1>
       <div className="flex items-center justify-start divide-x divide-slate-600">
-        {type === "list" ? (
+        {!info ? (
+          <div className="border-l border-slate-600 pl-6 text-lg font-medium leading-snug text-slate-500">
+            Brak informacji
+          </div>
+        ) : type === "list" ? (
           <>
             <div></div>
             <ul className="list-outside list-disc pl-12 font-medium leading-snug text-slate-500">

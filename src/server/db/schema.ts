@@ -1,57 +1,28 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  doublePrecision,
   index,
   integer,
   pgTableCreator,
   primaryKey,
-  serial,
+  // serial,
   text,
   timestamp,
   varchar,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
-export const createTable = pgTableCreator((name) => `projekt-strona_${name}`);
+export const createTable = pgTableCreator((name) => `${name}`);
 
-export const posts = createTable(
-  "post",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("createdById", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt"),
-  },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  }),
-);
-
-export const users = createTable("user", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-  }).default(sql`CURRENT_TIMESTAMP`),
-  image: varchar("image", { length: 255 }),
-});
-
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-}));
+// NextAuth basics
 
 export const accounts = createTable(
   "account",
   {
-    userId: varchar("userId", { length: 255 })
+    userId: text("userId")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 })
       .$type<AdapterAccount["type"]>()
       .notNull(),
@@ -64,6 +35,7 @@ export const accounts = createTable(
     scope: varchar("scope", { length: 255 }),
     id_token: text("id_token"),
     session_state: varchar("session_state", { length: 255 }),
+    admin: boolean("admin").default(false).notNull(),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -108,3 +80,87 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
+
+// Project schema
+
+export const users = createTable("user", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }),
+  firstName: varchar("firstName", { length: 255 }),
+  lastName: varchar("lastName", { length: 255 }),
+  nickname: varchar("nickname", { length: 255 }),
+  shortDescription: varchar("shortDescription", { length: 255 }),
+  longDescription: text("longDescription"),
+  email: varchar("email", { length: 255 }).notNull(),
+  emailVerified: timestamp("emailVerified", {
+    mode: "date",
+  }).default(sql`CURRENT_TIMESTAMP`),
+  image: varchar("image", { length: 255 }), // TODO figure out image storage
+});
+
+export const tags = createTable("tag", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+});
+
+export const tagRelations = relations(tags, ({ many }) => ({
+  offerTags: many(offerTags),
+}));
+
+export const offerTags = createTable(
+  "offer_tag",
+  {
+    offerId: varchar("offerId", { length: 255 })
+      .notNull()
+      .references(() => offers.id),
+    tagId: varchar("tagId", { length: 255 })
+      .notNull()
+      .references(() => tags.id),
+  },
+  (userTag) => ({
+    compoundKey: primaryKey({ columns: [userTag.offerId, userTag.tagId] }),
+  }),
+);
+
+export const offerTagsRelations = relations(offerTags, ({ one }) => ({
+  offer: one(offers, { fields: [offerTags.offerId], references: [offers.id] }),
+  tag: one(tags, { fields: [offerTags.tagId], references: [tags.id] }),
+}));
+
+export const offers = createTable("offer", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  price: doublePrecision("price"),
+  // TODO figure out location
+});
+
+export const offerRelations = relations(offers, ({ many }) => ({
+  userOffers: many(userOffers),
+  offerTags: many(offerTags),
+}));
+
+export const userOffers = createTable(
+  "user_offer",
+  {
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    offerId: varchar("offerId", { length: 255 })
+      .notNull()
+      .references(() => offers.id),
+  },
+  (userOffer) => ({
+    compoundKey: primaryKey({ columns: [userOffer.userId, userOffer.offerId] }),
+  }),
+);
+
+export const userOffersRelations = relations(userOffers, ({ one }) => ({
+  user: one(users, { fields: [userOffers.userId], references: [users.id] }),
+  offer: one(offers, { fields: [userOffers.offerId], references: [offers.id] }),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  accounts: many(accounts),
+  userOffers: many(userOffers),
+}));

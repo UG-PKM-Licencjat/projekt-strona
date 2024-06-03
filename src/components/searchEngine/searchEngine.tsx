@@ -1,6 +1,6 @@
 import React from "react";
-import { Icon } from "../common/Icon/Icon";
-import { Input } from "../common/Input/Input";
+import { Icon } from "../ui/Icon/Icon";
+import { Input } from "../ui/Input/Input";
 import { Tag } from "../Tag/Tag";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -37,7 +37,7 @@ export const SearchEngine = ({}: SearchEngine) => {
         Location
       </button>
       <button className="h-10">
-        <Icon style="w-8 h-8 text-white" name="magnifier" fill="#FFFFFF" />
+        <Icon className="h-8 w-8 text-white" name="magnifier" />
       </button>
     </div>
   );

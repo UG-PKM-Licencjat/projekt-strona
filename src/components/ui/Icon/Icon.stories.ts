@@ -11,6 +11,9 @@ const meta: Meta<typeof Icon> = {
     fill: {
       control: "color",
     },
+    stroke: {
+      control: "color",
+    },
   },
   tags: ["autodocs"],
 };
@@ -21,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const Magnifier: Story = {
   args: {
     name: "magnifier",
-    style: "w-4 h-4",
-    fill: "#000000",
+    className: "size-10",
+    stroke: "#000000",
   },
 };

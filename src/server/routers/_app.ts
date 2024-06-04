@@ -1,10 +1,13 @@
+import { z } from "zod";
 import { db } from "../db";
 import { users } from "../db/schema";
 import { procedure, router, authedProcedure } from "../trpc";
+import { eq } from "drizzle-orm";
 
 export const appRouter = router({
-  getUsers: authedProcedure.query(async () => {
+  getUsers: authedProcedure.query(async ({ ctx }) => {
     // TODO: implement with pagination etc
+    console.log(ctx.session);
     try {
       // console.log("Fetching users");
       const fetchedUsers = await db.select().from(users);
@@ -15,6 +18,17 @@ export const appRouter = router({
       return [];
     }
   }),
+  deleteUser: procedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async (opts) => {
+      console.log("Deleting user", opts.input.id);
+      await db.delete(users).where(eq(users.id, opts.input.id));
+      return;
+    }),
 
   // Only for easy mock
   addUsers: authedProcedure.mutation(async () => {

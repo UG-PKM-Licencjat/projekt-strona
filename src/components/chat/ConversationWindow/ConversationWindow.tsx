@@ -9,13 +9,21 @@ export default function ConversationWindow({ data }: ConversationWindowProps) {
     return <div>Please log in to view your chat history.</div>;
   }
   return (
-    <div id="conversation-window">
+    <div id="conversation-window" className="grid grid-cols-1 gap-2">
       {data.map((message) => (
-        <Message
+        <div
           key={message.timestamp}
-          text={message.message}
-          isFromMe={message.from === session.user.id}
-        />
+          className={
+            message.from === session.user.id
+              ? "justify-self-start"
+              : "justify-self-end"
+          }
+        >
+          <Message
+            text={message.message}
+            isFromMe={message.from === session.user.id}
+          />
+        </div>
       ))}
     </div>
   );

@@ -14,6 +14,7 @@ export const StarRating = ({
   if (currentRating > maxRating) {
     currentRating = maxRating;
   }
+  // TODO maybe add number rating display
   const [stars, setStars] = useState(Math.round(currentRating));
   const changeScore = (score: number) => {
     setStars(score);

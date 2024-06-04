@@ -42,7 +42,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
             </h3>
           </div>
           <div className="flex items-center justify-center gap-4">
-            <StarRating currentRating={3.4} maxRating={5} />
+            <StarRating currentRating={3.4} />
             <Icon name="badge-check" className="size-12" />
           </div>
           <div className="flex items-start justify-center gap-4">

@@ -4,11 +4,11 @@ import { Icon } from "../Icon/Icon";
 
 export const StarRating = ({
   currentRating,
-  maxRating,
+  maxRating = 5,
   editable = false,
 }: {
   currentRating: number;
-  maxRating: number;
+  maxRating?: number;
   editable?: boolean;
 }) => {
   if (currentRating > maxRating) {

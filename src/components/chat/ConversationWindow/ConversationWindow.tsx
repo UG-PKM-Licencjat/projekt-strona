@@ -12,7 +12,7 @@ export default function ConversationWindow({ data }: ConversationWindowProps) {
     <div id="conversation-window">
       {data.map((message) => (
         <Message
-          key={message.timestamp.toString()}
+          key={message.timestamp}
           text={message.message}
           isFromMe={message.from === session.user.id}
         />
@@ -28,6 +28,6 @@ interface ConversationWindowProps {
 export interface Message {
   from: string;
   to: string;
-  timestamp: Date;
+  timestamp: string;
   message: string;
 }

@@ -1,9 +1,6 @@
 import { initTRPC } from "@trpc/server";
 import { getServerAuthSession } from "./auth";
 import type { Session } from "next-auth";
-import { is } from "drizzle-orm";
-import { Context } from "@trpc/server";
-import { Session } from "next-auth";
 
 const t = initTRPC.create();
 
@@ -11,7 +8,7 @@ export const authMiddleware = t.middleware(async ({ ctx, next }) => {
   const session: Session | null = await getServerAuthSession();
   console.log("trpc authorization", session);
   if (!session) {
-    throw new Error("Unauthorized");
+    // not authenticated
   }
   // return session in context
   return next({ ctx: { session } });

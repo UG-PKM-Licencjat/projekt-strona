@@ -3,6 +3,7 @@ import { Icon } from "~/components/ui/Icon/Icon";
 import { Tag } from "~/components/Tag/Tag";
 import { redirect } from "next/navigation";
 import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
+import { StarRating } from "~/components/ui/StarRating/StarRating";
 // import Image from "next/image";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
@@ -41,11 +42,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
             </h3>
           </div>
           <div className="flex items-center justify-center gap-4">
-            <div className="flex h-12 w-44 items-center justify-center rounded-full bg-gray-800">
-              <span className="font-semibold text-white">
-                stars placeholder
-              </span>
-            </div>
+            <StarRating currentRating={3.4} maxRating={5} />
             <Icon name="badge-check" className="size-12" />
           </div>
           <div className="flex items-start justify-center gap-4">

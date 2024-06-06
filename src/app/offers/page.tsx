@@ -1,5 +1,4 @@
 import React from "react";
-import { Navbar } from "~/components/Navbar/Navbar";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { Offer } from "~/components/Offer/Offer";
 const placeholderOffers = [
@@ -31,7 +30,6 @@ const placeholderOffers = [
 export default function Page() {
   return (
     <>
-      <Navbar />
       <div className="flex w-full flex-col items-center gap-32 bg-white p-10">
         <div className="flex flex-col items-start gap-20">
           <h1 className="text-6xl font-semibold text-blue-950">ARTYŚCI-APKA</h1>

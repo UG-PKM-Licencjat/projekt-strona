@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { Tag } from "~/components/Tag/Tag";
 import { redirect } from "next/navigation";
 import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 import { StarRating } from "~/components/ui/StarRating/StarRating";
+import { trpc } from "~/app/_trpc/client";
 // import Image from "next/image";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
@@ -13,12 +16,16 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat alias facere itaque natus repellendus debitis voluptas facilis maiores quia rerum.",
     "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut inventore, libero dignissimos rerum quos, dolorem amet consectetur labore sint odio vero itaque obcaecati earum? Recusandae odio laborum aut voluptatum nesciunt?",
   ];
-  let uriDecoded;
+  let uriDecoded: string;
   try {
     uriDecoded = decodeURIComponent(params.offerId);
   } catch (e) {
     redirect("/offers");
   }
+
+  const { data } = trpc.getOffer.useQuery({ id: uriDecoded });
+  console.log(data);
+  // const tags = data?.offerTags?.map((tag) => tag.tag.name);
 
   return (
     <div className="flex flex-col items-start gap-20 px-16 py-8">
@@ -46,9 +53,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
             <Icon name="badge-check" className="size-12" />
           </div>
           <div className="flex items-start justify-center gap-4">
-            {tags.map((tag, index) => (
-              <Tag label={tag} key={index} />
-            ))}
+            {tags?.map((tag, index) => <Tag label={tag} key={index} />)}
           </div>
           {/* TODO quick placeholder - get someone to design this */}
           <div className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">

@@ -50,6 +50,11 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
               <Tag label={tag} key={index} />
             ))}
           </div>
+          {/* TODO quick placeholder - get someone to design this */}
+          <div className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
+            <Icon name="wallet" className="size-8" />
+            100 000 zł
+          </div>
         </div>
       </div>
 

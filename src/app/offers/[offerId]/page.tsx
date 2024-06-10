@@ -85,6 +85,11 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
         info={["https://www.youtube.com/embed/F2YpXC1itEE"]}
         type="link"
       />
+
+      {/* OPINIE */}
+      <OfferSegment heading="OPINIE">
+        TUTAJ IDĄ KOMENTARZE I OPINIE
+      </OfferSegment>
     </div>
   );
 }

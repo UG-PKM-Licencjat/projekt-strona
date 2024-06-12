@@ -74,8 +74,10 @@ export const appRouter = router({
         },
         where: eq(offers.id, input.id),
       });
-      console.log("Fetched offer", fetchedOffer);
-      return fetchedOffer;
+      const tags = fetchedOffer?.offerTags.map((tag) => tag.tag);
+      const mappedOffer = { ...fetchedOffer, offerTags: tags };
+      console.log("Fetched offer", mappedOffer);
+      return mappedOffer;
     }),
 
   // TODO finish create offer procedure

@@ -172,6 +172,7 @@ export default function OfferPage() {
                   </PopoverContent>
                 </Popover>
               </div>
+              {/* TODO figure out how to display this when array is empty */}
               <p className="text-sm font-semibold text-red-500">
                 {errors.tags?.message}
               </p>

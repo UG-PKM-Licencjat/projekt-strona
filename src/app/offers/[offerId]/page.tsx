@@ -47,7 +47,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
               Offer {uriDecoded}
               {/* MICHAŁ MATCZAK */}
             </h1>
-            <h3 className="text-gra text-2xl font-bold capitalize text-black/40">
+            <h3 className="text-2xl font-bold capitalize text-black/40">
               {/* Warszawa */}
               Location
             </h3>

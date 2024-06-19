@@ -41,7 +41,7 @@ const offerSchema = z
         message: "Cena nie może przekraczać 999 999 999 zł",
       }),
     tags: z
-      .array(z.object({ name: z.string(), id: z.string() }).required())
+      .array(z.object({ name: z.string(), id: z.string() }))
       .nonempty({ message: "Musisz dodać co najmniej jeden tag" }),
   })
   .required();
@@ -55,16 +55,16 @@ export default function OfferPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, touchedFields: touched },
     control,
   } = useForm<FormData>({
     resolver: zodResolver(offerSchema),
     defaultValues: {
-      tags: [
-        { name: "hashtag1", id: "0" },
-        { name: "hashtag2", id: "1" },
-        { name: "hashtag3", id: "2" },
-      ],
+      // tags: [
+      //   { name: "hashtag1", id: "0" },
+      //   { name: "hashtag2", id: "1" },
+      //   { name: "hashtag3", id: "2" },
+      // ],
     },
   });
 
@@ -75,11 +75,24 @@ export default function OfferPage() {
     name: "tags",
   });
 
-  const tags: { name: string; id: string }[] | undefined = [
+  const [tags, setTags] = React.useState<{ name: string; id: string }[]>([
     { name: "hashtag1", id: "0" },
     { name: "hashtag2", id: "1" },
     { name: "hashtag3", id: "2" },
-  ];
+  ]);
+
+  const appendFunc = (tag: { name: string; id: string }) => {
+    setTags(tags?.filter((t) => t.id !== tag.id));
+    append(tag);
+    // console.log(tags);
+    setTagOpen(false);
+  };
+
+  const removeFunc = (tag: { name: string; id: string }, index: number) => {
+    setTags([...tags, tag]);
+    remove(index);
+  };
+
   const onSubmit = handleSubmit((data) => {
     toast({
       title: "Submitted form",
@@ -143,7 +156,7 @@ export default function OfferPage() {
                     <Icon
                       name="plus"
                       className="pointer-events-auto size-5 rotate-45 cursor-pointer"
-                      onClick={() => remove(index)}
+                      onClick={() => removeFunc(tag, index)}
                     />
                   </div>
                 ))}
@@ -159,10 +172,7 @@ export default function OfferPage() {
                           <div
                             key={index}
                             className=" cursor-pointer divide-y divide-solid divide-black rounded-lg bg-purple-400 p-3 font-semibold text-white transition-colors hover:bg-purple-300"
-                            onClick={() => {
-                              append(tag);
-                              setTagOpen(false);
-                            }}
+                            onClick={() => appendFunc(tag)}
                           >
                             {tag.name}
                           </div>
@@ -172,9 +182,8 @@ export default function OfferPage() {
                   </PopoverContent>
                 </Popover>
               </div>
-              {/* TODO figure out how to display this when array is empty */}
               <p className="text-sm font-semibold text-red-500">
-                {errors.tags ?? fields?.length === 0
+                {errors.tags ?? (fields?.length === 0 && touched.tags)
                   ? "Musisz dodać co najmniej jeden tag"
                   : ""}
               </p>

@@ -174,7 +174,9 @@ export default function OfferPage() {
               </div>
               {/* TODO figure out how to display this when array is empty */}
               <p className="text-sm font-semibold text-red-500">
-                {errors.tags?.message}
+                {errors.tags ?? fields?.length === 0
+                  ? "Musisz dodać co najmniej jeden tag"
+                  : ""}
               </p>
               {/* TODO quick placeholder - get someone to design this */}
               <label className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">

@@ -59,13 +59,6 @@ export default function OfferPage() {
     control,
   } = useForm<FormData>({
     resolver: zodResolver(offerSchema),
-    defaultValues: {
-      // tags: [
-      //   { name: "hashtag1", id: "0" },
-      //   { name: "hashtag2", id: "1" },
-      //   { name: "hashtag3", id: "2" },
-      // ],
-    },
   });
 
   const [tagOpen, setTagOpen] = React.useState(false);
@@ -73,6 +66,7 @@ export default function OfferPage() {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tags",
+    keyName: "key",
   });
 
   const [tags, setTags] = React.useState<{ name: string; id: string }[]>([
@@ -84,11 +78,17 @@ export default function OfferPage() {
   const appendFunc = (tag: { name: string; id: string }) => {
     setTags(tags?.filter((t) => t.id !== tag.id));
     append(tag);
-    // console.log(tags);
-    setTagOpen(false);
+
+    if (tags.length === 1) {
+      setTagOpen(false);
+    }
   };
 
-  const removeFunc = (tag: { name: string; id: string }, index: number) => {
+  const removeFunc = (
+    tag: { name: string; id: string; key?: string },
+    index: number,
+  ) => {
+    delete tag.key;
     setTags([...tags, tag]);
     remove(index);
   };
@@ -146,10 +146,14 @@ export default function OfferPage() {
                 {fields?.map((tag, index) => (
                   <div
                     className="pointer-events-none flex h-10 items-center gap-2 rounded-lg bg-purple-400 px-4 font-normal text-white transition-colors hover:bg-destructive"
-                    key={index}
+                    key={tag.key}
                   >
                     <input
-                      {...register(`tags.${index}.name`)}
+                      {...register(`tags.${index}.name` as const)}
+                      className="hidden bg-inherit outline-none"
+                    />
+                    <input
+                      {...register(`tags.${index}.id` as const)}
                       className="hidden bg-inherit outline-none"
                     />
                     {tag.name}

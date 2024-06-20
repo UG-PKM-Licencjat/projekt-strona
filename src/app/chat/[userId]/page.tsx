@@ -1,5 +1,6 @@
 "use client";
 
+import { request } from "http";
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 import ConversationWindow, {
@@ -20,16 +21,38 @@ export default function Conversation({
   const { data: session } = useSession();
 
   void useMemo(async () => {
-    console.log("Loading data for", userId);
+    console.log("Loading data for", session?.user.id);
     const response = await fetch(
-      `https://chat-swxn.onrender.com/messages?from=${session?.user.id}&to=${userId}`,
+      `https://chat-swxn.onrender.com/messages?from=${session?.user.id}&to=${userId}`, // TODO: this fetches not conversations but messages to be fixed
     );
-    const initialMessages = (await response.json()) as Array<Message>;
-    setMessages(initialMessages);
+
+    // TODO: Validate schema?
+    const initialMessages = (await response.json()) as {
+      messages: Array<Message>;
+    };
+
+    setMessages(initialMessages.messages);
+    console.log(initialMessages.messages);
   }, [session?.user.id, userId]);
 
-  function handleSubmit() {
-    console.log(message);
+  async function handleSubmit() {
+    const response = await fetch("https://chat-swxn.onrender.com/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: message,
+        from: session?.user.id,
+        to: userId,
+      }),
+    });
+    // Todo also validate
+    const newMessage = (await response.json()) as { message: Message };
+    // TODO when status will be known change it to exact one
+    if (response.status < 300) {
+      setMessages([...messages, newMessage.message]);
+    }
     setMessage("");
   }
 

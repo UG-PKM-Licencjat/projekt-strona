@@ -1,15 +1,36 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useEffect, useRef } from "react";
 import Message from "../Message/Message";
 
 export default function ConversationWindow({ data }: ConversationWindowProps) {
   const { data: session } = useSession();
+  const chatBox = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    // if (chatBox.current) {
+    // chatBox.current.scrollTop = chatBox.current.scrollHeight;
+    // }
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [data]);
+
   if (!session) {
     return <div>Please log in to view your chat history.</div>;
   }
   return (
-    <div id="conversation-window" className="grid grid-cols-1 gap-2">
+    <div
+      id="conversation-window"
+      ref={chatBox}
+      className="grid grid-cols-1 gap-2"
+    >
       {data.map((message) => (
         <div
           key={message.timestamp}

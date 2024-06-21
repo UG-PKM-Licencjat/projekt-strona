@@ -2,7 +2,7 @@
 
 import { request } from "http";
 import { useSession } from "next-auth/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ConversationWindow, {
   type Message,
 } from "~/components/chat/ConversationWindow/ConversationWindow";
@@ -20,10 +20,23 @@ export default function Conversation({
   const [messages, setMessages] = useState<Array<Message>>([]);
   const { data: session } = useSession();
 
+  useEffect(() => {
+    const socketConnection = new WebSocket(
+      `wss://chat-swxn.onrender.com/connect?id=${session?.user.id}`,
+    );
+
+    socketConnection.onmessage = (event: MessageEvent<string>) => {
+      const newMessage = JSON.parse(event.data) as Message;
+      console.log("1", messages);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      console.log(messages);
+    };
+  }, [session]);
+
   void useMemo(async () => {
     console.log("Loading data for", session?.user.id);
     const response = await fetch(
-      `https://chat-swxn.onrender.com/messages?from=${session?.user.id}&to=${userId}`, // TODO: this fetches not conversations but messages to be fixed
+      `https://chat-swxn.onrender.com/messages?userA=${session?.user.id}&userB=${userId}`,
     );
 
     // TODO: Validate schema?
@@ -32,7 +45,6 @@ export default function Conversation({
     };
 
     setMessages(initialMessages.messages);
-    console.log(initialMessages.messages);
   }, [session?.user.id, userId]);
 
   async function handleSubmit() {

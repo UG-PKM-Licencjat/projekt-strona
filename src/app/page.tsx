@@ -1,7 +1,9 @@
+"use client";
 import React from "react";
 import { SearchEngine } from "~/components/searchEngine/searchEngine";
 import { Button } from "~/components/ui/Button/Button";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 export default function Home() {
   return (
@@ -40,13 +42,16 @@ export default function Home() {
               fugiat quas quos aperiam doloribus nemo doloremque autem.
             </p>
           </div>
-          <div className="flex w-1/2 flex-col items-center justify-around gap-7">
-            <h1 className="text-4xl">Dołącz do nas</h1>
-            <div className="flex justify-around gap-24">
-              <Button>Zaloguj się</Button>
-              <Button>Zarejestruj się</Button>
-            </div>
-          </div>
+          <Button
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "http://localhost:3000/admin/users",
+              })
+            }
+          >
+            Zaloguj się
+          </Button>
+          <Button>Zarejestruj się</Button>
         </section>
         <section className="bg-gray-100 p-10">
           <div className="flex flex-col justify-around gap-7">

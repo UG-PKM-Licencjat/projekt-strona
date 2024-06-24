@@ -5,11 +5,12 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-// import DiscordProvider from "next-auth/providers/discord";
-
-// import { env } from "~/env";
+import GoogleProvider from "next-auth/providers/google";
 import { db } from "~/server/db";
-import { createTable } from "~/server/db/schema";
+import type User from "next-auth";
+import { Session } from "next-auth";
+import { accounts } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,6 +22,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      admin: boolean;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -39,20 +41,37 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: async ({ session, user }) => {
+      const result = await db
+        .select({
+          admin: accounts.admin,
+        })
+        .from(accounts)
+        .where(eq(accounts.userId, user.id))
+        .limit(1);
+      console.log("result", result[0]?.admin ? true : false);
+      console.log("result", result);
+      console.log(
+        "user",
+        await db.select().from(accounts).where(eq(accounts.userId, user.id)),
+      );
+
+      return {
+        ...session,
+        user: {
+          id: user.id,
+          admin: result[0]?.admin ? true : false,
+        },
+      };
+    },
   },
-  adapter: DrizzleAdapter(db, createTable) as Adapter,
+  adapter: DrizzleAdapter(db) as Adapter,
   providers: [
-    // DiscordProvider({
-    //   clientId: env.DISCORD_CLIENT_ID,
-    //   clientSecret: env.DISCORD_CLIENT_SECRET,
-    // }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+
     /**
      * ...add more providers here.
      *

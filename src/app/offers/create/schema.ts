@@ -18,8 +18,16 @@ const offerSchema = z
     tags: z
       .array(z.object({ name: z.string(), id: z.string() }))
       .nonempty({ message: "Musisz dodać co najmniej jeden tag" }),
-    about: z.array(z.object({ text: z.string() })),
-    skills: z.array(z.object({ text: z.string() })),
+    about: z.array(
+      z.object({
+        text: z.string().min(1, { message: "Pole nie może być puste" }),
+      }),
+    ),
+    skills: z.array(
+      z.object({
+        text: z.string().min(1, { message: "Pole nie może być puste" }),
+      }),
+    ),
     links: z.array(
       z.object({
         text: z.string().url({ message: "Wklej poprawny link" }),

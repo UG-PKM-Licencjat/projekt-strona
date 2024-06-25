@@ -48,7 +48,10 @@ export function SegmentField({
                 <Icon
                   name="plus"
                   className="size-6 rotate-45 hover:cursor-pointer"
-                  onClick={() => remove(index)}
+                  onClick={() => {
+                    remove(index);
+                    setActive("none");
+                  }}
                   onMouseEnter={() => setActive(`${type}.${index}`)}
                   onMouseLeave={() => setActive("none")}
                 />

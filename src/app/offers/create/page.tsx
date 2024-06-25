@@ -165,7 +165,10 @@ export default function OfferPage() {
                   </div>
                 ))}
                 <Popover open={tagOpen} onOpenChange={setTagOpen}>
-                  <PopoverTrigger className="flex items-center rounded-full border-2 p-1 hover:bg-secondary">
+                  <PopoverTrigger
+                    className="flex items-center rounded-full border-2 p-1 hover:bg-secondary disabled:cursor-not-allowed disabled:bg-gray-300 disabled:opacity-60"
+                    disabled={tags.length === 0}
+                  >
                     <Icon name="plus" className="size-6" />
                   </PopoverTrigger>
                   <PopoverContent className="w-fit p-0">

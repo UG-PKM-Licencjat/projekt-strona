@@ -30,7 +30,7 @@ export function DefaultCreateOfferPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, touchedFields: touched },
+    formState: { errors },
     control,
   } = useFormContext<FormData>();
 
@@ -163,9 +163,8 @@ export function DefaultCreateOfferPage() {
                 </Popover>
               </div>
               <p className="text-sm font-semibold text-red-500">
-                {errors.tags ?? (fields?.length === 0 && touched.tags)
-                  ? "Musisz dodać co najmniej jeden tag"
-                  : ""}
+                {errors.tags?.root?.message?.toString() ??
+                  errors.tags?.message?.toString()}
               </p>
               {/* TODO quick placeholder - get someone to design this */}
               <label className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
@@ -175,7 +174,7 @@ export function DefaultCreateOfferPage() {
                     valueAsNumber: true,
                   })}
                   className="w-[5.8rem] bg-inherit text-right outline-none"
-                  placeholder="XXXXXXXX"
+                  placeholder="Cena"
                 />
                 zł
               </label>

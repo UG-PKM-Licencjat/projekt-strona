@@ -22,6 +22,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { type FormData } from "./schema";
 
+import { SegmentField } from "./segment-field";
 // import { trpc } from "~/app/_trpc/client";
 // import Image from "next/image";
 
@@ -186,10 +187,14 @@ export function DefaultCreateOfferPage() {
           </div>
 
           {/* O MNIE */}
-          <OfferSegment heading="O MNIE">test</OfferSegment>
+          <OfferSegment heading="O MNIE">
+            <SegmentField type="about" />
+          </OfferSegment>
 
           {/* CO OFERUJĘ */}
-          <OfferSegment heading="CO OFERUJĘ" info={description} />
+          <OfferSegment heading="CO OFERUJĘ">
+            <SegmentField type="skills" />
+          </OfferSegment>
 
           {/* MOJE PORTFOLIO */}
           <OfferSegment
@@ -202,11 +207,9 @@ export function DefaultCreateOfferPage() {
           />
 
           {/* LINKI */}
-          <OfferSegment
-            heading="LINKI"
-            info={["https://www.youtube.com/embed/F2YpXC1itEE"]}
-            type="link"
-          />
+          <OfferSegment heading="LINKI">
+            <SegmentField type="links" />
+          </OfferSegment>
         </div>
       </form>
     </>

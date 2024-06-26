@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { db } from "../db";
-import { users, offers, offerTags } from "../db/schema";
+import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure } from "../trpc";
 import { eq } from "drizzle-orm";
 
@@ -26,36 +26,10 @@ export const appRouter = router({
     )
     .mutation(async (opts) => {
       console.log("Deleting user", opts.input.id);
+      await db.delete(sessions).where(eq(sessions.userId, opts.input.id));
       await db.delete(users).where(eq(users.id, opts.input.id));
       return;
     }),
-
-  // Only for easy mock
-  addUsers: authedProcedure.mutation(async () => {
-    console.log("Adding users");
-
-    try {
-      await db.insert(users).values([
-        {
-          id: "199",
-          name: "Piotr",
-          email: "piotr@example.com",
-          image:
-            "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg",
-        },
-        {
-          id: "299",
-          name: "Lukasz",
-          email: "lukasz@example.com",
-          image:
-            "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg",
-        },
-      ]);
-    } catch (error) {
-      console.log("Error adding users", error);
-    }
-    return;
-  }),
   getOffer: procedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {

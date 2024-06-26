@@ -1,9 +1,6 @@
 import { initTRPC } from "@trpc/server";
 import { getServerAuthSession } from "./auth";
 import type { Session } from "next-auth";
-import { is } from "drizzle-orm";
-import { Context } from "@trpc/server";
-import { Session } from "next-auth";
 
 const t = initTRPC.create();
 

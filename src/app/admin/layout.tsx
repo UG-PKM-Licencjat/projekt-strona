@@ -8,7 +8,7 @@ import "~/styles/globals.css";
 
 import Link from "next/link";
 import { Icon } from "~/components/ui/Icon/Icon";
-import { NavItem } from "./nav-item";
+import { NavItem } from "./users/nav-item";
 
 export default function RootLayout({
   children,

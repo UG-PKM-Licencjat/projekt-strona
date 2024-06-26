@@ -10,11 +10,11 @@ import { trpc } from "~/app/_trpc/client";
 // import Image from "next/image";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
-  let tags: { name: string; id: string }[] | undefined = [
+  const [tags, setTags] = React.useState<{ name: string; id: string }[]>([
     { name: "hashtag1", id: "0" },
     { name: "hashtag2", id: "1" },
     { name: "hashtag3", id: "2" },
-  ];
+  ]);
   const description = [
     "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos eum fugit ex sed saepe quo consectetur nostrum illo autem recusandae.",
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat alias facere itaque natus repellendus debitis voluptas facilis maiores quia rerum.",
@@ -26,10 +26,14 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
   } catch (e) {
     redirect("/offers");
   }
-
   const { data } = trpc.getOffer.useQuery({ id: uriDecoded });
-  console.log(data);
-  tags = data ? data.offerTags : tags;
+
+  React.useEffect(() => {
+    console.log(data);
+    if (data) {
+      setTags(data?.offerTags);
+    }
+  }, [data]);
 
   return (
     <div className="flex flex-col items-start gap-20 px-16 py-8">
@@ -58,12 +62,12 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
           </div>
           <div className="flex items-start justify-center gap-4">
             {!tags && (
-              <div className="animate-pulse rounded-md bg-muted-foreground px-40 py-6" />
+              <div className="bg-muted-foreground animate-pulse rounded-md px-40 py-6" />
             )}
             {tags?.map((tag, index) => <Tag label={tag.name} key={index} />)}
           </div>
           {/* TODO quick placeholder - get someone to design this */}
-          <div className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
+          <div className="bg-primary stroke-primary-foreground text-primary-foreground flex items-center gap-3 rounded-full border px-4 py-2 font-semibold">
             <Icon name="wallet" className="size-8" />
             100 000 zł
           </div>

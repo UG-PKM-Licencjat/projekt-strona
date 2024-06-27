@@ -31,7 +31,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
   React.useEffect(() => {
     console.log(data);
     if (data) {
-      setTags(data?.offerTags);
+      data?.offerTags ? setTags(data?.offerTags) : null;
     }
   }, [data]);
 

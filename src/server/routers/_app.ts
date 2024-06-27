@@ -24,16 +24,18 @@ export const appRouter = router({
     .input(
       z.object({
         message: z.string(),
-        additionalInfo: z.string().optional(),
-        logType: z.nativeEnum(LogType).optional(),
-        tags: z.array(z.enum(tagValues)).optional(),
+        additionalInfo: z.string().default(""),
+        logType: z.nativeEnum(LogType).default(LogType.INFO),
+        tags: z.array(z.enum(tagValues)).default([]),
       }),
     )
     .mutation((opts) => {
-      const tags = opts.input.tags ?? [];
-      const logType: LogType = opts.input.logType ?? LogType.INFO;
-      const additionalInfo = opts.input.additionalInfo ?? "";
-      log(opts.input.message, additionalInfo, logType, tags);
+      log(
+        opts.input.message,
+        opts.input.additionalInfo,
+        opts.input.logType,
+        opts.input.tags,
+      );
     }),
   deleteUser: adminProcedure
     .input(

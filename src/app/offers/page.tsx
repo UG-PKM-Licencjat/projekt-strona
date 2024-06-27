@@ -1,7 +1,15 @@
 import React from "react";
-import { Navbar } from "~/components/Navbar/Navbar";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { Offer } from "~/components/Offer/Offer";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 const placeholderOffers = [
   {
     name: "IMIE NAZWISKO",
@@ -31,7 +39,6 @@ const placeholderOffers = [
 export default function Page() {
   return (
     <>
-      <Navbar />
       <div className="flex w-full flex-col items-center gap-32 bg-white p-10">
         <div className="flex flex-col items-start gap-20">
           <h1 className="text-6xl font-semibold text-blue-950">ARTYŚCI-APKA</h1>
@@ -44,11 +51,19 @@ export default function Page() {
               />
               <Icon name="magnifier" className="size-10 p-2" />
             </div>
-            {/* TODO: add logic and popover? */}
-            <button className="flex gap-2 rounded-lg border-2 border-blue-950 p-2">
-              Lokalizacja
-              <Icon name="arrow-down" className="size-6" />
-            </button>
+            {/* TODO: add logic */}
+            <Select>
+              <SelectTrigger className="flex h-full w-44 gap-2 rounded-lg border-2 border-blue-950 p-2">
+                <SelectValue placeholder="Lokalizacja" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="1">Lokalizacja 1</SelectItem>
+                  <SelectItem value="2">Lokalizacja 2</SelectItem>
+                  <SelectItem value="3">Lokalizacja 3</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         {/* Offers container */}

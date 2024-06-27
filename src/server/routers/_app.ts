@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { db } from "../db";
-import { sessions, users } from "../db/schema";
+import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure } from "../trpc";
 import { eq } from "drizzle-orm";
 
@@ -30,6 +30,56 @@ export const appRouter = router({
       await db.delete(users).where(eq(users.id, opts.input.id));
       return;
     }),
+  getOffer: procedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      console.log("Fetching offer", input.id);
+      const fetchedOffer = await db.query.offers.findFirst({
+        with: {
+          offerTags: {
+            columns: {
+              tagId: false,
+              offerId: false,
+            },
+            with: {
+              tag: true,
+            },
+          },
+        },
+        where: eq(offers.id, input.id),
+      });
+      const tags = fetchedOffer?.offerTags.map((tag) => tag.tag);
+      const mappedOffer = { ...fetchedOffer, offerTags: tags };
+      console.log("Fetched offer", mappedOffer);
+      return mappedOffer;
+    }),
+
+  // TODO finish create offer procedure
+  // createOffer: procedure
+  //   .input(
+  //     z.object({
+  //       id: z.string(),
+  //       name: z.string(),
+  //       description: z.string(),
+  //       price: z.number(),
+  //       tags: z.array(z.string()),
+  //     }),
+  //   )
+  //   .mutation(async ({ input }) => {
+  //     console.log("Creating offer", input);
+  //     const offer = await db
+  //       .insert(offers)
+  //       .values([
+  //         {
+  //           id: input.id,
+  //           name: input.name,
+  //           description: input.description,
+  //           price: input.price,
+  //         },
+  //       ])
+  //       .returning();
+  //     return offer;
+  //   }),
 });
 
 export type AppRouter = typeof appRouter;

@@ -1,24 +1,43 @@
 import { z } from "zod";
 import { db } from "../db";
 import { sessions, users, offers, offerTags } from "../db/schema";
-import { procedure, router, authedProcedure } from "../trpc";
+import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
 import { eq } from "drizzle-orm";
+import logEvent, { LogType, tagValues } from "../log";
+
+const keys = Object.keys(LogType);
 
 export const appRouter = router({
   getUsers: authedProcedure.query(async ({ ctx }) => {
     // TODO: implement with pagination etc
     console.log(ctx.session);
     try {
-      // console.log("Fetching users");
+      logEvent("Fetching users");
       const fetchedUsers = await db.select().from(users);
-      // console.log("Fetched users", fetchedUsers);
       return fetchedUsers;
     } catch (error) {
       console.log("Error fetching users", error);
       return [];
     }
   }),
-  deleteUser: procedure
+  clientLog: procedure
+    .input(
+      z.object({
+        message: z.string(),
+        additionalInfo: z.string().default(""),
+        logType: z.nativeEnum(LogType).default(LogType.INFO),
+        tags: z.array(z.enum(tagValues)).default([]),
+      }),
+    )
+    .mutation((opts) => {
+      logEvent(
+        opts.input.message,
+        opts.input.additionalInfo,
+        opts.input.logType,
+        opts.input.tags,
+      );
+    }),
+  deleteUser: adminProcedure
     .input(
       z.object({
         id: z.string(),

@@ -3,7 +3,7 @@ import { db } from "../db";
 import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
 import { eq } from "drizzle-orm";
-import log, { LogType, tagValues } from "../log";
+import logEvent, { LogType, tagValues } from "../log";
 
 const keys = Object.keys(LogType);
 
@@ -12,7 +12,7 @@ export const appRouter = router({
     // TODO: implement with pagination etc
     console.log(ctx.session);
     try {
-      log("Fetching users");
+      logEvent("Fetching users");
       const fetchedUsers = await db.select().from(users);
       return fetchedUsers;
     } catch (error) {
@@ -30,7 +30,7 @@ export const appRouter = router({
       }),
     )
     .mutation((opts) => {
-      log(
+      logEvent(
         opts.input.message,
         opts.input.additionalInfo,
         opts.input.logType,

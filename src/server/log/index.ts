@@ -24,7 +24,7 @@ export interface LogEvent {
   tags: Tag[];
 }
 
-const log = (
+const logEvent = (
   message: string,
   additionalInfo = "",
   logType: LogType = LogType.INFO,
@@ -47,4 +47,4 @@ const log = (
   });
 };
 
-export default log;
+export default logEvent;

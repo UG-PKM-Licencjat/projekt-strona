@@ -37,6 +37,8 @@ export const env = createEnv({
     ),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    MONGO_URL: z.string().url(),
+    LOG: z.string().default("true"),
   },
 
   /**
@@ -66,6 +68,8 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    MONGO_URL: process.env.MONGO_URL,
+    LOG: process.env.LOG,
     // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   },
   /**

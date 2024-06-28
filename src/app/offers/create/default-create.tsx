@@ -23,6 +23,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { type FormData } from "./schema";
 
 import { SegmentField } from "./segment-field";
+import { UploadButton } from "~/components/uploadthing";
 // import { trpc } from "~/app/_trpc/client";
 // import Image from "next/image";
 
@@ -192,14 +193,20 @@ export function DefaultCreateOfferPage() {
           </OfferSegment>
 
           {/* MOJE PORTFOLIO */}
-          <OfferSegment
-            heading="MOJE PORTFOLIO"
-            info={[
-              "https://www.youtube.com/embed/F2YpXC1itEE",
-              "https://www.youtube.com/embed/F2YpXC1itEE",
-            ]}
-            type="video"
-          />
+          <OfferSegment heading="MOJE PORTFOLIO">
+            <UploadButton
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                // Do something with the response
+                console.log("Files: ", res);
+                alert("Upload Completed");
+              }}
+              onUploadError={(error: Error) => {
+                // Do something with the error.
+                alert(`ERROR! ${error.message}`);
+              }}
+            />
+          </OfferSegment>
 
           {/* LINKI */}
           <OfferSegment heading="LINKI">

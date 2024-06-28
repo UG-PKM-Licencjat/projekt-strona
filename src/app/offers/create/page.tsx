@@ -27,7 +27,7 @@ export default function CreateOfferPage() {
             <div>Form</div>
           </TabsContent>
         </Tabs>
-        <DevTool control={methods.control} />
+        {/* <DevTool control={methods.control} /> */}
       </FormProvider>
     </>
   );

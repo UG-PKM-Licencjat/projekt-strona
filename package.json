@@ -28,6 +28,7 @@
     "@trpc/next": "^10.43.6",
     "@trpc/react-query": "^10.45.2",
     "@trpc/server": "^10.45.2",
+    "@uploadthing/react": "^6.7.1",
     "@vercel/postgres": "^0.8.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -49,6 +50,7 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.10.5",
+    "uploadthing": "^6.13.1",
     "zod": "^3.22.4",
     "zustand": "^4.5.2"
   },

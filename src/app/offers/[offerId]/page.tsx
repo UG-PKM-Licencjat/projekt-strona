@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 import { StarRating } from "~/components/ui/StarRating/StarRating";
 import { trpc } from "~/app/_trpc/client";
-// import Image from "next/image";
+import Image from "next/image";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
   const [tags, setTags] = React.useState<{ name: string; id: string }[]>([
@@ -39,11 +39,15 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
     <div className="flex flex-col items-start gap-20 px-16 py-8">
       {/* HEADER */}
       <div className="flex items-start gap-10">
-        <img
-          src="https://i.pinimg.com/736x/dc/e1/8e/dce18e21ab55156563e17affb71314fc.jpg"
-          alt="avatar"
-          className="size-64 rounded-full"
-        />
+        <div className="relative size-64">
+          <Image
+            src="https://utfs.io/f/43f2c3de-591d-4497-9461-3ba48a570d4c-n92lk7.jpg"
+            alt="avatar"
+            fill={true}
+            sizes="(max-width: 768px) 100vw, 640px"
+            className="rounded-full"
+          />
+        </div>
 
         <div className="mt-4 flex flex-col items-start justify-center gap-4">
           <div className="flex items-end justify-center gap-12">
@@ -62,12 +66,12 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
           </div>
           <div className="flex items-start justify-center gap-4">
             {!tags && (
-              <div className="bg-muted-foreground animate-pulse rounded-md px-40 py-6" />
+              <div className="animate-pulse rounded-md bg-muted-foreground px-40 py-6" />
             )}
             {tags?.map((tag, index) => <Tag label={tag.name} key={index} />)}
           </div>
           {/* TODO quick placeholder - get someone to design this */}
-          <div className="bg-primary stroke-primary-foreground text-primary-foreground flex items-center gap-3 rounded-full border px-4 py-2 font-semibold">
+          <div className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
             <Icon name="wallet" className="size-8" />
             100 000 zł
           </div>

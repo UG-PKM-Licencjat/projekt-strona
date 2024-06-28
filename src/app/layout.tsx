@@ -10,8 +10,8 @@ import { SessionProvider } from "next-auth/react";
 import { type Session } from "next-auth";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
-
 import { ourFileRouter } from "~/app/api/uploadthing/core";
+import { Toaster } from "~/components/ui/toaster";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +32,7 @@ function RootLayout({
         <SessionProvider session={session}>
           <Provider>{children}</Provider>
         </SessionProvider>
+        <Toaster />
       </body>
     </html>
   );

@@ -47,6 +47,9 @@ const SvgSymbols = (
       <polyline points="17 8 12 3 7 8" />
       <line x1="12" x2="12" y1="3" y2="15" />
     </symbol>
+    <symbol id="message-circle">
+      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+    </symbol>
   </svg>
 );
 

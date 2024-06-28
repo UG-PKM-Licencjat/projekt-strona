@@ -4,6 +4,7 @@ import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
 import { eq } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
+import { utapi } from "../uploadthing";
 
 const keys = Object.keys(LogType);
 
@@ -71,6 +72,16 @@ export const appRouter = router({
       const mappedOffer = { ...fetchedOffer, offerTags: tags };
       console.log("Fetched offer", mappedOffer);
       return mappedOffer;
+    }),
+
+  deleteFiles: procedure
+    .input(z.object({ fileKeys: z.array(z.string()).or(z.string()) }))
+    .mutation(async ({ input }) => {
+      console.log("Deleting files: ", input.fileKeys);
+      // logEvent("Deleting files", input.fileKeys.toString());
+      const deleted = await utapi.deleteFiles(input.fileKeys);
+      console.log("Deleted files: ", deleted);
+      return deleted.success;
     }),
 
   // TODO finish create offer procedure

@@ -19,13 +19,23 @@ import {
 } from "~/components/ui/popover";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useToast } from "~/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from "~/components/ui/dialog";
+
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { type FormData } from "./schema";
 
 import { SegmentField } from "./segment-field";
-import { UploadButton } from "~/components/uploadthing";
-// import { trpc } from "~/app/_trpc/client";
-// import Image from "next/image";
+import { UploadDropzone } from "~/components/uploadthing";
+import { trpc } from "~/app/_trpc/client";
+import Image from "next/image";
+
+import { type ClientUploadedFileData } from "uploadthing/types";
+import { Button } from "~/components/ui/Button/Button";
 
 export function DefaultCreateOfferPage() {
   const { toast } = useToast();
@@ -37,6 +47,42 @@ export function DefaultCreateOfferPage() {
   } = useFormContext<FormData>();
 
   const [tagOpen, setTagOpen] = React.useState(false);
+  const [images, setImages] = React.useState<ClientUploadedFileData<null>[]>(
+    [],
+  );
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [imageIsDeleting, setImageIsDeleting] = React.useState<string[]>([]);
+
+  const deleteFilesMutation = trpc.deleteFiles.useMutation();
+
+  const deleteFile = async (fileKey: string) => {
+    // TODO fix quick concurrent deletions messing up
+    setImageIsDeleting([...imageIsDeleting, fileKey]);
+    deleteFilesMutation
+      .mutateAsync({ fileKeys: fileKey })
+      .then((success) => {
+        if (success) {
+          setImages(images.filter((image) => image.key !== fileKey));
+          setImageIsDeleting(
+            imageIsDeleting.filter((image) => image !== fileKey),
+          );
+        } else {
+          toast({
+            title: "Wystąpił błąd",
+            description: "Nie udało się usunąć pliku",
+            variant: "destructive",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error deleting file", err);
+        toast({
+          title: "Wystąpił błąd",
+          description: "Nie udało się usunąć pliku",
+          variant: "destructive",
+        });
+      });
+  };
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -86,11 +132,16 @@ export function DefaultCreateOfferPage() {
         <div className="flex flex-col items-start gap-20 px-16 py-8">
           {/* HEADER */}
           <div className="flex items-start gap-10">
-            <img
-              src="https://i.pinimg.com/736x/dc/e1/8e/dce18e21ab55156563e17affb71314fc.jpg"
-              alt="avatar"
-              className="size-64 rounded-full"
-            />
+            <div className="relative size-64">
+              <Image
+                src="https://utfs.io/f/43f2c3de-591d-4497-9461-3ba48a570d4c-n92lk7.jpg"
+                alt="avatar"
+                fill={true}
+                sizes="(max-width: 768px) 100vw, 640px"
+                className="rounded-full"
+                priority
+              />
+            </div>
 
             <div className="mt-4 flex flex-col items-start justify-center gap-4">
               <div className="flex items-end justify-center gap-12">
@@ -194,18 +245,63 @@ export function DefaultCreateOfferPage() {
 
           {/* MOJE PORTFOLIO */}
           <OfferSegment heading="MOJE PORTFOLIO">
-            <UploadButton
-              endpoint="imageUploader"
-              onClientUploadComplete={(res) => {
-                // Do something with the response
-                console.log("Files: ", res);
-                alert("Upload Completed");
-              }}
-              onUploadError={(error: Error) => {
-                // Do something with the error.
-                alert(`ERROR! ${error.message}`);
-              }}
-            />
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center justify-center gap-2">
+                  <Icon name="upload" className="size-5" />
+                  Prześlij pliki
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogTitle>Prześlij pliki</DialogTitle>
+                {/* TODO customize style and text */}
+                <UploadDropzone
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(success) => {
+                    // Do something with the successponse
+                    console.log("Files: ", success);
+                    success ? setImages([...images, ...success]) : null;
+                    setDialogOpen(false);
+                    // alert("Upload Completed");
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+
+            <div className="flex flex-wrap gap-4">
+              {images.map((image) => (
+                <div key={image.key} className="group relative flex p-2">
+                  <div className="relative size-44 overflow-hidden rounded-lg border-2">
+                    <Image
+                      src={image.url}
+                      alt="avatar"
+                      fill={true}
+                      sizes="10vw"
+                    />
+                    {imageIsDeleting.includes(image.key) ? (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
+                        <Icon name="spinner" className="size-10 animate-spin" />
+                      </div>
+                    ) : null}
+                  </div>
+                  <div
+                    className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-destructive p-1 transition-all duration-200 hover:bg-red-600 group-hover:rotate-0 group-hover:scale-100"
+                    onClick={() => {
+                      void deleteFile(image.key);
+                    }}
+                  >
+                    <Icon
+                      name="plus"
+                      className="size-4 rotate-45 stroke-destructive-foreground"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </OfferSegment>
 
           {/* LINKI */}

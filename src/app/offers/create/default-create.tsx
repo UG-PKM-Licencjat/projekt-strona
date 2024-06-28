@@ -26,6 +26,8 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 
+import { motion, AnimatePresence } from "framer-motion";
+
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { type FormData } from "./schema";
 
@@ -272,36 +274,48 @@ export function DefaultCreateOfferPage() {
               </DialogContent>
             </Dialog>
 
-            <div className="flex flex-wrap gap-4">
-              {images.map((image) => (
-                <div key={image.key} className="group relative flex p-2">
-                  <div className="relative size-44 overflow-hidden rounded-lg border-2">
-                    <Image
-                      src={image.url}
-                      alt="avatar"
-                      fill={true}
-                      sizes="10vw"
-                    />
-                    {imageIsDeleting.includes(image.key) ? (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
-                        <Icon name="spinner" className="size-10 animate-spin" />
-                      </div>
-                    ) : null}
-                  </div>
-                  <div
-                    className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-destructive p-1 transition-all duration-200 hover:bg-red-600 group-hover:rotate-0 group-hover:scale-100"
-                    onClick={() => {
-                      void deleteFile(image.key);
-                    }}
+            <motion.div className="flex flex-wrap gap-4">
+              <AnimatePresence initial={false}>
+                {images.map((image) => (
+                  <motion.div
+                    key={image.key}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="group relative flex p-2"
+                    layout
                   >
-                    <Icon
-                      name="plus"
-                      className="size-4 rotate-45 stroke-destructive-foreground"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+                    <div className="relative size-44 overflow-hidden rounded-lg border-2">
+                      <Image
+                        src={image.url}
+                        alt="avatar"
+                        fill={true}
+                        sizes="10vw"
+                      />
+                      {imageIsDeleting.includes(image.key) ? (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
+                          <Icon
+                            name="spinner"
+                            className="size-10 animate-spin"
+                          />
+                        </div>
+                      ) : null}
+                    </div>
+                    <div
+                      className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-destructive p-1 transition-all duration-200 hover:bg-red-600 group-hover:rotate-0 group-hover:scale-100"
+                      onClick={() => {
+                        void deleteFile(image.key);
+                      }}
+                    >
+                      <Icon
+                        name="plus"
+                        className="size-4 rotate-45 stroke-destructive-foreground"
+                      />
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
           </OfferSegment>
 
           {/* LINKI */}

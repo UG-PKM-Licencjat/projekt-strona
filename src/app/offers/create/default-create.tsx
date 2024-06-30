@@ -49,25 +49,23 @@ export function DefaultCreateOfferPage() {
   } = useFormContext<FormData>();
 
   const [tagOpen, setTagOpen] = React.useState(false);
-  const [images, setImages] = React.useState<ClientUploadedFileData<null>[]>(
-    [],
-  );
+  const [files, setfiles] = React.useState<ClientUploadedFileData<null>[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [imageIsDeleting, setImageIsDeleting] = React.useState<string[]>([]);
+  const [fileIsDeleting, setFileIsDeleting] = React.useState<string[]>([]);
 
   const deleteFilesMutation = trpc.deleteFiles.useMutation();
 
   const deleteFile = async (fileKey: string) => {
-    setImageIsDeleting([...imageIsDeleting, fileKey]);
+    setFileIsDeleting([...fileIsDeleting, fileKey]);
     deleteFilesMutation
       .mutateAsync({ fileKeys: fileKey })
       .then((success) => {
         if (success) {
-          setImages((prevImages) =>
-            prevImages.filter((image) => image.key !== fileKey),
+          setfiles((prevfiles) =>
+            prevfiles.filter((file) => file.key !== fileKey),
           );
-          setImageIsDeleting((prevImageIsDeleting) =>
-            prevImageIsDeleting.filter((image) => image !== fileKey),
+          setFileIsDeleting((prevFileIsDeleting) =>
+            prevFileIsDeleting.filter((file) => file !== fileKey),
           );
         } else {
           toast({
@@ -88,13 +86,13 @@ export function DefaultCreateOfferPage() {
   };
 
   const deleteAll = () => {
-    setImageIsDeleting(images.map((image) => image.key));
+    setFileIsDeleting(files.map((file) => file.key));
     deleteFilesMutation
-      .mutateAsync({ fileKeys: images.map((image) => image.key) })
+      .mutateAsync({ fileKeys: files.map((file) => file.key) })
       .then((success) => {
         if (success) {
-          setImages([]);
-          setImageIsDeleting([]);
+          setfiles([]);
+          setFileIsDeleting([]);
         } else {
           toast({
             title: "Wystąpił błąd",
@@ -286,11 +284,11 @@ export function DefaultCreateOfferPage() {
                   <DialogTitle>Prześlij pliki</DialogTitle>
                   {/* TODO customize style and text */}
                   <UploadDropzone
-                    endpoint="imageUploader"
+                    endpoint="fileUploader"
                     onClientUploadComplete={(success) => {
                       // Do something with the successponse
                       console.log("Files: ", success);
-                      success ? setImages([...images, ...success]) : null;
+                      success ? setfiles([...files, ...success]) : null;
                       setDialogOpen(false);
                       // alert("Upload Completed");
                     }}
@@ -301,14 +299,19 @@ export function DefaultCreateOfferPage() {
                   />
                 </DialogContent>
               </Dialog>
-              {images.length > 0 && (
+              {files.length > 0 && (
                 <Button
                   onClick={deleteAll}
-                  className="flex w-fit items-center justify-center gap-2 px-2"
+                  className="flex w-fit items-center justify-center gap-2 px-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60"
                   variant="error"
                   type="button"
+                  disabled={fileIsDeleting.length > 0}
                 >
-                  <Icon name="trash" className="size-5" />
+                  {fileIsDeleting.length > 0 ? (
+                    <Icon name="spinner" className="size-5 animate-spin" />
+                  ) : (
+                    <Icon name="trash" className="size-5" />
+                  )}
                   Usuń wszystkie
                 </Button>
               )}
@@ -316,23 +319,41 @@ export function DefaultCreateOfferPage() {
 
             <motion.div className="flex flex-wrap gap-4">
               <AnimatePresence initial={false}>
-                {images.map((image) => (
+                {files.map((file) => (
                   <motion.div
-                    key={image.key}
+                    key={file.key}
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     className="group relative flex p-2"
                     layout
                   >
-                    <div className="relative size-44 overflow-hidden rounded-lg border-2">
-                      <Image
-                        src={image.url}
-                        alt="avatar"
-                        fill={true}
-                        sizes="10vw"
-                      />
-                      {imageIsDeleting.includes(image.key) ? (
+                    <div className="relative flex h-44 overflow-hidden rounded-lg border-2">
+                      {file.type.startsWith("image") ? (
+                        <Image
+                          src={file.url}
+                          alt={file.name}
+                          width={150}
+                          height={150}
+                          style={{ width: "100%", height: "auto" }}
+                          sizes="20vw"
+                        />
+                      ) : file.type.startsWith("video") ? (
+                        <video controls>
+                          <source src={file.url} type={file.type} />
+                        </video>
+                      ) : file.type.startsWith("audio") ? (
+                        // PLACEHOLDER (?)
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <p className="text-center text-sm font-semibold">
+                            {file.name}
+                          </p>
+                          <audio controls>
+                            <source src={file.url} type={file.type} />
+                          </audio>
+                        </div>
+                      ) : null}
+                      {fileIsDeleting.includes(file.key) ? (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
                           <Icon
                             name="spinner"
@@ -344,7 +365,7 @@ export function DefaultCreateOfferPage() {
                     <div
                       className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-destructive p-1 transition-all duration-200 hover:bg-red-600 group-hover:rotate-0 group-hover:scale-100"
                       onClick={() => {
-                        void deleteFile(image.key);
+                        void deleteFile(file.key);
                       }}
                     >
                       <Icon

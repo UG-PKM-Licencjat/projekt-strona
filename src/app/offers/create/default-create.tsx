@@ -58,15 +58,16 @@ export function DefaultCreateOfferPage() {
   const deleteFilesMutation = trpc.deleteFiles.useMutation();
 
   const deleteFile = async (fileKey: string) => {
-    // TODO fix quick concurrent deletions messing up
     setImageIsDeleting([...imageIsDeleting, fileKey]);
     deleteFilesMutation
       .mutateAsync({ fileKeys: fileKey })
       .then((success) => {
         if (success) {
-          setImages(images.filter((image) => image.key !== fileKey));
-          setImageIsDeleting(
-            imageIsDeleting.filter((image) => image !== fileKey),
+          setImages((prevImages) =>
+            prevImages.filter((image) => image.key !== fileKey),
+          );
+          setImageIsDeleting((prevImageIsDeleting) =>
+            prevImageIsDeleting.filter((image) => image !== fileKey),
           );
         } else {
           toast({

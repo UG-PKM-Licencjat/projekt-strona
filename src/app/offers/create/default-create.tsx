@@ -87,6 +87,32 @@ export function DefaultCreateOfferPage() {
       });
   };
 
+  const deleteAll = () => {
+    setImageIsDeleting(images.map((image) => image.key));
+    deleteFilesMutation
+      .mutateAsync({ fileKeys: images.map((image) => image.key) })
+      .then((success) => {
+        if (success) {
+          setImages([]);
+          setImageIsDeleting([]);
+        } else {
+          toast({
+            title: "Wystąpił błąd",
+            description: "Nie udało się usunąć plików",
+            variant: "destructive",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error deleting files", err);
+        toast({
+          title: "Wystąpił błąd",
+          description: "Nie udało się usunąć plików",
+          variant: "destructive",
+        });
+      });
+  };
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tags",
@@ -248,32 +274,45 @@ export function DefaultCreateOfferPage() {
 
           {/* MOJE PORTFOLIO */}
           <OfferSegment heading="MOJE PORTFOLIO">
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="flex items-center justify-center gap-2">
-                  <Icon name="upload" className="size-5" />
-                  Prześlij pliki
+            <div className="flex items-center justify-center gap-4">
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="flex items-center justify-center gap-2">
+                    <Icon name="upload" className="size-5" />
+                    Prześlij pliki
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogTitle>Prześlij pliki</DialogTitle>
+                  {/* TODO customize style and text */}
+                  <UploadDropzone
+                    endpoint="imageUploader"
+                    onClientUploadComplete={(success) => {
+                      // Do something with the successponse
+                      console.log("Files: ", success);
+                      success ? setImages([...images, ...success]) : null;
+                      setDialogOpen(false);
+                      // alert("Upload Completed");
+                    }}
+                    onUploadError={(error: Error) => {
+                      // Do something with the error.
+                      alert(`ERROR! ${error.message}`);
+                    }}
+                  />
+                </DialogContent>
+              </Dialog>
+              {images.length > 0 && (
+                <Button
+                  onClick={deleteAll}
+                  className="flex w-fit items-center justify-center gap-2 px-2"
+                  variant="error"
+                  type="button"
+                >
+                  <Icon name="trash" className="size-5" />
+                  Usuń wszystkie
                 </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogTitle>Prześlij pliki</DialogTitle>
-                {/* TODO customize style and text */}
-                <UploadDropzone
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(success) => {
-                    // Do something with the successponse
-                    console.log("Files: ", success);
-                    success ? setImages([...images, ...success]) : null;
-                    setDialogOpen(false);
-                    // alert("Upload Completed");
-                  }}
-                  onUploadError={(error: Error) => {
-                    // Do something with the error.
-                    alert(`ERROR! ${error.message}`);
-                  }}
-                />
-              </DialogContent>
-            </Dialog>
+              )}
+            </div>
 
             <motion.div className="flex flex-wrap gap-4">
               <AnimatePresence initial={false}>

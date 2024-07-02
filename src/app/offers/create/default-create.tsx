@@ -8,7 +8,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  // SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
@@ -24,7 +23,6 @@ import {
   DialogContent,
   DialogTrigger,
   DialogTitle,
-  DialogClose,
 } from "~/components/ui/dialog";
 
 import { motion, AnimatePresence } from "framer-motion";

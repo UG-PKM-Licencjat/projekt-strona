@@ -32,15 +32,13 @@ export function SegmentField({
         <motion.ul className="flex list-inside list-none flex-col justify-center pl-8 font-medium leading-snug text-slate-500">
           <AnimatePresence initial={false}>
             {fields.map((field, index) => (
-              <motion.div
-                key={field.key}
-                initial={{ opacity: 0, translateX: 100 }}
-                animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: -100 }}
-                layout
-              >
-                <li
+              <div key={field.key}>
+                <motion.li
                   className={`flex items-center gap-2 rounded-lg p-1 ${active === `${type}.${index}` ? "bg-gray-200" : ""}`}
+                  initial={{ opacity: 0, translateX: 100 }}
+                  animate={{ opacity: 1, translateX: 0 }}
+                  exit={{ opacity: 0, translateX: -100 }}
+                  layout
                 >
                   <span>•</span>
                   <input
@@ -64,11 +62,17 @@ export function SegmentField({
                     onMouseEnter={() => setActive(`${type}.${index}`)}
                     onMouseLeave={() => setActive("none")}
                   />
-                </li>
-                <p className="text-sm font-semibold text-red-500">
+                </motion.li>
+                <motion.p
+                  className="text-sm font-semibold text-red-500"
+                  initial={{ opacity: 0, translateX: 100 }}
+                  animate={{ opacity: 1, translateX: 0 }}
+                  exit={{ opacity: 0, translateX: -100 }}
+                  layout
+                >
                   {errors[type]?.[index]?.text?.message}
-                </p>
-              </motion.div>
+                </motion.p>
+              </div>
             ))}
           </AnimatePresence>
         </motion.ul>

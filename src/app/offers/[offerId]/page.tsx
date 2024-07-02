@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { Tag } from "~/components/Tag/Tag";
 import { redirect } from "next/navigation";
@@ -10,7 +10,7 @@ import { trpc } from "~/app/_trpc/client";
 import Image from "next/image";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
-  const [tags, setTags] = React.useState<{ name: string; id: string }[]>([
+  const [tags, setTags] = useState<{ name: string; id: string }[]>([
     { name: "hashtag1", id: "0" },
     { name: "hashtag2", id: "1" },
     { name: "hashtag3", id: "2" },
@@ -28,7 +28,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
   }
   const { data } = trpc.getOffer.useQuery({ id: uriDecoded });
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log(data);
     if (data) {
       data?.offerTags ? setTags(data?.offerTags) : null;

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { DefaultCreateOfferPage } from "./default-create";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useForm, FormProvider } from "react-hook-form";

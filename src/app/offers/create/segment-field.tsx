@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { type FormData } from "./schema";
@@ -21,7 +21,7 @@ export function SegmentField({
     keyName: "key",
   });
 
-  const [active, setActive] = React.useState("none");
+  const [active, setActive] = useState("none");
 
   return (
     <>

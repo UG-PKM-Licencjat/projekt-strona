@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 // import { useFieldArray, useFormContext } from "react-hook-form";
 // import { type FormData } from "./schema";
 import { Icon } from "~/components/ui/Icon/Icon";
@@ -18,10 +18,10 @@ import { FilePreview } from "./file-preview";
 
 export function FileUpload() {
   const { toast } = useToast();
-  const [files, setfiles] = React.useState<ClientUploadedFileData<null>[]>([]);
-  const [fileIsDeleting, setFileIsDeleting] = React.useState<string[]>([]);
-  const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [uploading, setUploading] = React.useState(false);
+  const [files, setfiles] = useState<ClientUploadedFileData<null>[]>([]);
+  const [fileIsDeleting, setFileIsDeleting] = useState<string[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const deleteFilesMutation = trpc.deleteFiles.useMutation();
 

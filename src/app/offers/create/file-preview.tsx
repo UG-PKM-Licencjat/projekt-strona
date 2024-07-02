@@ -1,4 +1,3 @@
-import React from "react";
 import { type ClientUploadedFileData } from "uploadthing/types";
 import Image from "next/image";
 import { Icon } from "~/components/ui/Icon/Icon";

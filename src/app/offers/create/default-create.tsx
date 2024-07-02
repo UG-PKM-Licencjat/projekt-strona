@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 import {
@@ -33,7 +33,7 @@ export function DefaultCreateOfferPage() {
     control,
   } = useFormContext<FormData>();
 
-  const [tagOpen, setTagOpen] = React.useState(false);
+  const [tagOpen, setTagOpen] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -41,7 +41,7 @@ export function DefaultCreateOfferPage() {
     keyName: "key",
   });
 
-  const [tags, setTags] = React.useState<{ name: string; id: string }[]>([
+  const [tags, setTags] = useState<{ name: string; id: string }[]>([
     { name: "hashtag1", id: "0" },
     { name: "hashtag2", id: "1" },
     { name: "hashtag3", id: "2" },

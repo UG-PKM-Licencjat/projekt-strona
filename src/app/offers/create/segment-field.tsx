@@ -24,7 +24,6 @@ export function SegmentField({
 
   return (
     <>
-      {/* TODO rethink textarea usage */}
       <div className="flex items-center justify-start divide-x divide-slate-600">
         <div></div>
         <ul className="flex list-inside list-none flex-col justify-center pl-8 font-medium leading-snug text-slate-500">

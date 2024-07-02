@@ -24,6 +24,7 @@ import {
   DialogContent,
   DialogTrigger,
   DialogTitle,
+  DialogClose,
 } from "~/components/ui/dialog";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -52,6 +53,7 @@ export function DefaultCreateOfferPage() {
   const [files, setfiles] = React.useState<ClientUploadedFileData<null>[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [fileIsDeleting, setFileIsDeleting] = React.useState<string[]>([]);
+  const [uploading, setUploading] = React.useState(false);
 
   const deleteFilesMutation = trpc.deleteFiles.useMutation();
 
@@ -280,21 +282,36 @@ export function DefaultCreateOfferPage() {
                     Prześlij pliki
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent
+                  onInteractOutside={(e) => {
+                    if (uploading) {
+                      e.preventDefault();
+                    }
+                  }}
+                  disableClose={uploading}
+                >
                   <DialogTitle>Prześlij pliki</DialogTitle>
                   {/* TODO customize style and text */}
                   <UploadDropzone
                     endpoint="fileUploader"
+                    onBeforeUploadBegin={(files) => {
+                      setUploading(true);
+                      return files;
+                    }}
+                    onUploadAborted={() => setUploading(false)}
                     onClientUploadComplete={(success) => {
                       // Do something with the successponse
                       console.log("Files: ", success);
                       success ? setfiles([...files, ...success]) : null;
                       setDialogOpen(false);
+                      setUploading(false);
                       // alert("Upload Completed");
                     }}
                     onUploadError={(error: Error) => {
                       // Do something with the error.
                       alert(`ERROR! ${error.message}`);
+
+                      setUploading(false);
                     }}
                   />
                 </DialogContent>
@@ -367,6 +384,7 @@ export function DefaultCreateOfferPage() {
                       onClick={() => {
                         void deleteFile(file.key);
                       }}
+                      hidden={fileIsDeleting.includes(file.key)}
                     >
                       <Icon
                         name="plus"

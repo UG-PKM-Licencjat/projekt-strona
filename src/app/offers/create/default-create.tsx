@@ -190,31 +190,10 @@ export function DefaultCreateOfferPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center justify-center gap-4">
-                {fields?.map((tag, index) => (
-                  <div
-                    className="pointer-events-none flex h-10 items-center gap-2 rounded-lg bg-purple-400 px-4 font-normal text-white transition-colors hover:bg-destructive"
-                    key={tag.key}
-                  >
-                    <input
-                      {...register(`tags.${index}.name` as const)}
-                      className="hidden bg-inherit outline-none"
-                    />
-                    <input
-                      {...register(`tags.${index}.id` as const)}
-                      className="hidden bg-inherit outline-none"
-                    />
-                    {tag.name}
-                    <Icon
-                      name="plus"
-                      className="pointer-events-auto size-5 rotate-45 cursor-pointer"
-                      onClick={() => removeFunc(tag, index)}
-                    />
-                  </div>
-                ))}
+              <div className="flex h-10 items-center justify-center gap-4">
                 <Popover open={tagOpen} onOpenChange={setTagOpen}>
                   <PopoverTrigger
-                    className="flex items-center rounded-full border-2 p-1 hover:bg-secondary disabled:cursor-not-allowed disabled:bg-gray-300 disabled:opacity-60"
+                    className="flex items-center justify-center rounded-full border-2 p-1 hover:bg-secondary disabled:cursor-not-allowed disabled:bg-gray-300 disabled:opacity-60"
                     disabled={tags.length === 0}
                   >
                     <Icon name="plus" className="size-6" />
@@ -236,6 +215,27 @@ export function DefaultCreateOfferPage() {
                     </ScrollArea>
                   </PopoverContent>
                 </Popover>
+                {fields?.map((tag, index) => (
+                  <div
+                    className="pointer-events-none flex h-10 items-center gap-2 rounded-lg bg-purple-400 px-4 font-normal text-white transition-colors hover:bg-destructive"
+                    key={tag.key}
+                  >
+                    <input
+                      {...register(`tags.${index}.name` as const)}
+                      className="hidden bg-inherit outline-none"
+                    />
+                    <input
+                      {...register(`tags.${index}.id` as const)}
+                      className="hidden bg-inherit outline-none"
+                    />
+                    {tag.name}
+                    <Icon
+                      name="plus"
+                      className="pointer-events-auto size-5 rotate-45 cursor-pointer"
+                      onClick={() => removeFunc(tag, index)}
+                    />
+                  </div>
+                ))}
               </div>
               <p className="text-sm font-semibold text-red-500">
                 {errors.tags?.root?.message?.toString() ??

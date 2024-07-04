@@ -41,7 +41,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
       <div className="flex items-start gap-10">
         <div className="relative size-64">
           <Image
-            src="https://utfs.io/f/43f2c3de-591d-4497-9461-3ba48a570d4c-n92lk7.jpg"
+            src="https://utfs.io/f/2d3da5b8-2b91-40b1-801a-f17f936fd1e3-n92lk7.jpg"
             alt="avatar"
             fill={true}
             sizes="(max-width: 768px) 100vw, 640px"

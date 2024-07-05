@@ -1,4 +1,3 @@
-// Note: `useUploadThing` is IMPORTED FROM YOUR CODEBASE using the `generateReactHelpers` function
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "@uploadthing/react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
@@ -131,7 +130,7 @@ export function MultiUploader() {
       <div
         className={cn(
           "mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10",
-          isDragActive ? "bg-blue-600/10" : "",
+          isDragActive ? "bg-pink-600/10" : "",
         )}
         {...getRootProps()}
       >
@@ -149,7 +148,7 @@ export function MultiUploader() {
             ></path>
           </svg>
           <div className="mt-4 flex text-sm leading-6 text-gray-600">
-            <div className="relative cursor-pointer font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500">
+            <div className="relative cursor-pointer font-semibold text-pink-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-pink-600 focus-within:ring-offset-2 hover:text-pink-500">
               {`Wybierz`}
               <input
                 className="sr-only"
@@ -167,7 +166,7 @@ export function MultiUploader() {
           {files.length > 0 && (
             <div className="mt-4 flex items-center justify-center">
               <button
-                className="flex h-10 w-40 items-center justify-center rounded-md bg-blue-600"
+                className="flex h-10 w-40 items-center justify-center rounded-md bg-pink-600"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -188,7 +187,7 @@ export function MultiUploader() {
           )}
           {files.length === 0 && (
             <div className="mt-4 flex items-center justify-center">
-              <button className="flex h-10 w-40 items-center justify-center rounded-md bg-blue-600">
+              <button className="flex h-10 w-40 items-center justify-center rounded-md bg-pink-600">
                 <span className="px-3 py-2 text-white">Wybierz pliki</span>
               </button>
             </div>

@@ -7,8 +7,8 @@ export function FilePreview({
   fileIsDeleting,
   deleteFile,
 }: {
-  file: ClientUploadedFileData<null>;
-  fileIsDeleting: string[];
+  file: ClientUploadedFileData<null> | (File & { url: string; key: string });
+  fileIsDeleting?: string[];
   deleteFile: (fileKey: string) => void;
 }) {
   return (
@@ -36,7 +36,7 @@ export function FilePreview({
             </audio>
           </div>
         ) : null}
-        {fileIsDeleting.includes(file.key) ? (
+        {fileIsDeleting?.includes(file.key) ? (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
             <Icon name="spinner" className="size-10 animate-spin" />
           </div>
@@ -47,7 +47,7 @@ export function FilePreview({
         onClick={() => {
           void deleteFile(file.key);
         }}
-        hidden={fileIsDeleting.includes(file.key)}
+        hidden={fileIsDeleting?.includes(file.key)}
       >
         <Icon
           name="plus"

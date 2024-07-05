@@ -1,6 +1,6 @@
 "use client";
 
-import { MultiUploader } from "../create/test-dropzone";
+import { MultiUploader } from "~/components/uploadthing";
 
 export default function TestPage() {
   return (

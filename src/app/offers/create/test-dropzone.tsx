@@ -5,6 +5,7 @@ import { generateClientDropzoneAccept } from "uploadthing/client";
 import Image from "next/image";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { cn } from "~/utils/cn";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useUploadThing } from "~/components/uploadthing";
 
@@ -79,9 +80,19 @@ const generatePermittedFileTypes = (config?: ExpandedRouteConfig) => {
 };
 
 export function MultiUploader() {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<
+    (File & { preview: string; key: string })[]
+  >([]);
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFiles(acceptedFiles);
+    console.log("acceptedFiles", acceptedFiles);
+    const modifiedFiles = acceptedFiles.map((file) =>
+      Object.assign(file, {
+        preview: URL.createObjectURL(file),
+        key: crypto.randomUUID(),
+      }),
+    );
+    console.log("modifiedFiles", modifiedFiles);
+    setFiles((files) => [...files, ...modifiedFiles]);
   }, []);
 
   const { startUpload, routeConfig, isUploading } = useUploadThing(
@@ -101,10 +112,14 @@ export function MultiUploader() {
     },
   );
 
+  const removeFile = (index: number) => {
+    setFiles((files) => files.filter((_, i) => i !== index));
+  };
+
   useEffect(() => {
     console.log("files", files);
     console.log(routeConfig);
-  }, [files, routeConfig]);
+  }, []);
 
   const { fileTypes } = generatePermittedFileTypes(routeConfig);
 
@@ -138,7 +153,11 @@ export function MultiUploader() {
           <div className="mt-4 flex text-sm leading-6 text-gray-600">
             <div className="relative cursor-pointer font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500">
               {`Wybierz`}
-              <input className="sr-only" {...getInputProps()} />
+              <input
+                className="sr-only"
+                {...getInputProps()}
+                disabled={isUploading}
+              />
             </div>
             <p className="pl-1">{`lub przeciągnij pliki`}</p>
           </div>
@@ -154,7 +173,7 @@ export function MultiUploader() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  if (!files) return;
+                  if (!files || isUploading) return;
 
                   void startUpload(files);
                 }}
@@ -178,36 +197,57 @@ export function MultiUploader() {
           )}
         </div>
       </div>
-      <div className="group relative flex p-2">
-        {files.map((file, index) => (
-          <div
-            className="relative flex h-44 overflow-hidden rounded-lg border-2"
-            key={index}
-          >
-            {file.type.startsWith("image") ? (
-              <Image
-                src={URL.createObjectURL(file)}
-                alt="test"
-                width={150}
-                height={150}
-                style={{ width: "100%", height: "auto" }}
-                sizes="20vw"
-              />
-            ) : file.type.startsWith("video") ? (
-              <video controls>
-                <source src={URL.createObjectURL(file)} type={file.type} />
-              </video>
-            ) : file.type.startsWith("audio") ? (
-              // PLACEHOLDER (?)
-              <div className="flex flex-col items-center justify-center gap-2">
-                <p className="text-center text-sm font-semibold">{file.name}</p>
-                <audio controls>
-                  <source src={URL.createObjectURL(file)} type={file.type} />
-                </audio>
+      <div className="relative flex flex-wrap gap-2 p-2">
+        <AnimatePresence initial={false}>
+          {files.map((file, index) => (
+            <motion.div
+              key={file.key}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              className="group relative flex p-2"
+              layout
+            >
+              <div className="relative flex h-44 overflow-hidden rounded-lg border-2">
+                {file.type.startsWith("image") ? (
+                  <Image
+                    src={file.preview}
+                    alt="test"
+                    width={150}
+                    height={150}
+                    style={{ width: "100%", height: "auto" }}
+                    sizes="20vw"
+                  />
+                ) : file.type.startsWith("video") ? (
+                  <video controls>
+                    <source src={file.preview} type={file.type} />
+                  </video>
+                ) : file.type.startsWith("audio") ? (
+                  // PLACEHOLDER (?)
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <p className="text-center text-sm font-semibold">
+                      {file.name}
+                    </p>
+                    <audio controls>
+                      <source src={file.preview} type={file.type} />
+                    </audio>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
-          </div>
-        ))}
+              <div
+                className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-destructive p-1 transition-all duration-200 hover:bg-red-600 group-hover:rotate-0 group-hover:scale-100"
+                onClick={() => {
+                  void removeFile(index);
+                }}
+              >
+                <Icon
+                  name="plus"
+                  className="size-4 rotate-45 stroke-destructive-foreground"
+                />
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </>
   );

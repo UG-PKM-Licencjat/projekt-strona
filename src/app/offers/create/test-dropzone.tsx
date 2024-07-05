@@ -84,14 +84,12 @@ export function MultiUploader() {
     (File & { preview: string; key: string })[]
   >([]);
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log("acceptedFiles", acceptedFiles);
     const modifiedFiles = acceptedFiles.map((file) =>
       Object.assign(file, {
         preview: URL.createObjectURL(file),
         key: crypto.randomUUID(),
       }),
     );
-    console.log("modifiedFiles", modifiedFiles);
     setFiles((files) => [...files, ...modifiedFiles]);
   }, []);
 

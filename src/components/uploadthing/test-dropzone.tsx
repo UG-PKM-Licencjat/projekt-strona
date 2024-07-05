@@ -39,16 +39,15 @@ const doFormatting = (config?: ExpandedRouteConfig): string => {
     return f;
   });
 
-  // Format multi-type uploader label as "Supports videos, images and files";
+  // Format multi-type uploader label as "Obrazy, filmy i pliki";
   if (allowedTypes.length > 1) {
     const lastType = formattedTypesMulti.pop();
     return `${formattedTypesMulti.join(", ")} i ${lastType}`;
   }
 
   // Single type uploader label
-  const key = allowedTypes[0] ? allowedTypes[0] : "blob";
+  const key = allowedTypes[0]!;
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unsafe-assignment
   const { maxFileSize, maxFileCount } = config[key]!;
 
   if (maxFileCount && maxFileCount > 1) {

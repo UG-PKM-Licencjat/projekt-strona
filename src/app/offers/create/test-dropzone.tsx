@@ -129,8 +129,10 @@ export function MultiUploader() {
     <>
       <div
         className={cn(
-          "mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10",
-          isDragActive ? "bg-pink-600/10" : "",
+          "mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10",
+          isDragActive
+            ? "border-pink-600 bg-pink-600/10"
+            : "border-gray-900/25",
         )}
         {...getRootProps()}
       >

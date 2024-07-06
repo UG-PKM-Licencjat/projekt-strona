@@ -7,7 +7,7 @@ export default defineConfig({
   out: "./migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: env.DATABASE_URL,
+    url: env.POSTGRES_URL,
   },
   tablesFilter: ["projekt-strona_*"],
 });

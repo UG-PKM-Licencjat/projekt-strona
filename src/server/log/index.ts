@@ -11,7 +11,13 @@ export enum LogType {
 }
 
 // Needed for zod validation
-export const tagValues = ["DATABASE", "AUTH", "API"] as const; // add more tags here
+export const tagValues = [
+  "DATABASE",
+  "AUTH",
+  "API",
+  "ROUTER",
+  "CLICKSTREAM",
+] as const; // add more tags here
 export type Tag = (typeof tagValues)[number];
 
 export interface LogEvent {

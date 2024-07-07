@@ -12,13 +12,10 @@ import { Button } from "~/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
 import { trpc } from "~/app/_trpc/client";
 
-interface SelectUser {
-  id: string;
-  image: string | null;
-  name: string | null;
-  email: string;
-  emailVerified: string | null;
-}
+import type { InferSelectModel } from "drizzle-orm";
+import type { users } from "~/server/db/schema";
+
+type SelectUser = InferSelectModel<typeof users>;
 
 export function UsersTable({
   users,
@@ -32,18 +29,26 @@ export function UsersTable({
   const router = useRouter();
 
   function onClick() {
-    router.replace(`/?offset=${offset}`);
+    // router.replace(`/?offset=${offset}`);
+    alert("Not implemented");
   }
 
   return (
     <>
-      <form className="rounded-lg border shadow-sm">
+      <form className="w-full rounded-lg border shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="max-w-[150px]">Name</TableHead>
-              <TableHead className="hidden md:table-cell">Email</TableHead>
-              <TableHead className="hidden md:table-cell">Username</TableHead>
+              <TableHead className="max-w-[150px]">Id</TableHead>
+              <TableHead className="md:table-cell">Email</TableHead>
+              <TableHead className="md:table-cell">Username</TableHead>
+              <TableHead className="md:table-cell">isPremium</TableHead>
+              <TableHead className="md:table-cell">isActive</TableHead>
+              <TableHead className="md:table-cell">isAdmin</TableHead>
+              <TableHead className="md:table-cell">Sessions</TableHead>
+              <TableHead className="md:table-cell">Accounts</TableHead>
+              <TableHead className="md:table-cell">Offers</TableHead>
+              <TableHead>Actions</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -71,11 +76,34 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
   const userId = user.id;
   const deleteUserWithId = trpc.deleteUser.useMutation();
 
+  console.log(user);
   return (
     <TableRow>
-      <TableCell className="font-medium">{user.name}</TableCell>
-      <TableCell className="hidden md:table-cell">{user.email}</TableCell>
-      <TableCell>{user.name}</TableCell>
+      <TableCell className="font-medium">{user.id}</TableCell>
+      <TableCell className="md:table-cell">{user.email}</TableCell>
+      <TableCell className="md:table-cell">{user.name}</TableCell>
+      <TableCell className="md:table-cell">
+        {user.isPremium ? (
+          <p className="text-green-500">true</p>
+        ) : (
+          <p className="text-red-500">false</p>
+        )}
+      </TableCell>
+      <TableCell className="md:table-cell">
+        {" "}
+        user.isActive ? (<p className="text-green-500">true</p>) : (
+        <p className="text-red-500">false</p>){" "}
+      </TableCell>
+      <TableCell className="md:table-cell">
+        {user.isAdmin ? (
+          <p className="text-green-500">true</p>
+        ) : (
+          <p className="text-red-500">false</p>
+        )}
+      </TableCell>
+      <TableCell className="md:table-cell">sessions count</TableCell>
+      <TableCell className="md:table-cell">account count</TableCell>
+      <TableCell className="md:table-cell">offers count</TableCell>
       <TableCell>
         <Button
           className="w-full"

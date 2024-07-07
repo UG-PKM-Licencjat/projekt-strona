@@ -24,7 +24,7 @@ export default function IndexPage({
   };
 
   return (
-    <main className="flex flex-1 flex-col p-4 md:p-6">
+    <main className="flex max-w-[80vw] flex-1 flex-col overflow-hidden p-4 md:p-6">
       <div className="mb-8 flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Users</h1>
       </div>

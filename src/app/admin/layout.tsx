@@ -53,7 +53,7 @@ export default function RootLayout({
                   Logi
                 </NavItem>
                 <NavItem href="/admin/tags">
-                  <Icon name="tag" className="h-5 w-5" />
+                  <Icon name="tags" className="h-5 w-5" />
                   Tagi
                 </NavItem>
               </nav>

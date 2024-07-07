@@ -25,7 +25,7 @@ export function Search(props: { value?: string }) {
     startTransition(() => {
       // All navigations are transitions automatically
       // But wrapping this allow us to observe the pending state
-      router.replace(`/admin?${params.toString()}`);
+      // router.replace(`/admin/users?${params.toString()}`);
     });
   }, [router, value]);
 

@@ -32,36 +32,30 @@ export default function RootLayout({
                   fill="currentColor"
                   stroke="none"
                 />
-                <span className="">ACME</span>
+                <span className="">Panel Admina</span>
               </Link>
             </div>
             <div className="flex-1 overflow-auto py-2">
               <nav className="grid items-start px-4 text-sm font-medium">
-                <NavItem href="/">
-                  <Icon name="users" className="h-4 w-4" />
-                  Users
+                <NavItem href="/admin/users">
+                  <Icon name="users" className="h-4 w-4" strokeWidth="3" />
+                  Użytkownicy
                 </NavItem>
-                <NavItem href="/settings">
-                  <Icon name="settings" className="h-4 w-4" />
-                  Settings
-                </NavItem>
-                <NavItem href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs">
+                <NavItem href="/admin/offers">
                   <Icon
-                    name="logo"
-                    className="h-4 w-4"
-                    fill="currentColor"
-                    stroke="none"
+                    name="badge-dollar-sign"
+                    className="ml-[-3px] h-5 w-5"
                   />
-                  Deploy
+                  Oferty
                 </NavItem>
-                <Button
-                  onClick={async () => {
-                    await signOut({ callbackUrl: window.location.origin });
-                  }}
-                >
-                  {" "}
-                  Wyloguj się
-                </Button>
+                <NavItem href="/admin/logs">
+                  <Icon name="scroll-text" className="ml-[-3px] h-5 w-5" />
+                  Logi
+                </NavItem>
+                <NavItem href="/admin/tags">
+                  <Icon name="tag" className="h-5 w-5" />
+                  Tagi
+                </NavItem>
               </nav>
             </div>
           </div>

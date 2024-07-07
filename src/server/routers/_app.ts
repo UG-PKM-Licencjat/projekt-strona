@@ -8,9 +8,9 @@ import logEvent, { LogType, tagValues } from "../log";
 const keys = Object.keys(LogType);
 
 export const appRouter = router({
-  getUsers: authedProcedure.query(async ({ ctx }) => {
+  getUsers: procedure.query(async ({ ctx }) => {
     // TODO: implement with pagination etc
-    console.log(ctx.session);
+    // console.log(ctx.session);
     try {
       logEvent("Fetching users");
       const fetchedUsers = await db.select().from(users);

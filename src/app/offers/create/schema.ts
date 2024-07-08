@@ -2,19 +2,10 @@ import { z } from "zod";
 
 const offerSchema = z
   .object({
-    price: z
-      .number({
-        message: "Cena powinna być podana w formacie 123456.50",
-      })
-      .step(0.01, {
-        message: "Cena powinna być podana w formacie 123456.50",
-      })
-      .positive({
-        message: "Cena powinna być podana w formacie 123456.50",
-      })
-      .max(999999999, {
-        message: "Cena nie może przekraczać 999 999 999 zł",
-      }),
+    price: z.string().regex(/^\d{1,9}(\.\d{1,2})?$/, {
+      message:
+        "Cena powinna być podana w formacie 12345,50 i nie przekraczać 999 999 999,99 zł",
+    }),
     tags: z
       .array(z.object({ name: z.string(), id: z.string() }))
       .nonempty({ message: "Musisz dodać co najmniej jeden tag" }),
@@ -26,6 +17,12 @@ const offerSchema = z
     skills: z.array(
       z.object({
         text: z.string().min(1, { message: "Pole nie może być puste" }),
+      }),
+    ),
+    files: z.array(
+      z.object({
+        // TODO Make this url?
+        fileKey: z.string(),
       }),
     ),
     links: z.array(

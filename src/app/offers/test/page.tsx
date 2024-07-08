@@ -8,34 +8,35 @@ import {
 } from "~/components/uploadthing";
 
 export default function TestPage() {
-  const [files, setFiles] = useState<CustomFile[]>([]);
+  const [images, setImages] = useState<CustomFile[]>([]);
 
-  const { startUpload, routeConfig, isUploading } = useUploadThing(
-    "fileUploader",
-    {
-      onClientUploadComplete: (res) => {
-        console.log(res);
-        console.log(res[0]?.url.split("/").pop());
-        setFiles([]);
-        alert("uploaded successfully!");
-      },
-      onUploadError: () => {
-        alert("error occurred while uploading");
-      },
-      onUploadBegin: () => {
-        // alert("upload has begun");
-      },
+  const {
+    startUpload: startImageUpload,
+    routeConfig: imageRouteConfig,
+    isUploading: isImageUploading,
+  } = useUploadThing("createImageUploader", {
+    onClientUploadComplete: (res) => {
+      console.log(res);
+      console.log(res[0]?.url.split("/").pop());
+      setImages([]);
+      alert("uploaded successfully!");
     },
-  );
+    onUploadError: () => {
+      alert("error occurred while uploading");
+    },
+    onUploadBegin: () => {
+      // alert("upload has begun");
+    },
+  });
 
   return (
     <div>
       <PreviewDropzone
-        files={files}
-        setFiles={setFiles}
-        routeConfig={routeConfig}
-        startUpload={startUpload}
-        isUploading={isUploading}
+        files={images}
+        setFiles={setImages}
+        routeConfig={imageRouteConfig}
+        startUpload={startImageUpload}
+        isUploading={isImageUploading}
       />
     </div>
   );

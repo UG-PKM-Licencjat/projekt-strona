@@ -22,7 +22,13 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { type FormData } from "./schema";
 import { SegmentField } from "./segment-field";
 import Image from "next/image";
-import { FileUpload } from "./file-upload";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+
+import {
+  PreviewDropzone,
+  useUploadThing,
+  type CustomFile,
+} from "~/components/uploadthing";
 
 export function DefaultCreateOfferPage() {
   const { toast } = useToast();
@@ -38,6 +44,12 @@ export function DefaultCreateOfferPage() {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tags",
+    keyName: "key",
+  });
+
+  const { fields: filesFields, append: appendFiles } = useFieldArray({
+    control,
+    name: "files",
     keyName: "key",
   });
 
@@ -65,7 +77,52 @@ export function DefaultCreateOfferPage() {
     remove(index);
   };
 
-  const onSubmit = handleSubmit((data) => {
+  const [images, setImages] = useState<CustomFile[]>([]);
+  const {
+    startUpload: startImageUpload,
+    routeConfig: imageRouteConfig,
+    isUploading: isImageUploading,
+  } = useUploadThing("createImageUploader", {
+    onClientUploadComplete: (res) => {
+      console.log(res);
+      appendFiles(res.map((file) => ({ fileKey: file.key })));
+      setImages([]);
+      // alert("uploaded successfully!");
+    },
+    onUploadError: () => {
+      alert("error occurred while uploading");
+    },
+    onUploadBegin: () => {
+      // alert("upload has begun");
+    },
+  });
+  const [videos, setVideos] = useState<CustomFile[]>([]);
+  const {
+    startUpload: startVideoUpload,
+    routeConfig: videoRouteConfig,
+    isUploading: isVideoUploading,
+  } = useUploadThing("createVideoUploader", {
+    onClientUploadComplete: (res) => {
+      console.log(res);
+      appendFiles(res.map((file) => ({ fileKey: file.key })));
+      setVideos([]);
+      // alert("uploaded successfully!");
+    },
+    onUploadError: () => {
+      alert("error occurred while uploading");
+    },
+    onUploadBegin: () => {
+      // alert("upload has begun");
+    },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    if (images.length > 0) {
+      await startImageUpload(images);
+    }
+    if (videos.length > 0) {
+      await startVideoUpload(videos);
+    }
     toast({
       title: "Submitted form",
       description: (
@@ -169,9 +226,7 @@ export function DefaultCreateOfferPage() {
               <label className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
                 <Icon name="wallet" className="size-8" />
                 <input
-                  {...register("price", {
-                    valueAsNumber: true,
-                  })}
+                  {...register("price")}
                   className="w-[5.8rem] bg-inherit text-right outline-none"
                   placeholder="Cena"
                 />
@@ -195,9 +250,60 @@ export function DefaultCreateOfferPage() {
           </OfferSegment>
 
           {/* MOJE PORTFOLIO */}
-          <OfferSegment heading="MOJE PORTFOLIO">
-            <FileUpload />
-          </OfferSegment>
+          <Tabs defaultValue="images" className="w-full">
+            <TabsList>
+              <TabsTrigger value="images">
+                <h1 className="text-4xl font-semibold uppercase">
+                  ZDJĘCIA {images.length}/
+                  {imageRouteConfig?.image?.maxFileCount}
+                </h1>
+              </TabsTrigger>
+              <TabsTrigger value="videos">
+                <h1 className="text-4xl font-semibold uppercase">
+                  FILMY {videos.length}/{videoRouteConfig?.video?.maxFileCount}
+                </h1>
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="images">
+              <PreviewDropzone
+                files={images}
+                setFiles={setImages}
+                routeConfig={imageRouteConfig}
+                startUpload={startImageUpload}
+                isUploading={isImageUploading}
+                showUploadButton={false}
+                disabled={
+                  images.length >=
+                  (imageRouteConfig?.image?.maxFileCount
+                    ? imageRouteConfig?.image?.maxFileCount
+                    : 0)
+                }
+              />
+            </TabsContent>
+            <TabsContent value="videos">
+              <PreviewDropzone
+                files={videos}
+                setFiles={setVideos}
+                routeConfig={videoRouteConfig}
+                startUpload={startVideoUpload}
+                isUploading={isVideoUploading}
+                showUploadButton={false}
+                disabled={
+                  videos.length >=
+                  (videoRouteConfig?.video?.maxFileCount
+                    ? videoRouteConfig?.video?.maxFileCount
+                    : 0)
+                }
+              />
+            </TabsContent>
+          </Tabs>
+          {filesFields.map((file, index) => (
+            <input
+              key={file.key}
+              {...register(`files.${index}.fileKey` as const)}
+              className="hidden bg-inherit outline-none"
+            />
+          ))}
 
           {/* LINKI */}
           <OfferSegment heading="LINKI">

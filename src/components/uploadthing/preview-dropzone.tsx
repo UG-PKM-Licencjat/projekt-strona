@@ -111,11 +111,6 @@ export function PreviewDropzone({
     setFiles((files) => files.filter((file) => file.key !== fileKey));
   };
 
-  useEffect(() => {
-    console.log("files", files);
-    console.log(routeConfig);
-  }, []);
-
   const { fileTypes } = generatePermittedFileTypes(routeConfig);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

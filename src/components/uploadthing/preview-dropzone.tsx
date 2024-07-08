@@ -1,12 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect, type SetStateAction } from "react";
 import { useDropzone } from "@uploadthing/react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { cn } from "~/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
 import { FilePreview } from "~/app/offers/create/file-preview";
-
-import { useUploadThing } from "~/components/uploadthing";
 
 type AllowedFileType = "image" | "video" | "audio" | "blob";
 type PowOf2 = 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024;
@@ -17,6 +15,8 @@ type RouteConfig = {
   maxFileSize: FileSize;
   maxFileCount: number;
 };
+
+export type CustomFile = File & { url: string; key: string };
 
 type ExpandedRouteConfig = Partial<Record<AllowedFileType, RouteConfig>>;
 
@@ -77,35 +77,34 @@ const generatePermittedFileTypes = (config?: ExpandedRouteConfig) => {
   return { fileTypes, multiple: maxFileCount.some((v) => v && v > 1) };
 };
 
-export function MultiUploader() {
-  const [files, setFiles] = useState<(File & { url: string; key: string })[]>(
-    [],
-  );
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const modifiedFiles = acceptedFiles.map((file) => {
-      return Object.assign(file, {
-        url: URL.createObjectURL(file),
-        key: crypto.randomUUID(),
-      });
-    });
-    setFiles((files) => [...files, ...modifiedFiles]);
-  }, []);
+interface PreviewDropzoneProps {
+  files: CustomFile[];
+  setFiles: (value: SetStateAction<CustomFile[]>) => void;
+  routeConfig: ExpandedRouteConfig | undefined;
+  startUpload: (files: CustomFile[]) => void;
+  isUploading: boolean;
+  className?: string;
+}
 
-  const { startUpload, routeConfig, isUploading } = useUploadThing(
-    "fileUploader",
-    {
-      onClientUploadComplete: (res) => {
-        console.log(res);
-        setFiles([]);
-        alert("uploaded successfully!");
-      },
-      onUploadError: () => {
-        alert("error occurred while uploading");
-      },
-      onUploadBegin: () => {
-        // alert("upload has begun");
-      },
+export function PreviewDropzone({
+  files,
+  setFiles,
+  routeConfig,
+  startUpload,
+  isUploading,
+  className,
+}: PreviewDropzoneProps) {
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const modifiedFiles = acceptedFiles.map((file) => {
+        return Object.assign(file, {
+          url: URL.createObjectURL(file),
+          key: crypto.randomUUID(),
+        });
+      });
+      setFiles((files) => [...files, ...modifiedFiles]);
     },
+    [setFiles],
   );
 
   const removeFile = (fileKey: string) => {
@@ -128,7 +127,10 @@ export function MultiUploader() {
     <>
       <div
         className={cn(
-          "mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10",
+          cn(
+            "mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10",
+            className,
+          ),
           isDragActive
             ? "border-pink-600 bg-pink-600/10"
             : "border-gray-900/25",

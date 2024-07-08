@@ -1,4 +1,4 @@
-import { useCallback, useEffect, type SetStateAction } from "react";
+import { useCallback, type SetStateAction } from "react";
 import { useDropzone } from "@uploadthing/react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 import { Icon } from "~/components/ui/Icon/Icon";

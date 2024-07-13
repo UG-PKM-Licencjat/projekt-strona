@@ -1,15 +1,11 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import {
-  getServerSession,
-  type DefaultSession,
-  type NextAuthOptions,
-} from "next-auth";
+import type { DefaultSession, NextAuthOptions, DefaultUser } from "next-auth";
+import { getServerSession } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import { db } from "~/server/db";
-import type User from "next-auth";
-import { Session } from "next-auth";
 import { accounts } from "~/server/db/schema";
+import { users } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 
 /**
@@ -23,15 +19,24 @@ declare module "next-auth" {
     user: {
       id: string;
       admin: boolean;
-      // ...other properties
-      // role: UserRole;
+
+      firstName: string;
+      lastName: string;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User extends DefaultUser {
+    firstname: string;
+    lastname: string;
+  }
+  export interface Profile {
+    sub?: string;
+    name?: string;
+    email?: string;
+    image?: string;
+    given_name?: string;
+    family_name?: string;
+  }
 }
 
 /**
@@ -39,9 +44,10 @@ declare module "next-auth" {
  *
  * @see https://next-auth.js.org/configuration/options
  */
+
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: async ({ session, user }) => {
+    session: async ({ session, token, user }) => {
       const result = await db
         .select({
           admin: accounts.admin,
@@ -49,20 +55,53 @@ export const authOptions: NextAuthOptions = {
         .from(accounts)
         .where(eq(accounts.userId, user.id))
         .limit(1);
-      console.log("result", result[0]?.admin ? true : false);
-      console.log("result", result);
-      console.log(
-        "user",
-        await db.select().from(accounts).where(eq(accounts.userId, user.id)),
-      );
+
+      const resultNames = await db
+        .select({
+          firstname: users.firstName,
+          lastname: users.lastName,
+        })
+        .from(users)
+        .where(eq(users.id, user.id))
+        .limit(1);
+
+      const { firstname, lastname } = resultNames[0] || {
+        firstname: "",
+        lastname: "",
+      };
 
       return {
         ...session,
         user: {
+          ...session.user,
+          firstName: firstname,
+          lastName: lastname,
           id: user.id,
           admin: result[0]?.admin ? true : false,
         },
       };
+    },
+    async signIn({ user, profile }) {
+      const existingUser = await db
+        .select({
+          firstName: users.firstName,
+          lastName: users.lastName,
+        })
+        .from(users)
+        .where(eq(users.id, user.id))
+        .limit(1);
+
+      if (!existingUser[0]?.firstName || !existingUser[0]?.lastName) {
+        await db
+          .update(users)
+          .set({
+            firstName: profile?.given_name,
+            lastName: profile?.family_name,
+          })
+          .where(eq(users.id, user.id));
+      }
+
+      return true;
     },
   },
   adapter: DrizzleAdapter(db) as Adapter,
@@ -70,6 +109,16 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile: (profile: GoogleProfile) => {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          firstname: profile.given_name,
+          lastname: profile.family_name,
+        };
+      },
     }),
 
     /**

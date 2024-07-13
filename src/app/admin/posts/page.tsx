@@ -1,7 +1,7 @@
 export default function Posts() {
   return (
     <div>
-      <p>Admin Panel</p>
+      <h1>Posts</h1>
     </div>
   );
 }

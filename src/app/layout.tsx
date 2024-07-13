@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 
-import SvgSymbols from "~/components/common/SvgSymbols/SvgSymbols";
+import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
 import { trpc } from "~/utils/trpc";
 import Provider from "./_trpc/Provider";
 import { SessionProvider } from "next-auth/react";
@@ -11,7 +11,6 @@ import { Session } from "next-auth";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
 });
 
 function RootLayout({
@@ -23,7 +22,7 @@ function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body className={`font-sans ${inter.variable}`}>
+      <body className={inter.className}>
         {SvgSymbols}
         <SessionProvider session={session}>
           <Provider>{children}</Provider>

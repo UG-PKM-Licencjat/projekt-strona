@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { SearchEngine } from "./SearchEngine";
+import { SearchEngine } from "./searchEngine";
 
 const meta = {
   title: "Components/SearchEngine",

@@ -45,7 +45,7 @@ export default function Home() {
           <Button
             onClick={() =>
               signIn("google", {
-                callbackUrl: "http://localhost:3000/admin/users",
+                callbackUrl: "http://localhost:3000/createaccount",
               })
             }
           >

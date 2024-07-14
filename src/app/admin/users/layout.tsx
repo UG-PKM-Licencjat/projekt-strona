@@ -2,12 +2,12 @@
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { Button } from "~/components/ui/Button/Button";
+import { Button } from "~/components/ui/Button";
 
 import "~/styles/globals.css";
 
 import Link from "next/link";
-import { Icon } from "~/components/ui/Icon/Icon";
+import { Icon } from "~/components/ui/Icon";
 import { NavItem } from "./nav-item";
 
 export default function RootLayout({

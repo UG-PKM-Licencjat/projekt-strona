@@ -1,6 +1,6 @@
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Icon } from "~/components/ui/Icon/Icon";
+import { Icon } from "~/components/ui/Icon";
 import { type FormData } from "./schema";
 
 export function SegmentField({

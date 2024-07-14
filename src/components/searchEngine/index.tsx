@@ -1,7 +1,7 @@
 import React from "react";
-import { Icon } from "../ui/Icon/Icon";
-import { Input } from "../ui/Input/Input";
-import { Tag } from "../Tag/Tag";
+import { Icon } from "../ui/Icon";
+import { Input } from "../ui/Input";
+import { Tag } from "../Tag";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface SearchEngine {}

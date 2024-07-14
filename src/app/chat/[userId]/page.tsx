@@ -5,9 +5,9 @@ import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import ConversationWindow, {
   type Message,
-} from "~/components/chat/ConversationWindow/ConversationWindow";
-import { Button } from "~/components/ui/Button/Button";
-import { Input } from "~/components/ui/Input/Input";
+} from "~/components/chat/ConversationWindow";
+import { Button } from "~/components/ui/Button";
+import { Input } from "~/components/ui/Input";
 
 // TODO: Data should be cached in the client
 export default function Conversation({

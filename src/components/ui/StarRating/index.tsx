@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Icon } from "../Icon/Icon";
+import { Icon } from "../Icon";
 
 export const StarRating = ({
   currentRating,

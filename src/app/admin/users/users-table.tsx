@@ -7,8 +7,8 @@ import {
   TableCell,
   TableBody,
   Table,
-} from "~/components/ui/Table/Table";
-import { Button } from "~/components/ui/Button/Button";
+} from "~/components/ui/Table";
+import { Button } from "~/components/ui/Button";
 import { useRouter } from "next/navigation";
 import { trpc } from "~/app/_trpc/client";
 

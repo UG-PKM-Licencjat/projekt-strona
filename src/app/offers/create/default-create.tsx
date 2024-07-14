@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
+import { Icon } from "~/components/ui/Icon";
+import { OfferSegment } from "~/components/ui/OfferSegment";
 import {
   Select,
   SelectContent,

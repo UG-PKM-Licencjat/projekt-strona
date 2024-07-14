@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import ConversationWindow from "./ConversationWindow";
+import ConversationWindow from ".";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 

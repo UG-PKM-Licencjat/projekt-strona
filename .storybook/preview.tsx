@@ -1,6 +1,6 @@
 // tailwind integration
 import React from "react";
-import SvgSymbols from "../src/components/ui/SvgSymbols/SvgSymbols";
+import SvgSymbols from "../src/components/ui/SvgSymbols";
 import "../src/styles/globals.css";
 
 import type { Preview } from "@storybook/react";

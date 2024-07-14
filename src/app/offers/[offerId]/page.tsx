@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { Tag } from "~/components/Tag/Tag";
+import { Icon } from "~/components/ui/Icon";
+import { Tag } from "~/components/Tag";
 import { redirect } from "next/navigation";
-import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
-import { StarRating } from "~/components/ui/StarRating/StarRating";
+import { OfferSegment } from "~/components/ui/OfferSegment";
+import { StarRating } from "~/components/ui/StarRating";
 import { trpc } from "~/app/_trpc/client";
 // import Image from "next/image";
 
@@ -62,12 +62,12 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
           </div>
           <div className="flex items-start justify-center gap-4">
             {!tags && (
-              <div className="bg-muted-foreground animate-pulse rounded-md px-40 py-6" />
+              <div className="animate-pulse rounded-md bg-muted-foreground px-40 py-6" />
             )}
             {tags?.map((tag, index) => <Tag label={tag.name} key={index} />)}
           </div>
           {/* TODO quick placeholder - get someone to design this */}
-          <div className="bg-primary stroke-primary-foreground text-primary-foreground flex items-center gap-3 rounded-full border px-4 py-2 font-semibold">
+          <div className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
             <Icon name="wallet" className="size-8" />
             100 000 zł
           </div>

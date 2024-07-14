@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
-import Message from "../Message/Message";
+import Message from "../Message";
 
 export default function ConversationWindow({ data }: ConversationWindowProps) {
   const { data: session } = useSession();

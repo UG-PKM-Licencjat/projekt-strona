@@ -1,6 +1,6 @@
 import React from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { Offer } from "~/components/Offer/Offer";
+import { Icon } from "~/components/ui/Icon";
+import { Offer } from "~/components/Offer";
 import {
   Select,
   SelectContent,

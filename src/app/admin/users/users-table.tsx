@@ -7,18 +7,15 @@ import {
   TableCell,
   TableBody,
   Table,
-} from "~/components/ui/Table/Table";
-import { Button } from "~/components/ui/Button/Button";
+} from "src/components/ui/Table/Table";
+import { Button } from "src/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
-import { trpc } from "~/app/_trpc/client";
+import { trpc } from "src/app/_trpc/client";
+import type { inferRouterOutputs } from "@trpc/server";
+import type { AppRouter } from "src/server/routers/_app";
 
-import type { InferSelectModel } from "drizzle-orm";
-import { users } from "~/server/db/schema";
-
-type SelectUser = {
-  sessions_count: number;
-  users: InferSelectModel<typeof users>;
-};
+type RouterOutputs = inferRouterOutputs<AppRouter>;
+type SelectUser = RouterOutputs["getUsers"][0]; // TODO: tricky type infering xd
 
 export function UsersTable({
   users,
@@ -57,7 +54,7 @@ export function UsersTable({
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <UserRow key={user.users.id} user={user} refetch={refetch} />
+              <UserRow key={user.id} user={user} refetch={refetch} />
             ))}
           </TableBody>
         </Table>
@@ -76,31 +73,32 @@ export function UsersTable({
 }
 
 function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
-  const userId = user.users.id;
+  const userId = user.id;
+
   const deleteUserWithId = trpc.deleteUser.useMutation();
 
   console.log(user);
   return (
     <TableRow>
-      <TableCell className="font-medium">{user.users.id}</TableCell>
-      <TableCell className="md:table-cell">{user.users.email}</TableCell>
-      <TableCell className="md:table-cell">{user.users.name}</TableCell>
+      <TableCell className="font-medium">{user.id}</TableCell>
+      <TableCell className="md:table-cell">{user.email}</TableCell>
+      <TableCell className="md:table-cell">{user.name}</TableCell>
       <TableCell className="md:table-cell">
-        {user.users.isPremium ? (
+        {user.isPremium ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>
         )}
       </TableCell>
       <TableCell className="md:table-cell">
-        {user.users.isActive ? (
+        {user.isActive ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>
         )}
       </TableCell>
       <TableCell className="md:table-cell">
-        {user.users.isAdmin ? (
+        {user.isAdmin ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>

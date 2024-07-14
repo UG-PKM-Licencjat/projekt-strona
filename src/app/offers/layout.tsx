@@ -1,6 +1,6 @@
 import React from "react";
-import { Navbar } from "~/components/Navbar/Navbar";
-import { Toaster } from "~/components/ui/toaster";
+import { Navbar } from "src/components/Navbar/Navbar";
+import { Toaster } from "src/components/ui/toaster";
 
 export default function OfferLayout({
   children,

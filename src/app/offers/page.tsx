@@ -1,6 +1,6 @@
 import React from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { Offer } from "~/components/Offer/Offer";
+import { Icon } from "src/components/ui/Icon/Icon";
+import { Offer } from "src/components/Offer/Offer";
 import {
   Select,
   SelectContent,
@@ -9,7 +9,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "src/components/ui/select";
 const placeholderOffers = [
   {
     name: "IMIE NAZWISKO",

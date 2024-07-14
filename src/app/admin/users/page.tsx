@@ -1,11 +1,11 @@
 "use client";
 
-import { trpc } from "~/app/_trpc/client";
+import { trpc } from "src/app/_trpc/client";
 import { UsersTable } from "./users-table";
 import { Search } from "./search";
-import { Icon } from "~/components/ui/Icon/Icon";
+import { Icon } from "src/components/ui/Icon/Icon";
 import { useRouter } from "next/navigation";
-import { Button } from "~/components/ui/Button/Button";
+import { Button } from "src/components/ui/Button/Button";
 
 export default function IndexPage({
   searchParams,

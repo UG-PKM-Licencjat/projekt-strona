@@ -2,7 +2,7 @@ import { z } from "zod";
 import { db } from "../db";
 import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
-import { eq, count } from "drizzle-orm";
+import { eq, count, getTableColumns } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
 
 const keys = Object.keys(LogType);
@@ -12,11 +12,12 @@ export const appRouter = router({
     // TODO: implement with pagination etc
     // console.log(ctx.session);
     try {
+      const columns = getTableColumns(users);
       logEvent("Fetching users");
 
       const fetchedUsers = await db
         .select({
-          users,
+          ...columns,
           sessions_count: count(sessions.sessionToken),
         })
         .from(users)

@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "~/utils/cn";
+import { cn } from "src/utils/cn";
 import { type VariantProps, cva } from "class-variance-authority";
 
 export interface ButtonProps

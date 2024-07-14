@@ -1,11 +1,10 @@
-import { Button } from '~/components/ui/Button/Button';
+import { Button } from "src/components/ui/Button/Button";
 // import { auth, signIn, signOut } from '@/lib/auth';
-import Image from 'next/image';
+import Image from "next/image";
 
 export async function User() {
   // const session = await auth();
   // const user = session?.user;
-
   // if (!user) {
   //   return (
   //     <form
@@ -18,7 +17,6 @@ export async function User() {
   //     </form>
   //   );
   // }
-
   // return (
   //   <div className="flex items-center gap-4">
   //     <form

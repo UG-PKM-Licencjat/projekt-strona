@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
+import { Icon } from "src/components/ui/Icon/Icon";
+import { OfferSegment } from "src/components/ui/OfferSegment/OfferSegment";
 import {
   Select,
   SelectContent,
@@ -11,14 +11,14 @@ import {
   // SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "src/components/ui/select";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "~/components/ui/popover";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { useToast } from "~/components/ui/use-toast";
+} from "src/components/ui/popover";
+import { ScrollArea } from "src/components/ui/scroll-area";
+import { useToast } from "src/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { type FormData } from "./schema";
 

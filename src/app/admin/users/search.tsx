@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "~/components/ui/Input/Input";
-import { Icon } from "~/components/ui/Icon/Icon";
+import { Input } from "src/components/ui/Input/Input";
+import { Icon } from "src/components/ui/Icon/Icon";
 import { useRouter } from "next/navigation";
 import { useTransition, useEffect, useRef, useState } from "react";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "src/components/ui/avatar";
 import Link from "next/link";
 
 // Placeholder - modify if needed

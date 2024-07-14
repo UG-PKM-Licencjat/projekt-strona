@@ -1,9 +1,8 @@
 "use client";
-import { Input } from "~/components/common/Input/Input";
+import { Input } from "~/components/ui/Input/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -14,8 +13,9 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { useRouter } from "next/navigation";
-import { changeRegistrationStatus } from "~/app/_actions/actions";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { trpc } from "~/app/_trpc/client";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -30,22 +30,53 @@ const formSchema = z.object({
   location: z.string().min(2, {
     message: "Lokalizacja musi mieć co najmniej 2 znaki.",
   }),
-  //picture: z.string(),
+  image: z.string().optional(),
 });
 
 export default function Create_Account() {
   const form = useForm({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      firstName: "",
+      lastName: "",
+      location: "",
+      image: "",
+    },
   });
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data } = useSession();
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    router.push("/createaccount/step2");
+    const putData = trpc.putRegistrationData1Step.useMutation();
+
+    const response = await putData.mutateAsync({
+      nickname: data.username,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      location: data.location,
+      image: data.image ?? "",
+    });
+    if (response != null) {
+      router.push("/createaccount/step2");
+    }
   };
+
+  useEffect(() => {
+    if (data) {
+      form.setValue("firstName", data.user.firstName);
+      form.setValue("lastName", data.user.lastName);
+    }
+  }, [data, form]);
+
+  const { data: trpcData } = trpc.getRegistrationData1Step.useQuery();
+  console.log(trpcData);
 
   return (
     <div>
+      <Button onClick={() => signOut({ callbackUrl: "http://localhost:3000" })}>
+        Wyloguj
+      </Button>
       <h1 className="my-10 flex justify-center">
         Uzupełnij te dane i korzystaj z naszej aplikacji!
       </h1>
@@ -72,7 +103,7 @@ export default function Create_Account() {
                 <FormItem className="flex flex-col">
                   <FormLabel>Imię</FormLabel>
                   <FormControl>
-                    <Input placeholder="imię" {...field} />
+                    <Input placeholder="imie" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,12 +137,12 @@ export default function Create_Account() {
             />
             <FormField
               control={form.control}
-              name="picture"
+              name="image"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Zdjęcie</FormLabel>
                   <FormControl>
-                    <Input id="picture" type="file" />
+                    <Input id="image" type="file" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,10 +1,10 @@
 "use client";
-import { Input } from "~/components/common/Input/Input";
+import { Input } from "~/components/ui/Input/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "~/components/common/Button/Button";
+import { Button } from "~/components/ui/Button/Button";
 import {
   Form,
   FormControl,
@@ -33,6 +33,7 @@ const formSchema = z.object({
         message: "Opis musi mieć co najmniej 2 słowa.",
       },
     ),
+  portfolio: z.string().optional(),
   offer: z
     .string()
     .optional()
@@ -74,6 +75,8 @@ export default function Create_Account() {
                   <FormLabel>O mnie</FormLabel>
                   <FormControl>
                     <Textarea
+                      // on click make normal border wider and delete this additional light blue border around
+                      className=" border-blue-950"
                       placeholder="Czym się zajmuje, kim jestem, moje doświadczenie itd."
                       {...field}
                     />
@@ -90,6 +93,7 @@ export default function Create_Account() {
                   <FormLabel>Co oferuję?</FormLabel>
                   <FormControl>
                     <Textarea
+                      className="hover: border-blue-950 outline-none focus:outline-none"
                       placeholder="Koncert, występ taneczny itd."
                       {...field}
                     />
@@ -100,7 +104,7 @@ export default function Create_Account() {
             />
             <FormField
               control={form.control}
-              name="lastname"
+              name="portfolio"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Portfolio</FormLabel>

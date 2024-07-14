@@ -10,7 +10,8 @@ import { SessionProvider } from "next-auth/react";
 import { type Session } from "next-auth";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { Tag } from "~/server/log";
+import { useConversationsStore } from "~/stores";
+import { Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,8 @@ function RootLayout({
 }) {
   const path = usePathname();
   const log = trpc.clientLog.useMutation();
+  const conversations = useConversationsStore();
+
   useEffect(() => {
     const user = session && session.user ? session.user.id : "anonymous";
 
@@ -34,6 +37,19 @@ function RootLayout({
       tags: ["ROUTER", "CLICKSTREAM"],
     });
   }, [path, session]);
+
+  useEffect(() => {
+    if (!session) return;
+
+    const socketConnection = new WebSocket(
+      `wss://chat-swxn.onrender.com/connect?id=${session?.user.id}`,
+    );
+
+    socketConnection.onmessage = (event: MessageEvent<string>) => {
+      const newMessage = JSON.parse(event.data) as Message; // TODO: Validate const
+      conversations.addMessage(session?.user.id, newMessage);
+    };
+  }, [session]);
 
   return (
     <html lang="pl">

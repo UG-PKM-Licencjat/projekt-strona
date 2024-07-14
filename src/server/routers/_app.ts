@@ -56,6 +56,56 @@ export const appRouter = router({
     }
     return;
   }),
+
+  putRegistrationData1Step: authedProcedure
+    .input(
+      z.object({
+        nickname: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
+        location: z.string(),
+        image: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const fetchedUsers = await db
+          .update(users)
+          .set({
+            nickname: input.nickname,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            location: input.location,
+            image: input.image,
+          })
+          .where(eq(users.id, ctx.session?.user.id));
+
+        return fetchedUsers;
+      } catch (error) {
+        console.log("Error fetching registration data", error);
+        return [];
+      }
+    }),
+
+  getRegistrationData1Step: authedProcedure.query(async ({ ctx }) => {
+    try {
+      const fetchedUserData = await db
+        .select({
+          nickname: users.nickname,
+          firstName: users.firstName,
+          lastName: users.lastName,
+          location: users.location,
+          image: users.image,
+        })
+        .from(users)
+        .where(eq(users.id, ctx.session?.user.id));
+      console.log("Fetched registration data", fetchedUserData);
+      return fetchedUserData;
+    } catch (error) {
+      console.log("Error fetching registration data", error);
+      return [];
+    }
+  }),
 });
 
 export type AppRouter = typeof appRouter;

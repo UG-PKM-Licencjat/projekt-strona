@@ -90,6 +90,7 @@ export const users = createTable("user", {
   lastName: varchar("lastName", { length: 255 }),
   nickname: varchar("nickname", { length: 255 }),
   shortDescription: varchar("shortDescription", { length: 255 }),
+  location: varchar("location", { length: 255 }),
   longDescription: text("longDescription"),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {

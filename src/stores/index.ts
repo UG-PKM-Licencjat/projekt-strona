@@ -1,13 +1,20 @@
 import { create } from "zustand";
+import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 
-type Store = {
-  count: number;
-  inc: () => void;
-};
+interface ConversationsStore {
+  conversations: Record<string, Message[]>;
+  addMessage: (userId: string, message: Message) => void;
+}
 
-const useStore = create<Store>()((set) => ({
-  count: 1,
-  inc: () => set((state) => ({ count: state.count + 1 })),
+const useConversationsStore = create<ConversationsStore>((set) => ({
+  conversations: {},
+  addMessage: (userId: string, message: Message) =>
+    set((state) => ({
+      conversations: {
+        ...state.conversations,
+        [userId]: [...(state.conversations[userId] ?? []), message],
+      },
+    })),
 }));
 
 /* example component

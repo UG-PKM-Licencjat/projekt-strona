@@ -7,10 +7,11 @@ import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
 import { trpc } from "~/utils/trpc";
 import Provider from "./_trpc/Provider";
 import { SessionProvider } from "next-auth/react";
-import { Session } from "next-auth";
+import { type Session } from "next-auth";
 
 const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 function RootLayout({
@@ -22,7 +23,7 @@ function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body className={inter.className}>
+      <body className={`font-sans ${inter.variable}`}>
         {SvgSymbols}
         <SessionProvider session={session}>
           <Provider>{children}</Provider>

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { db } from "../db";
 import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
-import { eq } from "drizzle-orm";
+import { eq, count } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
 
 const keys = Object.keys(LogType);
@@ -13,7 +13,15 @@ export const appRouter = router({
     // console.log(ctx.session);
     try {
       logEvent("Fetching users");
-      const fetchedUsers = await db.select().from(users);
+
+      const fetchedUsers = await db
+        .select({
+          users,
+          sessions_count: count(sessions.sessionToken),
+        })
+        .from(users)
+        .leftJoin(sessions, eq(users.id, sessions.userId))
+        .groupBy(users.id);
       return fetchedUsers;
     } catch (error) {
       console.log("Error fetching users", error);

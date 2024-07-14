@@ -13,9 +13,12 @@ import { useRouter } from "next/navigation";
 import { trpc } from "~/app/_trpc/client";
 
 import type { InferSelectModel } from "drizzle-orm";
-import type { users } from "~/server/db/schema";
+import { users } from "~/server/db/schema";
 
-type SelectUser = InferSelectModel<typeof users>;
+type SelectUser = {
+  sessions_count: number;
+  users: InferSelectModel<typeof users>;
+};
 
 export function UsersTable({
   users,
@@ -54,7 +57,7 @@ export function UsersTable({
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <UserRow key={user.id} user={user} refetch={refetch} />
+              <UserRow key={user.users.id} user={user} refetch={refetch} />
             ))}
           </TableBody>
         </Table>
@@ -73,35 +76,37 @@ export function UsersTable({
 }
 
 function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
-  const userId = user.id;
+  const userId = user.users.id;
   const deleteUserWithId = trpc.deleteUser.useMutation();
 
   console.log(user);
   return (
     <TableRow>
-      <TableCell className="font-medium">{user.id}</TableCell>
-      <TableCell className="md:table-cell">{user.email}</TableCell>
-      <TableCell className="md:table-cell">{user.name}</TableCell>
+      <TableCell className="font-medium">{user.users.id}</TableCell>
+      <TableCell className="md:table-cell">{user.users.email}</TableCell>
+      <TableCell className="md:table-cell">{user.users.name}</TableCell>
       <TableCell className="md:table-cell">
-        {user.isPremium ? (
+        {user.users.isPremium ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>
         )}
       </TableCell>
       <TableCell className="md:table-cell">
-        {" "}
-        user.isActive ? (<p className="text-green-500">true</p>) : (
-        <p className="text-red-500">false</p>){" "}
-      </TableCell>
-      <TableCell className="md:table-cell">
-        {user.isAdmin ? (
+        {user.users.isActive ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>
         )}
       </TableCell>
-      <TableCell className="md:table-cell">sessions count</TableCell>
+      <TableCell className="md:table-cell">
+        {user.users.isAdmin ? (
+          <p className="text-green-500">true</p>
+        ) : (
+          <p className="text-red-500">false</p>
+        )}
+      </TableCell>
+      <TableCell className="md:table-cell">{user.sessions_count}</TableCell>
       <TableCell className="md:table-cell">account count</TableCell>
       <TableCell className="md:table-cell">offers count</TableCell>
       <TableCell>

@@ -85,7 +85,6 @@ export const verificationTokens = createTable(
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  name: varchar("name", { length: 255 }),
   firstName: varchar("firstName", { length: 255 }),
   lastName: varchar("lastName", { length: 255 }),
   nickname: varchar("nickname", { length: 255 }),
@@ -98,6 +97,7 @@ export const users = createTable("user", {
   image: varchar("image", { length: 255 }), // TODO figure out image storage
   isPremium: boolean("isPremium").default(false).notNull(),
   isAdmin: boolean("isAdmin").default(false).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
 });
 
 export const tags = createTable("tag", {

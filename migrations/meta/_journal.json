@@ -15,6 +15,20 @@
       "when": 1720348150071,
       "tag": "0001_amusing_thaddeus_ross",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1720957594180,
+      "tag": "0002_harsh_exiles",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1720970835448,
+      "tag": "0003_loud_nightcrawler",
+      "breakpoints": true
     }
   ]
 }

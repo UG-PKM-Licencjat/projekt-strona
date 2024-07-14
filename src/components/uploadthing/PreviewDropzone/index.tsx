@@ -18,7 +18,7 @@ type RouteConfig = {
 
 export type CustomFile = File & { url: string; key: string };
 
-type ExpandedRouteConfig = Partial<Record<AllowedFileType, RouteConfig>>;
+export type ExpandedRouteConfig = Partial<Record<AllowedFileType, RouteConfig>>;
 
 const doFormatting = (config?: ExpandedRouteConfig): string => {
   if (!config) return "";

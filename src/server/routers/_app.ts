@@ -4,6 +4,7 @@ import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
 import { eq } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
+import { UserWithMessage } from "~/components/chat/ConversationsNav/ConversationsNav";
 
 const keys = Object.keys(LogType);
 
@@ -72,7 +73,15 @@ export const appRouter = router({
       console.log("Fetched offer", mappedOffer);
       return mappedOffer;
     }),
-
+  getSampleMessages: procedure.input(z.string()).query(async ({ input }) => {
+    const data = (await (
+      await fetch(`http://localhost:3000/api/messages/sample?user=${input}`)
+    ).json()) as Array<UserWithMessage>;
+    logEvent(
+      `Fetched sample messages for user ${input} with first element name: ${data[0]?.name}`,
+    );
+    return data;
+  }),
   // TODO finish create offer procedure
   // createOffer: procedure
   //   .input(

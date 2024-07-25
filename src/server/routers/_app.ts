@@ -74,16 +74,6 @@ export const appRouter = router({
       return mappedOffer;
     }),
 
-  deleteFiles: procedure
-    .input(z.object({ fileKeys: z.array(z.string()).or(z.string()) }))
-    .mutation(async ({ input }) => {
-      console.log("Deleting files: ", input.fileKeys);
-      // logEvent("Deleting files", input.fileKeys.toString());
-      const deleted = await utapi.deleteFiles(input.fileKeys);
-      console.log("Deleted files: ", deleted);
-      return deleted.success;
-    }),
-
   // TODO finish create offer procedure
   // createOffer: procedure
   //   .input(

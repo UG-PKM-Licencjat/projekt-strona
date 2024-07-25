@@ -31,9 +31,21 @@ export default function PreviewDropzone({
           key: crypto.randomUUID(),
         });
       });
-      setFiles((files) => [...files, ...modifiedFiles]);
+      setFiles((files) => {
+        const maxFileCount = routeConfig
+          ? Object.values(routeConfig)
+              .map((v) => v.maxFileCount)
+              .sort()[0]
+          : 1;
+        console.log(maxFileCount);
+
+        if (maxFileCount && maxFileCount > 1) {
+          return [...files, ...modifiedFiles].slice(0, maxFileCount);
+        }
+        return [...files, ...modifiedFiles];
+      });
     },
-    [setFiles],
+    [setFiles, routeConfig],
   );
 
   const removeFile = (fileKey: string) => {

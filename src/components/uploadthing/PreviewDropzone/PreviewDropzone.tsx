@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { cn } from "~/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
-import { FilePreview } from "~/app/offers/create/file-preview";
+import { FilePreview } from "~/components/uploadthing/FilePreview";
 
 import {
   generatePermittedFileTypes,

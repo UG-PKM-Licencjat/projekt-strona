@@ -132,7 +132,7 @@ export function PreviewDropzone({
           isDragActive
             ? "border-pink-600 bg-pink-600/10"
             : "border-gray-900/25",
-          disabled && "cursor-not-allowed opacity-50",
+          disabled && "cursor-not-allowed select-none opacity-50",
         )}
         {...getRootProps()}
       >
@@ -151,7 +151,12 @@ export function PreviewDropzone({
             ></path>
           </svg>
           <div className="mt-4 flex text-sm leading-6 text-gray-600">
-            <div className="relative cursor-pointer font-semibold text-pink-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-pink-600 focus-within:ring-offset-2 hover:text-pink-500">
+            <div
+              className={cn(
+                "relative cursor-pointer font-semibold text-pink-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-pink-600 focus-within:ring-offset-2 hover:text-pink-500",
+                disabled && "cursor-not-allowed",
+              )}
+            >
               Wybierz
             </div>
             <p className="pl-1">lub przeciągnij pliki</p>

@@ -1,8 +1,8 @@
 import { router } from "~/server/trpc";
 import getByUserIdProcedure from "./getByUserId";
 
-const SessionRouter = router({
+const AccountRouter = router({
   getByUserId: getByUserIdProcedure,
 });
 
-export default SessionRouter;
+export default AccountRouter;

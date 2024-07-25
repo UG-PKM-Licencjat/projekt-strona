@@ -4,9 +4,11 @@ import deleteProcedure from "./delete";
 import getByIdProcedure from "./getById";
 import { router } from "~/server/trpc";
 
-export const UserRouter = router({
+const UserRouter = router({
   get: getProcedure,
   getById: getByIdProcedure,
   create: createProcedure,
   delete: deleteProcedure,
 });
+
+export default UserRouter;

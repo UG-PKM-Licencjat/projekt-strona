@@ -23,37 +23,6 @@ export default function PreviewDropzone({
   showUploadButton = true,
   disabled = false,
 }: PreviewDropzoneProps) {
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const modifiedFiles = acceptedFiles.map((file) => {
-        return Object.assign(file, {
-          url: URL.createObjectURL(file),
-          key: crypto.randomUUID(),
-        });
-      });
-      setFiles((files) => {
-        const maxFileCount = routeConfig
-          ? Object.values(routeConfig)
-              .map((v) => v.maxFileCount)
-              .sort()[0]
-          : 1;
-        console.log(maxFileCount);
-
-        if (maxFileCount && maxFileCount > 1) {
-          return [...files, ...modifiedFiles].slice(0, maxFileCount);
-        }
-        return [...files, ...modifiedFiles];
-      });
-    },
-    [setFiles, routeConfig],
-  );
-
-  const removeFile = (fileKey: string) => {
-    setFiles((files) => files.filter((file) => file.key !== fileKey));
-  };
-
-  const { fileTypes } = generatePermittedFileTypes(routeConfig);
-
   const maxFileCount = routeConfig
     ? Object.values(routeConfig)
         .map((v) => v.maxFileCount)
@@ -65,6 +34,30 @@ export default function PreviewDropzone({
         .map((v) => getByteFileSize(v.maxFileSize))
         .sort()[0]
     : Infinity;
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const modifiedFiles = acceptedFiles.map((file) => {
+        return Object.assign(file, {
+          url: URL.createObjectURL(file),
+          key: crypto.randomUUID(),
+        });
+      });
+      setFiles((files) => {
+        if (maxFileCount && maxFileCount > 0) {
+          return [...files, ...modifiedFiles].slice(0, maxFileCount);
+        }
+        return [...files, ...modifiedFiles];
+      });
+    },
+    [setFiles, maxFileCount],
+  );
+
+  const removeFile = (fileKey: string) => {
+    setFiles((files) => files.filter((file) => file.key !== fileKey));
+  };
+
+  const { fileTypes } = generatePermittedFileTypes(routeConfig);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

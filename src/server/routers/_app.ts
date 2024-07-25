@@ -5,30 +5,12 @@ import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
 import { eq, count, getTableColumns } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
 
+import { AdminRouter } from "./admin";
+
 const keys = Object.keys(LogType);
 
 export const appRouter = router({
-  getUsers: procedure.query(async ({ ctx }) => {
-    // TODO: implement with pagination etc
-    // console.log(ctx.session);
-    try {
-      const columns = getTableColumns(users);
-      logEvent("Fetching users");
-
-      const fetchedUsers = await db
-        .select({
-          ...columns,
-          sessions_count: count(sessions.sessionToken),
-        })
-        .from(users)
-        .leftJoin(sessions, eq(users.id, sessions.userId))
-        .groupBy(users.id);
-      return fetchedUsers;
-    } catch (error) {
-      console.log("Error fetching users", error);
-      return [];
-    }
-  }),
+  admin: AdminRouter,
   clientLog: procedure
     .input(
       z.object({
@@ -46,18 +28,7 @@ export const appRouter = router({
         opts.input.tags,
       );
     }),
-  deleteUser: adminProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      }),
-    )
-    .mutation(async (opts) => {
-      console.log("Deleting user", opts.input.id);
-      await db.delete(sessions).where(eq(sessions.userId, opts.input.id));
-      await db.delete(users).where(eq(users.id, opts.input.id));
-      return;
-    }),
+
   getOffer: procedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {

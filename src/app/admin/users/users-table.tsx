@@ -12,10 +12,10 @@ import { Button } from "src/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
 import { trpc } from "src/app/_trpc/client";
 import type { inferRouterOutputs } from "@trpc/server";
-import type { AppRouter } from "src/server/routers/_app";
+import { AdminRouter } from "~/server/routers/admin";
 
-type RouterOutputs = inferRouterOutputs<AppRouter>;
-type SelectUser = RouterOutputs["getUsers"][0]; // TODO: tricky type infering xd
+type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter.users>;
+type SelectUser = RouterUserOutputs["get"][0]; // TODO: tricky type infering xd
 
 export function UsersTable({
   users,
@@ -83,7 +83,7 @@ export function UsersTable({
 function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
   const userId = user.id;
 
-  const deleteUserWithId = trpc.deleteUser.useMutation();
+  const deleteUserWithId = trpc.admin.users.delete.useMutation();
 
   // FIELDS
   const id = user.id ?? "null";
@@ -114,21 +114,21 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
         {image === "null" ? <a href={image}>image</a> : "null"}
       </TableCell>
       <TableCell className="md:table-cell">
-        {user.isPremium ? (
+        {isPremium ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>
         )}
       </TableCell>
       <TableCell className="md:table-cell">
-        {user.isAdmin ? (
+        {isAdmin ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>
         )}
       </TableCell>
       <TableCell className="md:table-cell">
-        {user.isActive ? (
+        {isActive ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>

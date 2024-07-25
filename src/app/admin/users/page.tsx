@@ -14,7 +14,7 @@ export default function IndexPage({
 }) {
   const search = searchParams.q ?? "";
   const offset = searchParams.offset ?? 0;
-  const { data, refetch: re } = trpc.getUsers.useQuery();
+  const { data, refetch: re } = trpc.admin.users.get.useQuery();
   const router = useRouter();
 
   const refetch = async () => {

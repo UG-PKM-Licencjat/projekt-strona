@@ -186,7 +186,7 @@ export function DefaultCreateOfferPage() {
                         {tags?.map((tag, index) => (
                           <div
                             key={index}
-                            className=" cursor-pointer divide-y divide-solid divide-black rounded-lg bg-purple-400 p-3 font-semibold text-white transition-colors hover:bg-purple-300"
+                            className="cursor-pointer select-none divide-y divide-solid divide-black rounded-lg bg-purple-400 p-3 font-semibold text-white transition-colors hover:bg-purple-300"
                             onClick={() => appendFunc(tag)}
                           >
                             {tag.name}
@@ -198,7 +198,7 @@ export function DefaultCreateOfferPage() {
                 </Popover>
                 {fields?.map((tag, index) => (
                   <div
-                    className="pointer-events-none flex h-10 items-center gap-2 rounded-lg bg-purple-400 px-4 font-normal text-white transition-colors hover:bg-destructive"
+                    className="pointer-events-none flex h-10 select-none items-center gap-2 rounded-lg bg-purple-400 px-4 font-normal text-white transition-colors hover:bg-destructive"
                     key={tag.key}
                   >
                     <input

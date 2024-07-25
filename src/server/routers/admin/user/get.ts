@@ -4,7 +4,7 @@ import { eq, count, getTableColumns } from "drizzle-orm";
 import { db } from "~/server/db";
 import logEvent from "~/server/log";
 
-const getUsersProcedure = procedure.query(async ({ ctx }) => {
+const getProcedure = procedure.query(async ({ ctx }) => {
   // TODO: implement with pagination etc
   // console.log(ctx.session);
   try {
@@ -26,4 +26,4 @@ const getUsersProcedure = procedure.query(async ({ ctx }) => {
   }
 });
 
-export default getUsersProcedure;
+export default getProcedure;

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   TableHead,
   TableRow,
@@ -12,7 +13,7 @@ import { Button } from "src/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
 import { trpc } from "src/app/_trpc/client";
 import type { inferRouterOutputs } from "@trpc/server";
-import { AdminRouter } from "~/server/routers/admin";
+import type { AdminRouter } from "~/server/routers/admin";
 
 type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter.users>;
 type SelectUser = RouterUserOutputs["get"][0]; // TODO: tricky type infering xd
@@ -57,7 +58,6 @@ export function UsersTable({
               <TableHead className="md:table-cell">Accounts</TableHead>
               <TableHead className="md:table-cell">Offers</TableHead>
               <TableHead>Actions</TableHead>
-              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -81,8 +81,6 @@ export function UsersTable({
 }
 
 function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
-  const userId = user.id;
-
   const deleteUserWithId = trpc.admin.users.delete.useMutation();
 
   // FIELDS
@@ -136,7 +134,14 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
       </TableCell>
       <TableCell className="md:table-cell">{location}</TableCell>
       <TableCell className="md:table-cell">{registrationStatus}</TableCell>
-      <TableCell className="md:table-cell">{sessions}</TableCell>
+      <TableCell className="md:table-cell">
+        <Link
+          href={`users/${id}/sessions`}
+          className="text-indigo-700 underline hover:opacity-30"
+        >
+          {sessions}
+        </Link>
+      </TableCell>
       <TableCell className="md:table-cell">{accounts}</TableCell>
       <TableCell className="md:table-cell">{offers}</TableCell>
       <TableCell>
@@ -145,7 +150,7 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
           size="sm"
           variant="outline"
           formAction={() => {
-            deleteUserWithId.mutate({ id: userId });
+            deleteUserWithId.mutate({ id });
             refetch();
           }}
         >

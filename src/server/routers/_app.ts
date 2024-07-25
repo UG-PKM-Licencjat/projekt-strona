@@ -7,8 +7,6 @@ import logEvent, { LogType, tagValues } from "../log";
 
 import { AdminRouter } from "./admin";
 
-const keys = Object.keys(LogType);
-
 export const appRouter = router({
   admin: AdminRouter,
   clientLog: procedure

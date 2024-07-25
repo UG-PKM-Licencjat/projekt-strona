@@ -4,7 +4,7 @@ import { db } from "~/server/db";
 import { z } from "zod";
 import logEvent from "~/server/log";
 
-const createUserProcedure = adminProcedure
+const createProcedure = adminProcedure
   .input(
     z.object({
       email: z.string(),
@@ -16,4 +16,4 @@ const createUserProcedure = adminProcedure
     return;
   });
 
-export default createUserProcedure;
+export default createProcedure;

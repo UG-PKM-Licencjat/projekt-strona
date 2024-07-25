@@ -5,7 +5,7 @@ import { db } from "~/server/db";
 import { z } from "zod";
 import logEvent from "~/server/log";
 
-const deleteUserProcedure = adminProcedure
+const deleteProcedure = adminProcedure
   .input(
     z.object({
       id: z.string(),
@@ -18,4 +18,4 @@ const deleteUserProcedure = adminProcedure
     return;
   });
 
-export default deleteUserProcedure;
+export default deleteProcedure;

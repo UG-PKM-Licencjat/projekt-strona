@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const offerSchema = z
   .object({
-    price: z.string().regex(/^\d{1,9}(\.\d{1,2})?$/, {
+    price: z.string().regex(/^\d{1,9}(\,\d{1,2})?$/, {
       message:
         "Cena powinna być podana w formacie 12345,50 i nie przekraczać 999 999 999,99 zł",
     }),

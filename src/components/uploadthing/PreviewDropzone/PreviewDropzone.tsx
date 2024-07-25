@@ -59,13 +59,14 @@ export default function PreviewDropzone({
 
   const { fileTypes } = generatePermittedFileTypes(routeConfig);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
-    disabled: disabled || isUploading,
-    maxFiles: maxFileCount,
-    maxSize: maxFileSize,
-  });
+  const { getRootProps, getInputProps, isDragActive, fileRejections } =
+    useDropzone({
+      onDrop,
+      accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
+      disabled: disabled || isUploading,
+      maxFiles: maxFileCount,
+      maxSize: maxFileSize,
+    });
 
   return (
     <>
@@ -140,6 +141,19 @@ export default function PreviewDropzone({
             </div>
           )}
         </div>
+      </div>
+      <div className="flex flex-col gap-2 p-2">
+        {fileRejections.map((fileRejection) => (
+          <div
+            key={fileRejection.file.name}
+            className="flex items-center gap-2 "
+          >
+            <Icon name="plus" className="size-6 rotate-45" />
+            <p className="text-sm font-semibold text-red-500">
+              {fileRejection.errors.map((error) => error.message).join(", ")}
+            </p>
+          </div>
+        ))}
       </div>
       <div className="relative flex flex-wrap gap-2 p-2">
         <AnimatePresence initial={false}>

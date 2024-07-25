@@ -40,11 +40,19 @@ export function UsersTable({
           <TableHeader>
             <TableRow>
               <TableHead className="max-w-[150px]">Id</TableHead>
+              <TableHead className="md:table-cell">Firstname</TableHead>
+              <TableHead className="md:table-cell">Lastname</TableHead>
+              <TableHead className="md:table-cell">Nickname</TableHead>
               <TableHead className="md:table-cell">Email</TableHead>
-              <TableHead className="md:table-cell">Username</TableHead>
+              <TableHead className="md:table-cell">EmailVerified</TableHead>
+              <TableHead className="md:table-cell">Image</TableHead>
               <TableHead className="md:table-cell">isPremium</TableHead>
-              <TableHead className="md:table-cell">isActive</TableHead>
               <TableHead className="md:table-cell">isAdmin</TableHead>
+              <TableHead className="md:table-cell">isActive</TableHead>
+              <TableHead className="md:table-cell">Location</TableHead>
+              <TableHead className="md:table-cell">
+                RegistrationStatus
+              </TableHead>
               <TableHead className="md:table-cell">Sessions</TableHead>
               <TableHead className="md:table-cell">Accounts</TableHead>
               <TableHead className="md:table-cell">Offers</TableHead>
@@ -77,21 +85,36 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
 
   const deleteUserWithId = trpc.deleteUser.useMutation();
 
-  console.log(user);
+  // FIELDS
+  const id = user.id ?? "null";
+  const firstname = user.firstName ?? "null";
+  const lastname = user.lastName ?? "null";
+  const nickname = user.nickname ?? "null";
+  const email = user.email ?? "null";
+  const emailVerified = user.emailVerified ?? "null";
+  const image = user.image ?? "null";
+  const isPremium = user.isPremium ?? "null";
+  const isAdmin = user.isAdmin ?? "null";
+  const isActive = user.isActive ?? "null";
+  const location = user.location ?? "null";
+  const registrationStatus = user.registrationStatus ?? "null";
+  const sessions = user.sessions_count ?? "null";
+  const accounts = user.accounts_count ?? "null";
+  const offers = user.offers_count ?? "null";
+
   return (
     <TableRow>
-      <TableCell className="font-medium">{user.id}</TableCell>
-      <TableCell className="md:table-cell">{user.email}</TableCell>
-      <TableCell className="md:table-cell">{user.name}</TableCell>
+      <TableCell className="font-medium">{id}</TableCell>
+      <TableCell className="md:table-cell">{firstname}</TableCell>
+      <TableCell className="md:table-cell">{lastname}</TableCell>
+      <TableCell className="md:table-cell">{nickname}</TableCell>
+      <TableCell className="md:table-cell">{email}</TableCell>
+      <TableCell className="md:table-cell">{emailVerified}</TableCell>
       <TableCell className="md:table-cell">
-        {user.isPremium ? (
-          <p className="text-green-500">true</p>
-        ) : (
-          <p className="text-red-500">false</p>
-        )}
+        {image === "null" ? <a href={image}>image</a> : "null"}
       </TableCell>
       <TableCell className="md:table-cell">
-        {user.isActive ? (
+        {user.isPremium ? (
           <p className="text-green-500">true</p>
         ) : (
           <p className="text-red-500">false</p>
@@ -104,9 +127,18 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
           <p className="text-red-500">false</p>
         )}
       </TableCell>
-      <TableCell className="md:table-cell">{user.sessions_count}</TableCell>
-      <TableCell className="md:table-cell">account count</TableCell>
-      <TableCell className="md:table-cell">offers count</TableCell>
+      <TableCell className="md:table-cell">
+        {user.isActive ? (
+          <p className="text-green-500">true</p>
+        ) : (
+          <p className="text-red-500">false</p>
+        )}
+      </TableCell>
+      <TableCell className="md:table-cell">{location}</TableCell>
+      <TableCell className="md:table-cell">{registrationStatus}</TableCell>
+      <TableCell className="md:table-cell">{sessions}</TableCell>
+      <TableCell className="md:table-cell">{accounts}</TableCell>
+      <TableCell className="md:table-cell">{offers}</TableCell>
       <TableCell>
         <Button
           className="w-full"

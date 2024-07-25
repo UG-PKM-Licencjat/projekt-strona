@@ -251,14 +251,20 @@ export function DefaultCreateOfferPage() {
 
           {/* MOJE PORTFOLIO */}
           <Tabs defaultValue="images" className="w-full">
-            <TabsList>
-              <TabsTrigger value="images">
+            <TabsList className="h-14 p-0">
+              <TabsTrigger
+                value="images"
+                className="h-14 data-[state=active]:bg-pink-700 data-[state=active]:text-white"
+              >
                 <h1 className="text-4xl font-semibold uppercase">
                   ZDJĘCIA {images.length}/
                   {imageRouteConfig?.image?.maxFileCount}
                 </h1>
               </TabsTrigger>
-              <TabsTrigger value="videos">
+              <TabsTrigger
+                value="videos"
+                className="h-14 data-[state=active]:bg-pink-700 data-[state=active]:text-white"
+              >
                 <h1 className="text-4xl font-semibold uppercase">
                   FILMY {videos.length}/{videoRouteConfig?.video?.maxFileCount}
                 </h1>

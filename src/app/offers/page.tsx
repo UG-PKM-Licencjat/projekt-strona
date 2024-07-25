@@ -1,4 +1,3 @@
-import React from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { Offer } from "~/components/Offer/Offer";
 import {
@@ -6,7 +5,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";

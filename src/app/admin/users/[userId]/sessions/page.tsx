@@ -45,7 +45,7 @@ export default function IndexPage({
       <div className="mb-4 w-full">
         <Search value={searchParams.q} />
       </div>
-      {data ? (
+      {sessionData ? (
         <SessionsTable sessions={sessionData} offset={0} refetch={sessionRe} />
       ) : (
         <Icon name="spinner" className="m-32 h-8 w-8 animate-spin" />

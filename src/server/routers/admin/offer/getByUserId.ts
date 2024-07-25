@@ -1,10 +1,9 @@
 import { adminProcedure, procedure } from "~/server/trpc";
 import { offers, users, userOffers } from "~/server/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { db } from "~/server/db";
 import { z } from "zod";
 import logEvent from "~/server/log";
-import { log } from "console";
 
 const getByUserIdProcedure = procedure
   .input(
@@ -13,16 +12,16 @@ const getByUserIdProcedure = procedure
     }),
   )
   .query(async ({ input }) => {
-    logEvent("Fetching sessions by userId", input.userId);
+    logEvent("Fetching offers by userId", input.userId);
+    const columns = getTableColumns(offers);
+
     const fetchedOffers = await db
-      .select()
+      .select({
+        ...columns,
+      })
       .from(offers)
-      .where(
-        and(
-          eq(userOffers.userId, input.userId),
-          eq(userOffers.offerId, offers.id),
-        ),
-      );
+      .leftJoin(userOffers, eq(offers.id, userOffers.offerId))
+      .where(eq(userOffers.userId, input.userId));
     return fetchedOffers;
   });
 

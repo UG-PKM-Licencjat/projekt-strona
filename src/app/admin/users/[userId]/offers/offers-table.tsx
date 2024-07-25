@@ -14,15 +14,15 @@ import { trpc } from "src/app/_trpc/client";
 import type { inferRouterOutputs } from "@trpc/server";
 import { AdminRouter } from "~/server/routers/admin";
 
-type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter.sessions>;
-type Session = RouterUserOutputs["getByUserId"][0];
+type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter.offers>;
+type Offer = RouterUserOutputs["getByUserId"][0];
 
-export function SessionsTable({
-  sessions,
+export function OffersTable({
+  offers,
   offset,
   refetch,
 }: {
-  sessions: Session[];
+  offers: Offer[];
   offset: number | null;
   refetch: () => void;
 }) {
@@ -39,14 +39,16 @@ export function SessionsTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="max-w-[150px]">SessionToken</TableHead>
-              <TableHead className="md:table-cell">Expires</TableHead>
+              <TableHead className="max-w-[150px]">Id</TableHead>
+              <TableHead className="md:table-cell">Name</TableHead>
+              <TableHead className="md:table-cell">Description</TableHead>
+              <TableHead className="md:table-cell">Price</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sessions.map((session, index) => (
-              <SessionRow key={index} session={session} refetch={refetch} />
+            {offers.map((offer, index) => (
+              <OfferRow key={index} offer={offer} refetch={refetch} />
             ))}
           </TableBody>
         </Table>
@@ -64,23 +66,21 @@ export function SessionsTable({
   );
 }
 
-function SessionRow({
-  session,
-  refetch,
-}: {
-  session: Session;
-  refetch: () => void;
-}) {
+function OfferRow({ offer, refetch }: { offer: Offer; refetch: () => void }) {
   const deleteUserWithId = trpc.admin.users.delete.useMutation();
 
   // FIELDS
-  const sessionToken = session.sessionToken ?? "null";
-  const expires = session.expires ?? "null";
+  const id = offer.id ?? "null";
+  const name = offer.name ?? "null";
+  const description = offer.description ?? "null";
+  const price = offer.price ?? "null";
 
   return (
     <TableRow>
-      <TableCell className="font-medium">{sessionToken}</TableCell>
-      <TableCell className="md:table-cell">{expires}</TableCell>
+      <TableCell className="font-medium">{id}</TableCell>
+      <TableCell className="md:table-cell">{name}</TableCell>
+      <TableCell className="md:table-cell">{description}</TableCell>
+      <TableCell className="md:table-cell">{price}</TableCell>
       <TableCell>
         <Button
           className="w-full"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children } from "react";
 import { cn } from "src/utils/cn";
 import { type VariantProps, cva } from "class-variance-authority";
 
@@ -39,13 +39,15 @@ const buttonVariants = cva(
 );
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, children, ...props }, ref) => {
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      />
+      >
+        {children}
+      </button>
     );
   },
 );

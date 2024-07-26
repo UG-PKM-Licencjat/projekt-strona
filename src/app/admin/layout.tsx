@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { Button } from "src/components/ui/Button/Button";
-
 import "~/styles/globals.css";
 
 import Link from "next/link";
@@ -20,7 +19,7 @@ export default function RootLayout({
     redirect("/");
   }
   return (
-    <div lang="en" className="h-full bg-gray-50">
+    <div lang="en" className="h-full overflow-hidden bg-gray-50">
       <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
         <div className="hidden border-r bg-gray-100/40 dark:bg-gray-800/40 lg:block">
           <div className="flex h-full max-h-screen flex-col gap-2">

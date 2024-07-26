@@ -158,7 +158,10 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
           {offers}
         </Link>
       </TableCell>
-      <TableCell>
+      <TableCell className="flex gap-4">
+        <Button className="w-full" size="sm" variant="secondary">
+          <Link href={`users/${id}/edit`}>Edit</Link>
+        </Button>
         <Button
           className="w-full"
           size="sm"

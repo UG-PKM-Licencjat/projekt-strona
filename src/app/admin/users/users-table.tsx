@@ -142,8 +142,22 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
           {sessions}
         </Link>
       </TableCell>
-      <TableCell className="md:table-cell">{accounts}</TableCell>
-      <TableCell className="md:table-cell">{offers}</TableCell>
+      <TableCell className="md:table-cell">
+        <Link
+          href={`users/${id}/accounts`}
+          className="text-indigo-700 underline hover:opacity-30"
+        >
+          {accounts}
+        </Link>
+      </TableCell>
+      <TableCell className="md:table-cell">
+        <Link
+          href={`users/${id}/offers`}
+          className="text-indigo-700 underline hover:opacity-30"
+        >
+          {offers}
+        </Link>
+      </TableCell>
       <TableCell>
         <Button
           className="w-full"

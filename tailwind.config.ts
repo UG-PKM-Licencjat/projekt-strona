@@ -18,6 +18,18 @@ const config = {
         "2xl": "1400px",
       },
     },
+    fontSize: {
+      xs: "0.6875rem",
+      sm: "0.75rem",
+      base: "1rem",
+      lg: "1.3125rem",
+      xl: "1.5rem",
+      "2xl": "2.25rem",
+      "3xl": "2.9375rem",
+      "4xl": "3.8125rem",
+      "5xl": "5rem",
+      "6xl": "6.5625rem",
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -53,6 +65,15 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        neo: {
+          pink: "#d5a495",
+          sage: "#c6c99d",
+          mantis: "#7bbe7f",
+          sea: "#409270",
+          castleton: "#036751",
+          gray: "#f5f4f4",
+          "dark-gray": "#939292",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -72,6 +93,10 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        header: ["var(--font-montserrat)", "system-ui", "sans-serif"],
+        body: ["var(--font-cabin)", "system-ui", "sans-serif"],
       },
     },
   },

@@ -32,8 +32,8 @@ const config = {
     },
     borderRadius: {
       none: "0",
-      xs: "4px",
-      sm: "8px",
+      sm: "4px",
+      DEFAULT: "8px",
       md: "12px",
       lg: "16px",
       xl: "28px",
@@ -83,11 +83,6 @@ const config = {
           gray: "#f5f4f4",
           "dark-gray": "#939292",
         },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "accordion-down": {

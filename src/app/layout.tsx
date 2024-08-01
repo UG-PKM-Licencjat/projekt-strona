@@ -1,7 +1,7 @@
 "use client";
 import "~/styles/globals.css";
 
-import { Inter } from "next/font/google";
+import { Cabin, Montserrat } from "next/font/google";
 
 import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
 import { trpc } from "~/utils/trpc";
@@ -14,8 +14,14 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 import { Toaster } from "~/components/ui/toaster";
 
-const inter = Inter({
+const cabin = Cabin({
   subsets: ["latin"],
+  variable: "--font-cabin",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
 });
 
 function RootLayout({
@@ -27,7 +33,7 @@ function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body className={inter.className}>
+      <body className={`${cabin.variable} ${montserrat.variable} font-body`}>
         {SvgSymbols}
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <SessionProvider session={session}>

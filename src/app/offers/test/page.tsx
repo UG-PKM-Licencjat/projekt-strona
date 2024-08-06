@@ -13,7 +13,7 @@ import {
   RadioGroup,
   RadioGroupLabelItem,
 } from "~/components/ui/RadioGroup/RadioGroup";
-import { Checkbox } from "~/components/ui/checkbox";
+import { Checkbox } from "~/components/ui/Checkbox/Checkbox";
 import { Icon } from "~/components/ui/Icon/Icon";
 
 export default function CreateOfferPage() {

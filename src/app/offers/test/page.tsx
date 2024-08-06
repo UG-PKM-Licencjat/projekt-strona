@@ -11,6 +11,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupLabelItem } from "~/components/ui/radio-group";
 import { Checkbox } from "~/components/ui/checkbox";
+import { Icon } from "~/components/ui/Icon/Icon";
 
 export default function CreateOfferPage() {
   const sizes = ["sm", "md", "lg"] as const;
@@ -81,6 +82,7 @@ export default function CreateOfferPage() {
         <Checkbox id="c1">Tak, chcę się reklamować na Bebop</Checkbox>
         <Checkbox id="c2">Nie, chcę tylko przeglądać oferty</Checkbox>
       </div>
+      <Icon name="trash" className="size-10" />
     </div>
   );
 }

@@ -9,7 +9,6 @@ const meta = {
   },
   args: {
     children: "Button",
-    onClick: () => alert("Button clicked"),
   },
   argTypes: {
     variant: {
@@ -25,10 +24,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    variant: "primary",
-    children: "Primary",
+    variant: "default",
+    children: "Default",
   },
 };
 
@@ -39,6 +38,13 @@ export const Secondary: Story = {
   },
 };
 
+export const Link: Story = {
+  args: {
+    variant: "link",
+    children: "Link",
+  },
+};
+
 export const Outline: Story = {
   args: {
     variant: "outline",
@@ -46,10 +52,17 @@ export const Outline: Story = {
   },
 };
 
-export const Error: Story = {
+export const Destructive: Story = {
   args: {
-    variant: "error",
-    children: "Error",
+    variant: "destructive",
+    children: "Destructive",
+  },
+};
+
+export const Ghost: Story = {
+  args: {
+    variant: "ghost",
+    children: "Ghost",
   },
 };
 
@@ -57,6 +70,13 @@ export const Small: Story = {
   args: {
     size: "sm",
     children: "Small",
+  },
+};
+
+export const Medium: Story = {
+  args: {
+    size: "md",
+    children: "Medium",
   },
 };
 

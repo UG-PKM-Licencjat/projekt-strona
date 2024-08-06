@@ -1,47 +1,49 @@
-import React from "react";
-import { cn } from "~/utils/cn";
-import { type VariantProps, cva } from "class-variance-authority";
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  onClick?: () => void;
-}
+import { cn } from "~/utils/cn";
+
 const buttonVariants = cva(
-  "rounded-md border-2 border-transparent transition duration-200 text-center",
+  "inline-flex items-center justify-center whitespace-nowrap tracking-wider text-lg rounded-lg font-semibold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary:
-          "bg-violet-900 text-white hover:bg-white hover:border-violet-900 hover:text-violet-900",
         secondary:
-          "bg-blue-950 text-white hover:bg-white hover:border-blue-950 hover:text-blue-950",
+          "bg-neo-castleton text-neo-gray hover:bg-neo-castleton-hover",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "bg-transparent text-violet-900 border-violet-900 hover:bg-violet-900 hover:text-white",
-        error:
-          "bg-orange-500 text-white hover:bg-white hover:border-orange-500 hover:text-orange-500",
-        success:
-          "bg-green-900 text-white hover:bg-white hover:border-green-900 hover:text-green-900",
-        warning:
-          "bg-amber-500 text-white hover:bg-white hover:border-amber-500 hover:text-amber-500",
+          "border border-2 border-neo-pink bg-transparent text-neo-pink hover:bg-neo-pink hover:text-neo-gray",
+        default: "bg-neo-pink text-neo-gray hover:bg-neo-pink-hover",
+        ghost: "hover:bg-black/20 hover:text-black",
+        link: "text-neo-castleton underline-offset-4 hover:underline",
       },
       size: {
-        sm: "h-[32px] w-[96px] text-sm",
-        md: "h-[44px] w-[132px] text-base",
-        lg: "h-[60px] w-[160px] text-xl",
+        sm: "h-11 px-8 text-base rounded-md",
+        md: "h-14 px-8",
+        lg: "h-16 px-11",
+        icon: "size-14",
       },
     },
     defaultVariants: {
-      variant: "primary",
+      variant: "default",
       size: "md",
     },
   },
 );
 
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
     return (
-      <button
+      <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
@@ -49,7 +51,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   },
 );
-
 Button.displayName = "Button";
 
-export { Button };
+export { Button, buttonVariants };

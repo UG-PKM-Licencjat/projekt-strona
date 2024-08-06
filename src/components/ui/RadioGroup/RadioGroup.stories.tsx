@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <RadioGroup>
+    <RadioGroup defaultValue="tak">
       <RadioGroupLabelItem value="tak" id="r1">
         Tak, chcę się reklamować na Bebop
       </RadioGroupLabelItem>

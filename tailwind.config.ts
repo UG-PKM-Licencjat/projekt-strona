@@ -75,12 +75,30 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         neo: {
-          pink: "#d5a495",
-          sage: "#c6c99d",
-          mantis: "#7bbe7f",
-          sea: "#409270",
-          castleton: "#036751",
-          gray: "#f5f4f4",
+          pink: {
+            DEFAULT: "#d5a495",
+            hover: "#BC8A7B",
+          },
+          sage: {
+            DEFAULT: "#c6c99d",
+            hover: "#AAAC86",
+          },
+          mantis: {
+            DEFAULT: "#7bbe7f",
+            hover: "#64A068",
+          },
+          sea: {
+            DEFAULT: "#409270",
+            hover: "#386653",
+          },
+          castleton: {
+            DEFAULT: "#036751",
+            hover: "#043429",
+          },
+          gray: {
+            DEFAULT: "#f5f4f4",
+            hover: "#DBDBDB",
+          },
           "dark-gray": "#939292",
         },
       },

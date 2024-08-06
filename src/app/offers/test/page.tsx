@@ -1,7 +1,7 @@
 import { Button } from "~/components/ui/button";
 
 export default function CreateOfferPage() {
-  const sizes = ["sm", "default", "lg"] as const;
+  const sizes = ["sm", "md", "lg"] as const;
   const variants = [
     "default",
     "outline",

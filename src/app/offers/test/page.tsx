@@ -6,8 +6,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
-import { Input } from "~/components/ui/input";
+} from "~/components/ui/Select/Select";
+import { Input } from "~/components/ui/Input/Input";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupLabelItem } from "~/components/ui/radio-group";
 import { Checkbox } from "~/components/ui/checkbox";

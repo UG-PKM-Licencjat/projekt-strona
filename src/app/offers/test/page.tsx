@@ -9,7 +9,10 @@ import {
 } from "~/components/ui/Select/Select";
 import { Input } from "~/components/ui/Input/Input";
 import { Label } from "~/components/ui/label";
-import { RadioGroup, RadioGroupLabelItem } from "~/components/ui/radio-group";
+import {
+  RadioGroup,
+  RadioGroupLabelItem,
+} from "~/components/ui/RadioGroup/RadioGroup";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Icon } from "~/components/ui/Icon/Icon";
 

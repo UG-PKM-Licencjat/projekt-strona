@@ -10,6 +10,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupLabelItem } from "~/components/ui/radio-group";
+import { Checkbox } from "~/components/ui/checkbox";
 
 export default function CreateOfferPage() {
   const sizes = ["sm", "md", "lg"] as const;
@@ -22,7 +23,7 @@ export default function CreateOfferPage() {
     "link",
   ] as const;
   return (
-    <div className="flex h-screen flex-col items-center gap-10 p-20 text-black">
+    <div className="flex flex-col items-center gap-10 p-20 text-black">
       <div className="font-header text-2xl font-semibold ">Test page</div>
       <div>
         <Label>Select</Label>
@@ -74,6 +75,11 @@ export default function CreateOfferPage() {
             Nie, chcę tylko przeglądać oferty
           </RadioGroupLabelItem>
         </RadioGroup>
+      </div>
+      <div className="grid gap-2">
+        <Label>Checkbox</Label>
+        <Checkbox id="c1">Tak, chcę się reklamować na Bebop</Checkbox>
+        <Checkbox id="c2">Nie, chcę tylko przeglądać oferty</Checkbox>
       </div>
     </div>
   );

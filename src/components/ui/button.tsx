@@ -5,29 +5,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "~/utils/cn";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap tracking-wide rounded-md font-semibold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap tracking-wider text-lg rounded-lg font-semibold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        secondary: "bg-neo-castleton text-neo-gray hover:bg-neo-castleton/90",
+        secondary:
+          "bg-neo-castleton text-neo-gray hover:bg-neo-castleton-hover",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
           "border border-2 border-neo-pink bg-transparent text-neo-pink hover:bg-neo-pink hover:text-neo-gray",
-        default: "bg-neo-pink text-neo-gray hover:bg-neo-pink/80",
-        ghost: "hover:bg-black/30 hover:text-black",
+        default: "bg-neo-pink text-neo-gray hover:bg-neo-pink-hover",
+        ghost: "hover:bg-black/20 hover:text-black",
         link: "text-neo-castleton underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 px-3",
-        lg: "h-11 px-6",
-        icon: "h-10 w-10",
+        sm: "h-11 px-8 text-base rounded-md",
+        md: "h-14 px-8",
+        lg: "h-16 px-11",
+        icon: "size-14",
       },
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
+      size: "md",
     },
   },
 );

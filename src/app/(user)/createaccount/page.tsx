@@ -3,7 +3,7 @@ import { Input } from "~/components/ui/Input/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "~/components/ui/button";
+import { Button } from "~/components/ui/Button/Button";
 import {
   Form,
   FormControl,
@@ -16,6 +16,10 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { trpc } from "~/app/_trpc/client";
 import { useEffect } from "react";
+import { Icon } from "~/components/ui/Icon/Icon";
+//import svg
+import ReactComponent from "~/components/ui/SvgSymbols/illustration.svg";
+import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 
 const formSchema = z.object({
   nickname: z.string().min(2, {
@@ -86,86 +90,97 @@ export default function Create_Account() {
   }, [form, trpcData]);
 
   return (
-    <div>
-      <Button onClick={() => signOut({ callbackUrl: "http://localhost:3000" })}>
-        Wyloguj
-      </Button>
-      <h1 className="my-10 flex justify-center">
-        Uzupełnij te dane i korzystaj z naszej aplikacji!
-      </h1>
-      <div className="w-500 flex justify-center">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="nickname"
-              render={({ field }) => (
-                <FormItem className=" flex flex-col">
-                  <FormLabel>Pseudonim</FormLabel>
-                  <FormControl>
-                    <Input placeholder="pseudonim" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Imię</FormLabel>
-                  <FormControl>
-                    <Input placeholder="imie" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Nazwisko</FormLabel>
-                  <FormControl>
-                    <Input placeholder="nazwisko" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Lokalizacja</FormLabel>
-                  <FormControl>
-                    <Input placeholder="lokalizacja" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Zdjęcie</FormLabel>
-                  <FormControl>
-                    <Input id="image" type="file" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit">Przejdź dalej</Button>
-          </form>
-        </Form>
+    <>
+      {" "}
+      <div className="absolute left-5 top-0 font-bold">
+        <h1 className="text-center text-2xl text-primary">Bebooop</h1>
       </div>
-    </div>
+      <div
+        className="relative mx-10 box-border grid grid-cols-3 gap-20 rounded-lg bg-secondary p-10
+    "
+      >
+        {/* header website name bebooop */}
+
+        {/* <Button onClick={() => signOut({ callbackUrl: "http://localhost:3000" })}>
+        Wyloguj
+      </Button> */}
+        {/* pasek progresu w rejestracji */}
+
+        <div
+          className="col-span-2 mb-10 grid w-max auto-rows-max grid-rows-2 justify-center gap-10 
+          "
+        >
+          <h1
+            className="font-header text-center text-2xl font-medium leading-none text-primary 
+     "
+          >
+            Cieszymy się, że
+            <span className="text-neo-castleton"> jesteś </span> z nami!
+          </h1>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="gap-y-auto left absolute bottom-0 mb-10 w-72  space-y-6"
+            >
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem
+                    className=" flex flex-col items-center
+                "
+                  >
+                    {/* <FormLabel>Zdjęcie</FormLabel> */}
+                    <FormControl className="bg-neo-pink h-44 w-44 justify-center rounded-full">
+                      <Input id="image" type="file" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem className="box-border flex w-full flex-col">
+                    <FormLabel>Imię</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Podaj imię" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem className="box-content flex flex-col">
+                    <FormLabel>Nazwisko</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Podaj nazwisko" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full">
+                Przejdź dalej
+              </Button>
+            </form>
+          </Form>
+        </div>
+        <div>
+          <img
+            src="/svgs/illustration.svg"
+            width={90}
+            height={20}
+            className="h-full w-full object-cover "
+          />
+          {/* <Icon name="registration1" /> */}
+        </div>
+      </div>
+    </>
   );
 }

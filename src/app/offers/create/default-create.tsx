@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "~/components/ui/Select/Select";
 import {
   Popover,
   PopoverTrigger,

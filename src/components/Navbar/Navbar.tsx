@@ -16,7 +16,7 @@ export const Navbar = () => (
       <Avatar>
         {/* Placeholder image */}
         <AvatarImage
-          src="https://i.pinimg.com/736x/dc/e1/8e/dce18e21ab55156563e17affb71314fc.jpg"
+          src="https://utfs.io/f/2d3da5b8-2b91-40b1-801a-f17f936fd1e3-n92lk7.jpg"
           alt="avatar"
         />
         <AvatarFallback>XD</AvatarFallback>

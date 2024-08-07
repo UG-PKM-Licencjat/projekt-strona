@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { withUt } from "uploadthing/tw";
 
 const config = {
   darkMode: ["class"],
@@ -16,6 +17,27 @@ const config = {
       screens: {
         "2xl": "1400px",
       },
+    },
+    fontSize: {
+      xs: "0.6875rem",
+      sm: "0.75rem",
+      base: "1rem",
+      lg: "1.3125rem",
+      xl: "1.5rem",
+      "2xl": "2.25rem",
+      "3xl": "2.9375rem",
+      "4xl": "3.8125rem",
+      "5xl": "5rem",
+      "6xl": "6.5625rem",
+    },
+    borderRadius: {
+      none: "0",
+      sm: "4px",
+      DEFAULT: "8px",
+      md: "12px",
+      lg: "16px",
+      xl: "28px",
+      full: "9999px",
     },
     extend: {
       colors: {
@@ -52,11 +74,33 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        neo: {
+          pink: {
+            DEFAULT: "#d5a495",
+            hover: "#BC8A7B",
+          },
+          sage: {
+            DEFAULT: "#c6c99d",
+            hover: "#AAAC86",
+          },
+          mantis: {
+            DEFAULT: "#7bbe7f",
+            hover: "#64A068",
+          },
+          sea: {
+            DEFAULT: "#409270",
+            hover: "#386653",
+          },
+          castleton: {
+            DEFAULT: "#036751",
+            hover: "#043429",
+          },
+          gray: {
+            DEFAULT: "#f5f4f4",
+            hover: "#DBDBDB",
+          },
+          "dark-gray": "#939292",
+        },
       },
       keyframes: {
         "accordion-down": {
@@ -72,9 +116,13 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        header: ["var(--font-montserrat)", "system-ui", "sans-serif"],
+        body: ["var(--font-cabin)", "system-ui", "sans-serif"],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
-export default config;
+export default withUt(config);

@@ -130,6 +130,46 @@ export const appRouter = router({
       }
     }),
 
+  changeStep: authedProcedure
+    .input(
+      z.object({
+        step: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        console.log("Changing registration step", input.step);
+        console.log("User id", ctx.session?.user.id);
+        const fetchedUsers = await db
+          .update(users)
+          .set({
+            registrationStatus: input.step,
+          })
+          .where(eq(users.id, ctx.session?.user.id));
+        console.log("Changed registration step", fetchedUsers);
+        return fetchedUsers;
+      } catch (error) {
+        console.log("Error fetching registration data", error);
+        return [];
+      }
+    }),
+
+  getRegistationStep: authedProcedure.query(async ({ ctx }) => {
+    try {
+      const step = await db
+        .select({
+          registrationStatus: users.registrationStatus,
+        })
+        .from(users)
+        .where(eq(users.id, ctx.session?.user.id));
+      console.log("Fetched registration step", step);
+      return step;
+    } catch (error) {
+      console.log("Error fetching registration data", error);
+      return;
+    }
+  }),
+
   getRegistrationData1Step: authedProcedure.query(async ({ ctx }) => {
     try {
       const fetchedUserData = await db
@@ -142,7 +182,7 @@ export const appRouter = router({
         })
         .from(users)
         .where(eq(users.id, ctx.session?.user.id));
-      console.log("Fetched registration data", fetchedUserData);
+      // console.log("Fetched registration data", fetchedUserData);
       return fetchedUserData;
     } catch (error) {
       console.log("Error fetching registration data", error);

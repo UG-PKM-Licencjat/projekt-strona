@@ -1,11 +1,32 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { SearchEngine } from "~/components/searchEngine/searchEngine";
 import { Button } from "~/components/ui/Button/Button";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { trpc } from "./_trpc/client";
+import { redirect } from "next/navigation";
 
 export default function Home() {
+  // const session = useSession();
+  // const getRegistationStep = trpc.getRegistationStep.useQuery();
+
+  // let url = "http://localhost:3000";
+  // useEffect(() => {
+  //   if (session != null) {
+  //     const step = getRegistationStep.data?.[0]?.registrationStatus ?? 0;
+  //     console.log("step", step);
+  //     switch (step) {
+  //       case 2:
+  //         // url = "http://localhost:3000/createaccount/step2";
+  //         redirect("/createaccount/step2");
+  //       default:
+  //         break;
+  //     }
+  //   }
+  // }, [session, getRegistationStep]);
+
   return (
     <>
       <header className="flex h-[500px] justify-between bg-pink-700">
@@ -43,7 +64,7 @@ export default function Home() {
             </p>
           </div>
           <Button
-            onClick={() =>
+            onClick={async () =>
               signIn("google", {
                 callbackUrl: "http://localhost:3000/createaccount",
               })

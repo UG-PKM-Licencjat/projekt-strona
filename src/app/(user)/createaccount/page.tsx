@@ -18,7 +18,7 @@ import { trpc } from "~/app/_trpc/client";
 import { useEffect } from "react";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
+  nickname: z.string().min(2, {
     message: "Pseudonim musi mieć co najmniej 2 znaki.",
   }),
   firstName: z.string().min(2, {
@@ -37,7 +37,7 @@ export default function Create_Account() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      nickname: "",
       firstName: "",
       lastName: "",
       location: "",
@@ -46,31 +46,44 @@ export default function Create_Account() {
   });
   const router = useRouter();
   const { data } = useSession();
+  const putData = trpc.putRegistrationData1Step.useMutation();
+  const changeStep = trpc.changeStep.useMutation();
+  const getStep = trpc.getRegistationStep.useQuery();
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const putData = trpc.putRegistrationData1Step.useMutation();
-
     const response = await putData.mutateAsync({
-      nickname: data.username,
+      nickname: data.nickname,
       firstName: data.firstName,
       lastName: data.lastName,
       location: data.location,
       image: data.image ?? "",
     });
     if (response != null) {
-      router.push("/createaccount/step2");
+      const stepp = await changeStep.mutateAsync({ step: 2 });
+      console.log("Success");
+      // console.log("response", stepp);
+      const got = await getStep;
+      console.log("got", got);
+
+      // router.push("/createaccount/step2");
+    } else {
+      console.log("Error");
     }
   };
-
-  useEffect(() => {
-    if (data) {
-      form.setValue("firstName", data.user.firstName);
-      form.setValue("lastName", data.user.lastName);
-    }
-  }, [data, form]);
-
   const { data: trpcData } = trpc.getRegistrationData1Step.useQuery();
-  console.log(trpcData);
+  useEffect(() => {
+    console.log("trpcData", trpcData);
+    if (trpcData && Array.isArray(trpcData) && trpcData.length > 0) {
+      console.log("trpcData2", trpcData);
+      const firstData = trpcData[0];
+      if (firstData) {
+        form.setValue("firstName", firstData.firstName ?? "");
+        form.setValue("lastName", firstData.lastName ?? "");
+        form.setValue("nickname", firstData.nickname ?? "");
+        form.setValue("location", firstData.location ?? "");
+      }
+    }
+  }, [form, trpcData]);
 
   return (
     <div>
@@ -85,7 +98,7 @@ export default function Create_Account() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="username"
+              name="nickname"
               render={({ field }) => (
                 <FormItem className=" flex flex-col">
                   <FormLabel>Pseudonim</FormLabel>

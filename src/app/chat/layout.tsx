@@ -6,6 +6,7 @@ import ConversationsNav, {
   type UserWithMessage,
 } from "~/components/chat/ConversationsNav/ConversationsNav";
 import { useConversationsStore } from "~/stores";
+import { trpc } from "../_trpc/client";
 
 export default function ChatLayout({
   children,
@@ -15,10 +16,13 @@ export default function ChatLayout({
   const conversationsStore = useConversationsStore();
   const { data: session } = useSession();
   const [sampleMessages, setSampleMessages] = useState<UserWithMessage[]>([]);
-
+  const { data: messages, refetch: re } = trpc.getSampleMessages.useQuery(
+    session?.user.id ?? "", // TODO fix it somehow session
+  );
   useEffect(() => {
     const userId = session?.user.id;
     if (!userId) return;
+    void re(); // TODO: not too good idea
     const conversations = conversationsStore.conversations[userId] ?? [];
     const mapped = conversations.map((message) => ({
       name: "Test name", // TODO: get user name from the server
@@ -26,7 +30,8 @@ export default function ChatLayout({
       image: "https://picsum.photos/id/100/400/400",
     }));
     setSampleMessages(mapped);
-  }, [conversationsStore.conversations, session?.user.id]);
+  }, [conversationsStore.conversations, re, session?.user.id]);
+
   // TODO: we should fetch the messages from the server
   return (
     <div className="flex gap-10">

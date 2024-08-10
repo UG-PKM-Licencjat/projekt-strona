@@ -74,16 +74,20 @@ export const appRouter = router({
       return mappedOffer;
     }),
   getSampleMessages: procedure.input(z.string()).query(async ({ input }) => {
-    const data = (await (
-      await fetch(`http://localhost:3000/api/messages/sample?user=${input}`)
-    ).json()) as Array<UserWithMessage>;
+    const data = (
+      await (
+        await fetch(
+          `https://chat-swxn.onrender.com/messages/sample?user=${input}`,
+        )
+      ).json()
+    ).result!.data! as Array<UserWithMessage>; // TODO: validate with zod and fix it to be safe
     logEvent(
       `Fetched sample messages for user ${input} with first element name: ${data[0]?.name}`,
     );
     return data;
   }),
   // TODO finish create offer procedure
-  // createOffer: procedure
+  // createOffer: procedureatl
   //   .input(
   //     z.object({
   //       id: z.string(),

@@ -4,6 +4,7 @@ import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
 import { eq } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
+import { utapi } from "../uploadthing";
 import { UserWithMessage } from "~/components/chat/ConversationsNav/ConversationsNav";
 
 const keys = Object.keys(LogType);

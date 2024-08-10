@@ -7,6 +7,7 @@ import ConversationsNav, {
 } from "~/components/chat/ConversationsNav/ConversationsNav";
 import { useConversationsStore } from "~/stores";
 import { trpc } from "../_trpc/client";
+import { useRouter } from "next/navigation";
 
 export default function ChatLayout({
   children,
@@ -16,21 +17,28 @@ export default function ChatLayout({
   const conversationsStore = useConversationsStore();
   const { data: session } = useSession();
   const [sampleMessages, setSampleMessages] = useState<UserWithMessage[]>([]);
+  const router = useRouter();
+
   const { data: messages, refetch: re } = trpc.getSampleMessages.useQuery(
-    session?.user.id ?? "", // TODO fix it somehow session
+    session?.user.id ?? "",
   );
+
   useEffect(() => {
     const userId = session?.user.id;
     if (!userId) return;
-    void re(); // TODO: not too good idea
+    //void re(); // TODO: not too good idea
     const conversations = conversationsStore.conversations[userId] ?? [];
-    const mapped = conversations.map((message) => ({
-      name: "Test name", // TODO: get user name from the server
-      lastMessage: message.message,
-      image: "https://picsum.photos/id/100/400/400",
-    }));
-    setSampleMessages(mapped);
-  }, [conversationsStore.conversations, re, session?.user.id]);
+    const mapped: Array<UserWithMessage> | undefined = messages?.map(
+      (message) =>
+        ({
+          name: "Test name", // TODO: get user name from the server
+          lastMessage: message.message,
+          image: "https://picsum.photos/id/100/400/400", // TODO: fetch from server
+          userId: message.from == userId ? message.to : message.from,
+        }) satisfies UserWithMessage,
+    );
+    setSampleMessages(mapped ?? []);
+  }, [conversationsStore.conversations, messages, session?.user.id]);
 
   // TODO: we should fetch the messages from the server
   return (
@@ -39,7 +47,7 @@ export default function ChatLayout({
         <ConversationsNav
           usersWithMessages={sampleMessages}
           clickAction={(user) => {
-            console.log(user);
+            router.push(`/chat/${user.userId}`);
           }}
         />
       </div>

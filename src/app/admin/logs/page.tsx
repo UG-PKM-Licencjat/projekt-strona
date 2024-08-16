@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 export default function Page() {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState<Array<{ id: string; message: string }>>([]);
 
   useEffect(() => {
-    fetchLogs();
+    void fetchLogs();
   }, []);
 
   const fetchLogs = async () => {
     try {
-      const response = await axios.get("/api/logs"); // Replace "/api/logs" with your API endpoint for querying logs from MongoDB
-      setLogs(response.data);
+      const response = await fetch("/api/logs"); // Replace "/api/logs" with your API endpoint for querying logs from MongoDB
+      const parsed = (await response.json()) as Array<{
+        id: string;
+        message: string;
+      }>;
+      setLogs(parsed);
     } catch (error) {
       console.error("Error fetching logs:", error);
     }

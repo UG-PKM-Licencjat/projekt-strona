@@ -1,4 +1,5 @@
 import * as React from "react";
+import type { IconType } from "~/components/ui/SvgSymbols/SvgSymbols";
 
 type DefaultProps = React.SVGProps<SVGSVGElement>;
 
@@ -6,7 +7,7 @@ interface IconProps extends DefaultProps {
   /**
    * Icon name
    */
-  name: string;
+  name: IconType;
   /**
    * Custom classes
    */

@@ -1,17 +1,16 @@
 "use client";
 
-import React from "react";
-import { Icon } from "src/components/ui/Icon/Icon";
-import { OfferSegment } from "src/components/ui/OfferSegment/OfferSegment";
+import { useState } from "react";
+import { Icon } from "~/components/ui/Icon/Icon";
+import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  // SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "src/components/ui/select";
+} from "~/components/ui/Select/Select";
 import {
   Popover,
   PopoverTrigger,
@@ -21,10 +20,15 @@ import { ScrollArea } from "src/components/ui/scroll-area";
 import { useToast } from "src/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { type FormData } from "./schema";
-
 import { SegmentField } from "./segment-field";
-// import { trpc } from "~/app/_trpc/client";
-// import Image from "next/image";
+import Image from "next/image";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+
+import {
+  PreviewDropzone,
+  useUploadThing,
+  type CustomFile,
+} from "~/components/uploadthing";
 
 export function DefaultCreateOfferPage() {
   const { toast } = useToast();
@@ -35,7 +39,7 @@ export function DefaultCreateOfferPage() {
     control,
   } = useFormContext<FormData>();
 
-  const [tagOpen, setTagOpen] = React.useState(false);
+  const [tagOpen, setTagOpen] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -43,7 +47,13 @@ export function DefaultCreateOfferPage() {
     keyName: "key",
   });
 
-  const [tags, setTags] = React.useState<{ name: string; id: string }[]>([
+  const { fields: filesFields, append: appendFiles } = useFieldArray({
+    control,
+    name: "files",
+    keyName: "key",
+  });
+
+  const [tags, setTags] = useState<{ name: string; id: string }[]>([
     { name: "hashtag1", id: "0" },
     { name: "hashtag2", id: "1" },
     { name: "hashtag3", id: "2" },
@@ -67,7 +77,52 @@ export function DefaultCreateOfferPage() {
     remove(index);
   };
 
-  const onSubmit = handleSubmit((data) => {
+  const [images, setImages] = useState<CustomFile[]>([]);
+  const {
+    startUpload: startImageUpload,
+    routeConfig: imageRouteConfig,
+    isUploading: isImageUploading,
+  } = useUploadThing("createImageUploader", {
+    onClientUploadComplete: (res) => {
+      console.log(res);
+      appendFiles(res.map((file) => ({ fileKey: file.key })));
+      setImages([]);
+      // alert("uploaded successfully!");
+    },
+    onUploadError: () => {
+      alert("error occurred while uploading");
+    },
+    onUploadBegin: () => {
+      // alert("upload has begun");
+    },
+  });
+  const [videos, setVideos] = useState<CustomFile[]>([]);
+  const {
+    startUpload: startVideoUpload,
+    routeConfig: videoRouteConfig,
+    isUploading: isVideoUploading,
+  } = useUploadThing("createVideoUploader", {
+    onClientUploadComplete: (res) => {
+      console.log(res);
+      appendFiles(res.map((file) => ({ fileKey: file.key })));
+      setVideos([]);
+      // alert("uploaded successfully!");
+    },
+    onUploadError: () => {
+      alert("error occurred while uploading");
+    },
+    onUploadBegin: () => {
+      // alert("upload has begun");
+    },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    if (images.length > 0) {
+      await startImageUpload(images);
+    }
+    if (videos.length > 0) {
+      await startVideoUpload(videos);
+    }
     toast({
       title: "Submitted form",
       description: (
@@ -85,11 +140,16 @@ export function DefaultCreateOfferPage() {
         <div className="flex flex-col items-start gap-20 px-16 py-8">
           {/* HEADER */}
           <div className="flex items-start gap-10">
-            <img
-              src="https://i.pinimg.com/736x/dc/e1/8e/dce18e21ab55156563e17affb71314fc.jpg"
-              alt="avatar"
-              className="size-64 rounded-full"
-            />
+            <div className="relative size-64">
+              <Image
+                src="https://utfs.io/f/2d3da5b8-2b91-40b1-801a-f17f936fd1e3-n92lk7.jpg"
+                alt="avatar"
+                fill={true}
+                sizes="(max-width: 768px) 100vw, 640px"
+                className="rounded-full"
+                priority
+              />
+            </div>
 
             <div className="mt-4 flex flex-col items-start justify-center gap-4">
               <div className="flex items-end justify-center gap-12">
@@ -111,10 +171,34 @@ export function DefaultCreateOfferPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex h-10 items-center justify-center gap-4">
+                <Popover open={tagOpen} onOpenChange={setTagOpen}>
+                  <PopoverTrigger
+                    className="flex items-center justify-center rounded-full border-2 p-1 hover:bg-secondary disabled:cursor-not-allowed disabled:bg-gray-300 disabled:opacity-60"
+                    disabled={tags.length === 0}
+                  >
+                    <Icon name="plus" className="size-6" />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-fit p-0">
+                    {/* TODO add search */}
+                    <ScrollArea className="max-h-[20rem] rounded-lg">
+                      <div className="flex flex-col gap-1 p-2">
+                        {tags?.map((tag, index) => (
+                          <div
+                            key={index}
+                            className="cursor-pointer select-none divide-y divide-solid divide-black rounded-lg bg-purple-400 p-3 font-semibold text-white transition-colors hover:bg-purple-300"
+                            onClick={() => appendFunc(tag)}
+                          >
+                            {tag.name}
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </PopoverContent>
+                </Popover>
                 {fields?.map((tag, index) => (
                   <div
-                    className="pointer-events-none flex h-10 items-center gap-2 rounded-lg bg-purple-400 px-4 font-normal text-white transition-colors hover:bg-destructive"
+                    className="pointer-events-none flex h-10 select-none items-center gap-2 rounded-lg bg-purple-400 px-4 font-normal text-white transition-colors hover:bg-destructive"
                     key={tag.key}
                   >
                     <input
@@ -133,30 +217,6 @@ export function DefaultCreateOfferPage() {
                     />
                   </div>
                 ))}
-                <Popover open={tagOpen} onOpenChange={setTagOpen}>
-                  <PopoverTrigger
-                    className="flex items-center rounded-full border-2 p-1 hover:bg-secondary disabled:cursor-not-allowed disabled:bg-gray-300 disabled:opacity-60"
-                    disabled={tags.length === 0}
-                  >
-                    <Icon name="plus" className="size-6" />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-fit p-0">
-                    {/* TODO add search */}
-                    <ScrollArea className="max-h-[20rem] rounded-lg">
-                      <div className="flex flex-col gap-1 p-2">
-                        {tags?.map((tag, index) => (
-                          <div
-                            key={index}
-                            className=" cursor-pointer divide-y divide-solid divide-black rounded-lg bg-purple-400 p-3 font-semibold text-white transition-colors hover:bg-purple-300"
-                            onClick={() => appendFunc(tag)}
-                          >
-                            {tag.name}
-                          </div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                  </PopoverContent>
-                </Popover>
               </div>
               <p className="text-sm font-semibold text-red-500">
                 {errors.tags?.root?.message?.toString() ??
@@ -166,9 +226,7 @@ export function DefaultCreateOfferPage() {
               <label className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
                 <Icon name="wallet" className="size-8" />
                 <input
-                  {...register("price", {
-                    valueAsNumber: true,
-                  })}
+                  {...register("price")}
                   className="w-[5.8rem] bg-inherit text-right outline-none"
                   placeholder="Cena"
                 />
@@ -192,14 +250,66 @@ export function DefaultCreateOfferPage() {
           </OfferSegment>
 
           {/* MOJE PORTFOLIO */}
-          <OfferSegment
-            heading="MOJE PORTFOLIO"
-            info={[
-              "https://www.youtube.com/embed/F2YpXC1itEE",
-              "https://www.youtube.com/embed/F2YpXC1itEE",
-            ]}
-            type="video"
-          />
+          <Tabs defaultValue="images" className="w-full">
+            <TabsList className="h-14 p-0">
+              <TabsTrigger
+                value="images"
+                className="h-14 data-[state=active]:bg-pink-700 data-[state=active]:text-white"
+              >
+                <h1 className="text-4xl font-semibold uppercase">
+                  ZDJĘCIA {images.length}/
+                  {imageRouteConfig?.image?.maxFileCount}
+                </h1>
+              </TabsTrigger>
+              <TabsTrigger
+                value="videos"
+                className="h-14 data-[state=active]:bg-pink-700 data-[state=active]:text-white"
+              >
+                <h1 className="text-4xl font-semibold uppercase">
+                  FILMY {videos.length}/{videoRouteConfig?.video?.maxFileCount}
+                </h1>
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="images">
+              <PreviewDropzone
+                files={images}
+                setFiles={setImages}
+                routeConfig={imageRouteConfig}
+                startUpload={startImageUpload}
+                isUploading={isImageUploading}
+                showUploadButton={false}
+                disabled={
+                  images.length >=
+                  (imageRouteConfig?.image?.maxFileCount
+                    ? imageRouteConfig?.image?.maxFileCount
+                    : 0)
+                }
+              />
+            </TabsContent>
+            <TabsContent value="videos">
+              <PreviewDropzone
+                files={videos}
+                setFiles={setVideos}
+                routeConfig={videoRouteConfig}
+                startUpload={startVideoUpload}
+                isUploading={isVideoUploading}
+                showUploadButton={false}
+                disabled={
+                  videos.length >=
+                  (videoRouteConfig?.video?.maxFileCount
+                    ? videoRouteConfig?.video?.maxFileCount
+                    : 0)
+                }
+              />
+            </TabsContent>
+          </Tabs>
+          {filesFields.map((file, index) => (
+            <input
+              key={file.key}
+              {...register(`files.${index}.fileKey` as const)}
+              className="hidden bg-inherit outline-none"
+            />
+          ))}
 
           {/* LINKI */}
           <OfferSegment heading="LINKI">

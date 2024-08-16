@@ -1,15 +1,13 @@
 "use client";
 
-import { request } from "http";
 import { useSession } from "next-auth/react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ConversationWindow, {
   type Message,
 } from "src/components/chat/ConversationWindow/ConversationWindow";
 import { Button } from "src/components/ui/Button/Button";
 import { Input } from "src/components/ui/Input/Input";
 
-// TODO: Data should be cached in the client
 export default function Conversation({
   params,
 }: {
@@ -19,19 +17,6 @@ export default function Conversation({
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Array<Message>>([]);
   const { data: session } = useSession();
-
-  useEffect(() => {
-    const socketConnection = new WebSocket(
-      `wss://chat-swxn.onrender.com/connect?id=${session?.user.id}`,
-    );
-
-    socketConnection.onmessage = (event: MessageEvent<string>) => {
-      const newMessage = JSON.parse(event.data) as Message;
-      console.log("1", messages);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-      console.log(messages);
-    };
-  }, [session]);
 
   void useMemo(async () => {
     console.log("Loading data for", session?.user.id);

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { DefaultCreateOfferPage } from "./default-create";
 import {
   Tabs,
@@ -10,7 +9,6 @@ import {
 } from "src/components/ui/tabs";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DevTool } from "@hookform/devtools";
 import { offerSchema, type FormData } from "./schema";
 
 export default function CreateOfferPage() {
@@ -32,7 +30,6 @@ export default function CreateOfferPage() {
             <div>Form</div>
           </TabsContent>
         </Tabs>
-        <DevTool control={methods.control} />
       </FormProvider>
     </>
   );

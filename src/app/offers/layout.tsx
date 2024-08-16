@@ -1,6 +1,4 @@
-import React from "react";
-import { Navbar } from "src/components/Navbar/Navbar";
-import { Toaster } from "src/components/ui/toaster";
+import { Navbar } from "~/components/Navbar/Navbar";
 
 export default function OfferLayout({
   children,
@@ -11,7 +9,6 @@ export default function OfferLayout({
     <div className="flex h-screen flex-col">
       <Navbar />
       {children}
-      <Toaster />
     </div>
   );
 }

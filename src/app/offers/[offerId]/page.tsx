@@ -1,16 +1,16 @@
 "use client";
 
-import React from "react";
-import { Icon } from "src/components/ui/Icon/Icon";
-import { Tag } from "src/components/Tag/Tag";
+import { useState, useEffect } from "react";
+import { Icon } from "~/components/ui/Icon/Icon";
+import { Tag } from "~/components/Tag/Tag";
 import { redirect } from "next/navigation";
-import { OfferSegment } from "src/components/ui/OfferSegment/OfferSegment";
-import { StarRating } from "src/components/ui/StarRating/StarRating";
-import { trpc } from "src/app/_trpc/client";
-// import Image from "next/image";
+import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
+import { StarRating } from "~/components/ui/StarRating/StarRating";
+import { trpc } from "~/app/_trpc/client";
+import Image from "next/image";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
-  const [tags, setTags] = React.useState<{ name: string; id: string }[]>([
+  const [tags, setTags] = useState<{ name: string; id: string }[]>([
     { name: "hashtag1", id: "0" },
     { name: "hashtag2", id: "1" },
     { name: "hashtag3", id: "2" },
@@ -28,7 +28,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
   }
   const { data } = trpc.getOffer.useQuery({ id: uriDecoded });
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log(data);
     if (data) {
       data?.offerTags ? setTags(data?.offerTags) : null;
@@ -39,11 +39,15 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
     <div className="flex flex-col items-start gap-20 px-16 py-8">
       {/* HEADER */}
       <div className="flex items-start gap-10">
-        <img
-          src="https://i.pinimg.com/736x/dc/e1/8e/dce18e21ab55156563e17affb71314fc.jpg"
-          alt="avatar"
-          className="size-64 rounded-full"
-        />
+        <div className="relative size-64">
+          <Image
+            src="https://utfs.io/f/2d3da5b8-2b91-40b1-801a-f17f936fd1e3-n92lk7.jpg"
+            alt="avatar"
+            fill={true}
+            sizes="(max-width: 768px) 100vw, 640px"
+            className="rounded-full"
+          />
+        </div>
 
         <div className="mt-4 flex flex-col items-start justify-center gap-4">
           <div className="flex items-end justify-center gap-12">

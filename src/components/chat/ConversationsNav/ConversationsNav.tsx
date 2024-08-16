@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useEffect } from "react";
 
 export default function ConversationsNav({
   usersWithMessages,
@@ -10,15 +11,15 @@ export default function ConversationsNav({
   return (
     <div className="h-screen w-72 overflow-y-auto border-r border-gray-300 bg-gray-100">
       <ul className="m-0 list-none p-0">
-        {usersWithMessages.map((user, index) => (
+        {usersWithMessages.map((user) => (
           <li
-            key={index}
+            key={user.userId}
             className="flex cursor-pointer items-center border-b border-gray-300 p-2 transition duration-300 hover:bg-gray-200"
             onClick={() => clickAction(user)}
           >
             <div className="flex items-center">
               {
-                <Image
+                <img
                   src={user.image}
                   alt={user.name}
                   width={40}
@@ -39,6 +40,7 @@ export default function ConversationsNav({
 }
 
 export interface UserWithMessage {
+  userId: string;
   name: string;
   lastMessage: string;
   image: string;

@@ -94,8 +94,8 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
   const isPremium = user.isPremium ?? "null";
   const isAdmin = user.isAdmin ?? "null";
   const isActive = user.isActive ?? "null";
-  const location = user.location ?? "null";
-  const registrationStatus = user.registrationStatus ?? "null";
+  // const location = user.location ?? "null";
+  // const registrationStatus = user.registrationStatus ?? "null";
   const sessions = user.sessions_count ?? "null";
   const accounts = user.accounts_count ?? "null";
   const offers = user.offers_count ?? "null";
@@ -132,8 +132,8 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
           <p className="text-red-500">false</p>
         )}
       </TableCell>
-      <TableCell className="md:table-cell">{location}</TableCell>
-      <TableCell className="md:table-cell">{registrationStatus}</TableCell>
+      {/* <TableCell className="md:table-cell">{location}</TableCell>
+      <TableCell className="md:table-cell">{registrationStatus}</TableCell> */}
       <TableCell className="md:table-cell">
         <Link
           href={`users/${id}/sessions`}

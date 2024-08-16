@@ -1,6 +1,6 @@
 import { getServerAuthSession } from "../auth";
 import mongo from "./mongo";
-import { env } from "~/env.js";
+import { env } from "src/env.js";
 
 const collection = mongo.collection<LogEvent>("logs");
 

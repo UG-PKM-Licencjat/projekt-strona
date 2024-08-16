@@ -1,11 +1,11 @@
 "use client";
 
-import { trpc } from "~/app/_trpc/client";
+import { trpc } from "src/app/_trpc/client";
 import { UsersTable } from "./users-table";
-import { Search } from "./search";
-import { Icon } from "~/components/ui/Icon/Icon";
+import { Search } from "../search";
+import { Icon } from "src/components/ui/Icon/Icon";
 import { useRouter } from "next/navigation";
-import { Button } from "~/components/ui/Button/Button";
+import { Button } from "src/components/ui/Button/Button";
 
 export default function IndexPage({
   searchParams,
@@ -14,7 +14,7 @@ export default function IndexPage({
 }) {
   const search = searchParams.q ?? "";
   const offset = searchParams.offset ?? 0;
-  const { data, refetch: re } = trpc.getUsers.useQuery();
+  const { data, refetch: re } = trpc.admin.users.get.useQuery();
   const router = useRouter();
 
   const refetch = async () => {
@@ -24,7 +24,7 @@ export default function IndexPage({
   };
 
   return (
-    <main className="flex flex-1 flex-col p-4 md:p-6">
+    <main className="flex max-w-[80vw] flex-1 flex-col overflow-hidden p-4 md:p-6">
       <div className="mb-8 flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Users</h1>
       </div>

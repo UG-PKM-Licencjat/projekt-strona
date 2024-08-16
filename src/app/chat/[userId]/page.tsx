@@ -4,9 +4,9 @@ import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 import ConversationWindow, {
   type Message,
-} from "~/components/chat/ConversationWindow/ConversationWindow";
-import { Button } from "~/components/ui/Button/Button";
-import { Input } from "~/components/ui/Input/Input";
+} from "src/components/chat/ConversationWindow/ConversationWindow";
+import { Button } from "src/components/ui/Button/Button";
+import { Input } from "src/components/ui/Input/Input";
 
 export default function Conversation({
   params,

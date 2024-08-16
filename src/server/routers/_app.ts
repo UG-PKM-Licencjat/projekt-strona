@@ -2,27 +2,16 @@ import { z } from "zod";
 import { db } from "../db";
 import { sessions, users, offers, offerTags } from "../db/schema";
 import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
-import { eq } from "drizzle-orm";
+import { eq, count, getTableColumns } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
 import { utapi } from "../uploadthing";
 import { UserWithMessage } from "~/components/chat/ConversationsNav/ConversationsNav";
 import { Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 
-const keys = Object.keys(LogType);
+import { AdminRouter } from "./admin";
 
 export const appRouter = router({
-  getUsers: authedProcedure.query(async ({ ctx }) => {
-    // TODO: implement with pagination etc
-    console.log(ctx.session);
-    try {
-      logEvent("Fetching users");
-      const fetchedUsers = await db.select().from(users);
-      return fetchedUsers;
-    } catch (error) {
-      console.log("Error fetching users", error);
-      return [];
-    }
-  }),
+  admin: AdminRouter,
   clientLog: procedure
     .input(
       z.object({
@@ -40,18 +29,7 @@ export const appRouter = router({
         opts.input.tags,
       );
     }),
-  deleteUser: adminProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      }),
-    )
-    .mutation(async (opts) => {
-      console.log("Deleting user", opts.input.id);
-      await db.delete(sessions).where(eq(sessions.userId, opts.input.id));
-      await db.delete(users).where(eq(users.id, opts.input.id));
-      return;
-    }),
+
   getOffer: procedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {

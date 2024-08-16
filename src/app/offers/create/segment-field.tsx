@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Icon } from "~/components/ui/Icon/Icon";
+import { Icon } from "src/components/ui/Icon/Icon";
 import { type FormData } from "./schema";
 import { motion, AnimatePresence } from "framer-motion";
 

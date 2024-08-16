@@ -96,6 +96,9 @@ export const users = createTable("user", {
     mode: "date",
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }), // TODO figure out image storage
+  isPremium: boolean("isPremium").default(false).notNull(),
+  isAdmin: boolean("isAdmin").default(false).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
 });
 
 export const tags = createTable("tag", {

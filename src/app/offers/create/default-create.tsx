@@ -15,9 +15,9 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "~/components/ui/popover";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { useToast } from "~/components/ui/use-toast";
+} from "src/components/ui/popover";
+import { ScrollArea } from "src/components/ui/scroll-area";
+import { useToast } from "src/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { type FormData } from "./schema";
 import { SegmentField } from "./segment-field";

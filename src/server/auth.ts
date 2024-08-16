@@ -6,10 +6,10 @@ import {
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
-import { db } from "~/server/db";
+import { db } from "src/server/db";
 import type User from "next-auth";
 import { Session } from "next-auth";
-import { accounts } from "~/server/db/schema";
+import { accounts } from "src/server/db/schema";
 import { eq } from "drizzle-orm";
 
 /**

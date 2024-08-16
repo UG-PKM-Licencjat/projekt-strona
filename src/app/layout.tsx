@@ -3,8 +3,8 @@ import "~/styles/globals.css";
 
 import { Cabin, Montserrat } from "next/font/google";
 
-import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
-import { trpc } from "~/utils/trpc";
+import SvgSymbols from "src/components/ui/SvgSymbols/SvgSymbols";
+import { trpc } from "src/utils/trpc";
 import Provider from "./_trpc/Provider";
 import { SessionProvider } from "next-auth/react";
 import { type Session } from "next-auth";

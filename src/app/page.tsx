@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { SearchEngine } from "src/components/searchEngine/searchEngine";
+import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
 import { Button } from "src/components/ui/Button/Button";
 import Image from "next/image";
 import { signIn } from "next-auth/react";

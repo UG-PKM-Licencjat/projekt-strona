@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { trpc } from "~/app/_trpc/client";
 import { useEffect } from "react";
@@ -91,36 +91,26 @@ export default function Create_Account() {
 
   return (
     <>
-      {" "}
-      <div className="absolute left-5 top-0 font-bold">
-        <h1 className="text-center text-2xl text-primary">Bebooop</h1>
+      <div className="md:bg-neo-castleton mb-6 h-4 w-auto self-start rounded-lg bg-secondary">
+        {/*  TODO with of progress bar responsiveness or not? */}
+        <div className="bg-neo-pink h-4 w-1/3 self-start rounded-lg"></div>
       </div>
-      <div
-        className="relative mx-10 box-border grid grid-cols-3 gap-20 rounded-lg bg-secondary p-10
-    "
-      >
-        {/* header website name bebooop */}
-
-        {/* <Button onClick={() => signOut({ callbackUrl: "http://localhost:3000" })}>
-        Wyloguj
-      </Button> */}
-        {/* pasek progresu w rejestracji */}
-
-        <div
-          className="col-span-2 mb-10 grid w-max auto-rows-max grid-rows-2 justify-center gap-10 
-          "
-        >
-          <h1
-            className="font-header text-center text-2xl font-medium leading-none text-primary 
-     "
-          >
+      <div className="flex h-full flex-row pb-10">
+        <div className="flex w-full flex-col justify-between">
+          <h1 className="font-header w-full text-center text-2xl font-medium leading-none text-primary  xl:text-left ">
             Cieszymy się, że
-            <span className="text-neo-castleton"> jesteś </span> z nami!
+            <br className="sm:hidden" />
+            <span className="md:text-neo-castleton text-neo-mantis">
+              {" "}
+              jesteś
+            </span>{" "}
+            z nami!
           </h1>
+
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="gap-y-auto left absolute bottom-0 mb-10 w-72  space-y-6"
+              className="gap-y-auto left bottom-0  space-y-6 pt-6"
             >
               <FormField
                 control={form.control}
@@ -130,7 +120,6 @@ export default function Create_Account() {
                     className=" flex flex-col items-center
                 "
                   >
-                    {/* <FormLabel>Zdjęcie</FormLabel> */}
                     <FormControl className="bg-neo-pink h-44 w-44 justify-center rounded-full">
                       <Input id="image" type="file" />
                     </FormControl>
@@ -165,20 +154,22 @@ export default function Create_Account() {
                 )}
               />
 
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full "
+                // onClick={() => router.push("/createaccount/step2")}
+              >
                 Przejdź dalej
               </Button>
             </form>
           </Form>
         </div>
-        <div>
+
+        <div className="hidden   w-full justify-end xl:block ">
           <img
             src="/svgs/illustration.svg"
-            width={90}
-            height={20}
-            className="h-full w-full object-cover "
+            className="ml-20 hidden h-full w-max object-cover xl:block"
           />
-          {/* <Icon name="registration1" /> */}
         </div>
       </div>
     </>

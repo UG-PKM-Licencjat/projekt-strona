@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   doublePrecision,
   index,
@@ -84,10 +84,15 @@ export const verificationTokens = pgTable(
 
 export const users = pgTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  name: varchar("name", { length: 255 }),
   firstName: varchar("firstName", { length: 255 }),
   lastName: varchar("lastName", { length: 255 }),
   nickname: varchar("nickname", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
+  emailVerified: timestamp("emailVerified", {
+    mode: "date",
+    withTimezone: true,
+  }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }), // TODO figure out image storage
   isPremium: boolean("isPremium").default(false).notNull(),
   isAdmin: boolean("isAdmin").default(false).notNull(),

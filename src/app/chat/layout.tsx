@@ -6,7 +6,7 @@ import ConversationsNav, {
   type UserWithMessage,
 } from "~/components/chat/ConversationsNav/ConversationsNav";
 import { useConversationsStore } from "~/stores";
-import { trpc } from "../_trpc/client";
+import { trpc } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 
 export default function ChatLayout({

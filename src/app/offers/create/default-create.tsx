@@ -30,7 +30,7 @@ import {
   type CustomFile,
 } from "~/components/uploadthing";
 import { type ClientUploadedFileData } from "uploadthing/types";
-import { trpc } from "~/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 
 const getFileType = (file: ClientUploadedFileData<null>) => {
   const fileType = file.type.split("/")[0];

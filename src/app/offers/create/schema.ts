@@ -21,8 +21,8 @@ const offerSchema = z
     ),
     files: z.array(
       z.object({
-        // TODO Make this url?
-        fileKey: z.string(),
+        url: z.string(),
+        type: z.enum(["image", "video", "audio", "link"]),
       }),
     ),
     links: z.array(

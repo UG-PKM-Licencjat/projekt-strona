@@ -1,15 +1,14 @@
 import { z } from "zod";
-import { db } from "../db";
-import { offers } from "../db/schema";
 import { procedure, router } from "../trpc";
-import { eq } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 
 import { AdminRouter } from "./admin";
+import { OffersRouter } from "./offers";
 
 export const appRouter = router({
   admin: AdminRouter,
+  offers: OffersRouter,
   clientLog: procedure
     .input(
       z.object({
@@ -27,30 +26,6 @@ export const appRouter = router({
         opts.input.tags,
       );
     }),
-
-  getOffer: procedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
-      console.log("Fetching offer", input.id);
-      const fetchedOffer = await db.query.offers.findFirst({
-        with: {
-          offerTags: {
-            columns: {
-              tagId: false,
-              offerId: false,
-            },
-            with: {
-              tag: true,
-            },
-          },
-        },
-        where: eq(offers.id, input.id),
-      });
-      const tags = fetchedOffer?.offerTags.map((tag) => tag.tag);
-      const mappedOffer = { ...fetchedOffer, offerTags: tags };
-      console.log("Fetched offer", mappedOffer);
-      return mappedOffer;
-    }),
   getSampleMessages: procedure.input(z.string()).query(async ({ input }) => {
     const data: Array<Message> = (await (
       await fetch(
@@ -65,32 +40,6 @@ export const appRouter = router({
     // );
     return data;
   }),
-  // TODO finish create offer procedure
-  // createOffer: procedureatl
-  //   .input(
-  //     z.object({
-  //       id: z.string(),
-  //       name: z.string(),
-  //       description: z.string(),
-  //       price: z.number(),
-  //       tags: z.array(z.string()),
-  //     }),
-  //   )
-  //   .mutation(async ({ input }) => {
-  //     console.log("Creating offer", input);
-  //     const offer = await db
-  //       .insert(offers)
-  //       .values([
-  //         {
-  //           id: input.id,
-  //           name: input.name,
-  //           description: input.description,
-  //           price: input.price,
-  //         },
-  //       ])
-  //       .returning();
-  //     return offer;
-  //   }),
 });
 
 export type AppRouter = typeof appRouter;

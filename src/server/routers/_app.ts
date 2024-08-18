@@ -1,12 +1,10 @@
 import { z } from "zod";
 import { db } from "../db";
-import { sessions, users, offers, offerTags } from "../db/schema";
-import { procedure, router, authedProcedure, adminProcedure } from "../trpc";
-import { eq, count, getTableColumns } from "drizzle-orm";
+import { offers } from "../db/schema";
+import { procedure, router } from "../trpc";
+import { eq } from "drizzle-orm";
 import logEvent, { LogType, tagValues } from "../log";
-import { utapi } from "../uploadthing";
-import { UserWithMessage } from "~/components/chat/ConversationsNav/ConversationsNav";
-import { Message } from "~/components/chat/ConversationWindow/ConversationWindow";
+import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 
 import { AdminRouter } from "./admin";
 

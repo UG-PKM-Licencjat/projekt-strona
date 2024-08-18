@@ -42,7 +42,7 @@ export default function Page({ params }: { params: { userId: string } }) {
       form.setValue("shortDescription", data.shortDescription ?? "");
       form.setValue("longDescription", data.longDescription ?? "");
       form.setValue("image", data.image ?? "");
-      form.setValue("location", data.location ?? "");
+      // form.setValue("location", data.location ?? "");
     }
   }, [data]);
 
@@ -56,7 +56,7 @@ export default function Page({ params }: { params: { userId: string } }) {
       shortDescription: data?.shortDescription ?? "",
       longDescription: data?.longDescription ?? "",
       image: data?.image ?? "",
-      location: data?.location ?? "",
+      // location: data?.location ?? "",
     },
   });
 

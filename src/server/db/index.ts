@@ -1,16 +1,23 @@
-// Vercel postgres version
-
 import { sql } from "@vercel/postgres";
-import { drizzle } from "drizzle-orm/vercel-postgres";
+import {
+  drizzle as drizzleVercel,
+  type VercelPgDatabase,
+} from "drizzle-orm/vercel-postgres";
+import {
+  drizzle as drizzleJS,
+  type PostgresJsDatabase,
+} from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import { env } from "~/env.js";
 import * as schema from "./schema";
 
-export const db = drizzle(sql, { schema });
+export let db:
+  | VercelPgDatabase<typeof schema>
+  | PostgresJsDatabase<typeof schema>;
 
-// Universal Database URL version
-
-// import { drizzle } from "drizzle-orm/postgres-js";
-// import postgres from "postgres";
-// import { env } from "~/env.js";
-
-// export const postgresClient = postgres(env.POSTGRES_URL);
-// export const db = drizzleJS(postgresClient, { schema });
+if (env.NODE_ENV === "production") {
+  db = drizzleVercel(sql, { schema });
+} else {
+  const postgresClient = postgres(env.POSTGRES_URL);
+  db = drizzleJS(postgresClient, { schema });
+}

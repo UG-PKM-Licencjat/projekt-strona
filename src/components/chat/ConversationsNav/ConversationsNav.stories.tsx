@@ -14,6 +14,7 @@ export const Default: Story = {
   args: {
     usersWithMessages: [
       {
+        userId: "1",
         name: "John",
         lastMessage: "Hello",
         image: "https://picsum.photos/200",

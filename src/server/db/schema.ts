@@ -109,7 +109,7 @@ export const tagRelations = relations(tags, ({ many }) => ({
 }));
 
 export const offerTags = pgTable(
-  "offer_tag",
+  "offerTag",
   {
     offerId: varchar("offerId", { length: 255 })
       .notNull()
@@ -142,7 +142,7 @@ export const offerRelations = relations(offers, ({ many }) => ({
 }));
 
 export const userOffers = pgTable(
-  "user_offer",
+  "userOffer",
   {
     userId: varchar("userId", { length: 255 })
       .notNull()

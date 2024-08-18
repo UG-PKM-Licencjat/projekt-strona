@@ -1,5 +1,5 @@
-import { procedure } from "~/server/trpc";
-import { offerSchema } from "~/app/offers/create/schema";
+import { procedure } from "~/server/api/trpc";
+import { offerSchema } from "~/utils/offerSchema";
 
 const createProcedure = procedure.input(offerSchema).mutation(async (opts) => {
   const { input } = opts;

@@ -1,12 +1,21 @@
 import { z } from "zod";
-import { procedure, router } from "../trpc";
+import {
+  createCallerFactory,
+  createTRPCRouter,
+  procedure,
+} from "~/server/api/trpc";
 import logEvent, { LogType, tagValues } from "../log";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 
-import { AdminRouter } from "./admin";
-import { OffersRouter } from "./offers";
+import { AdminRouter } from "./routers/admin";
+import { OffersRouter } from "./routers/offers";
 
-export const appRouter = router({
+/**
+ * This is the primary router for your server.
+ *
+ * All routers added in /api/routers should be manually added here.
+ */
+export const appRouter = createTRPCRouter({
   admin: AdminRouter,
   offers: OffersRouter,
   clientLog: procedure
@@ -42,4 +51,14 @@ export const appRouter = router({
   }),
 });
 
+// export type definition of API
 export type AppRouter = typeof appRouter;
+
+/**
+ * Create a server-side caller for the tRPC API.
+ * @example
+ * const trpc = createCaller(createContext);
+ * const res = await trpc.post.all();
+ *       ^? Post[]
+ */
+export const createCaller = createCallerFactory(appRouter);

@@ -50,10 +50,10 @@ export function UsersTable({
               <TableHead className="md:table-cell">isPremium</TableHead>
               <TableHead className="md:table-cell">isAdmin</TableHead>
               <TableHead className="md:table-cell">isActive</TableHead>
-              <TableHead className="md:table-cell">Location</TableHead>
+              {/* <TableHead className="md:table-cell">Location</TableHead>
               <TableHead className="md:table-cell">
                 RegistrationStatus
-              </TableHead>
+              </TableHead> */}
               <TableHead className="md:table-cell">Sessions</TableHead>
               <TableHead className="md:table-cell">Accounts</TableHead>
               <TableHead className="md:table-cell">Offers</TableHead>

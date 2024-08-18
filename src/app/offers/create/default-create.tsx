@@ -30,6 +30,7 @@ import {
   type CustomFile,
 } from "~/components/uploadthing";
 import { type ClientUploadedFileData } from "uploadthing/types";
+import { trpc } from "~/app/_trpc/client";
 
 const getFileType = (file: ClientUploadedFileData<null>) => {
   const fileType = file.type.split("/")[0];
@@ -124,6 +125,7 @@ export function DefaultCreateOfferPage() {
 
   // TODO disable all interactions while uploading
   const [uploading, setUploading] = useState(false);
+  const createOffer = trpc.offers.create.useMutation();
 
   const onSubmit = handleSubmit(async (data) => {
     setUploading(true);
@@ -158,7 +160,9 @@ export function DefaultCreateOfferPage() {
         </pre>
       ),
     });
+    createOffer.mutate(data);
     console.log(data);
+    console.log("Mutation data:", createOffer.data);
     setUploading(false);
   });
 

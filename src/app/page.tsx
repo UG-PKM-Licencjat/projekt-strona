@@ -3,7 +3,7 @@ import React from "react";
 import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
 import { Button } from "src/components/ui/Button/Button";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 export default function Home() {
   return (
@@ -51,6 +51,7 @@ export default function Home() {
           >
             Zaloguj się
           </Button>
+          <Button onClick={() => signOut()}>Wyloguj się</Button>
           <Button>Zarejestruj się</Button>
         </section>
         <section className="bg-gray-100 p-10">

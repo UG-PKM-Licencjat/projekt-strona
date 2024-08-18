@@ -6,6 +6,7 @@ import {
   pgTable,
   primaryKey,
   // serial,
+  jsonb,
   text,
   timestamp,
   varchar,
@@ -83,16 +84,10 @@ export const verificationTokens = pgTable(
 
 export const users = pgTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  name: varchar("name", { length: 255 }),
   firstName: varchar("firstName", { length: 255 }),
   lastName: varchar("lastName", { length: 255 }),
   nickname: varchar("nickname", { length: 255 }),
-  shortDescription: varchar("shortDescription", { length: 255 }),
-  longDescription: text("longDescription"),
   email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-  }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }), // TODO figure out image storage
   isPremium: boolean("isPremium").default(false).notNull(),
   isAdmin: boolean("isAdmin").default(false).notNull(),
@@ -130,9 +125,13 @@ export const offerTagsRelations = relations(offerTags, ({ one }) => ({
 
 export const offers = pgTable("offer", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  // TODO delete this?
   name: varchar("name", { length: 255 }).notNull(),
-  description: text("description"),
   price: doublePrecision("price"),
+  about: jsonb("about"),
+  skills: jsonb("skills"),
+  files: jsonb("files"),
+  links: jsonb("links"),
   // TODO figure out location
 });
 

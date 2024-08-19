@@ -22,7 +22,7 @@ const offerSchema = z
     files: z.array(
       z.object({
         url: z.string(),
-        type: z.enum(["image", "video", "audio", "iframe", "link"]),
+        type: z.string(),
       }),
     ),
     links: z.array(

@@ -10,12 +10,12 @@ import {
 } from "src/components/ui/Table/Table";
 import { Button } from "src/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
-import { trpc } from "src/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 import type { inferRouterOutputs } from "@trpc/server";
-import { AdminRouter } from "~/server/routers/admin";
+import type { AdminRouter } from "~/server/api/routers/admin";
 
-type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter.offers>;
-type Offer = RouterUserOutputs["getByUserId"][0];
+type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter>;
+type Offer = RouterUserOutputs["offers"]["getByUserId"][0];
 
 export function OffersTable({
   offers,
@@ -69,17 +69,16 @@ export function OffersTable({
 function OfferRow({ offer, refetch }: { offer: Offer; refetch: () => void }) {
   const deleteUserWithId = trpc.admin.users.delete.useMutation();
 
+  // TODO: update fields
   // FIELDS
   const id = offer.id ?? "null";
   const name = offer.name ?? "null";
-  const description = offer.description ?? "null";
   const price = offer.price ?? "null";
 
   return (
     <TableRow>
       <TableCell className="font-medium">{id}</TableCell>
       <TableCell className="md:table-cell">{name}</TableCell>
-      <TableCell className="md:table-cell">{description}</TableCell>
       <TableCell className="md:table-cell">{price}</TableCell>
       <TableCell>
         <Button

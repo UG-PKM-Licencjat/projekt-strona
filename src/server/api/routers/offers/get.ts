@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "~/server/db";
 import { offers } from "~/server/db/schema";
-import { procedure } from "~/server/trpc";
+import { procedure } from "~/server/api/trpc";
 
 const getProcedure = procedure
   .input(z.object({ id: z.string() }))

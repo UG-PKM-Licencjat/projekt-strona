@@ -10,12 +10,12 @@ import {
 } from "src/components/ui/Table/Table";
 import { Button } from "src/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
-import { trpc } from "src/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 import type { inferRouterOutputs } from "@trpc/server";
-import { AdminRouter } from "~/server/routers/admin";
+import type { AdminRouter } from "~/server/api/routers/admin";
 
-type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter.sessions>;
-type Session = RouterUserOutputs["getByUserId"][0];
+type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter>;
+type Session = RouterUserOutputs["sessions"]["getByUserId"][0];
 
 export function SessionsTable({
   sessions,
@@ -80,7 +80,7 @@ function SessionRow({
   return (
     <TableRow>
       <TableCell className="font-medium">{sessionToken}</TableCell>
-      <TableCell className="md:table-cell">{expires}</TableCell>
+      <TableCell className="md:table-cell">{expires.toLocaleString()}</TableCell>
       <TableCell>
         <Button
           className="w-full"

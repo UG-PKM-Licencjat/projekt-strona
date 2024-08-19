@@ -1,6 +1,6 @@
 "use client";
 
-import { trpc } from "src/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 import { SessionsTable } from "./sessions-table";
 import { Search } from "../../../search";
 import { Icon } from "src/components/ui/Icon/Icon";

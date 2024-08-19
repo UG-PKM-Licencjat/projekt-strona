@@ -5,12 +5,16 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import { db } from "src/server/db";
-import type User from "next-auth";
-import { Session } from "next-auth";
-import { accounts } from "src/server/db/schema";
 import { eq } from "drizzle-orm";
+import { env } from "~/env.js";
+import {
+  users,
+  sessions,
+  accounts,
+  verificationTokens,
+} from "src/server/db/schema";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -28,9 +32,9 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
+  // interface User extends DefaultUser {
+  //   firstname: string;
+  //   lastname: string;
   // }
 }
 
@@ -49,12 +53,12 @@ export const authOptions: NextAuthOptions = {
         .from(accounts)
         .where(eq(accounts.userId, user.id))
         .limit(1);
-      console.log("result", result[0]?.admin ? true : false);
-      console.log("result", result);
-      console.log(
-        "user",
-        await db.select().from(accounts).where(eq(accounts.userId, user.id)),
-      );
+      // console.log("result", result[0]?.admin ? true : false);
+      // console.log("result", result);
+      // console.log(
+      //   "user",
+      //   await db.select().from(accounts).where(eq(accounts.userId, user.id)),
+      // );
 
       return {
         ...session,
@@ -65,11 +69,26 @@ export const authOptions: NextAuthOptions = {
       };
     },
   },
-  adapter: DrizzleAdapter(db) as Adapter,
+  adapter: DrizzleAdapter(db, {
+    usersTable: users,
+    accountsTable: accounts,
+    sessionsTable: sessions,
+    verificationTokensTable: verificationTokens,
+  }) as Adapter,
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      profile(profile: GoogleProfile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          firstName: profile.given_name,
+          lastName: profile.family_name,
+          email: profile.email,
+          image: profile.picture,
+        };
+      },
     }),
 
     /**

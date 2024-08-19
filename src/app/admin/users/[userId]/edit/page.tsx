@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { trpc } from "src/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 import {
   Form,
   FormControl,
@@ -39,8 +39,6 @@ export default function Page({ params }: { params: { userId: string } }) {
       form.setValue("firstname", data.firstName ?? "");
       form.setValue("lastname", data.lastName ?? "");
       form.setValue("nickname", data.nickname ?? "");
-      form.setValue("shortDescription", data.shortDescription ?? "");
-      form.setValue("longDescription", data.longDescription ?? "");
       form.setValue("image", data.image ?? "");
       // form.setValue("location", data.location ?? "");
     }
@@ -53,8 +51,6 @@ export default function Page({ params }: { params: { userId: string } }) {
       firstname: data?.firstName ?? "",
       lastname: data?.lastName ?? "",
       nickname: data?.nickname ?? "",
-      shortDescription: data?.shortDescription ?? "",
-      longDescription: data?.longDescription ?? "",
       image: data?.image ?? "",
       // location: data?.location ?? "",
     },
@@ -115,32 +111,6 @@ export default function Page({ params }: { params: { userId: string } }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nickname</FormLabel>
-                  <FormControl>
-                    <Input placeholder={field.value} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="shortDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Short description</FormLabel>
-                  <FormControl>
-                    <Input placeholder={field.value} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="longDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Long description</FormLabel>
                   <FormControl>
                     <Input placeholder={field.value} {...field} />
                   </FormControl>

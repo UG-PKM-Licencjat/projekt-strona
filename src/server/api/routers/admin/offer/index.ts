@@ -1,7 +1,7 @@
-import { router } from "~/server/trpc";
+import { createTRPCRouter } from "~/server/api/trpc";
 import getByUserIdProcedure from "./getByUserId";
 
-const OfferRouter = router({
+const OfferRouter = createTRPCRouter({
   getByUserId: getByUserIdProcedure,
 });
 

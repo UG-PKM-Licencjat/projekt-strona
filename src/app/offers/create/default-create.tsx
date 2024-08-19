@@ -19,7 +19,7 @@ import {
 import { ScrollArea } from "src/components/ui/scroll-area";
 import { useToast } from "src/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { type FormData, offerSchema } from "./schema";
+import { type FormData, offerSchema } from "~/utils/offerSchema";
 import { SegmentField } from "./segment-field";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -30,7 +30,7 @@ import {
   type CustomFile,
 } from "~/components/uploadthing";
 import { type ClientUploadedFileData } from "uploadthing/types";
-import { trpc } from "~/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 
 const getFileType = (file: ClientUploadedFileData<null>) => {
   const fileType = file.type.split("/")[0];

@@ -1,4 +1,4 @@
-import { adminProcedure } from "~/server/trpc";
+import { adminProcedure } from "~/server/api/trpc";
 import { sessions, users } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";

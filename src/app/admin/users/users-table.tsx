@@ -11,12 +11,12 @@ import {
 } from "src/components/ui/Table/Table";
 import { Button } from "src/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
-import { trpc } from "src/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 import type { inferRouterOutputs } from "@trpc/server";
-import type { AdminRouter } from "~/server/routers/admin";
+import type { AdminRouter } from "~/server/api/routers/admin";
 
-type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter.users>;
-type SelectUser = RouterUserOutputs["get"][0]; // TODO: tricky type infering xd
+type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter>;
+type SelectUser = RouterUserOutputs["users"]["get"][0]; // TODO: tricky type infering xd
 
 export function UsersTable({
   users,
@@ -50,10 +50,10 @@ export function UsersTable({
               <TableHead className="md:table-cell">isPremium</TableHead>
               <TableHead className="md:table-cell">isAdmin</TableHead>
               <TableHead className="md:table-cell">isActive</TableHead>
-              <TableHead className="md:table-cell">Location</TableHead>
+              {/* <TableHead className="md:table-cell">Location</TableHead>
               <TableHead className="md:table-cell">
                 RegistrationStatus
-              </TableHead>
+              </TableHead> */}
               <TableHead className="md:table-cell">Sessions</TableHead>
               <TableHead className="md:table-cell">Accounts</TableHead>
               <TableHead className="md:table-cell">Offers</TableHead>
@@ -107,7 +107,7 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
       <TableCell className="md:table-cell">{lastname}</TableCell>
       <TableCell className="md:table-cell">{nickname}</TableCell>
       <TableCell className="md:table-cell">{email}</TableCell>
-      <TableCell className="md:table-cell">{emailVerified}</TableCell>
+      <TableCell className="md:table-cell">{emailVerified.toLocaleString()}</TableCell>
       <TableCell className="md:table-cell">
         {image === "null" ? <a href={image}>image</a> : "null"}
       </TableCell>

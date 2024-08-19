@@ -2,7 +2,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useConversationsStore } from "~/stores";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
-import { trpc } from "~/utils/trpc";
+import { trpc } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 
 export default function GlobalBehaviours({

@@ -10,12 +10,12 @@ import {
 } from "src/components/ui/Table/Table";
 import { Button } from "src/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
-import { trpc } from "src/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 import type { inferRouterOutputs } from "@trpc/server";
-import { AdminRouter } from "~/server/routers/admin";
+import type { AdminRouter } from "~/server/api/routers/admin";
 
-type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter.accounts>;
-type Account = RouterUserOutputs["getByUserId"][0];
+type RouterUserOutputs = inferRouterOutputs<typeof AdminRouter>;
+type Account = RouterUserOutputs["accounts"]["getByUserId"][0];
 
 export function AccountsTable({
   accounts,

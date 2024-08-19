@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-import { adminProcedure, procedure } from "~/server/trpc";
+import { adminProcedure, procedure } from "~/server/api/trpc";
 import { eq } from "drizzle-orm";
 import logEvent from "~/server/log";
 

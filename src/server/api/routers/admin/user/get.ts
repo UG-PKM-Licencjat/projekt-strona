@@ -1,4 +1,4 @@
-import { procedure } from "~/server/trpc";
+import { procedure } from "~/server/api/trpc";
 import { sessions, users, userOffers, accounts } from "~/server/db/schema";
 import { eq, count, getTableColumns } from "drizzle-orm";
 import { db } from "~/server/db";

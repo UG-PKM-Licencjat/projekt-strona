@@ -19,7 +19,7 @@ import {
 import { ScrollArea } from "src/components/ui/scroll-area";
 import { useToast } from "src/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { type FormData } from "./schema";
+import { type FormData, offerSchema } from "~/utils/offerSchema";
 import { SegmentField } from "./segment-field";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -29,6 +29,14 @@ import {
   useUploadThing,
   type CustomFile,
 } from "~/components/uploadthing";
+import { type ClientUploadedFileData } from "uploadthing/types";
+import { trpc } from "~/trpc/react";
+
+const getFileType = (file: ClientUploadedFileData<null>) => {
+  const fileType = file.type.split("/")[0];
+  const result = offerSchema.shape.files.element.shape.type.safeParse(fileType);
+  return result.success ? result.data : "link";
+};
 
 export function DefaultCreateOfferPage() {
   const { toast } = useToast();
@@ -47,7 +55,7 @@ export function DefaultCreateOfferPage() {
     keyName: "key",
   });
 
-  const { fields: filesFields, append: appendFiles } = useFieldArray({
+  const { fields: filesFields } = useFieldArray({
     control,
     name: "files",
     keyName: "key",
@@ -83,9 +91,7 @@ export function DefaultCreateOfferPage() {
     routeConfig: imageRouteConfig,
     isUploading: isImageUploading,
   } = useUploadThing("createImageUploader", {
-    onClientUploadComplete: (res) => {
-      console.log(res);
-      appendFiles(res.map((file) => ({ fileKey: file.key })));
+    onClientUploadComplete: () => {
       setImages([]);
       // alert("uploaded successfully!");
     },
@@ -102,9 +108,7 @@ export function DefaultCreateOfferPage() {
     routeConfig: videoRouteConfig,
     isUploading: isVideoUploading,
   } = useUploadThing("createVideoUploader", {
-    onClientUploadComplete: (res) => {
-      console.log(res);
-      appendFiles(res.map((file) => ({ fileKey: file.key })));
+    onClientUploadComplete: () => {
       setVideos([]);
       // alert("uploaded successfully!");
     },
@@ -116,13 +120,32 @@ export function DefaultCreateOfferPage() {
     },
   });
 
+  // TODO disable all interactions while uploading
+  const [uploading, setUploading] = useState(false);
+  const createOffer = trpc.offers.create.useMutation();
+
   const onSubmit = handleSubmit(async (data) => {
-    if (images.length > 0) {
-      await startImageUpload(images);
-    }
-    if (videos.length > 0) {
-      await startVideoUpload(videos);
-    }
+    setUploading(true);
+    await Promise.all([
+      images.length > 0 ? startImageUpload(images) : [],
+      videos.length > 0 ? startVideoUpload(videos) : [],
+    ])
+      .then((results) => {
+        const files = results
+          .flat()
+          .filter((file) => file !== undefined)
+          .map((file): FormData["files"][number] => ({
+            url: file.url,
+            type: getFileType(file),
+          }));
+        console.log(files);
+        data.files = files;
+        console.log("Done");
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Error");
+      });
     toast({
       title: "Submitted form",
       description: (
@@ -131,7 +154,10 @@ export function DefaultCreateOfferPage() {
         </pre>
       ),
     });
+    createOffer.mutate(data);
     console.log(data);
+    console.log("Mutation data:", createOffer.data);
+    setUploading(false);
   });
 
   return (
@@ -255,6 +281,7 @@ export function DefaultCreateOfferPage() {
               <TabsTrigger
                 value="images"
                 className="h-14 data-[state=active]:bg-pink-700 data-[state=active]:text-white"
+                disabled={uploading}
               >
                 <h1 className="text-4xl font-semibold uppercase">
                   ZDJĘCIA {images.length}/
@@ -264,6 +291,7 @@ export function DefaultCreateOfferPage() {
               <TabsTrigger
                 value="videos"
                 className="h-14 data-[state=active]:bg-pink-700 data-[state=active]:text-white"
+                disabled={uploading}
               >
                 <h1 className="text-4xl font-semibold uppercase">
                   FILMY {videos.length}/{videoRouteConfig?.video?.maxFileCount}
@@ -279,10 +307,11 @@ export function DefaultCreateOfferPage() {
                 isUploading={isImageUploading}
                 showUploadButton={false}
                 disabled={
+                  uploading ||
                   images.length >=
-                  (imageRouteConfig?.image?.maxFileCount
-                    ? imageRouteConfig?.image?.maxFileCount
-                    : 0)
+                    (imageRouteConfig?.image?.maxFileCount
+                      ? imageRouteConfig?.image?.maxFileCount
+                      : 0)
                 }
               />
             </TabsContent>
@@ -295,10 +324,11 @@ export function DefaultCreateOfferPage() {
                 isUploading={isVideoUploading}
                 showUploadButton={false}
                 disabled={
+                  uploading ||
                   videos.length >=
-                  (videoRouteConfig?.video?.maxFileCount
-                    ? videoRouteConfig?.video?.maxFileCount
-                    : 0)
+                    (videoRouteConfig?.video?.maxFileCount
+                      ? videoRouteConfig?.video?.maxFileCount
+                      : 0)
                 }
               />
             </TabsContent>
@@ -306,7 +336,7 @@ export function DefaultCreateOfferPage() {
           {filesFields.map((file, index) => (
             <input
               key={file.key}
-              {...register(`files.${index}.fileKey` as const)}
+              {...register(`files.${index}.url` as const)}
               className="hidden bg-inherit outline-none"
             />
           ))}

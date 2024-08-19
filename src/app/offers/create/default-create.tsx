@@ -30,8 +30,12 @@ import {
   type CustomFile,
 } from "~/components/uploadthing";
 import { trpc } from "~/trpc/react";
+import { useSession } from "next-auth/react";
 
 export function DefaultCreateOfferPage() {
+  const { data: session } = useSession({
+    required: true,
+  });
   const { toast } = useToast();
   const {
     register,
@@ -57,7 +61,7 @@ export function DefaultCreateOfferPage() {
   const [tags, setTags] = useState<{ name: string; id: string }[]>([
     { name: "hashtag1", id: "0" },
     { name: "hashtag2", id: "1" },
-    { name: "hashtag3", id: "2" },
+    { name: "hashtag3", id: "4" },
   ]);
 
   const appendFunc = (tag: { name: string; id: string }) => {
@@ -139,17 +143,34 @@ export function DefaultCreateOfferPage() {
         console.log(err);
         console.log("Error");
       });
-    toast({
-      title: "Submitted form",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    createOffer.mutate(data);
-    console.log(data);
-    console.log("Mutation data:", createOffer.data);
+    if (session?.user?.id === undefined) {
+      toast({
+        title: "Error submitting form",
+        description: "You must be logged in to create an offer",
+        variant: "destructive",
+      });
+    } else {
+      const offer = { ...data, userId: session?.user?.id };
+      toast({
+        title: "Submitted form",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(offer, null, 2)}</code>
+          </pre>
+        ),
+      });
+      // Development only
+      createOffer.mutate(offer, {
+        onError(error) {
+          toast({
+            title: `Error submitting form [${error.data?.code}]`,
+            description: error.message,
+            variant: "destructive",
+          });
+        },
+      });
+      console.log(offer);
+    }
     setUploading(false);
   });
 
@@ -173,9 +194,11 @@ export function DefaultCreateOfferPage() {
             <div className="mt-4 flex flex-col items-start justify-center gap-4">
               <div className="flex items-end justify-center gap-12">
                 {/* Offer create */}
-                <h1 className="break-all text-4xl font-semibold uppercase text-blue-950 outline-none">
-                  MICHAŁ MATCZAK
-                </h1>
+                <input
+                  {...register("name")}
+                  className="w-[500px] break-all text-4xl font-semibold uppercase text-blue-950 outline-none"
+                  placeholder="Twoja ksywka"
+                />
                 {/* TODO placeholder until location stuff is figured out */}
                 <Select>
                   <SelectTrigger className="w-fit text-2xl font-bold capitalize text-black/40">
@@ -190,6 +213,9 @@ export function DefaultCreateOfferPage() {
                   </SelectContent>
                 </Select>
               </div>
+              <p className="text-sm font-semibold text-red-500">
+                {errors.name?.message}
+              </p>
               <div className="flex h-10 items-center justify-center gap-4">
                 <Popover open={tagOpen} onOpenChange={setTagOpen}>
                   <PopoverTrigger

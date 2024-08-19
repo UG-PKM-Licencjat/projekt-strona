@@ -131,7 +131,9 @@ export const offerTagsRelations = relations(offerTags, ({ one }) => ({
 }));
 
 export const offers = pgTable("offer", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   // TODO delete this?
   name: varchar("name", { length: 255 }).notNull(),
   price: doublePrecision("price"),

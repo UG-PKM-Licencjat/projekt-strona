@@ -19,7 +19,7 @@ import {
 import { ScrollArea } from "src/components/ui/scroll-area";
 import { useToast } from "src/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { type FormData } from "./schema";
+import { type FormData, offerSchema } from "./schema";
 import { SegmentField } from "./segment-field";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -34,11 +34,8 @@ import { trpc } from "~/app/_trpc/client";
 
 const getFileType = (file: ClientUploadedFileData<null>) => {
   const fileType = file.type.split("/")[0];
-  return fileType === "image"
-    ? "image"
-    : fileType === "video"
-      ? "video"
-      : "audio";
+  const result = offerSchema.shape.files.element.shape.type.safeParse(fileType);
+  return result.success ? result.data : "link";
 };
 
 export function DefaultCreateOfferPage() {
@@ -136,14 +133,11 @@ export function DefaultCreateOfferPage() {
       .then((results) => {
         const files = results
           .flat()
-          .map((file): FormData["files"][number] | null => {
-            if (!file) return null;
-            return {
-              url: file.url,
-              type: getFileType(file),
-            };
-          })
-          .filter((file) => file !== null);
+          .filter((file) => file !== undefined)
+          .map((file): FormData["files"][number] => ({
+            url: file.url,
+            type: getFileType(file),
+          }));
         console.log(files);
         data.files = files;
         console.log("Done");

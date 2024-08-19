@@ -19,7 +19,7 @@ import {
 import { ScrollArea } from "src/components/ui/scroll-area";
 import { useToast } from "src/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { type FormData, offerSchema } from "~/utils/offerSchema";
+import { type FormData } from "~/utils/offerSchema";
 import { SegmentField } from "./segment-field";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -29,14 +29,7 @@ import {
   useUploadThing,
   type CustomFile,
 } from "~/components/uploadthing";
-import { type ClientUploadedFileData } from "uploadthing/types";
 import { trpc } from "~/trpc/react";
-
-const getFileType = (file: ClientUploadedFileData<null>) => {
-  const fileType = file.type.split("/")[0];
-  const result = offerSchema.shape.files.element.shape.type.safeParse(fileType);
-  return result.success ? result.data : "link";
-};
 
 export function DefaultCreateOfferPage() {
   const { toast } = useToast();
@@ -136,7 +129,7 @@ export function DefaultCreateOfferPage() {
           .filter((file) => file !== undefined)
           .map((file): FormData["files"][number] => ({
             url: file.url,
-            type: getFileType(file),
+            type: file.type,
           }));
         console.log(files);
         data.files = files;

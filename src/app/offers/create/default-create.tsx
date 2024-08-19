@@ -61,7 +61,7 @@ export function DefaultCreateOfferPage() {
   const [tags, setTags] = useState<{ name: string; id: string }[]>([
     { name: "hashtag1", id: "0" },
     { name: "hashtag2", id: "1" },
-    { name: "hashtag3", id: "4" },
+    { name: "hashtag3", id: "2" },
   ]);
 
   const appendFunc = (tag: { name: string; id: string }) => {

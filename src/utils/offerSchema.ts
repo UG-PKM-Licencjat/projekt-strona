@@ -21,7 +21,7 @@ const offerSchema = z
     ),
     files: z.array(
       z.object({
-        url: z.string(),
+        url: z.string().url(),
         type: z.string(),
       }),
     ),

@@ -3,82 +3,92 @@ import React from "react";
 import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
 import { Button } from "src/components/ui/Button/Button";
 import Image from "next/image";
+import { Icon } from "src/components/ui/Icon/Icon";
 import { signIn, signOut } from "next-auth/react";
 
 export default function Home() {
   return (
-    <>
-      <header className="flex h-[500px] justify-between bg-pink-700">
-        <div className="flex h-full w-3/5 flex-col justify-around pl-20">
-          <h1 className="text-4xl text-white">ARTYŚCI-APKA</h1>
-          <SearchEngine />
+    <div className="min-h-screen bg-neo-castleton text-white">
+      {/* Header Section */}
+      <header className="container flex w-full pt-4">
+        <div className="ml-10 flex-1 flex-col items-start">
+          <Icon name="logo" className="w-28" />
+          <h1 className="mt-4 text-5xl">
+            Poczuj <span className="text-neo-sage">rytm...</span>
+          </h1>
+          <h2 className="mt-2 flex justify-end text-4xl text-black">
+            <span className="text-neo-sage">...</span>na weselu twojej babci
+          </h2>
         </div>
-        <div
-          style={{
-            clipPath: "polygon(0 0, 100% 0, 100% 100%, 20% 100%)",
-          }}
-          className="h-full w-fit"
-        >
-          <Image
-            src="/img/kontrabas.jpg"
-            className="hidden object-cover lg:block"
-            height={500}
-            width={600}
-            alt="zdjęcie kontrabasisty grającego koncert"
-          />
+        <div className="mr-10 flex w-1/3 flex-col items-end">
+          <button className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md">
+            Sign in with Google
+          </button>
+          <Icon name="girl-pointing" stroke="transparent" />
         </div>
       </header>
-      <main className="mt-5">
-        <section className="flex gap-52 bg-white p-10">
-          <div className="flex w-1/2 flex-col items-center justify-around gap-7">
-            <h1 className="text-4xl">Kim jesteśmy?</h1>
-            <p className="text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
-              fugiat quas quos aperiam doloribus nemo doloremque autem. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
-              fugiat quas quos aperiam doloribus nemo doloremque autem.
-            </p>
+
+      {/* Categories Section */}
+      <section className="bg-white px-10 py-8 text-black">
+        <div className="mx-auto max-w-4xl">
+          <h4 className="mb-4 text-2xl font-bold">Kategorie</h4>
+          <div className="grid grid-cols-2 gap-4 text-lg sm:grid-cols-3">
+            <div>
+              <h5 className="font-semibold">Muzyka</h5>
+              <ul>
+                <li>zespoły</li>
+                <li>soliści</li>
+                <li>reszta</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold">Performance</h5>
+              <ul>
+                <li>taniec</li>
+                <li>magik</li>
+                <li>kuglarz</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold">Rękodzieła</h5>
+              <ul>
+                <li>obrazy</li>
+                <li>rzeźby</li>
+                <li>portrety</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold">Wideo i fotografia</h5>
+              <ul>
+                <li>sesje zdjęciowe</li>
+                <li>filmowcy</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold">Obróbka komputerowa</h5>
+              <ul>
+                <li>montowanie</li>
+                <li>mix</li>
+                <li>photoshop</li>
+              </ul>
+            </div>
           </div>
-          <Button
-            onClick={() =>
-              signIn("google", {
-                callbackUrl: "http://localhost:3000/admin/users",
-              })
-            }
-          >
-            Zaloguj się
-          </Button>
-          <Button onClick={() => signOut()}>Wyloguj się</Button>
-          <Button>Zarejestruj się</Button>
-        </section>
-        <section className="bg-gray-100 p-10">
-          <div className="flex flex-col justify-around gap-7">
-            <h2 className="text-2xl">Nasze cele</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
-              fugiat quas quos aperiam doloribus nemo doloremque autem. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
-              fugiat quas quos aperiam doloribus nemo doloremque autem.
-            </p>
-          </div>
-        </section>
-        <section className="bg-white p-10">
-          <div className="flex flex-col justify-around gap-7">
-            <h2 className="text-2xl">Nasza misja</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod, fug
-            </p>
-          </div>
-        </section>
-      </main>
-    </>
+        </div>
+      </section>
+
+      {/* Promoted Offers Section */}
+      <section className="bg-gray-100 px-10 py-8">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="h-40 rounded-lg bg-rose-300"></div>
+          <div className="h-40 rounded-lg bg-green-900"></div>
+          <div className="h-40 rounded-lg bg-green-200"></div>
+          <div className="h-40 rounded-lg bg-green-500"></div>
+          <div className="h-40 rounded-lg bg-green-500"></div>
+          <div className="h-40 rounded-lg bg-rose-300"></div>
+          <div className="h-40 rounded-lg bg-green-200"></div>
+          <div className="h-40 rounded-lg bg-green-500"></div>
+        </div>
+      </section>
+    </div>
   );
 }

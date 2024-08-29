@@ -8,7 +8,7 @@ const offerSchema = z
         "Cena powinna być podana w formacie 12345,50 i nie przekraczać 999 999 999,99 zł",
     }),
     tags: z
-      .array(z.object({ name: z.string(), id: z.string() }))
+      .array(z.object({ name: z.string(), id: z.number() }))
       .nonempty({ message: "Musisz dodać co najmniej jeden tag" }),
     about: z.array(
       z.object({

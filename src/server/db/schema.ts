@@ -5,7 +5,7 @@ import {
   integer,
   pgTable,
   primaryKey,
-  // serial,
+  serial,
   jsonb,
   text,
   timestamp,
@@ -102,7 +102,7 @@ export const users = pgTable("user", {
 });
 
 export const tags = pgTable("tag", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   name: varchar("name", { length: 255 }).notNull(),
 });
 
@@ -116,7 +116,7 @@ export const offerTags = pgTable(
     offerId: varchar("offerId", { length: 255 })
       .notNull()
       .references(() => offers.id),
-    tagId: varchar("tagId", { length: 255 })
+    tagId: integer("tagId")
       .notNull()
       .references(() => tags.id),
   },

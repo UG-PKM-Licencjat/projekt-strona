@@ -5,7 +5,6 @@ import {
   integer,
   pgTable,
   primaryKey,
-  serial,
   jsonb,
   text,
   timestamp,

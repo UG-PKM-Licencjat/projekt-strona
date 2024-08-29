@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 import {
@@ -58,13 +58,17 @@ export function DefaultCreateOfferPage() {
     keyName: "key",
   });
 
-  const [tags, setTags] = useState<{ name: string; id: string }[]>([
-    { name: "hashtag1", id: "0" },
-    { name: "hashtag2", id: "1" },
-    { name: "hashtag3", id: "2" },
-  ]);
+  const allTags = trpc.offers.getAllTags.useQuery();
 
-  const appendFunc = (tag: { name: string; id: string }) => {
+  const [tags, setTags] = useState<{ name: string; id: number }[]>([]);
+
+  useEffect(() => {
+    if (allTags.data) {
+      setTags(allTags.data);
+    }
+  }, [allTags.data]);
+
+  const appendFunc = (tag: { name: string; id: number }) => {
     setTags(tags?.filter((t) => t.id !== tag.id));
     append(tag);
 
@@ -74,7 +78,7 @@ export function DefaultCreateOfferPage() {
   };
 
   const removeFunc = (
-    tag: { name: string; id: string; key?: string },
+    tag: { name: string; id: number; key?: string },
     index: number,
   ) => {
     delete tag.key;

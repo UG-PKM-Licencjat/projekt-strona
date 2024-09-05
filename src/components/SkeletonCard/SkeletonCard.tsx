@@ -11,7 +11,7 @@ export default function SkeletonCard() {
 
   return (
     <div
-      className={cn("dela h-40 animate-pulse rounded-lg", color)}
+      className={cn("h-40 animate-pulse rounded-lg", color)}
       style={{ animationDelay: `${randomDelay}s` }}
     ></div>
   );

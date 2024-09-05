@@ -7,28 +7,33 @@ import { signIn, signOut } from "next-auth/react";
 import SkeletonCard from "~/components/SkeletonCard/SkeletonCard";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  // // TO DO WHEN OFFERS FETCHING IS READY
+  // const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (isLoading) {
-      const intervalId = setInterval(() => {
-        // Symulacja zmiany stanu isLoading po pewnym czasie
-        if (Math.random() > 0.8) {
-          setIsLoading(false);
-        }
-      }, 1000); // Powtarzanie co 1 sekundę
+  // useEffect(() => {
+  //   if (isLoading) {
+  //     const intervalId = setInterval(() => {
+  //       // Symulacja zmiany stanu isLoading po pewnym czasie
+  //       if (Math.random() > 0.8) {
+  //         setIsLoading(false);
+  //       }
+  //     }, 1000); // Powtarzanie co 1 sekundę
 
-      // Czyszczenie interwału po zmianie isLoading
-      return () => clearInterval(intervalId);
-    }
-  }, [isLoading]);
+  //     // Czyszczenie interwału po zmianie isLoading
+  //     return () => clearInterval(intervalId);
+  //   }
+  // }, [isLoading]);
 
   return (
     <div className="min-h-screen bg-neo-castleton text-white">
       {/* Header Section */}
       <header className="container flex h-[500px] flex-col pt-4">
         <div className="flex flex-row justify-between">
-          <Icon name="logo" height="50" viewBox="0 0 151 44" />
+          <Icon
+            name="logo"
+            className="h-[50px] max-md:h-7"
+            viewBox="0 0 151 44"
+          />
           <Button
             className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
             variant={null}

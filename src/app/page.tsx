@@ -10,21 +10,34 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-neo-castleton text-white">
       {/* Header Section */}
-      <header className="container flex w-full pt-4">
-        <div className="ml-10 flex-1 flex-col items-start">
-          <Icon name="logo" className="w-28" />
-          <h1 className="mt-4 text-5xl">
+      <header className="container flex h-[400px] flex-col pt-4">
+        <div className="flex h-1/5 flex-row justify-between">
+          <Icon name="logo" viewBox="0 0 151 44" />
+          {/* <button className="h-11 rounded-full bg-white px-4 py-2 text-green-900 shadow-md">
+            Sign in with Google
+          </button> */}
+          <Button
+            className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
+            variant={null}
+            size="sm"
+            onClick={() => alert("log in wip")}
+          >
+            Sign in with Google
+          </Button>
+        </div>
+        <div className="relative mr-10 flex h-4/5 flex-col">
+          <h1 className="mt-4 text-5xl max-lg:text-4xl">
             Poczuj <span className="text-neo-sage">rytm...</span>
           </h1>
-          <h2 className="mt-2 flex justify-end text-4xl text-black">
-            <span className="text-neo-sage">...</span>na weselu twojej babci
+          <h2 className="mt-2 flex w-2/3 justify-end pl-10 text-4xl text-black max-lg:text-3xl">
+            <span className="text-neo-sage">...</span>
+            na weselu twojej babci
           </h2>
-        </div>
-        <div className="mr-10 flex w-1/3 flex-col items-end">
-          <button className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md">
-            Sign in with Google
-          </button>
-          <Icon name="girl-pointing" stroke="transparent" />
+          <Icon
+            className="absolute right-0 h-full max-md:hidden"
+            name="girl-pointing"
+            stroke="transparent"
+          />
         </div>
       </header>
 

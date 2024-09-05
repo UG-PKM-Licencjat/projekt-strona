@@ -2,10 +2,17 @@ import React, { useEffect } from "react";
 import { cn } from "~/utils/cn";
 
 export default function SkeletonCard() {
-  const colors = ["bg-neo-pink", "bg-neo-castleton", "bg-neo-sage"];
+  const colors = ["bg-neo-pink/50", "bg-neo-castleton/50", "bg-neo-sage/50"];
 
   const random = Math.floor(Math.random() * colors.length);
   const color = colors[random];
 
-  return <div className={cn("h-40 rounded-lg", color)}></div>;
+  const randomDelay = Math.random() * 2; // w sekundach
+
+  return (
+    <div
+      className={cn("dela h-40 animate-pulse rounded-lg", color)}
+      style={{ animationDelay: `${randomDelay}s` }}
+    ></div>
+  );
 }

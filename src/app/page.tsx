@@ -1,12 +1,28 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
 import { Button } from "src/components/ui/Button/Button";
-import Image from "next/image";
 import { Icon } from "src/components/ui/Icon/Icon";
 import { signIn, signOut } from "next-auth/react";
+import SkeletonCard from "~/components/SkeletonCard/SkeletonCard";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (isLoading) {
+      const intervalId = setInterval(() => {
+        // Symulacja zmiany stanu isLoading po pewnym czasie
+        if (Math.random() > 0.8) {
+          setIsLoading(false);
+        }
+      }, 1000); // Powtarzanie co 1 sekundę
+
+      // Czyszczenie interwału po zmianie isLoading
+      return () => clearInterval(intervalId);
+    }
+  }, [isLoading]);
+
   return (
     <div className="min-h-screen bg-neo-castleton text-white">
       {/* Header Section */}
@@ -90,14 +106,9 @@ export default function Home() {
       {/* Promoted Offers Section */}
       <section className="bg-gray-100 px-10 py-8">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          <div className="h-40 rounded-lg bg-rose-300"></div>
-          <div className="h-40 rounded-lg bg-green-900"></div>
-          <div className="h-40 rounded-lg bg-green-200"></div>
-          <div className="h-40 rounded-lg bg-green-500"></div>
-          <div className="h-40 rounded-lg bg-green-500"></div>
-          <div className="h-40 rounded-lg bg-rose-300"></div>
-          <div className="h-40 rounded-lg bg-green-200"></div>
-          <div className="h-40 rounded-lg bg-green-500"></div>
+          {[...Array<number>(9)].map((el, idx) => {
+            return <SkeletonCard key={idx} />;
+          })}
         </div>
       </section>
     </div>

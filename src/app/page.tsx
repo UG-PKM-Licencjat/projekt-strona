@@ -10,12 +10,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-neo-castleton text-white">
       {/* Header Section */}
-      <header className="container flex h-[400px] flex-col pt-4">
-        <div className="flex h-1/5 flex-row justify-between">
-          <Icon name="logo" viewBox="0 0 151 44" />
-          {/* <button className="h-11 rounded-full bg-white px-4 py-2 text-green-900 shadow-md">
-            Sign in with Google
-          </button> */}
+      <header className="container flex h-[500px] flex-col pt-4">
+        <div className="flex flex-row justify-between">
+          <Icon name="logo" height="50" viewBox="0 0 151 44" />
           <Button
             className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
             variant={null}
@@ -25,18 +22,19 @@ export default function Home() {
             Sign in with Google
           </Button>
         </div>
-        <div className="relative mr-10 flex h-4/5 flex-col">
-          <h1 className="mt-4 text-5xl max-lg:text-4xl">
+        <div className="relative mx-10 flex flex-1 flex-col justify-center gap-10">
+          <h1 className="ml-5 mt-4 text-5xl max-lg:text-4xl">
             Poczuj <span className="text-neo-sage">rytm...</span>
           </h1>
           <h2 className="mt-2 flex w-2/3 justify-end pl-10 text-4xl text-black max-lg:text-3xl">
             <span className="text-neo-sage">...</span>
-            na weselu twojej babci
+            na weselu swojej babci
           </h2>
           <Icon
-            className="absolute right-0 h-full max-md:hidden"
+            className="absolute right-14 h-full max-md:hidden"
             name="girl-pointing"
             stroke="transparent"
+            viewBox="0 0 204 410"
           />
         </div>
       </header>

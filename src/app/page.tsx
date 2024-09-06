@@ -38,7 +38,11 @@ export default function Home() {
             className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
             variant={null}
             size="sm"
-            onClick={() => alert("log in wip")}
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "http://localhost:3000",
+              })
+            }
           >
             Sign in with Google
           </Button>

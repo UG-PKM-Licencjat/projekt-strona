@@ -21,7 +21,7 @@ export default function ChatLayout({
   const [sampleMessages, setSampleMessages] = useState<UserWithMessage[]>([]);
   const router = useRouter();
 
-  const { data: messages, refetch: re } = trpc.getSampleMessages.useQuery(
+  const { data: messages } = trpc.getSampleMessages.useQuery(
     session?.user.id ?? "",
   );
 

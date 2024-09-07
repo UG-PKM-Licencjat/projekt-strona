@@ -26,27 +26,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-neo-castleton text-white">
-      {/* Header Section */}
       <header className="container flex h-[500px] flex-col pt-4">
-        <div className="flex flex-row justify-between">
-          <Icon
-            name="logo"
-            className="h-[50px] max-md:h-7"
-            viewBox="0 0 151 44"
-          />
-          <Button
-            className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
-            variant={null}
-            size="sm"
-            onClick={() =>
-              signIn("google", {
-                callbackUrl: "http://localhost:3000",
-              })
-            }
-          >
-            Sign in with Google
-          </Button>
-        </div>
         <div className="relative mx-10 flex flex-1 flex-col justify-center gap-10">
           <h1 className="ml-5 mt-4 text-5xl max-lg:text-4xl">
             Poczuj <span className="text-neo-sage">rytm...</span>

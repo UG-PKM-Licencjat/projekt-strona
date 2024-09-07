@@ -12,6 +12,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 import { Toaster } from "~/components/ui/toaster";
+import { Navbar } from "~/components/Navbar/Navbar";
 
 const cabin = Cabin({
   subsets: ["latin"],
@@ -34,7 +35,10 @@ export default function RootLayout({
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <SessionProvider session={session}>
           <TRPCReactProvider>
-            <GlobalBehaviours>{children}</GlobalBehaviours>
+            <GlobalBehaviours>
+              <Navbar/>
+              {children}
+            </GlobalBehaviours>
           </TRPCReactProvider>
         </SessionProvider>
         <Toaster />

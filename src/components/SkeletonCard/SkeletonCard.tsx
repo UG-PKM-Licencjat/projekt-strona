@@ -1,16 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { cn } from "~/utils/cn";
 
 /**
  * Komponent reprezentujący szkielet karty z ofertą, który pojawia się podczas ładowania danych.
  */
 export default function SkeletonCard() {
-  const colors = ["bg-neo-pink/50", "bg-neo-castleton/50", "bg-neo-sage/50"];
+  const colors = useMemo(
+    () => ["bg-neo-pink/50", "bg-neo-castleton/50", "bg-neo-sage/50"],
+    [],
+  );
+  const [color, setColor] = React.useState(colors[0]);
+  const [randomDelay, setRandomDelay] = React.useState(2);
 
-  const random = Math.floor(Math.random() * colors.length);
-  const color = colors[random];
-
-  const randomDelay = Math.random() * 2; // w sekundach
+  useEffect(() => {
+    const random = Math.floor(Math.random() * colors.length);
+    setColor(colors[random]);
+    setRandomDelay(Math.random() * 2);
+  }, [colors]);
 
   return (
     <div

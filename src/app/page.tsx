@@ -1,9 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
-import { Button } from "src/components/ui/Button/Button";
+import React from "react";
 import { Icon } from "src/components/ui/Icon/Icon";
-import { signIn, signOut } from "next-auth/react";
 import SkeletonCard from "~/components/SkeletonCard/SkeletonCard";
 
 export default function Home() {

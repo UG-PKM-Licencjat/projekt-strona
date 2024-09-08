@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 const filterList: Array<string> = [];
 
 export const Navbar = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
 
   if (filterList.includes(pathname)) return <></>;
@@ -26,6 +26,7 @@ export const Navbar = () => {
               viewBox="0 0 151 44"
             />
           </Link>
+          {status}
           {buildNavbarElements(session)}
         </div>
       </div>
@@ -34,21 +35,16 @@ export const Navbar = () => {
 };
 
 const buildNavbarElements = (session: Session | null): JSX.Element => (
-  <div className="flex gap-3">
+  <div className="flex items-center gap-3">
     <Link href="/offers">Oferty</Link>
     {!session && (
-      <Button
-        className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
-        variant={null}
-        size="sm"
-        onClick={() =>
-          signIn("google", {
-            callbackUrl: "http://localhost:3000",
-          })
-        }
+      <button
+        className="flex items-center gap-2 rounded-full bg-neo-gray px-4 py-2.5 font-semibold text-neo-castleton shadow-md transition-colors hover:bg-neo-gray-hover"
+        onClick={() => signIn("google")}
       >
+        <Icon name="google" className="size-6 stroke-none" />
         Sign in with Google
-      </Button>
+      </button>
     )}
     {session && (
       <>

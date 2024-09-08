@@ -26,23 +26,27 @@ export const Navbar = () => (
   <div className="bg-neo-castleton text-white">
     <div className="container flex flex-col p-4">
       <div className="flex flex-row justify-between items-center">
-        <Icon
-          name="logo"
-          className="h-[50px] max-md:h-7"
-          viewBox="0 0 151 44"
-        />
-        <Button
-          className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
-          variant={null}
-          size="sm"
-          onClick={() =>
-            signIn("google", {
-              callbackUrl: "http://localhost:3000",
-            })
-          }
-        >
-          Sign in with Google
-        </Button>
+        <a href="/">
+          <Icon
+            name="logo"
+            className="h-[50px] max-md:h-7"
+            viewBox="0 0 151 44"
+          />
+        </a>
+        <div>
+          <Button
+            className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
+            variant={null}
+            size="sm"
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "http://localhost:3000",
+              })
+            }
+          >
+            Sign in with Google
+          </Button>
+        </div>
       </div>
     </div>
   </div>

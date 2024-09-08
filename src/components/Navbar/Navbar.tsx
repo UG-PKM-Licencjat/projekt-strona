@@ -42,7 +42,7 @@ const buildNavbarElements = (session: Session | null): JSX.Element => (
         onClick={() => signIn("google")}
       >
         <Icon name="google" className="size-6 stroke-none" />
-        Sign in with Google
+        Zaloguj się przez Google
       </button>
     )}
     {session && (

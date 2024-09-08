@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
-import { Button } from "../ui/Button/Button";
 import { signIn, useSession } from "next-auth/react";
 import { type Session } from "next-auth";
 import UserMenu from "./UserMenu";

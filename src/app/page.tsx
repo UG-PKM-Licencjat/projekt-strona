@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Icon } from "src/components/ui/Icon/Icon";
-import SkeletonCard from "~/components/SkeletonCard/SkeletonCard";
+import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 
 export default function Home() {
   // // TO DO WHEN OFFERS FETCHING IS READY
@@ -93,7 +93,7 @@ export default function Home() {
       <section className="bg-gray-100 px-10 py-8">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {[...Array<number>(9)].map((el, idx) => {
-            return <SkeletonCard key={idx} />;
+            return <SkeletonCard key={idx} className="h-40" randomColor />;
           })}
         </div>
       </section>

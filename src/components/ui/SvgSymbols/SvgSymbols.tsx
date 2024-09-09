@@ -1,6 +1,5 @@
 enum Icons {
   Magnifier = "magnifier",
-  Profile = "profile",
   Spinner = "spinner",
   Users = "users",
   Settings = "settings",

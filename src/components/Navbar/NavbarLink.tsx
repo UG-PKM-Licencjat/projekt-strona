@@ -19,7 +19,7 @@ export const NavbarLink = ({
     <Link {...props}>
       <div
         className={cn(
-          "flex items-center gap-2 text-lg text-neo-gray-hover transition-colors hover:text-neo-sage",
+          "flex items-center gap-2 text-lg text-neo-gray transition-colors hover:text-neo-sage",
           pathname === props.href && "text-neo-sage",
         )}
       >

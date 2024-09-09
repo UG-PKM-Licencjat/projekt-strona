@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import UserMenu from "./UserMenu";
 import { usePathname } from "next/navigation";
 import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { NavbarLink } from "./NavbarLink";
 import { MobileNavLink } from "./MobileNavLink";
 import { cn } from "~/lib/utils";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "~/components/ui/drawer";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/Button/Button";
 
 const filterList: Array<string> = [];
 
 export const Navbar = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const closeDrawer = () => setDrawerOpen(false);
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const direction = useScrollDirection();
@@ -45,7 +58,7 @@ export const Navbar = () => {
               )}
               {!session && status === "unauthenticated" && (
                 <button
-                  className="flex items-center gap-2 rounded-full bg-neo-gray px-4 py-2.5 font-semibold text-neo-castleton shadow-md transition-colors hover:bg-neo-gray-hover"
+                  className="flex items-center gap-2 rounded-full bg-neo-gray px-4 py-2.5 font-semibold text-black shadow-md transition-colors hover:bg-neo-gray-hover"
                   onClick={() => signIn("google")}
                 >
                   <Icon name="google" className="size-6 stroke-none" />
@@ -69,7 +82,94 @@ export const Navbar = () => {
           <MobileNavLink href="/offers">
             <Icon name="magnifier" className="size-10" />
           </MobileNavLink>
-          <Icon name="user" className="size-10 text-neo-gray" />
+          <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
+            <DrawerTrigger>
+              {!session && (
+                <Icon name="user" className="size-10 text-neo-gray" />
+              )}
+              {session && (
+                <Avatar>
+                  <AvatarImage
+                    src={session.user.image!}
+                    alt={session.user.name!}
+                    referrerPolicy="no-referrer"
+                  />
+                  <AvatarFallback>
+                    {session.user.firstName[0]}
+                    {session.user.lastName[0]}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle className="font-header text-2xl text-black">
+                  {session?.user.name}
+                </DrawerTitle>
+              </DrawerHeader>
+              {!session && (
+                <div className="flex items-center justify-center">
+                  <button
+                    className="flex items-center gap-4 rounded-full bg-neo-gray px-6 py-4 text-lg font-semibold text-black shadow-md transition-colors hover:bg-neo-gray-hover"
+                    onClick={() => signIn("google")}
+                  >
+                    <Icon name="google" className="size-8 stroke-none" />
+                    Zaloguj się przez Google
+                  </button>
+                </div>
+              )}
+              {session && (
+                <div className="grid grid-cols-2 gap-4 p-8 text-xl font-semibold">
+                  <Link
+                    href="/profile"
+                    onClick={closeDrawer}
+                    className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-pink p-4 text-white"
+                  >
+                    <Icon name="user" className="size-14" />
+                    Profil
+                  </Link>
+                  <Link
+                    href="/chat"
+                    onClick={closeDrawer}
+                    className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-sage p-4 text-white"
+                  >
+                    <Icon name="message-square" className="size-14" />
+                    Czat
+                  </Link>
+
+                  {session.user?.admin && (
+                    <Link
+                      href="/admin"
+                      onClick={closeDrawer}
+                      className="col-span-2 flex aspect-[2/1] size-full flex-col items-center justify-center rounded-lg bg-neo-mantis p-4 text-white"
+                    >
+                      <Icon name="shield" className="size-14" />
+                      Panel Administratora
+                    </Link>
+                  )}
+                </div>
+              )}
+              <DrawerFooter>
+                <div className="flex items-center justify-around">
+                  <DrawerClose>
+                    <Button variant="ghost" className="text-black">
+                      Zamknij
+                    </Button>
+                  </DrawerClose>
+                  {session && (
+                    <Button
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      variant="secondary"
+                      className="flex items-center gap-2"
+                    >
+                      <Icon name="logout" className="size-8" />
+                      Wyloguj się
+                    </Button>
+                  )}
+                </div>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </div>
       </nav>
     </>

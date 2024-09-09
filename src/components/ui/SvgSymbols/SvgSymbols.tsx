@@ -21,6 +21,7 @@ enum Icons {
   Logout = "logout",
   Shield = "shield",
   Google = "google",
+  Home = "home",
 }
 
 export type IconType = `${Icons}`;
@@ -30,10 +31,6 @@ const SvgSymbols = (
     <symbol id={Icons.Magnifier}>
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
-    </symbol>
-    <symbol id={Icons.Profile}>
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
     </symbol>
     <symbol id={Icons.Spinner}>
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
@@ -219,6 +216,10 @@ const SvgSymbols = (
         d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
       ></path>
       <path fill="none" d="M0 0h48v48H0z"></path>
+    </symbol>
+    <symbol id={Icons.Home}>
+      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+      <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
     </symbol>
   </svg>
 );

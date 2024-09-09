@@ -7,9 +7,17 @@ import {
   Italic,
   List,
   ListOrdered,
+  Heading,
+  Heading1,
   Heading2,
+  Heading3,
 } from "lucide-react";
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
 import { Toggle } from "~/components/ui/toggle";
 
 type Props = {
@@ -22,16 +30,51 @@ export function Toolbar({ editor }: Props) {
   }
 
   return (
-    <div className="rounded-md border border-black bg-transparent">
-      <Toggle
-        size="sm"
-        pressed={editor.isActive("heading")}
-        onPressedChange={() =>
-          editor.chain().focus().toggleHeading({ level: 2 }).run()
-        }
-      >
-        <Heading2 className="h-4 w-4" />
-      </Toggle>
+    <div className="flex gap-1 rounded-md border bg-white p-1 active:bg-opacity-10">
+      <Popover>
+        <PopoverTrigger
+          asChild
+          className="h-9 w-9 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
+        >
+          <Heading className="h-4 w-4" />
+        </PopoverTrigger>
+        <PopoverContent
+          sideOffset={4}
+          align="center"
+          className="ml-2 mt-2 w-20"
+        >
+          <div className="flex flex-col gap-1 outline-none">
+            <Toggle
+              size="sm"
+              pressed={editor.isActive("heading", { level: 1 })}
+              onPressedChange={() =>
+                editor.chain().focus().toggleHeading({ level: 1 }).run()
+              }
+            >
+              <Heading1 className="h-4 w-4" />
+            </Toggle>
+
+            <Toggle
+              size="sm"
+              pressed={editor.isActive("heading", { level: 2 })}
+              onPressedChange={() =>
+                editor.chain().focus().toggleHeading({ level: 2 }).run()
+              }
+            >
+              <Heading2 className="h-4 w-4" />
+            </Toggle>
+            <Toggle
+              size="sm"
+              pressed={editor.isActive("heading", { level: 3 })}
+              onPressedChange={() =>
+                editor.chain().focus().toggleHeading({ level: 3 }).run()
+              }
+            >
+              <Heading3 className="h-4 w-4" />
+            </Toggle>
+          </div>
+        </PopoverContent>
+      </Popover>
       <Toggle
         size="sm"
         pressed={editor.isActive("bold")}

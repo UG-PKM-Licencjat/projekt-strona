@@ -4,7 +4,7 @@ import Tiptap from "~/components/RichTextEditor/Tiptap";
 export default function Home() {
   return (
     <Tiptap
-      description="Write here.."
+      placeholder="Write here.."
       onChange={() => {
         return;
       }}

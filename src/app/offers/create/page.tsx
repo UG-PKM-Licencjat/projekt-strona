@@ -9,7 +9,7 @@ import {
 } from "src/components/ui/tabs";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { offerSchema, type FormData } from "~/utils/offerSchema";
+import { offerSchema, type FormData } from "~/lib/offerSchema";
 
 export default function CreateOfferPage() {
   const methods = useForm<FormData>({

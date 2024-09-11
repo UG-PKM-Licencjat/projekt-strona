@@ -136,11 +136,11 @@ export const offers = pgTable("offer", {
   // TODO delete this?
   name: varchar("name", { length: 255 }).notNull(),
   price: doublePrecision("price"),
-  about: jsonb("about"),
+  about: text("about"),
   skills: jsonb("skills"),
   files: jsonb("files"),
   links: jsonb("links"),
-  // TODO figure out location
+  location: varchar("location", { length: 255 }),
 });
 
 export const offerRelations = relations(offers, ({ many }) => ({

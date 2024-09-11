@@ -1,82 +1,148 @@
-import { Icon } from "~/components/ui/Icon/Icon";
-import { Offer } from "~/components/Offer/Offer";
+"use client";
+
+import Image from "next/image";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/Select/Select";
-const placeholderOffers = [
+  MapPin,
+  Star,
+  Search,
+  ChevronDown,
+  Check,
+  X,
+  Grid,
+  List,
+} from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import ArtistCard, { type Artist } from "~/components/ArtistCard/ArtistCard";
+
+const artists: Artist[] = [
   {
-    name: "IMIE NAZWISKO",
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-    tags: ["hashtag", "hashtag", "hashtag", "hashtag"],
+    id: 1,
+    name: "Alex Johnson",
+    professions: ["Painter", "Illustrator"],
+    description:
+      "Versatile artist specializing in vibrant acrylic paintings and digital illustrations.",
+    priceRange: "$50 - $500",
+    cities: ["New York", "Boston"],
+    rating: 4.8,
+    imageUrl: "/placeholder.svg?height=100&width=100",
   },
   {
-    name: "IMIE NAZWISKO",
+    id: 2,
+    name: "Sam Lee",
+    professions: ["Photographer", "Videographer"],
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id repudiandae similique aperiam optio earum quidem, ad tempore necessitatibus suscipit iusto?",
-    tags: ["hashtag", "hashtag", "hashtag", "hashtag"],
+      "Capturing life's moments through the lens, specializing in events and portraits.",
+    priceRange: "$100 - $1000",
+    cities: ["Los Angeles", "San Francisco"],
+    rating: 4.9,
+    imageUrl: "/placeholder.svg?height=100&width=100",
   },
   {
-    name: "IMIE NAZWISKO",
+    id: 3,
+    name: "Emily Chen",
+    professions: ["Graphic Designer", "UI/UX Designer"],
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id repudiandae similique aperiam optio earum quidem, ad tempore necessitatibus suscipit iusto?",
-    tags: ["hashtag", "hashtag", "hashtag", "hashtag"],
-  },
-  {
-    name: "IMIE NAZWISKO",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione alias animi nostrum quo, ipsa doloribus aut a error laborum assumenda eius harum quia, dolor libero. Possimus iusto ullam animi voluptatum distinctio enim suscipit magnam, quaerat omnis quae vitae veritatis laborum reiciendis aliquid dolor quisquam dignissimos accusantium vero dolorum similique cum. Doloremque mollitia sunt voluptates error doloribus, delectus nulla dolorum incidunt, recusandae iusto assumenda deserunt harum, culpa temporibus! Quam nisi corrupti accusantium nostrum dolorum eligendi. Dolorum eaque illo asperiores aperiam nisi delectus eligendi voluptate odit unde! Quisquam, eius! Exercitationem reprehenderit aperiam sit quos accusamus dicta, fugiat sunt possimus. Sed, quibusdam numquam!",
-    tags: ["hashtag", "hashtag", "hashtag", "hashtag"],
+      "Creating stunning visuals and user-friendly interfaces for digital platforms.",
+    priceRange: "$75 - $750",
+    cities: ["Chicago", "Seattle"],
+    rating: 4.7,
+    imageUrl: "/placeholder.svg?height=100&width=100",
   },
 ];
 
-export default function Page() {
+export default function SearchPage() {
+  const [viewMode, setViewMode] = useState("grid");
+  const professionFilterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        professionFilterRef.current &&
+        !professionFilterRef.current.contains(event.target as Node)
+      ) {
+        // setShowProfessionFilter(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <>
-      <div className="flex w-full flex-col items-center gap-32 bg-white p-10">
-        <div className="flex flex-col items-start gap-20">
-          <h1 className="text-6xl font-semibold text-blue-950">ARTYŚCI-APKA</h1>
-          <div className="flex items-center gap-20 font-semibold">
-            <div className="flex items-center divide-x-2 divide-blue-950 rounded-lg border-2 border-blue-950 drop-shadow-md">
+    <div className="min-h-screen bg-[#f5f5f5]">
+      <main className="container mx-auto p-4">
+        <div className="mb-8 rounded-lg bg-[#f0e4d7] p-4 shadow-md">
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="relative flex-grow">
               <input
                 type="text"
-                placeholder="Wpisz nazwę oferty"
-                className="rounded-lg p-2 focus:outline-none"
+                placeholder="Search artists..."
+                className="w-full rounded-md border border-[#97b085] py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-[#5f8d4e]"
               />
-              <Icon name="magnifier" className="size-10 p-2" />
+              <Search
+                className="absolute left-3 top-2.5 text-[#5f8d4e]"
+                size={20}
+              />
             </div>
-            {/* TODO: add logic */}
-            <Select>
-              <SelectTrigger className="flex h-full w-44 gap-2 rounded-lg border-2 border-blue-950 p-2">
-                <SelectValue placeholder="Lokalizacja" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="1">Lokalizacja 1</SelectItem>
-                  <SelectItem value="2">Lokalizacja 2</SelectItem>
-                  <SelectItem value="3">Lokalizacja 3</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div className="relative">
+              <select className="appearance-none rounded-md border border-[#97b085] bg-white px-4 py-2 pr-8 text-[#2d6a4f] focus:outline-none focus:ring-2 focus:ring-[#5f8d4e]">
+                <option>Select City</option>
+                <option>New York</option>
+                <option>Los Angeles</option>
+                <option>Chicago</option>
+              </select>
+              <MapPin
+                className="absolute right-3 top-2.5 text-[#5f8d4e]"
+                size={20}
+              />
+            </div>
+
+            <button className="rounded-md bg-[#5f8d4e] px-4 py-2 text-white transition duration-300 hover:bg-[#4a6741]">
+              Search
+            </button>
           </div>
         </div>
-        {/* Offers container */}
-        <div className="grid max-w-[75rem] items-center justify-center gap-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-5">
-          {placeholderOffers.map((offer, index) => (
-            <Offer
-              key={index}
-              name={offer.name}
-              description={offer.description}
-              tags={offer.tags}
-              className={index % 3 === 0 ? "xl:col-span-3" : "xl:col-span-2"}
-            />
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-[#2d6a4f]">
+            Featured Artists
+          </h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`rounded p-2 ${viewMode === "grid" ? "bg-[#97b085]" : "bg-[#f0e4d7]"} transition-colors duration-200`}
+              aria-label="Grid view"
+            >
+              <Grid
+                size={20}
+                className={
+                  viewMode === "grid" ? "text-[#f0e4d7]" : "text-[#5f8d4e]"
+                }
+              />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`rounded p-2 ${viewMode === "list" ? "bg-[#97b085]" : "bg-[#f0e4d7]"} transition-colors duration-200`}
+              aria-label="List view"
+            >
+              <List
+                size={20}
+                className={
+                  viewMode === "list" ? "text-[#f0e4d7]" : "text-[#5f8d4e]"
+                }
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          className={`grid ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"} gap-6`}
+        >
+          {artists.map((artist) => (
+            <ArtistCard key={artist.id} artist={artist} />
           ))}
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 }

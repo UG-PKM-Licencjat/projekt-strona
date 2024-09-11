@@ -98,6 +98,7 @@ export const users = createTable("user", {
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }), // TODO figure out image storage
   registrationStatus: integer("registrationStatus").default(0).notNull(),
+  isArtist: boolean("isArtist").default(false).notNull(),
 });
 
 export const tags = createTable("tag", {

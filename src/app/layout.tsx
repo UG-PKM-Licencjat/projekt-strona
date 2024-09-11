@@ -33,7 +33,9 @@ function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body className={`${cabin.variable} ${montserrat.variable} font-body`}>
+      <body
+        className={`${cabin.variable} ${montserrat.variable} h-screen font-body `}
+      >
         {SvgSymbols}
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <SessionProvider session={session}>

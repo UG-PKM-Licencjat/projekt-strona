@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Icon } from "~/components/ui/Icon/Icon";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FilePreview } from "~/components/uploadthing/FilePreview";
 
@@ -146,7 +146,7 @@ export default function PreviewDropzone({
         {fileRejections.map((fileRejection) => (
           <div
             key={fileRejection.file.name}
-            className="flex items-center gap-2 "
+            className="flex items-center gap-2"
           >
             <Icon name="plus" className="size-6 rotate-45" />
             <p className="text-sm font-semibold text-red-500">

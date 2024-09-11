@@ -5,7 +5,7 @@ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check } from "lucide-react";
 import { Label } from "../label";
 
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/utils";
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,

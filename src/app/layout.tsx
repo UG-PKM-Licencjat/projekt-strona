@@ -1,12 +1,11 @@
-"use client";
 import "~/styles/globals.css";
 
 import { Cabin, Montserrat } from "next/font/google";
 
 import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
 import { TRPCReactProvider } from "~/trpc/react";
-import { SessionProvider } from "next-auth/react";
-import { type Session } from "next-auth";
+import { getServerAuthSession } from "~/server/auth";
+import { SessionProvider } from "~/components/SessionProvider";
 import GlobalBehaviours from "./GlobalBehaviours";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
@@ -24,10 +23,10 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  session,
-}: Readonly<{ children: React.ReactNode; session: Session }>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  const session = await getServerAuthSession();
   return (
     <html lang="en">
       <body className={`${cabin.variable} ${montserrat.variable} font-body`}>
@@ -36,7 +35,7 @@ export default function RootLayout({
         <SessionProvider session={session}>
           <TRPCReactProvider>
             <GlobalBehaviours>
-              <Navbar/>
+              <Navbar />
               {children}
             </GlobalBehaviours>
           </TRPCReactProvider>

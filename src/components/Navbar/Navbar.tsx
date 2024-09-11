@@ -1,10 +1,10 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
 import { signIn, signOut, useSession } from "next-auth/react";
 import UserMenu from "./UserMenu";
 import { usePathname } from "next/navigation";
-import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { NavbarLink } from "./NavbarLink";
 import { MobileNavLink } from "./MobileNavLink";
 import { cn } from "~/lib/utils";
@@ -16,6 +16,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
+  DrawerDescription,
 } from "~/components/ui/drawer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
@@ -25,7 +26,7 @@ const filterList: Array<string> = [];
 export const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const pathname = usePathname();
   const direction = useScrollDirection();
 
@@ -51,12 +52,7 @@ export const Navbar = () => {
                   <UserMenu session={session} />
                 </>
               )}
-              {!session && status === "loading" && (
-                <>
-                  <SkeletonCard className="h-5 w-44 rounded" />
-                </>
-              )}
-              {!session && status === "unauthenticated" && (
+              {!session && (
                 <button
                   className="flex items-center gap-2 rounded-full bg-neo-gray px-4 py-2.5 font-semibold text-black shadow-md transition-colors hover:bg-neo-gray-hover"
                   onClick={() => signIn("google")}
@@ -106,6 +102,7 @@ export const Navbar = () => {
                 <DrawerTitle className="font-header text-2xl text-black">
                   {session?.user.name}
                 </DrawerTitle>
+                <DrawerDescription></DrawerDescription>
               </DrawerHeader>
               {!session && (
                 <div className="flex items-center justify-center">
@@ -151,7 +148,7 @@ export const Navbar = () => {
               )}
               <DrawerFooter>
                 <div className="flex items-center justify-around">
-                  <DrawerClose>
+                  <DrawerClose asChild>
                     <Button variant="ghost" className="text-black">
                       Zamknij
                     </Button>

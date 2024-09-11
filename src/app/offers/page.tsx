@@ -13,48 +13,21 @@ import {
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ArtistCard, { type Artist } from "~/components/ArtistCard/ArtistCard";
-
-const artists: Artist[] = [
-  {
-    id: 1,
-    name: "Alex Johnson",
-    professions: ["Painter", "Illustrator"],
-    description:
-      "Versatile artist specializing in vibrant acrylic paintings and digital illustrations.",
-    priceRange: "$50 - $500",
-    cities: ["New York", "Boston"],
-    rating: 4.8,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 2,
-    name: "Sam Lee",
-    professions: ["Photographer", "Videographer"],
-    description:
-      "Capturing life's moments through the lens, specializing in events and portraits.",
-    priceRange: "$100 - $1000",
-    cities: ["Los Angeles", "San Francisco"],
-    rating: 4.9,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 3,
-    name: "Emily Chen",
-    professions: ["Graphic Designer", "UI/UX Designer"],
-    description:
-      "Creating stunning visuals and user-friendly interfaces for digital platforms.",
-    priceRange: "$75 - $750",
-    cities: ["Chicago", "Seattle"],
-    rating: 4.7,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-];
+import { trpc } from "~/trpc/react";
 
 export default function SearchPage() {
   const [viewMode, setViewMode] = useState("grid");
   const professionFilterRef = useRef<HTMLDivElement>(null);
+  const { data, refetch } = trpc.offers.search.useQuery({
+    text: "Graphic",
+    location: "Los Angeles",
+    skip: 0,
+    limit: 5,
+  });
 
   useEffect(() => {
+    void refetch();
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         professionFilterRef.current &&
@@ -138,9 +111,9 @@ export default function SearchPage() {
         <div
           className={`grid ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"} gap-6`}
         >
-          {artists.map((artist) => (
+          {/* {artists.map((artist) => (
             <ArtistCard key={artist.id} artist={artist} />
-          ))}
+          ))} */}
         </div>
       </main>
     </div>

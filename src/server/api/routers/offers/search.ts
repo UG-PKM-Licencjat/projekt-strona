@@ -15,7 +15,7 @@ const searchProcedure = procedure
   )
   .query(async (opts) => {
     // TODO improve searching algorithm if time allows
-    const dbOffers = db
+    const dbOffers = await db
       .select()
       .from(offers)
       .where(
@@ -29,7 +29,8 @@ const searchProcedure = procedure
       )
       .limit(opts.input.limit)
       .offset(opts.input.skip);
-    return [];
+    console.log(dbOffers);
+    return dbOffers;
   });
 
 export default searchProcedure;

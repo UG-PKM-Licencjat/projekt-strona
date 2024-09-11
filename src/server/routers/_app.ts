@@ -74,6 +74,27 @@ export const appRouter = router({
       return mappedOffer;
     }),
 
+  userTypeRegularorArtist: authedProcedure
+    .input(
+      z.object({
+        isArtist: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const fetchedUsers = await db
+          .update(users)
+          .set({
+            isArtist: input.isArtist,
+          })
+          .where(eq(users.id, ctx.session?.user.id ?? ""));
+        return fetchedUsers;
+      } catch (error) {
+        console.log("Error fetching registration data", error);
+        return [];
+      }
+    }),
+
   // TODO finish create offer procedure
   // createOffer: procedure
   //   .input(
@@ -104,10 +125,8 @@ export const appRouter = router({
   putRegistrationData1Step: authedProcedure
     .input(
       z.object({
-        nickname: z.string(),
         firstName: z.string(),
         lastName: z.string(),
-        location: z.string(),
         image: z.string(),
       }),
     )
@@ -116,13 +135,11 @@ export const appRouter = router({
         const fetchedUsers = await db
           .update(users)
           .set({
-            nickname: input.nickname,
             firstName: input.firstName,
             lastName: input.lastName,
-            location: input.location,
             image: input.image,
           })
-          .where(eq(users.id, ctx.session?.user.id));
+          .where(eq(users.id, ctx.session?.user.id ?? ""));
 
         return fetchedUsers;
       } catch (error) {
@@ -146,7 +163,7 @@ export const appRouter = router({
           .set({
             registrationStatus: input.step,
           })
-          .where(eq(users.id, ctx.session?.user.id));
+          .where(eq(users.id, ctx.session?.user.id ?? ""));
         console.log("Changed registration step", fetchedUsers);
         return fetchedUsers;
       } catch (error) {
@@ -162,7 +179,7 @@ export const appRouter = router({
           registrationStatus: users.registrationStatus,
         })
         .from(users)
-        .where(eq(users.id, ctx.session?.user.id));
+        .where(eq(users.id, ctx.session?.user.id ?? ""));
       console.log("Fetched registration step", step);
       return step;
     } catch (error) {
@@ -182,7 +199,7 @@ export const appRouter = router({
           image: users.image,
         })
         .from(users)
-        .where(eq(users.id, ctx.session?.user.id));
+        .where(eq(users.id, ctx.session?.user.id ?? ""));
       // console.log("Fetched registration data", fetchedUserData);
       return fetchedUserData;
     } catch (error) {

@@ -1,4 +1,4 @@
-import { env } from "~/env.js";
+import { env } from "src/env.js";
 import { MongoClient } from "mongodb";
 
 const client = new MongoClient(env.MONGO_URL);

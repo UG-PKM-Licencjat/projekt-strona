@@ -1,14 +1,31 @@
 "use client";
-import React, { useEffect } from "react";
-import { SearchEngine } from "~/components/searchEngine/searchEngine";
-import { Button } from "~/components/ui/Button/Button";
-import Image from "next/image";
-import { signIn } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
+import { Button } from "src/components/ui/Button/Button";
+import { Icon } from "src/components/ui/Icon/Icon";
+import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import { trpc } from "./_trpc/client";
 import { redirect } from "next/navigation";
+import SkeletonCard from "~/components/SkeletonCard/SkeletonCard";
 
 export default function Home() {
+  // // TO DO WHEN OFFERS FETCHING IS READY
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+  //   if (isLoading) {
+  //     const intervalId = setInterval(() => {
+  //       // Symulacja zmiany stanu isLoading po pewnym czasie
+  //       if (Math.random() > 0.8) {
+  //         setIsLoading(false);
+  //       }
+  //     }, 1000); // Powtarzanie co 1 sekundę
+
+  //     // Czyszczenie interwału po zmianie isLoading
+  //     return () => clearInterval(intervalId);
+  //   }
+  // }, [isLoading]);
+
   // const session = useSession();
   // const getRegistationStep = trpc.getRegistationStep.useQuery();
 
@@ -28,77 +45,101 @@ export default function Home() {
   // }, [session, getRegistationStep]);
 
   return (
-    <>
-      <header className="flex h-[500px] justify-between bg-pink-700">
-        <div className="flex h-full w-3/5 flex-col justify-around pl-20">
-          <h1 className="text-4xl text-white">ARTYŚCI-APKA</h1>
-          <SearchEngine />
-        </div>
-        <div
-          style={{
-            clipPath: "polygon(0 0, 100% 0, 100% 100%, 20% 100%)",
-          }}
-          className="h-full w-fit"
-        >
-          <Image
-            src="/img/kontrabas.jpg"
-            className="hidden object-cover lg:block"
-            height={500}
-            width={600}
-            alt="zdjęcie kontrabasisty grającego koncert"
+    <div className="min-h-screen bg-neo-castleton text-white">
+      {/* Header Section */}
+      <header className="container flex h-[500px] flex-col pt-4">
+        <div className="flex flex-row justify-between">
+          <Icon
+            name="logo"
+            className="h-[50px] max-md:h-7"
+            viewBox="0 0 151 44"
           />
-        </div>
-      </header>
-      <main className="mt-5">
-        <section className="flex gap-52 bg-white p-10">
-          <div className="flex w-1/2 flex-col items-center justify-around gap-7">
-            <h1 className="text-4xl">Kim jesteśmy?</h1>
-            <p className="text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
-              fugiat quas quos aperiam doloribus nemo doloremque autem. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
-              fugiat quas quos aperiam doloribus nemo doloremque autem.
-            </p>
-          </div>
           <Button
-            onClick={async () =>
+            className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
+            variant={null}
+            size="sm"
+            onClick={() =>
               signIn("google", {
-                callbackUrl: "http://localhost:3000/createaccount",
+                callbackUrl: "http://localhost:3000",
               })
             }
           >
-            Zaloguj się
+            Sign in with Google
           </Button>
-          <Button>Zarejestruj się</Button>
-        </section>
-        <section className="bg-gray-100 p-10">
-          <div className="flex flex-col justify-around gap-7">
-            <h2 className="text-2xl">Nasze cele</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
-              fugiat quas quos aperiam doloribus nemo doloremque autem. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod,
-              fugiat quas quos aperiam doloribus nemo doloremque autem.
-            </p>
+        </div>
+        <div className="relative mx-10 flex flex-1 flex-col justify-center gap-10">
+          <h1 className="ml-5 mt-4 text-5xl max-lg:text-4xl">
+            Poczuj <span className="text-neo-sage">rytm...</span>
+          </h1>
+          <h2 className="mt-2 flex w-2/3 justify-end pl-10 text-4xl text-black max-lg:text-3xl">
+            <span className="text-neo-sage">...</span>
+            na weselu swojej babci
+          </h2>
+          <Icon
+            className="absolute right-14 h-full max-md:hidden"
+            name="girl-pointing"
+            stroke="transparent"
+            viewBox="0 0 204 410"
+          />
+        </div>
+      </header>
+
+      {/* Categories Section */}
+      <section className="bg-white px-10 py-8 text-black">
+        <div className="mx-auto max-w-4xl">
+          <h4 className="mb-4 text-2xl font-bold">Kategorie</h4>
+          <div className="grid grid-cols-2 gap-4 text-lg sm:grid-cols-3">
+            <div>
+              <h5 className="font-semibold">Muzyka</h5>
+              <ul>
+                <li>zespoły</li>
+                <li>soliści</li>
+                <li>reszta</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold">Performance</h5>
+              <ul>
+                <li>taniec</li>
+                <li>magik</li>
+                <li>kuglarz</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold">Rękodzieła</h5>
+              <ul>
+                <li>obrazy</li>
+                <li>rzeźby</li>
+                <li>portrety</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold">Wideo i fotografia</h5>
+              <ul>
+                <li>sesje zdjęciowe</li>
+                <li>filmowcy</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold">Obróbka komputerowa</h5>
+              <ul>
+                <li>montowanie</li>
+                <li>mix</li>
+                <li>photoshop</li>
+              </ul>
+            </div>
           </div>
-        </section>
-        <section className="bg-white p-10">
-          <div className="flex flex-col justify-around gap-7">
-            <h2 className="text-2xl">Nasza misja</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatibus, quia, quae quod, fugiat quas quos aperiam doloribus
-              nemo doloremque autem. Quisquam voluptatibus, quia, quae quod, fug
-            </p>
-          </div>
-        </section>
-      </main>
-    </>
+        </div>
+      </section>
+
+      {/* Promoted Offers Section */}
+      <section className="bg-gray-100 px-10 py-8">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {[...Array<number>(9)].map((el, idx) => {
+            return <SkeletonCard key={idx} />;
+          })}
+        </div>
+      </section>
+    </div>
   );
 }

@@ -3,9 +3,9 @@ import {
   doublePrecision,
   index,
   integer,
-  pgTableCreator,
+  pgTable,
   primaryKey,
-  // serial,
+  jsonb,
   text,
   timestamp,
   varchar,
@@ -13,11 +13,9 @@ import {
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
-export const createTable = pgTableCreator((name) => `${name}`);
-
 // NextAuth basics
 
-export const accounts = createTable(
+export const accounts = pgTable(
   "account",
   {
     userId: text("userId")
@@ -49,7 +47,7 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
-export const sessions = createTable(
+export const sessions = pgTable(
   "session",
   {
     sessionToken: varchar("sessionToken", { length: 255 })
@@ -69,7 +67,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
 
-export const verificationTokens = createTable(
+export const verificationTokens = pgTable(
   "verificationToken",
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),
@@ -83,26 +81,29 @@ export const verificationTokens = createTable(
 
 // Project schema
 
-export const users = createTable("user", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+export const users = pgTable("user", {
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
   firstName: varchar("firstName", { length: 255 }),
   lastName: varchar("lastName", { length: 255 }),
   nickname: varchar("nickname", { length: 255 }),
-  shortDescription: varchar("shortDescription", { length: 255 }),
-  location: varchar("location", { length: 255 }),
-  longDescription: text("longDescription"),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
+    withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }), // TODO figure out image storage
+  isPremium: boolean("isPremium").default(false).notNull(),
+  isAdmin: boolean("isAdmin").default(false).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
   registrationStatus: integer("registrationStatus").default(0).notNull(),
   isArtist: boolean("isArtist").default(false).notNull(),
 });
 
-export const tags = createTable("tag", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+export const tags = pgTable("tag", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   name: varchar("name", { length: 255 }).notNull(),
 });
 
@@ -110,13 +111,13 @@ export const tagRelations = relations(tags, ({ many }) => ({
   offerTags: many(offerTags),
 }));
 
-export const offerTags = createTable(
-  "offer_tag",
+export const offerTags = pgTable(
+  "offerTag",
   {
     offerId: varchar("offerId", { length: 255 })
       .notNull()
       .references(() => offers.id),
-    tagId: varchar("tagId", { length: 255 })
+    tagId: integer("tagId")
       .notNull()
       .references(() => tags.id),
   },
@@ -130,11 +131,17 @@ export const offerTagsRelations = relations(offerTags, ({ one }) => ({
   tag: one(tags, { fields: [offerTags.tagId], references: [tags.id] }),
 }));
 
-export const offers = createTable("offer", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+export const offers = pgTable("offer", {
+  id: varchar("id", { length: 255 })
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  // TODO delete this?
   name: varchar("name", { length: 255 }).notNull(),
-  description: text("description"),
   price: doublePrecision("price"),
+  about: jsonb("about"),
+  skills: jsonb("skills"),
+  files: jsonb("files"),
+  links: jsonb("links"),
   // TODO figure out location
 });
 
@@ -143,8 +150,8 @@ export const offerRelations = relations(offers, ({ many }) => ({
   offerTags: many(offerTags),
 }));
 
-export const userOffers = createTable(
-  "user_offer",
+export const userOffers = pgTable(
+  "userOffer",
   {
     userId: varchar("userId", { length: 255 })
       .notNull()

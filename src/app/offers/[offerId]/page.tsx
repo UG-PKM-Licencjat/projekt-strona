@@ -6,7 +6,7 @@ import { Tag } from "~/components/Tag/Tag";
 import { redirect } from "next/navigation";
 import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 import { StarRating } from "~/components/ui/StarRating/StarRating";
-import { trpc } from "~/app/_trpc/client";
+import { trpc } from "~/trpc/react";
 import Image from "next/image";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
@@ -26,7 +26,7 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
   } catch (e) {
     redirect("/offers");
   }
-  const { data } = trpc.getOffer.useQuery({ id: uriDecoded });
+  const { data } = trpc.offers.get.useQuery({ id: uriDecoded });
 
   useEffect(() => {
     console.log(data);

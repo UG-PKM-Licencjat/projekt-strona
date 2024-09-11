@@ -1,5 +1,5 @@
-import { Button } from "~/components/ui/Button/Button";
-import { Input } from "~/components/ui/Input/Input";
+import { Button } from "src/components/ui/Button/Button";
+import { Input } from "src/components/ui/Input/Input";
 
 export default function Chat() {
   return (

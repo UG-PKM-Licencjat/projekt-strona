@@ -1,4 +1,6 @@
 {
+  "id": "303c4929-54a1-4274-8d00-a2f75b351d5e",
+  "prevId": "95ceef55-6ea2-44f0-88b0-6cc092ae27c0",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -82,6 +84,7 @@
       },
       "indexes": {
         "account_userId_idx": {
+          "name": "account_userId_idx",
           "columns": [
             {
               "expression": "userId",
@@ -90,35 +93,27 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "account_userId_idx",
           "isUnique": false,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
-          "columnsFrom": [
-            "userId"
-          ],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "account_provider_providerAccountId_pk": {
           "name": "account_provider_providerAccountId_pk",
-          "columns": [
-            "provider",
-            "providerAccountId"
-          ]
+          "columns": ["provider", "providerAccountId"]
         }
       },
       "uniqueConstraints": {}
@@ -145,37 +140,26 @@
         "offer_tag_offerId_offer_id_fk": {
           "name": "offer_tag_offerId_offer_id_fk",
           "tableFrom": "offer_tag",
-          "columnsFrom": [
-            "offerId"
-          ],
           "tableTo": "offer",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "columnsFrom": ["offerId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         },
         "offer_tag_tagId_tag_id_fk": {
           "name": "offer_tag_tagId_tag_id_fk",
           "tableFrom": "offer_tag",
-          "columnsFrom": [
-            "tagId"
-          ],
           "tableTo": "tag",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "columnsFrom": ["tagId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "offer_tag_offerId_tagId_pk": {
           "name": "offer_tag_offerId_tagId_pk",
-          "columns": [
-            "offerId",
-            "tagId"
-          ]
+          "columns": ["offerId", "tagId"]
         }
       },
       "uniqueConstraints": {}
@@ -239,6 +223,7 @@
       },
       "indexes": {
         "session_userId_idx": {
+          "name": "session_userId_idx",
           "columns": [
             {
               "expression": "userId",
@@ -247,26 +232,21 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "session_userId_idx",
           "isUnique": false,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {
         "session_userId_user_id_fk": {
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
-          "columnsFrom": [
-            "userId"
-          ],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -316,37 +296,26 @@
         "user_offer_userId_user_id_fk": {
           "name": "user_offer_userId_user_id_fk",
           "tableFrom": "user_offer",
-          "columnsFrom": [
-            "userId"
-          ],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         },
         "user_offer_offerId_offer_id_fk": {
           "name": "user_offer_offerId_offer_id_fk",
           "tableFrom": "user_offer",
-          "columnsFrom": [
-            "offerId"
-          ],
           "tableTo": "offer",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "columnsFrom": ["offerId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "user_offer_userId_offerId_pk": {
           "name": "user_offer_userId_offerId_pk",
-          "columns": [
-            "userId",
-            "offerId"
-          ]
+          "columns": ["userId", "offerId"]
         }
       },
       "uniqueConstraints": {}
@@ -391,12 +360,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "location": {
-          "name": "location",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "longDescription": {
           "name": "longDescription",
           "type": "text",
@@ -422,12 +385,26 @@
           "primaryKey": false,
           "notNull": false
         },
-        "registrationStatus": {
-          "name": "registrationStatus",
-          "type": "integer",
+        "isPremium": {
+          "name": "isPremium",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "default": 0
+          "default": false
+        },
+        "isAdmin": {
+          "name": "isAdmin",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isActive": {
+          "name": "isActive",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
         }
       },
       "indexes": {},
@@ -463,10 +440,7 @@
       "compositePrimaryKeys": {
         "verificationToken_identifier_token_pk": {
           "name": "verificationToken_identifier_token_pk",
-          "columns": [
-            "identifier",
-            "token"
-          ]
+          "columns": ["identifier", "token"]
         }
       },
       "uniqueConstraints": {}
@@ -475,10 +449,8 @@
   "enums": {},
   "schemas": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "c6c78143-b77e-444e-ab9d-cd790152b0da",
-  "prevId": "9862ae90-e1f6-4ff3-bcac-a8ccab4e3baf"
+    "tables": {}
+  }
 }

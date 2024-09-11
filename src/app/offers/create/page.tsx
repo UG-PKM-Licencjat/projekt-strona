@@ -1,10 +1,15 @@
 "use client";
 
 import { DefaultCreateOfferPage } from "./default-create";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "src/components/ui/tabs";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { offerSchema, type FormData } from "./schema";
+import { offerSchema, type FormData } from "~/utils/offerSchema";
 
 export default function CreateOfferPage() {
   const methods = useForm<FormData>({

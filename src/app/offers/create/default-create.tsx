@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 import {
@@ -15,11 +15,11 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "~/components/ui/popover";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { useToast } from "~/components/ui/use-toast";
+} from "src/components/ui/popover";
+import { ScrollArea } from "src/components/ui/scroll-area";
+import { useToast } from "src/components/ui/use-toast";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { type FormData } from "./schema";
+import { type FormData } from "~/utils/offerSchema";
 import { SegmentField } from "./segment-field";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -29,8 +29,13 @@ import {
   useUploadThing,
   type CustomFile,
 } from "~/components/uploadthing";
+import { trpc } from "~/trpc/react";
+import { useSession } from "next-auth/react";
 
 export function DefaultCreateOfferPage() {
+  const { data: session } = useSession({
+    required: true,
+  });
   const { toast } = useToast();
   const {
     register,
@@ -47,19 +52,23 @@ export function DefaultCreateOfferPage() {
     keyName: "key",
   });
 
-  const { fields: filesFields, append: appendFiles } = useFieldArray({
+  const { fields: filesFields } = useFieldArray({
     control,
     name: "files",
     keyName: "key",
   });
 
-  const [tags, setTags] = useState<{ name: string; id: string }[]>([
-    { name: "hashtag1", id: "0" },
-    { name: "hashtag2", id: "1" },
-    { name: "hashtag3", id: "2" },
-  ]);
+  const allTags = trpc.offers.getAllTags.useQuery();
 
-  const appendFunc = (tag: { name: string; id: string }) => {
+  const [tags, setTags] = useState<{ name: string; id: number }[]>([]);
+
+  useEffect(() => {
+    if (allTags.data) {
+      setTags(allTags.data);
+    }
+  }, [allTags.data]);
+
+  const appendFunc = (tag: { name: string; id: number }) => {
     setTags(tags?.filter((t) => t.id !== tag.id));
     append(tag);
 
@@ -69,7 +78,7 @@ export function DefaultCreateOfferPage() {
   };
 
   const removeFunc = (
-    tag: { name: string; id: string; key?: string },
+    tag: { name: string; id: number; key?: string },
     index: number,
   ) => {
     delete tag.key;
@@ -83,9 +92,7 @@ export function DefaultCreateOfferPage() {
     routeConfig: imageRouteConfig,
     isUploading: isImageUploading,
   } = useUploadThing("createImageUploader", {
-    onClientUploadComplete: (res) => {
-      console.log(res);
-      appendFiles(res.map((file) => ({ fileKey: file.key })));
+    onClientUploadComplete: () => {
       setImages([]);
       // alert("uploaded successfully!");
     },
@@ -102,9 +109,7 @@ export function DefaultCreateOfferPage() {
     routeConfig: videoRouteConfig,
     isUploading: isVideoUploading,
   } = useUploadThing("createVideoUploader", {
-    onClientUploadComplete: (res) => {
-      console.log(res);
-      appendFiles(res.map((file) => ({ fileKey: file.key })));
+    onClientUploadComplete: () => {
       setVideos([]);
       // alert("uploaded successfully!");
     },
@@ -116,22 +121,61 @@ export function DefaultCreateOfferPage() {
     },
   });
 
+  // TODO disable all interactions while uploading
+  const [uploading, setUploading] = useState(false);
+  const createOffer = trpc.offers.create.useMutation();
+
   const onSubmit = handleSubmit(async (data) => {
-    if (images.length > 0) {
-      await startImageUpload(images);
+    setUploading(true);
+    await Promise.all([
+      images.length > 0 ? startImageUpload(images) : [],
+      videos.length > 0 ? startVideoUpload(videos) : [],
+    ])
+      .then((results) => {
+        const files = results
+          .flat()
+          .filter((file) => file !== undefined)
+          .map((file): FormData["files"][number] => ({
+            url: file.url,
+            type: file.type,
+          }));
+        console.log(files);
+        data.files = files;
+        console.log("Done");
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Error");
+      });
+    if (session?.user?.id === undefined) {
+      toast({
+        title: "Error submitting form",
+        description: "You must be logged in to create an offer",
+        variant: "destructive",
+      });
+    } else {
+      const offer = { ...data, userId: session?.user?.id };
+      toast({
+        title: "Submitted form",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(offer, null, 2)}</code>
+          </pre>
+        ),
+      });
+      // Development only
+      createOffer.mutate(offer, {
+        onError(error) {
+          toast({
+            title: `Error submitting form [${error.data?.code}]`,
+            description: error.message,
+            variant: "destructive",
+          });
+        },
+      });
+      console.log(offer);
     }
-    if (videos.length > 0) {
-      await startVideoUpload(videos);
-    }
-    toast({
-      title: "Submitted form",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    console.log(data);
+    setUploading(false);
   });
 
   return (
@@ -154,9 +198,11 @@ export function DefaultCreateOfferPage() {
             <div className="mt-4 flex flex-col items-start justify-center gap-4">
               <div className="flex items-end justify-center gap-12">
                 {/* Offer create */}
-                <h1 className="break-all text-4xl font-semibold uppercase text-blue-950 outline-none">
-                  MICHAŁ MATCZAK
-                </h1>
+                <input
+                  {...register("name")}
+                  className="w-[500px] break-all text-4xl font-semibold uppercase text-blue-950 outline-none"
+                  placeholder="Twoja ksywka"
+                />
                 {/* TODO placeholder until location stuff is figured out */}
                 <Select>
                   <SelectTrigger className="w-fit text-2xl font-bold capitalize text-black/40">
@@ -171,6 +217,9 @@ export function DefaultCreateOfferPage() {
                   </SelectContent>
                 </Select>
               </div>
+              <p className="text-sm font-semibold text-red-500">
+                {errors.name?.message}
+              </p>
               <div className="flex h-10 items-center justify-center gap-4">
                 <Popover open={tagOpen} onOpenChange={setTagOpen}>
                   <PopoverTrigger
@@ -255,6 +304,7 @@ export function DefaultCreateOfferPage() {
               <TabsTrigger
                 value="images"
                 className="h-14 data-[state=active]:bg-pink-700 data-[state=active]:text-white"
+                disabled={uploading}
               >
                 <h1 className="text-4xl font-semibold uppercase">
                   ZDJĘCIA {images.length}/
@@ -264,6 +314,7 @@ export function DefaultCreateOfferPage() {
               <TabsTrigger
                 value="videos"
                 className="h-14 data-[state=active]:bg-pink-700 data-[state=active]:text-white"
+                disabled={uploading}
               >
                 <h1 className="text-4xl font-semibold uppercase">
                   FILMY {videos.length}/{videoRouteConfig?.video?.maxFileCount}
@@ -279,10 +330,11 @@ export function DefaultCreateOfferPage() {
                 isUploading={isImageUploading}
                 showUploadButton={false}
                 disabled={
+                  uploading ||
                   images.length >=
-                  (imageRouteConfig?.image?.maxFileCount
-                    ? imageRouteConfig?.image?.maxFileCount
-                    : 0)
+                    (imageRouteConfig?.image?.maxFileCount
+                      ? imageRouteConfig?.image?.maxFileCount
+                      : 0)
                 }
               />
             </TabsContent>
@@ -295,10 +347,11 @@ export function DefaultCreateOfferPage() {
                 isUploading={isVideoUploading}
                 showUploadButton={false}
                 disabled={
+                  uploading ||
                   videos.length >=
-                  (videoRouteConfig?.video?.maxFileCount
-                    ? videoRouteConfig?.video?.maxFileCount
-                    : 0)
+                    (videoRouteConfig?.video?.maxFileCount
+                      ? videoRouteConfig?.video?.maxFileCount
+                      : 0)
                 }
               />
             </TabsContent>
@@ -306,7 +359,7 @@ export function DefaultCreateOfferPage() {
           {filesFields.map((file, index) => (
             <input
               key={file.key}
-              {...register(`files.${index}.fileKey` as const)}
+              {...register(`files.${index}.url` as const)}
               className="hidden bg-inherit outline-none"
             />
           ))}

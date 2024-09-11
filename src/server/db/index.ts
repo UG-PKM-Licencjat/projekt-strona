@@ -1,16 +1,34 @@
-// Vercel postgres version
-
 import { sql } from "@vercel/postgres";
-import { drizzle } from "drizzle-orm/vercel-postgres";
+import {
+  drizzle as drizzleVercel,
+  type VercelPgDatabase,
+} from "drizzle-orm/vercel-postgres";
+import {
+  drizzle as drizzleJS,
+  type PostgresJsDatabase,
+} from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+
+import { env } from "~/env";
 import * as schema from "./schema";
 
-export const db = drizzle(sql, { schema });
+/**
+ * Cache the database connection in development. This avoids creating a new connection on every HMR
+ * update.
+ */
+const globalForDb = globalThis as unknown as {
+  conn: postgres.Sql | undefined;
+};
 
-// Universal Database URL version
+const conn = globalForDb.conn ?? postgres(env.POSTGRES_URL);
+if (env.NODE_ENV !== "production") globalForDb.conn = conn;
 
-// import { drizzle } from "drizzle-orm/postgres-js";
-// import postgres from "postgres";
-// import { env } from "~/env.js";
+export let db:
+  | VercelPgDatabase<typeof schema>
+  | PostgresJsDatabase<typeof schema>;
 
-// export const postgresClient = postgres(env.POSTGRES_URL);
-// export const db = drizzleJS(postgresClient, { schema });
+if (env.NODE_ENV === "production") {
+  db = drizzleVercel(sql, { schema });
+} else {
+  db = drizzleJS(conn, { schema });
+}

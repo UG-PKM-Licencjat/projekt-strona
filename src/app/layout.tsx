@@ -4,8 +4,7 @@ import "~/styles/globals.css";
 import { Cabin, Montserrat } from "next/font/google";
 
 import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
-import { trpc } from "~/utils/trpc";
-import Provider from "./_trpc/Provider";
+import { TRPCReactProvider } from "~/trpc/react";
 import { SessionProvider } from "next-auth/react";
 import { type Session } from "next-auth";
 import GlobalBehaviours from "./GlobalBehaviours";
@@ -24,13 +23,10 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-function RootLayout({
+export default function RootLayout({
   children,
   session,
-}: {
-  children: React.ReactNode;
-  session: Session;
-}) {
+}: Readonly<{ children: React.ReactNode; session: Session }>) {
   return (
     <html lang="pl">
       <body
@@ -39,14 +35,12 @@ function RootLayout({
         {SvgSymbols}
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <SessionProvider session={session}>
-          <Provider>
+          <TRPCReactProvider>
             <GlobalBehaviours>{children}</GlobalBehaviours>
-          </Provider>
+          </TRPCReactProvider>
         </SessionProvider>
         <Toaster />
       </body>
     </html>
   );
 }
-
-export default trpc.withTRPC(RootLayout);

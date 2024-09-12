@@ -9,6 +9,12 @@ import CharacterCount, {
 import { Toolbar } from "./Toolbar";
 import { Color } from "@tiptap/extension-color";
 import TextStyle from "@tiptap/extension-text-style";
+import Table from "@tiptap/extension-table";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import TableRow from "@tiptap/extension-table-row";
+import Youtube from "@tiptap/extension-youtube";
+import Gapcursor from "@tiptap/extension-gapcursor";
 
 export default function TipTap({
   placeholder,
@@ -26,6 +32,17 @@ export default function TipTap({
       CharacterCount.configure({ limit: charLimit }),
       TextStyle,
       Color,
+      Table.configure({
+        resizable: true,
+      }),
+      Gapcursor,
+      TableRow,
+      TableHeader,
+      TableCell,
+      Youtube.configure({
+        controls: true,
+        nocookie: true,
+      }),
     ],
     editorProps: {
       attributes: {

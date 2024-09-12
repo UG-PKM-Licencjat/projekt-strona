@@ -13,6 +13,20 @@ import {
   Heading3,
   MessageSquareQuote,
   Minus,
+  Table,
+  Trash,
+  PlusSquare,
+  ArrowLeft,
+  ArrowRight,
+  BetweenHorizontalStart,
+  BetweenHorizontalEnd,
+  TableCellsMerge,
+  TableCellsSplit,
+  BetweenVerticalStart,
+  BetweenVerticalEnd,
+  FoldHorizontal,
+  FoldVertical,
+  Youtube,
 } from "lucide-react";
 
 import {
@@ -28,8 +42,9 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 
+import { Button } from "~/components/ui/Button/Button";
 import { Toggle } from "~/components/ui/toggle";
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 
 type Props = {
   editor: Editor | null;
@@ -39,6 +54,20 @@ export function Toolbar({ editor }: Props) {
   if (!editor) {
     return null;
   }
+  const [height, setHeight] = useState(480);
+  const [width, setWidth] = useState(640);
+
+  const addYoutubeVideo = () => {
+    const url = prompt("Enter YouTube URL");
+
+    if (url) {
+      editor.commands.setYoutubeVideo({
+        src: url,
+        width: Math.max(320, parseInt(`${width}`, 10)) || 640,
+        height: Math.max(180, parseInt(`${height}`, 10)) || 480,
+      });
+    }
+  };
 
   // set base color
 
@@ -49,7 +78,7 @@ export function Toolbar({ editor }: Props) {
         <Tooltip>
           <TooltipTrigger asChild>
             <input
-              className="h-9 w-9 cursor-pointer appearance-none rounded-full bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+              className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
               type="color"
               onInput={(event: FormEvent<HTMLInputElement>) =>
                 editor
@@ -246,6 +275,286 @@ export function Toolbar({ editor }: Props) {
           </TooltipTrigger>
           <TooltipContent sideOffset={4}>Horizontal Rule</TooltipContent>
         </Tooltip>
+
+        {/* Table */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+            >
+              <Table className="h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            // className="space-y-2"
+            sideOffset={4}
+            align="center"
+            className="w-26 ml-2 mt-2"
+          >
+            <div className="grid grid-cols-2 gap-2">
+              {/* Wstawienie tabeli */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() =>
+                      editor
+                        .chain()
+                        .focus()
+                        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+                        .run()
+                    }
+                    variant="ghost"
+                    size="sm"
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <PlusSquare className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Wstaw nową tabelę
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Usunięcie tabeli */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => editor.chain().focus().deleteTable().run()}
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                    variant="ghost"
+                    size="sm"
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Usuń istniejącą tabelę
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Dodanie kolumny przed */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      editor.chain().focus().addColumnBefore().run()
+                    }
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <BetweenHorizontalStart className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Dodaj kolumnę przed bieżącą
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Dodanie kolumny po */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      editor.chain().focus().addColumnAfter().run()
+                    }
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <BetweenHorizontalEnd className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Dodaj kolumnę po bieżącej
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Dodanie wiersza przed */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().addRowBefore().run()}
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <BetweenVerticalStart className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Dodaj wiersz przed bieżącym
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Dodanie wiersza po */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().addRowAfter().run()}
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <BetweenVerticalEnd className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Dodaj wiersz po bieżącym
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Usunięcie wiersza */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().deleteRow().run()}
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <FoldVertical className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Usuń bieżący wiersz
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Usunięcie kolumny */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().deleteColumn().run()}
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <FoldHorizontal className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Usuń bieżącą kolumnę
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Scalanie komórek */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().mergeCells().run()}
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <TableCellsMerge className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Scal zaznaczone komórki
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Dzielenie komórek */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().splitCell().run()}
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <TableCellsSplit className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Podziel scalone komórki
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Przejdź do poprzedniej komórki */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      editor.chain().focus().goToPreviousCell().run()
+                    }
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Przejdź do poprzedniej komórki
+                </TooltipContent>
+              </Tooltip>
+              {/* Przejdź do następnej komórki */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().goToNextCell().run()}
+                    className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={4}>
+                  Przejdź do następnej komórki
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+            >
+              <Youtube className="h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80" sideOffset={4}>
+            <div className="flex justify-around">
+              <input
+                className="flex rounded-md border px-2"
+                id="width"
+                type="number"
+                min="320"
+                max="1024"
+                placeholder="width"
+                value={width}
+                onChange={(event) => setWidth(parseInt(event.target.value))}
+              />
+              <input
+                className="flex rounded-md border px-2"
+                id="height"
+                type="number"
+                min="180"
+                max="720"
+                placeholder="height"
+                value={height}
+                onChange={(event) => setHeight(parseInt(event.target.value))}
+              />
+              <Button
+                id="add"
+                variant="destructive"
+                size="sm"
+                className="h-9 w-32 text-sm"
+                onClick={addYoutubeVideo}
+              >
+                Add YouTube video
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </TooltipProvider>
     </div>
   );

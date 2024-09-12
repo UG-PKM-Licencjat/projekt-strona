@@ -14,6 +14,7 @@ import {
 } from "~/components/ui/form";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Icon } from "~/components/ui/Icon/Icon";
 
 
 const formSchema = z.object({
@@ -146,10 +147,11 @@ export default function Step1(props: any) {
         </div>
 
         <div className="hidden   w-full justify-end xl:block ">
-          <img
+          <Icon name="standing-man" viewBox="0 0 253 551"  className="ml-20 hidden h-full w-fit object-cover xl:block " />
+          {/* <img
             src="/svgs/illustration.svg"
             className="ml-20 hidden h-full w-max object-cover xl:block"
-          />
+          /> */}
         </div>
       </div>
     </>

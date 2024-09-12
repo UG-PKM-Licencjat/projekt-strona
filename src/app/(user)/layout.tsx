@@ -9,7 +9,7 @@ export default function RootLayout({
     <>
       <div className="bg-neo-castleton  box-border h-full ">
         <div className=" flex  w-screen flex-row items-center justify-between font-bold sm:mb-5">
-          <h1 className="ml-10 text-left  text-2xl text-primary">Bebooops</h1>
+          {/* <h1 className="ml-10 text-left  text-2xl text-primary">Bebooops</h1> */}
           <Icon
             className="mr-10  block sm:hidden"
             name="menu-bar"

@@ -26,6 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cons } from "effect/List";
 import { useEffect } from "react";
 import appRouter from "~/server/api/root";
+import { Icon } from "~/components/ui/Icon/Icon";
 
 export default function Step2(props: { data: Data; handleChange: any }) {
   const { data, handleChange } = props;
@@ -49,6 +50,8 @@ export default function Step2(props: { data: Data; handleChange: any }) {
   const writenames = trpc.user.putRegistrationData.useMutation();
   const write = trpc.user.write.useMutation();
 
+  const {data: session, update} = useSession();
+
   async function onSubmit(isArtistString: z.infer<typeof FormSchema>)  {
 
     const isArtist = isArtistString.type === "true" ? true : false;
@@ -61,7 +64,18 @@ export default function Step2(props: { data: Data; handleChange: any }) {
       registrationStatus : 2,
     });
 
+
     if (response) {
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          firstName: data.firstName,
+          lastName: data.lastName,
+        }
+      }
+      );
+      console.log(session?.user.firstName)
       handleChange({ activeTab: 2 });
     }
 
@@ -92,7 +106,7 @@ export default function Step2(props: { data: Data; handleChange: any }) {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex h-full w-full flex-col justify-between gap-5 pb-10"
+              className="flex h-full w-full flex-col justify-between gap-5 "
             >
               <FormField
                 control={form.control}
@@ -105,7 +119,7 @@ export default function Step2(props: { data: Data; handleChange: any }) {
                           <RadioGroupLabelItem value="true" id="r1" >
                             
                             <div className=" ">
-                              Tak, chcę się reklamować na Bebopl
+                              Tak, chcę się reklamować na Bebop!
                             </div>
                           </RadioGroupLabelItem>
                         </FormControl>
@@ -114,7 +128,7 @@ export default function Step2(props: { data: Data; handleChange: any }) {
                         <FormControl>
                           <RadioGroupLabelItem value="false " id="r2">
                             <div className=" ">
-                              Nie, chcę tylko przeglądać oferty
+                              Nie, chcę tylko przeglądać oferty.
                             </div>
                           </RadioGroupLabelItem>
                         </FormControl>
@@ -147,6 +161,7 @@ export default function Step2(props: { data: Data; handleChange: any }) {
         </div>
         <div className=" hidden h-full w-full justify-end xl:block ">
           <div className="h-full pb-10">
+           
             <img
               src="/svgs/illustration2.svg"
               className="ml-20 hidden h-full  w-3/4 object-cover xl:block"

@@ -19,6 +19,12 @@ const getProcedure = procedure
             tag: true,
           },
         },
+        userOffers: {
+          columns: {
+            userId: true,
+            offerId: false,
+          },
+        },
       },
       where: eq(offers.id, input.id),
     });

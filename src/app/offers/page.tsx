@@ -1,82 +1,115 @@
-import { Icon } from "~/components/ui/Icon/Icon";
-import { Offer } from "~/components/Offer/Offer";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/Select/Select";
-const placeholderOffers = [
-  {
-    name: "IMIE NAZWISKO",
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-    tags: ["hashtag", "hashtag", "hashtag", "hashtag"],
-  },
-  {
-    name: "IMIE NAZWISKO",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id repudiandae similique aperiam optio earum quidem, ad tempore necessitatibus suscipit iusto?",
-    tags: ["hashtag", "hashtag", "hashtag", "hashtag"],
-  },
-  {
-    name: "IMIE NAZWISKO",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id repudiandae similique aperiam optio earum quidem, ad tempore necessitatibus suscipit iusto?",
-    tags: ["hashtag", "hashtag", "hashtag", "hashtag"],
-  },
-  {
-    name: "IMIE NAZWISKO",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione alias animi nostrum quo, ipsa doloribus aut a error laborum assumenda eius harum quia, dolor libero. Possimus iusto ullam animi voluptatum distinctio enim suscipit magnam, quaerat omnis quae vitae veritatis laborum reiciendis aliquid dolor quisquam dignissimos accusantium vero dolorum similique cum. Doloremque mollitia sunt voluptates error doloribus, delectus nulla dolorum incidunt, recusandae iusto assumenda deserunt harum, culpa temporibus! Quam nisi corrupti accusantium nostrum dolorum eligendi. Dolorum eaque illo asperiores aperiam nisi delectus eligendi voluptate odit unde! Quisquam, eius! Exercitationem reprehenderit aperiam sit quos accusamus dicta, fugiat sunt possimus. Sed, quibusdam numquam!",
-    tags: ["hashtag", "hashtag", "hashtag", "hashtag"],
-  },
-];
+"use client";
 
-export default function Page() {
+import { MapPin, Search, Grid, List } from "lucide-react";
+import { useState, useEffect } from "react";
+import ArtistCard, { type Artist } from "~/components/ArtistCard/ArtistCard";
+import { Input } from "~/components/ui/Input/Input";
+import { trpc } from "~/trpc/react";
+
+export default function SearchPage() {
+  const [viewMode, setViewMode] = useState("grid");
+
+  const [location, setLocation] = useState("");
+  const [searchText, setSearchText] = useState("");
+
+  const { data, refetch } = trpc.offers.search.useQuery({
+    text: searchText,
+    location: location,
+    skip: 0,
+    limit: 5,
+  });
+
+  function onLocationChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setLocation(event.target.value);
+  }
+
+  function onSearchTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearchText(event.target.value);
+  }
+
+  function search() {
+    void refetch();
+  }
+
   return (
-    <>
-      <div className="flex w-full flex-col items-center gap-32 bg-white p-10">
-        <div className="flex flex-col items-start gap-20">
-          <h1 className="text-6xl font-semibold text-blue-950">ARTYŚCI-APKA</h1>
-          <div className="flex items-center gap-20 font-semibold">
-            <div className="flex items-center divide-x-2 divide-blue-950 rounded-lg border-2 border-blue-950 drop-shadow-md">
-              <input
+    <div className="min-h-screen bg-[#f5f5f5]">
+      <main className="container mx-auto p-4">
+        <div className="mb-8 rounded-lg bg-neo-castleton p-4 shadow-md">
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="relative flex-grow">
+              <Input
                 type="text"
-                placeholder="Wpisz nazwę oferty"
-                className="rounded-lg p-2 focus:outline-none"
+                value={searchText}
+                onChange={onSearchTextChange}
+                placeholder="Karol Piwowarek, gitara"
+                className="w-full rounded-md border border-neo-castleton py-2 pl-14 pr-4 focus:outline-none focus:ring-2 focus:ring-neo-castleton"
               />
-              <Icon name="magnifier" className="size-10 p-2" />
+              <Search
+                className="absolute left-3 top-2.5 text-neo-castleton"
+                size={35}
+              />
             </div>
-            {/* TODO: add logic */}
-            <Select>
-              <SelectTrigger className="flex h-full w-44 gap-2 rounded-lg border-2 border-blue-950 p-2">
-                <SelectValue placeholder="Lokalizacja" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="1">Lokalizacja 1</SelectItem>
-                  <SelectItem value="2">Lokalizacja 2</SelectItem>
-                  <SelectItem value="3">Lokalizacja 3</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div className="relative">
+              <Input
+                placeholder="Warszawa"
+                onChange={onLocationChange}
+                className="appearance-none rounded-md border border-[#97b085] bg-white px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#5f8d4e]"
+                value={location}
+              />
+              <MapPin
+                className="absolute right-3 top-2.5 text-neo-castleton"
+                size={35}
+              />
+            </div>
+
+            <button
+              onClick={search}
+              className="rounded-md bg-neo-pink px-4 py-2 text-white transition duration-300 hover:bg-[#4a6741]"
+            >
+              Szukaj
+            </button>
           </div>
         </div>
-        {/* Offers container */}
-        <div className="grid max-w-[75rem] items-center justify-center gap-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-5">
-          {placeholderOffers.map((offer, index) => (
-            <Offer
-              key={index}
-              name={offer.name}
-              description={offer.description}
-              tags={offer.tags}
-              className={index % 3 === 0 ? "xl:col-span-3" : "xl:col-span-2"}
-            />
-          ))}
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-[#2d6a4f]">
+            Wyniki wyszukiwania
+          </h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`rounded p-2 ${viewMode === "grid" ? "bg-neo-castleton" : "bg-neo-sage"} transition-colors duration-200`}
+              aria-label="Grid view"
+            >
+              <Grid
+                size={20}
+                className={
+                  viewMode === "grid" ? "text-neo-sage" : "text-neo-castleton"
+                }
+              />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`rounded p-2 ${viewMode === "list" ? "bg-neo-castleton" : "bg-neo-sage"} transition-colors duration-200`}
+              aria-label="List view"
+            >
+              <List
+                size={20}
+                className={
+                  viewMode === "list" ? "text-neo-sage" : "text-neo-castleton"
+                }
+              />
+            </button>
+          </div>
         </div>
-      </div>
-    </>
+        <div
+          className={`grid ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"} gap-6`}
+        >
+          {data?.map((offer) => <h1 key={offer.id}>{offer.name}</h1>)}
+          {/* {artists.map((artist) => (
+            <ArtistCard key={artist.id} artist={artist} />
+          ))} */}
+        </div>
+      </main>
+    </div>
   );
 }

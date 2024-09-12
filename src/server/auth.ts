@@ -1,5 +1,6 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import {
+  type DefaultUser,
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
@@ -27,15 +28,17 @@ declare module "next-auth" {
     user: {
       id: string;
       admin: boolean;
+      firstName: string;
+      lastName: string;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User extends DefaultUser {
-  //   firstname: string;
-  //   lastname: string;
-  // }
+  interface User extends DefaultUser {
+    firstName: string;
+    lastName: string;
+  }
 }
 
 /**
@@ -64,9 +67,20 @@ export const authOptions: NextAuthOptions = {
         ...session,
         user: {
           id: user.id,
+          image: user.image,
+          name: user.name,
+          firstName: user.firstName,
+          lastName: user.lastName,
           admin: result[0]?.admin ? true : false,
         },
       };
+    },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   adapter: DrizzleAdapter(db, {

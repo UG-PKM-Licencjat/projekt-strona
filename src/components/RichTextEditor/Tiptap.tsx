@@ -7,6 +7,8 @@ import CharacterCount, {
   type CharacterCountStorage,
 } from "@tiptap/extension-character-count";
 import { Toolbar } from "./Toolbar";
+import { Color } from "@tiptap/extension-color";
+import TextStyle from "@tiptap/extension-text-style";
 
 export default function TipTap({
   placeholder,
@@ -22,6 +24,8 @@ export default function TipTap({
       StarterKit.configure({}),
       Placeholder.configure({ placeholder: placeholder }),
       CharacterCount.configure({ limit: charLimit }),
+      TextStyle,
+      Color,
     ],
     editorProps: {
       attributes: {

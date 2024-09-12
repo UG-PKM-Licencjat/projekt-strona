@@ -20,6 +20,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Toggle } from "~/components/ui/toggle";
+import type { FormEvent } from "react";
 
 type Props = {
   editor: Editor | null;
@@ -30,8 +31,23 @@ export function Toolbar({ editor }: Props) {
     return null;
   }
 
+  // set base color
+
   return (
     <div className="flex gap-1 rounded-md border bg-white p-1 active:bg-opacity-10">
+      <input
+        className="h-9 w-9 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
+        type="color"
+        onInput={(event: FormEvent<HTMLInputElement>) =>
+          editor
+            .chain()
+            .focus()
+            .setColor((event.target as HTMLInputElement).value)
+            .run()
+        }
+        value={(editor.getAttributes("textStyle").color as string) || "#000000"}
+        data-testid="setColor"
+      />
       <Popover>
         <PopoverTrigger
           asChild

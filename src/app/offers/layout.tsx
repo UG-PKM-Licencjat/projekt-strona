@@ -1,5 +1,3 @@
-import { Navbar } from "~/components/Offer/Navbar/Navbar";
-
 export default function OfferLayout({
   children,
 }: {

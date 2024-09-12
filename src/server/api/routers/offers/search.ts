@@ -14,27 +14,29 @@ const searchProcedure = procedure
     }),
   )
   .query(async (opts) => {
-    console.log("Starting query");
     // TODO improve searching algorithm if time allows
-    // let query;
+    let query;
 
-    // if (opts.input.text !== "")
-    //   query = or(
-    //     like(offers.name, `%${opts.input.text}%`),
-    //     like(offers.about, `%${opts.input.text}%`),
-    //   );
+    if (opts.input.text !== "")
+      query = or(
+        like(offers.name, `%${opts.input.text}%`),
+        like(offers.about, `%${opts.input.text}%`),
+      );
 
-    // if (opts.input.location !== "")
-    //   query = and(eq(offers.location, opts.input.location), query);
+    if (opts.input.location !== "" && opts.input.text === "")
+      query = eq(offers.location, opts.input.location);
+    else if (opts.input.location !== "")
+      query = and(eq(offers.location, opts.input.location), query);
 
-    console.log("Executing query");
-    const dbOffers = await db.select().from(offers);
-    // .where(query)
-    // .limit(opts.input.limit)
-    // .offset(opts.input.skip);
+    const dbOffers = await db
+      .select()
+      .from(offers)
+      .where(query)
+      .limit(opts.input.limit)
+      .offset(opts.input.skip);
 
-    // console.log(dbOffers);
-    console.log("Gotten response");
+    console.log(dbOffers);
+
     return dbOffers;
   });
 

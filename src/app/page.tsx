@@ -7,6 +7,7 @@ import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import SkeletonCard from "~/components/SkeletonCard/SkeletonCard";
+import { trpc } from "~/trpc/react";
 
 export default function Home() {
   // // TO DO WHEN OFFERS FETCHING IS READY
@@ -26,23 +27,30 @@ export default function Home() {
   //   }
   // }, [isLoading]);
 
-  // const session = useSession();
-  // const getRegistationStep = trpc.getRegistationStep.useQuery();
+  const session = useSession();
+  const getRegistationStep1 = trpc.user.getRegistationStep.useQuery();
 
-  // let url = "http://localhost:3000";
-  // useEffect(() => {
-  //   if (session != null) {
-  //     const step = getRegistationStep.data?.[0]?.registrationStatus ?? 0;
-  //     console.log("step", step);
-  //     switch (step) {
-  //       case 2:
-  //         // url = "http://localhost:3000/createaccount/step2";
-  //         redirect("/createaccount/step2");
-  //       default:
-  //         break;
-  //     }
-  //   }
-  // }, [session, getRegistationStep]);
+
+  useEffect(() => {
+    const url = window.location.href;
+    if (session != null) {
+      const step = getRegistationStep1.data
+      console.log("step", step);
+
+      // switch (step) {
+      //  case 2:
+      //     break;
+      //   case 0:
+      //     redirect(url + "/createaccount");
+      //   case 1:
+      //     redirect(url + "/createaccount");
+       
+
+      //   default:
+      //     break;
+      // }
+    }
+  }, [session]);
 
   return (
     <div className="min-h-screen bg-neo-castleton text-white">

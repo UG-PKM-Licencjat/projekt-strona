@@ -28,7 +28,7 @@ const searchProcedure = procedure
     //   query = and(eq(offers.location, opts.input.location), query);
 
     console.log("Executing query");
-    const dbOffers = await db.select({ name: offers.name }).from(offers);
+    const dbOffers = await db.select().from(offers);
     // .where(query)
     // .limit(opts.input.limit)
     // .offset(opts.input.skip);

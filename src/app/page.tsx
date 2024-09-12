@@ -1,12 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { SearchEngine } from "~/components/SearchEngine/SearchEngine";
-import { Button } from "src/components/ui/Button/Button";
+import React from "react";
 import { Icon } from "src/components/ui/Icon/Icon";
-import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import SkeletonCard from "~/components/SkeletonCard/SkeletonCard";
+import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { trpc } from "~/trpc/react";
 
 export default function Home() {
@@ -54,27 +51,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-neo-castleton text-white">
-      {/* Header Section */}
       <header className="container flex h-[500px] flex-col pt-4">
-        <div className="flex flex-row justify-between">
-          <Icon
-            name="logo"
-            className="h-[50px] max-md:h-7"
-            viewBox="0 0 151 44"
-          />
-          <Button
-            className="rounded-full bg-white px-4 py-2 text-green-900 shadow-md"
-            variant={null}
-            size="sm"
-            onClick={() =>
-              signIn("google", {
-                callbackUrl: "http://localhost:3000",
-              })
-            }
-          >
-            Sign in with Google
-          </Button>
-        </div>
         <div className="relative mx-10 flex flex-1 flex-col justify-center gap-10">
           <h1 className="ml-5 mt-4 text-5xl max-lg:text-4xl">
             Poczuj <span className="text-neo-sage">rytm...</span>
@@ -144,7 +121,7 @@ export default function Home() {
       <section className="bg-gray-100 px-10 py-8">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {[...Array<number>(9)].map((el, idx) => {
-            return <SkeletonCard key={idx} />;
+            return <SkeletonCard key={idx} className="h-40" randomColor />;
           })}
         </div>
       </section>

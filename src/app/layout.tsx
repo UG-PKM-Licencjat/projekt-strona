@@ -1,17 +1,17 @@
-"use client";
 import "~/styles/globals.css";
 
 import { Cabin, Montserrat } from "next/font/google";
 
 import SvgSymbols from "~/components/ui/SvgSymbols/SvgSymbols";
 import { TRPCReactProvider } from "~/trpc/react";
-import { SessionProvider } from "next-auth/react";
-import { type Session } from "next-auth";
+import { getServerAuthSession } from "~/server/auth";
+import { SessionProvider } from "~/components/SessionProvider";
 import GlobalBehaviours from "./GlobalBehaviours";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 import { Toaster } from "~/components/ui/toaster";
+import { Navbar } from "~/components/Navbar/Navbar";
 
 const cabin = Cabin({
   subsets: ["latin"],
@@ -23,10 +23,10 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  session,
-}: Readonly<{ children: React.ReactNode; session: Session }>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  const session = await getServerAuthSession();
   return (
     <html lang="pl">
       <body
@@ -36,7 +36,10 @@ export default function RootLayout({
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <SessionProvider session={session}>
           <TRPCReactProvider>
-            <GlobalBehaviours>{children}</GlobalBehaviours>
+            <GlobalBehaviours>
+              <Navbar />
+              {children}
+            </GlobalBehaviours>
           </TRPCReactProvider>
         </SessionProvider>
         <Toaster />

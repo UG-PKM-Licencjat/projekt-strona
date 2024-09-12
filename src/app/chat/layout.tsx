@@ -2,9 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import  {
-  type UserWithMessage,
-} from "~/components/chat/ConversationsNav/ConversationsNav";
+import { type UserWithMessage } from "~/components/chat/ConversationsNav/ConversationsNav";
 
 import { trpc } from "~/trpc/react";
 import { useRouter } from "next/navigation";
@@ -45,20 +43,20 @@ export default function ChatLayout({
     <div className="flex h-screen bg-[#4a8573] text-[#005243]">
       {/* Sidebar for desktop and mobile */}
       <div
-        className={`fixed inset-y-0 left-0 z-20 w-64 bg-neo-castleton p-4 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0 left-0 z-20 w-64 transform overflow-y-auto bg-neo-castleton p-4 transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:translate-x-0`}
       >
-        <h2 className="text-2xl font-bold mb-4 text-white">Rozmowy</h2>
+        <h2 className="mb-4 text-2xl font-bold text-white">Rozmowy</h2>
         {sampleMessages.map((conversation, index) => (
           <div
             onClick={() => {
-                          router.push(`/chat/${conversation.userId}`);
-                        }}
+              router.push(`/chat/${conversation.userId}`);
+            }}
             key={index}
-            className="flex items-center mb-2 p-2 hover:bg-[#4a8573] rounded cursor-pointer transition-colors text-white"
+            className="mb-2 flex cursor-pointer items-center rounded p-2 text-white transition-colors hover:bg-[#4a8573]"
           >
-            <Avatar className="h-8 w-8 mr-2">
+            <Avatar className="mr-2 h-8 w-8">
               <AvatarImage src={conversation.image} alt={conversation.name} />
               <AvatarFallback>{conversation.name}</AvatarFallback>
             </Avatar>
@@ -69,7 +67,7 @@ export default function ChatLayout({
 
       {/* Toggle Button for Mobile */}
       <button
-        className="p-4 text-white md:hidden z-30"
+        className="z-30 p-4 text-white md:hidden"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         ☰
@@ -78,7 +76,7 @@ export default function ChatLayout({
       {/* Overlay for Mobile */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black opacity-50 z-10 md:hidden"
+          className="fixed inset-0 z-10 bg-black opacity-50 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}

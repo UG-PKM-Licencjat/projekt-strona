@@ -1,4 +1,4 @@
-import { Navbar } from "~/components/Navbar/Navbar";
+
 
 export default function OfferLayout({
   children,
@@ -7,7 +7,6 @@ export default function OfferLayout({
 }) {
   return (
     <div className="flex h-screen flex-col">
-      <Navbar />
       {children}
     </div>
   );

@@ -8,12 +8,13 @@ import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
 import { StarRating } from "~/components/ui/StarRating/StarRating";
 import { trpc } from "~/trpc/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
-  const [tags, setTags] = useState<{ name: string; id: string }[]>([
-    { name: "hashtag1", id: "0" },
-    { name: "hashtag2", id: "1" },
-    { name: "hashtag3", id: "2" },
+  const [tags, setTags] = useState<{ name: string; id: number }[]>([
+    { name: "hashtag1", id: 0 },
+    { name: "hashtag2", id: 1 },
+    { name: "hashtag3", id: 2 },
   ]);
   const description = [
     "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos eum fugit ex sed saepe quo consectetur nostrum illo autem recusandae.",
@@ -37,6 +38,16 @@ export default function OfferPage({ params }: { params: { offerId: string } }) {
 
   return (
     <div className="flex flex-col items-start gap-20 px-16 py-8">
+      <div className="fixed bottom-10 right-10 cursor-pointer rounded-full bg-primary p-4">
+        <Link
+          href={`/chat/${data?.userOffers ? data.userOffers[0]?.userId : ""}`}
+        >
+          <Icon
+            name="message-square"
+            className="size-8 stroke-primary-foreground"
+          />
+        </Link>
+      </div>
       {/* HEADER */}
       <div className="flex items-start gap-10">
         <div className="relative size-64">

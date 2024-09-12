@@ -13,6 +13,9 @@ const meta = {
         user: {
           id: "1",
           admin: true,
+          name: "Jan Kowalski",
+          firstName: "Jan",
+          lastName: "Kowalski",
         },
         expires: "2025-01-01T00:00:00.000Z",
       };

@@ -10,10 +10,10 @@ import { trpc } from "~/trpc/react";
 import Image from "next/image";
 
 export default function OfferPage({ params }: { params: { offerId: string } }) {
-  const [tags, setTags] = useState<{ name: string; id: string }[]>([
-    { name: "hashtag1", id: "0" },
-    { name: "hashtag2", id: "1" },
-    { name: "hashtag3", id: "2" },
+  const [tags, setTags] = useState<{ name: string; id: number }[]>([
+    { name: "hashtag1", id: 0 },
+    { name: "hashtag2", id: 1 },
+    { name: "hashtag3", id: 2 },
   ]);
   const description = [
     "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos eum fugit ex sed saepe quo consectetur nostrum illo autem recusandae.",

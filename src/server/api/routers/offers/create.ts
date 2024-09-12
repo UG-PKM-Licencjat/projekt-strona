@@ -1,5 +1,5 @@
 import { procedure } from "~/server/api/trpc";
-import { offerSchema } from "~/utils/offerSchema";
+import { offerSchema } from "~/lib/offerSchema";
 import { db } from "~/server/db";
 import { offers, offerTags, users, userOffers } from "~/server/db/schema";
 import { z } from "zod";

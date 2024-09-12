@@ -14,17 +14,21 @@ CREATE TABLE IF NOT EXISTS "account" (
 	CONSTRAINT "account_provider_providerAccountId_pk" PRIMARY KEY("provider","providerAccountId")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "offer_tag" (
+CREATE TABLE IF NOT EXISTS "offerTag" (
 	"offerId" varchar(255) NOT NULL,
-	"tagId" varchar(255) NOT NULL,
-	CONSTRAINT "offer_tag_offerId_tagId_pk" PRIMARY KEY("offerId","tagId")
+	"tagId" integer NOT NULL,
+	CONSTRAINT "offerTag_offerId_tagId_pk" PRIMARY KEY("offerId","tagId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "offer" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
-	"description" text,
-	"price" double precision
+	"price" double precision,
+	"about" text,
+	"skills" jsonb,
+	"files" jsonb,
+	"links" jsonb,
+	"location" varchar(255)
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
@@ -34,14 +38,14 @@ CREATE TABLE IF NOT EXISTS "session" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tag" (
-	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "tag_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
 	"name" varchar(255) NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "user_offer" (
+CREATE TABLE IF NOT EXISTS "userOffer" (
 	"userId" varchar(255) NOT NULL,
 	"offerId" varchar(255) NOT NULL,
-	CONSTRAINT "user_offer_userId_offerId_pk" PRIMARY KEY("userId","offerId")
+	CONSTRAINT "userOffer_userId_offerId_pk" PRIMARY KEY("userId","offerId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
@@ -50,11 +54,12 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"firstName" varchar(255),
 	"lastName" varchar(255),
 	"nickname" varchar(255),
-	"shortDescription" varchar(255),
-	"longDescription" text,
 	"email" varchar(255) NOT NULL,
-	"emailVerified" timestamp DEFAULT CURRENT_TIMESTAMP,
-	"image" varchar(255)
+	"emailVerified" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+	"image" varchar(255),
+	"isPremium" boolean DEFAULT false NOT NULL,
+	"isAdmin" boolean DEFAULT false NOT NULL,
+	"isActive" boolean DEFAULT true NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "verificationToken" (
@@ -71,13 +76,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "offer_tag" ADD CONSTRAINT "offer_tag_offerId_offer_id_fk" FOREIGN KEY ("offerId") REFERENCES "public"."offer"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "offerTag" ADD CONSTRAINT "offerTag_offerId_offer_id_fk" FOREIGN KEY ("offerId") REFERENCES "public"."offer"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "offer_tag" ADD CONSTRAINT "offer_tag_tagId_tag_id_fk" FOREIGN KEY ("tagId") REFERENCES "public"."tag"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "offerTag" ADD CONSTRAINT "offerTag_tagId_tag_id_fk" FOREIGN KEY ("tagId") REFERENCES "public"."tag"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -89,13 +94,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "user_offer" ADD CONSTRAINT "user_offer_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "userOffer" ADD CONSTRAINT "userOffer_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "user_offer" ADD CONSTRAINT "user_offer_offerId_offer_id_fk" FOREIGN KEY ("offerId") REFERENCES "public"."offer"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "userOffer" ADD CONSTRAINT "userOffer_offerId_offer_id_fk" FOREIGN KEY ("offerId") REFERENCES "public"."offer"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

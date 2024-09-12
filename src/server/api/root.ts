@@ -9,6 +9,8 @@ import { type Message } from "~/components/chat/ConversationWindow/ConversationW
 
 import { AdminRouter } from "./routers/admin";
 import { OffersRouter } from "./routers/offers";
+import { Users } from "lucide-react";
+import { UserRouter } from "./routers/user";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +20,7 @@ import { OffersRouter } from "./routers/offers";
 export const appRouter = createTRPCRouter({
   admin: AdminRouter,
   offers: OffersRouter,
+  user: UserRouter,
   clientLog: procedure
     .input(
       z.object({

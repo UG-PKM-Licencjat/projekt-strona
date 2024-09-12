@@ -18,16 +18,18 @@ import { trpc } from "~/trpc/react";
 export default function SearchPage() {
   const [viewMode, setViewMode] = useState("grid");
   const professionFilterRef = useRef<HTMLDivElement>(null);
-  const { data, refetch } = trpc.offers.search.useQuery({
-    text: "Graphic",
-    location: "Los Angeles",
-    skip: 0,
-    limit: 5,
-  });
+  // const { data, refetch } = trpc.offers.search.useQuery({
+  //   text: "Graphic",
+  //   location: "Los Angeles",
+  //   skip: 0,
+  //   limit: 5,
+  // });
+
+  const { data: data2 } = trpc.offers.getAllTags.useQuery();
 
   useEffect(() => {
-    void refetch();
-
+    // void refetch();
+    console.log(data2);
     const handleClickOutside = (event: MouseEvent) => {
       if (
         professionFilterRef.current &&
@@ -111,6 +113,9 @@ export default function SearchPage() {
         <div
           className={`grid ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"} gap-6`}
         >
+          {
+            //{data?.map((offer) => <h1 key={offer.id}>{offer.name}</h1>)}}
+          }
           {/* {artists.map((artist) => (
             <ArtistCard key={artist.id} artist={artist} />
           ))} */}

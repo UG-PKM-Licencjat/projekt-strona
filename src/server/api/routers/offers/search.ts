@@ -2,7 +2,7 @@ import { z } from "zod";
 import { procedure } from "../../trpc";
 import { db } from "~/server/db";
 import { offers } from "~/server/db/schema";
-import { and, eq, like, or } from "drizzle-orm";
+import { and, eq, like, not, or } from "drizzle-orm";
 
 const searchProcedure = procedure
   .input(
@@ -14,22 +14,27 @@ const searchProcedure = procedure
     }),
   )
   .query(async (opts) => {
+    console.log("Starting query");
     // TODO improve searching algorithm if time allows
-    const dbOffers = await db
-      .select()
-      .from(offers)
-      .where(
-        and(
-          eq(offers.location, opts.input.location),
-          or(
-            like(offers.name, `%${opts.input.text}%`),
-            like(offers.about, `%${opts.input.text}%`),
-          ),
-        ),
-      )
-      .limit(opts.input.limit)
-      .offset(opts.input.skip);
-    console.log(dbOffers);
+    // let query;
+
+    // if (opts.input.text !== "")
+    //   query = or(
+    //     like(offers.name, `%${opts.input.text}%`),
+    //     like(offers.about, `%${opts.input.text}%`),
+    //   );
+
+    // if (opts.input.location !== "")
+    //   query = and(eq(offers.location, opts.input.location), query);
+
+    console.log("Executing query");
+    const dbOffers = await db.select({ name: offers.name }).from(offers);
+    // .where(query)
+    // .limit(opts.input.limit)
+    // .offset(opts.input.skip);
+
+    // console.log(dbOffers);
+    console.log("Gotten response");
     return dbOffers;
   });
 

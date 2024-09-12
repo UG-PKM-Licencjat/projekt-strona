@@ -10,19 +10,22 @@ import {
   RadioGroupLabelItem,
 } from "~/components/ui/RadioGroup/RadioGroup";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { trpc } from "~/utils/trpc";
+import { trpc } from "~/trpc/react";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormMessage,
   FormLabel,
 } from "~/components/ui/form";
-import { on } from "events";
 import { Data } from "./page";
 import { useSession } from "next-auth/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cons } from "effect/List";
+import { useEffect } from "react";
+import appRouter from "~/server/api/root";
 
 export default function Step2(props: { data: Data; handleChange: any }) {
   const { data, handleChange } = props;
@@ -35,29 +38,34 @@ export default function Step2(props: { data: Data; handleChange: any }) {
 
   const { data: sessionData } = useSession();
 
+  useEffect(() => {
+    console.log("Data has changed step 2 :", data);
+  }, [data]);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  const writeState = trpc.userTypeRegularorArtist.useMutation();
-  const writenames = trpc.putRegistrationData1Step.useMutation();
+  const writenames = trpc.user.putRegistrationData.useMutation();
+  const write = trpc.user.write.useMutation();
 
-  async function onSubmit(isArtist: { type: string }) {
-    const response = await writeState.mutateAsync({
-      isArtist: false,
-    });
-    const response2 = await writenames.mutateAsync({
+  async function onSubmit(isArtistString: z.infer<typeof FormSchema>)  {
+
+    const isArtist = isArtistString.type === "true" ? true : false;
+  
+    const response = await writenames.mutateAsync({
       firstName: data.firstName,
       lastName: data.lastName,
-      image: sessionData?.user?.image ?? "",
+      image: sessionData?.user?.image ?? "sada",
+      isArtist: isArtist,
+      registrationStatus : 2,
     });
 
-    if (response != null || response.rowCount > 0) {
-      console.log("User type updated");
-      // handleChange({ activeTab: 2 });
+    if (response) {
+      handleChange({ activeTab: 2 });
     }
-    console.log(response2.rowCount);
-    console.log(response);
+
+
   }
 
   return (
@@ -91,10 +99,11 @@ export default function Step2(props: { data: Data; handleChange: any }) {
                 name="type"
                 render={({ field }) => (
                   <FormControl>
-                    <RadioGroup onValueChange={field.onChange}>
+                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value}>
                       <FormItem>
                         <FormControl>
-                          <RadioGroupLabelItem value="true" id="r1">
+                          <RadioGroupLabelItem value="true" id="r1" >
+                            
                             <div className=" ">
                               Tak, chcę się reklamować na Bebopl
                             </div>
@@ -109,6 +118,7 @@ export default function Step2(props: { data: Data; handleChange: any }) {
                             </div>
                           </RadioGroupLabelItem>
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     </RadioGroup>
                   </FormControl>

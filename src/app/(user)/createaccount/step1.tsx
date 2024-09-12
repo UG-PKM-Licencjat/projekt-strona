@@ -13,10 +13,8 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { trpc } from "~/app/_trpc/client";
-import { useEffect, useState } from "react";
-import { Data } from "./page";
+import { useEffect } from "react";
+
 
 const formSchema = z.object({
   firstName: z

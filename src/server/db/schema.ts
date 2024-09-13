@@ -190,23 +190,3 @@ export const ratingsRelations = relations(ratings, ({ one }) => ({
   user: one(users, { fields: [ratings.userId], references: [users.id] }),
   offer: one(offers, { fields: [ratings.offerId], references: [offers.id] }),
 }));
-
-// export const offersRatings = pgTable("offerRating", {
-//   offerId: varchar("offerId", { length: 255 })
-//     .notNull()
-//     .references(() => offers.id),
-//   ratingId: integer("ratingId")
-//     .notNull()
-//     .references(() => ratings.id),
-// });
-
-// export const offersRatingsRelations = relations(offersRatings, ({ one }) => ({
-//   offer: one(offers, {
-//     fields: [offersRatings.offerId],
-//     references: [offers.id],
-//   }),
-//   rating: one(ratings, {
-//     fields: [offersRatings.ratingId],
-//     references: [ratings.id],
-//   }),
-// }));

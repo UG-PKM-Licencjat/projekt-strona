@@ -10,5 +10,9 @@ export default async function Layout({
   if (!session) {
     redirect("/");
   }
-  return <div>{children}</div>;
+  return (
+    <div className="flex flex-1 flex-col bg-neo-castleton">
+      <div className="flex flex-1 sm:p-20">{children}</div>
+    </div>
+  );
 }

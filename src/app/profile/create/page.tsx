@@ -6,6 +6,8 @@ import Step3 from "./steps/Step3";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { type IconType } from "~/components/ui/SvgSymbols/SvgSymbols";
 import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/Button/Button";
+import { motion } from "framer-motion";
 
 export default function CreateArtistProfilePage() {
   const [activeStep, setStep] = useState(1);
@@ -18,61 +20,93 @@ export default function CreateArtistProfilePage() {
 
   const steps: { title: string; content: React.ReactNode; icon: IconType }[] = [
     {
-      title: "Step 1",
+      title: "Opisz siebie",
       content: <Step1 />,
       icon: "user",
     },
     {
-      title: "Step 2",
+      title: "Galeria",
       content: <Step2 />,
       icon: "user",
     },
     {
-      title: "Step 3",
+      title: "Linki",
       content: <Step3 />,
       icon: "user",
     },
   ];
 
   return (
-    <div className="container">
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Create Profile</h1>
-        </div>
-        <div className="rounded-lg bg-neo-gray p-10">
-          {steps[activeStep - 1]?.content}
-        </div>
-        <div className="flex flex-col gap-4">
+    <div className="container flex flex-1 flex-col justify-between bg-neo-gray p-8 sm:rounded-lg">
+      <div className="flex flex-1 gap-8">
+        {/* Vertical stepper */}
+        <div className="flex h-full flex-col gap-4">
+          <h2 className="font-header text-2xl font-semibold">Stwórz profil</h2>
           {steps.map((step, index) => (
-            <div
+            <motion.div
+              whileTap={{ scale: [null, 0.95] }}
+              transition={{ duration: 0.2 }}
               className={cn(
-                "flex cursor-pointer items-center gap-2 rounded-md bg-neo-dark-gray p-2",
-                index === activeStep - 1 && "bg-neo-sea",
+                "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-4",
+                index === activeStep - 1 && "bg-neo-sea text-neo-gray",
               )}
               key={index}
               onClick={() => handleStepChange(index + 1)}
             >
-              {step.title}
               <Icon name={step.icon} className="size-6" />
-            </div>
+              {step.title}
+            </motion.div>
           ))}
         </div>
+        {/* Horizontal stepper */}
+        {/* <div className="relative flex w-full gap-4">
+          <h2 className="font-header text-2xl font-semibold">Stwórz profil</h2>
+          <div className="absolute left-0 top-0 flex w-full justify-center">
+            <div className="flex w-fit gap-2 rounded-md bg-neo-gray-hover">
+              {steps.map((step, index) => (
+                <motion.div
+                  whileTap={{ scale: [null, 0.95] }}
+                  transition={{ duration: 0.2 }}
+                  className={cn(
+                    "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-4",
+                    index <= activeStep - 1 && "bg-neo-sea text-neo-gray",
+                  )}
+                  key={index}
+                  onClick={() => handleStepChange(index + 1)}
+                >
+                  <Icon name={step.icon} className="size-6" />
+                  {step.title}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div> */}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">
+              {steps[activeStep - 1]?.title}
+            </h1>
+          </div>
+          <div className="w-fit rounded-lg bg-neo-gray p-10">
+            {steps[activeStep - 1]?.content}
+          </div>
+        </div>
       </div>
-      <div className="container absolute bottom-0 flex justify-center p-4">
-        <div className="flex w-full justify-between gap-2">
-          <button
-            className="flex h-10 w-40 items-center justify-center rounded-md bg-pink-600"
-            onClick={() => handleStepChange(activeStep - 1)}
-          >
-            <span className="px-3 py-2 text-white">Back</span>
-          </button>
-          <button
-            className="flex h-10 w-40 items-center justify-center rounded-md bg-pink-600"
-            onClick={() => handleStepChange(activeStep + 1)}
-          >
-            <span className="px-3 py-2 text-white">Next</span>
-          </button>
+      <div className="flex w-full pb-20 sm:p-6">
+        <div className="container flex w-full justify-between gap-2">
+          {activeStep > 1 ? (
+            <Button
+              variant="outline"
+              onClick={() => handleStepChange(activeStep - 1)}
+            >
+              Cofnij
+            </Button>
+          ) : (
+            <div></div>
+          )}
+          <Button onClick={() => handleStepChange(activeStep + 1)}>
+            Dalej
+          </Button>
         </div>
       </div>
     </div>

@@ -147,6 +147,7 @@ export const offerRelations = relations(offers, ({ many }) => ({
   userOffers: many(userOffers),
   offerTags: many(offerTags),
   ratings: many(ratings),
+  reviews: many(review),
 }));
 
 export const userOffers = pgTable(
@@ -173,6 +174,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   userOffers: many(userOffers),
   ratings: many(ratings),
+  reviews: many(review),
 }));
 
 export const ratings = pgTable("rating", {
@@ -189,4 +191,21 @@ export const ratings = pgTable("rating", {
 export const ratingsRelations = relations(ratings, ({ one }) => ({
   user: one(users, { fields: [ratings.userId], references: [users.id] }),
   offer: one(offers, { fields: [ratings.offerId], references: [offers.id] }),
+}));
+
+export const review = pgTable("review", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  offerId: varchar("offerId", { length: 255 })
+    .notNull()
+    .references(() => offers.id),
+  comment: text("comment"),
+  replyTo: integer("replyTo"), // id of the review this is a reply to,
+});
+
+export const reviewRelations = relations(review, ({ one }) => ({
+  user: one(users, { fields: [review.userId], references: [users.id] }),
+  offer: one(offers, { fields: [review.offerId], references: [offers.id] }),
 }));

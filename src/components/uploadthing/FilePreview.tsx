@@ -44,7 +44,8 @@ export function FilePreview({
       </div>
       <div
         className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-destructive p-1 transition-all duration-200 hover:bg-red-600 group-hover:rotate-0 group-hover:scale-100"
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           void deleteFile(file.key);
         }}
         hidden={fileIsDeleting?.includes(file.key)}

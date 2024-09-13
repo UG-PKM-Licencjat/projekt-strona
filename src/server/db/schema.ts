@@ -203,6 +203,7 @@ export const review = pgTable("review", {
     .references(() => offers.id),
   comment: text("comment"),
   replyTo: integer("replyTo"), // id of the review this is a reply to,
+  replies: integer("replies").default(0),
 });
 
 export const reviewRelations = relations(review, ({ one }) => ({

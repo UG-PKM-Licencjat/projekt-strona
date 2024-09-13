@@ -1,21 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "../Icon/Icon";
 
 export const StarRating = ({
   currentRating,
   maxRating = 5,
   editable = false,
+  onChange,
 }: {
   currentRating: number;
   maxRating?: number;
   editable?: boolean;
+  onChange?: (rating: number) => void;
 }) => {
   if (currentRating > maxRating) {
     currentRating = maxRating;
   }
   // TODO maybe add number rating display
   const [stars, setStars] = useState(Math.round(currentRating));
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(stars);
+    }
+  }, [stars, onChange]);
+
   const changeScore = (score: number) => {
     setStars(score);
     // TODO add api call etc

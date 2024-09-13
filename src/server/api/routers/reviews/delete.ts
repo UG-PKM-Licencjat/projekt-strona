@@ -1,6 +1,6 @@
 import { procedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
-import { reviews, users, offers } from "~/server/db/schema";
+import { reviews } from "~/server/db/schema";
 import { z } from "zod";
 import logEvent, { LogType } from "~/server/log";
 import { TRPCError } from "@trpc/server";

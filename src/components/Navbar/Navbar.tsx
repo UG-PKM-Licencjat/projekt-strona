@@ -47,7 +47,7 @@ export const Navbar = () => {
               {session && (
                 <>
                   <NavbarLink href="/chat" icon="message-square">
-                    Chat
+                    Czat
                   </NavbarLink>
                   <UserMenu session={session} />
                 </>

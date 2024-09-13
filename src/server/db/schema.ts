@@ -147,7 +147,7 @@ export const offerRelations = relations(offers, ({ many }) => ({
   userOffers: many(userOffers),
   offerTags: many(offerTags),
   ratings: many(ratings),
-  reviews: many(review),
+  reviews: many(reviews),
 }));
 
 export const userOffers = pgTable(
@@ -174,7 +174,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   userOffers: many(userOffers),
   ratings: many(ratings),
-  reviews: many(review),
+  reviews: many(reviews),
 }));
 
 export const ratings = pgTable("rating", {

@@ -5,9 +5,8 @@ import { z } from "zod";
 import logEvent, { LogType } from "~/server/log";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
-import { log } from "console";
 
-export const getByUserAndOfferIds = procedure
+export const getByUserAndOfferIdsProcedure = procedure
   .input(
     z.object({
       offerId: z.string(),
@@ -42,4 +41,4 @@ export const getByUserAndOfferIds = procedure
     return result[0];
   });
 
-export default getByUserAndOfferIds;
+export default getByUserAndOfferIdsProcedure;

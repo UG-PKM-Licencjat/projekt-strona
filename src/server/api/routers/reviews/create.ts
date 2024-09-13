@@ -1,10 +1,10 @@
 import { procedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
-import { review, users, offers } from "~/server/db/schema";
+import { reviews, users, offers } from "~/server/db/schema";
 import { z } from "zod";
 import logEvent, { LogType } from "~/server/log";
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 const COMMENT_LENGTH = 500;
 
@@ -14,6 +14,7 @@ export const createProcedure = procedure
       offerId: z.string(),
       userId: z.string(),
       comment: z.string().max(COMMENT_LENGTH),
+      replyTo: z.string().optional(),
     }),
   )
   .mutation(async (opts) => {
@@ -56,21 +57,26 @@ export const createProcedure = procedure
       });
     }
 
-    const result = await db.insert(reviews).values({ offerId, userId, rating });
+    const result = await db
+      .insert(reviews)
+      .values({ offerId, userId, comment });
 
     if (!result) {
       logEvent(
-        "Failed to create rating",
+        "Failed to create review",
         JSON.stringify(result),
         LogType.ERROR,
       );
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to create rating",
+        message: "Failed to create review",
       });
     }
 
-    logEvent(`User ${userId} rated offer ${offerId}`, JSON.stringify(result));
+    logEvent(
+      `User ${userId} added review to offer ${offerId}`,
+      JSON.stringify(result),
+    );
     return result;
   });
 

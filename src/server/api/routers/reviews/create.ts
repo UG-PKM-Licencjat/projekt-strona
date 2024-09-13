@@ -14,12 +14,12 @@ export const createProcedure = procedure
       offerId: z.string(),
       userId: z.string(),
       comment: z.string().max(COMMENT_LENGTH),
-      replyTo: z.string().optional(),
+      replyTo: z.number().int().optional(),
     }),
   )
   .mutation(async (opts) => {
     const { input } = opts;
-    const { offerId, userId, comment } = input;
+    const { offerId, userId, comment, replyTo } = input;
 
     const userIdResult = await db
       .select()
@@ -57,9 +57,13 @@ export const createProcedure = procedure
       });
     }
 
-    const result = await db
-      .insert(reviews)
-      .values({ offerId, userId, comment });
+    let values;
+    if (replyTo) {
+      values = { offerId, userId, comment, replyTo };
+    } else {
+      values = { offerId, userId, comment };
+    }
+    const result = await db.insert(reviews).values(values);
 
     if (!result) {
       logEvent(

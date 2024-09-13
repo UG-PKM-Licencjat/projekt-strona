@@ -35,7 +35,7 @@ export const Navbar = () => {
   return (
     <>
       <nav className="sticky top-0 z-50 flex bg-neo-castleton max-sm:hidden">
-        <div className="container flex-col p-4 text-white">
+        <div className="container flex-col py-4 text-white">
           <div className="flex flex-row items-center justify-between">
             <Link href="/">
               <Icon name="logo" className="h-[50px]" viewBox="0 0 151 44" />

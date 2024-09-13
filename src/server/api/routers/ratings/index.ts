@@ -1,5 +1,9 @@
+import { createTRPCRouter } from "~/server/api/trpc";
+import CreateProcedure from "./create";
+import getByUserAndOfferIds from "./getByUserAndOfferIds";
+
 export const RatingsRouter = createTRPCRouter({
-  getByOfferId: GetProcedure,
-  delete: DeleteProcedure,
+  getByUserAndOfferIds: getByUserAndOfferIds,
   create: CreateProcedure,
+  delete: DeleteProcedure,
 });

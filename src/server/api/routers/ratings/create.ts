@@ -88,3 +88,5 @@ export const createProcedure = procedure
     logEvent(`User ${userId} rated offer ${offerId}`, JSON.stringify(result));
     return result;
   });
+
+export default createProcedure;

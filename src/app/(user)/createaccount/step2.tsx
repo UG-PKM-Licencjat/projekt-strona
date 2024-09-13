@@ -1,12 +1,8 @@
 "use client";
 import { Button } from "~/components/ui/Button/Button";
 import { useRouter } from "next/navigation";
-// import { Checkbox } from "~/components/ui/Checkbox/Checkbox";
-import { Select } from "~/components/ui/Select/Select";
-import { Label } from "~/components/ui/label";
 import {
   RadioGroup,
-  RadioGroupItem,
   RadioGroupLabelItem,
 } from "~/components/ui/RadioGroup/RadioGroup";
 import { useForm } from "react-hook-form";
@@ -18,17 +14,14 @@ import {
   FormField,
   FormItem,
   FormMessage,
-  FormLabel,
 } from "~/components/ui/form";
 import { Data } from "./page";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cons } from "effect/List";
 import { useEffect } from "react";
-import appRouter from "~/server/api/root";
 import { Icon } from "~/components/ui/Icon/Icon";
 
-export default function Step2(props: { data: Data; handleChange: any }) {
+export default function Step2(props: { data: Data; handleChange: ({}) => void  }) {
   const { data, handleChange } = props;
   const router = useRouter();
   const FormSchema = z.object({
@@ -59,7 +52,6 @@ export default function Step2(props: { data: Data; handleChange: any }) {
     const response = await writenames.mutateAsync({
       firstName: data.firstName,
       lastName: data.lastName,
-      image: sessionData?.user?.image ?? "sada",
       isArtist: isArtist,
       registrationStatus : 2,
     });
@@ -160,12 +152,16 @@ export default function Step2(props: { data: Data; handleChange: any }) {
           </Form>
         </div>
         <div className=" hidden h-full w-full justify-end xl:block ">
-          <div className="h-full pb-10">
-           
-            <img
-              src="/svgs/illustration2.svg"
-              className="ml-20 hidden h-full  w-3/4 object-cover xl:block"
+          <div className="h-full pb-10 ml-20 hidden   w-3/4 object-cover xl:block">
+            <Icon
+              name="woman-going"
+              viewBox="0 0 821 576"
+              className="h-full bg-pink-300 w-1/2"
             />
+            {/* <img
+              src="/svgs/Frame7.svg"
+              className="ml-20 hidden h-full  w-3/4 object-cover xl:block"
+            /> */}
           </div>
         </div>
       </div>

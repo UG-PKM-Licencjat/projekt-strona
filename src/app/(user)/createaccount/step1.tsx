@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
+import { Data } from "./page";
 
 
 const formSchema = z.object({
@@ -38,7 +39,7 @@ const formSchema = z.object({
   image: z.string().optional(),
 });
 
-export default function Step1(props: any) {
+export default function Step1(props: { data: Data; handleChange: ({}) => void }) {
   const { data, handleChange } = props;
 
   const form = useForm({
@@ -138,7 +139,6 @@ export default function Step1(props: any) {
               <Button
                 type="submit"
                 className="w-full "
-                onClick={() => onSubmit}
               >
                 Przejdź dalej
               </Button>

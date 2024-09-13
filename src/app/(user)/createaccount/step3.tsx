@@ -1,18 +1,8 @@
-"use client";
-import { redirect } from "next/navigation";
-import { useEffect } from "react";
 import { Button } from "~/components/ui/Button/Button";
 import { Icon } from "~/components/ui/Icon/Icon";
-import { useRouter } from "next/navigation";
+import { Link } from "lucide-react";
 
 export default function Step3() {
-  let window_location_origin = window.location.origin;
-  const router = useRouter();
-
-  useEffect(() => {
-    window_location_origin = window.location.origin;
-    console.log("window_location_origin", window_location_origin);
-  }, []);
 
   return (
     <>
@@ -44,9 +34,9 @@ export default function Step3() {
           </div>
           <Button
             className="mt-10 w-min justify-center 2xl:w-auto"
-            onClick={() =>  router.push(window_location_origin) }
+           
           >
-            Przejdź do strony głównej
+            <Link href="/">Przejdź do strony głównej</Link>
           </Button>
         </div>
         <div className="col-start-2 col-end-4 hidden h-max 2xl:block">

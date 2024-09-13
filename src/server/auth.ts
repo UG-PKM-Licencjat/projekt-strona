@@ -49,7 +49,7 @@ declare module "next-auth" {
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: async ({ session, token, user }) => {
+    session: async ({ session, user }) => {
       const result = await db
         .select({
           admin: accounts.admin,
@@ -84,6 +84,11 @@ export const authOptions: NextAuthOptions = {
       return baseUrl;
     },
   },
+  pages: {
+   newUser: "/createaccount",
+  },
+
+
   adapter: DrizzleAdapter(db, {
     usersTable: users,
     accountsTable: accounts,

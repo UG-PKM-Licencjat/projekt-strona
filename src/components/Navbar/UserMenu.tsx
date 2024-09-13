@@ -17,6 +17,7 @@ interface UserMenuProps {
   session: Session;
 }
 
+
 const UserMenu = ({ session }: UserMenuProps) => {
   return (
     <DropdownMenu>

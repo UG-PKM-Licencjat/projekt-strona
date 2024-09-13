@@ -9,7 +9,6 @@ import { type Message } from "~/components/chat/ConversationWindow/ConversationW
 
 import { AdminRouter } from "./routers/admin";
 import { OffersRouter } from "./routers/offers";
-import { Users } from "lucide-react";
 import { UserRouter } from "./routers/user";
 
 /**

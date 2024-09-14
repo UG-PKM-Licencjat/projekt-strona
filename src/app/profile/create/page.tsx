@@ -92,12 +92,12 @@ export default function CreateArtistProfilePage() {
                   }}
                 >
                   <Icon name={step.icon} className="size-6" />
-                  <span className="max-lg:hidden">{step.nav}</span>
+                  <span className="max-lg:hidden">{step.title}</span>
                 </motion.div>
               ))}
             </div>
             <span className="text-center font-semibold lg:hidden">
-              {steps[activeStep]?.nav}
+              {steps[activeStep]?.title}
             </span>
           </div>
           <div className="flex flex-col gap-4">

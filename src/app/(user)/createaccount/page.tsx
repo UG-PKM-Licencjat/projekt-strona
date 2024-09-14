@@ -24,16 +24,11 @@ const MainForm = () => {
   });
   const handleChange = (change) => {
     console.log("change", change);
-    // const { name, value } = change
     setData({
       ...data,
       ...change,
-     
     });
-    // // console.log("change", change.activeTab);
-    setActiveTab(
-      change.activeTab
-      );
+    setActiveTab(change.activeTab);
   };
 
   useEffect(() => {
@@ -46,9 +41,7 @@ const MainForm = () => {
     <Step3 />,
   ];
 
-  return (
-    <>{formElements[activeTab]}</>
-  );
+  return <>{formElements[activeTab]}</>;
 };
 
 export default MainForm;

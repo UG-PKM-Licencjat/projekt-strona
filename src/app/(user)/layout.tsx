@@ -7,13 +7,12 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <div className="bg-neo-castleton  box-border h-full overflow-hidden">
-        <div className=" flex  w-screen flex-row items-center justify-between font-bold sm:mb-5">
-        </div>
-
-        <div className="flex  w-screen items-center justify-center sm:h-5/6 ">
-          <div className="md:bg-neo-gray rounded-xlg flex h-full  w-full justify-center overflow-auto rounded-xl  bg-none   sm:w-9/12">
-            <div className="h-full w-full justify-between rounded-lg px-14 py-10 align-middle overflow-x-hidden ">
+      <div
+        className="box-border h-full overflow-visible bg-neo-castleton" //h-[calc(100vh-72px)] sm:h-[calc(100vh-82px)]
+      >
+        <div className="flex w-screen items-center justify-center sm:h-5/6">
+          <div className="rounded-xlg flex h-full min-h-96 w-full justify-center rounded-xl bg-none sm:w-9/12 md:bg-neo-gray">
+            <div className="h-full w-full justify-between rounded-lg px-6 py-10 align-middle sm:px-12">
               {children}
             </div>
           </div>

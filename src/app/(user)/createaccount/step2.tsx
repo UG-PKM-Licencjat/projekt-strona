@@ -20,8 +20,13 @@ import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
+import Image from "next/image";
+import womangoing from "public/svg/woman-going.svg";
 
-export default function Step2(props: { data: Data; handleChange: ({}) => void  }) {
+export default function Step2(props: {
+  data: Data;
+  handleChange: ({}) => void;
+}) {
   const { data, handleChange } = props;
   const router = useRouter();
   const FormSchema = z.object({
@@ -30,48 +35,38 @@ export default function Step2(props: { data: Data; handleChange: ({}) => void  }
     }),
   });
 
-  const { data: sessionData } = useSession();
-
-  useEffect(() => {
-    console.log("Data has changed step 2 :", data);
-  }, [data]);
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
   const writenames = trpc.user.putRegistrationData.useMutation();
-  const write = trpc.user.write.useMutation();
 
-  const {data: session, update} = useSession();
+  const { data: session, update } = useSession();
 
-  async function onSubmit(isArtistString: z.infer<typeof FormSchema>)  {
-
+  async function onSubmit(isArtistString: z.infer<typeof FormSchema>) {
     const isArtist = isArtistString.type === "true" ? true : false;
-  
-    const response = await writenames.mutateAsync({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      isArtist: isArtist,
-      registrationStatus : 2,
-    });
 
+    if (form.getValues().type !== undefined) {
+      const response = await writenames.mutateAsync({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        isArtist: isArtist,
+        registrationStatus: 2,
+      });
 
-    if (response) {
-      await update({
-        ...session,
-        user: {
-          ...session?.user,
-          firstName: data.firstName,
-          lastName: data.lastName,
-        }
+      if (response) {
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            firstName: data.firstName,
+            lastName: data.lastName,
+          },
+        });
+
+        handleChange({ activeTab: 2 });
       }
-      );
-      console.log(session?.user.firstName)
-      handleChange({ activeTab: 2 });
     }
-
-
   }
 
   return (
@@ -80,9 +75,9 @@ export default function Step2(props: { data: Data; handleChange: ({}) => void  }
         <div className="h-4 w-2/3 self-start rounded-lg bg-neo-pink"></div>
       </div>
       <div className="col flex h-full">
-        <div className="flex h-full w-full flex-col justify-between pb-10 ">
+        <div className="flex h-full w-full flex-col justify-between pb-10">
           <div>
-            <h1 className="mb-4 self-start   text-start font-header text-2xl font-medium leading-none text-primary">
+            <h1 className="mb-4 self-start text-start font-header text-2xl font-medium leading-none text-primary">
               Czy jesteś
               <br className="sm:hidden" />
               <span className="text-neo-mantis md:text-neo-castleton">
@@ -90,7 +85,7 @@ export default function Step2(props: { data: Data; handleChange: ({}) => void  }
                 artystą?
               </span>
             </h1>
-            <p className=" text-neo-dark-gray ">
+            <p className="text-neo-dark-gray">
               Wiemy, że w każdym drzemie artysta
             </p>
           </div>
@@ -98,18 +93,20 @@ export default function Step2(props: { data: Data; handleChange: ({}) => void  }
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex h-full w-full flex-col justify-between gap-5 "
+              className="flex h-full w-full flex-col justify-between gap-5"
             >
               <FormField
                 control={form.control}
                 name="type"
                 render={({ field }) => (
                   <FormControl>
-                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value}>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormItem>
                         <FormControl>
-                          <RadioGroupLabelItem value="true" id="r1" >
-                            
+                          <RadioGroupLabelItem value="true" id="r1">
                             <div className=" ">
                               Tak, chcę się reklamować na Bebop!
                             </div>
@@ -130,7 +127,7 @@ export default function Step2(props: { data: Data; handleChange: ({}) => void  }
                   </FormControl>
                 )}
               />
-              <div className=" flex flex-col  justify-between gap-5 sm:flex-row ">
+              <div className="flex flex-col justify-between gap-5 sm:flex-row">
                 <Button
                   className="sm:w-1/2"
                   variant={"outline"}
@@ -151,17 +148,13 @@ export default function Step2(props: { data: Data; handleChange: ({}) => void  }
             </form>
           </Form>
         </div>
-        <div className=" hidden h-full w-full justify-end xl:block ">
-          <div className="h-full pb-10 ml-20 hidden   w-3/4 object-cover xl:block">
-            <Icon
-              name="woman-going"
-              viewBox="0 0 821 576"
-              className="h-full bg-pink-300 w-1/2"
+        <div className="hidden h-full w-full justify-end xl:block">
+          <div className="ml-20 hidden h-full w-3/4 object-cover pb-10 xl:block">
+            <Image
+              src={womangoing}
+              alt="woman-going"
+              className="ml-20 hidden h-full w-3/4 object-cover xl:block"
             />
-            {/* <img
-              src="/svgs/Frame7.svg"
-              className="ml-20 hidden h-full  w-3/4 object-cover xl:block"
-            /> */}
           </div>
         </div>
       </div>

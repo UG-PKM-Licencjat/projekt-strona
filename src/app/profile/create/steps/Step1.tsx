@@ -1,13 +1,11 @@
-import { motion } from "framer-motion";
+import { useFormContext } from "react-hook-form";
+import { Input } from "~/components/ui/Input/Input";
 
 export default function Step1() {
+  const { register } = useFormContext();
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.5 }}
-    >
-      Step 1
-    </motion.div>
+    <div>
+      <Input {...register("name")} placeholder="Imię i nazwisko" />
+    </div>
   );
 }

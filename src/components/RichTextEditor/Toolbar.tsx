@@ -1,5 +1,3 @@
-"use client";
-
 import { type Editor } from "@tiptap/react";
 import {
   Bold,
@@ -47,13 +45,10 @@ import { Toggle } from "~/components/ui/toggle";
 import { useState, type FormEvent } from "react";
 
 type Props = {
-  editor: Editor | null;
+  editor: Editor;
 };
 
 export function Toolbar({ editor }: Props) {
-  if (!editor) {
-    return null;
-  }
   const [height, setHeight] = useState(480);
   const [width, setWidth] = useState(640);
 

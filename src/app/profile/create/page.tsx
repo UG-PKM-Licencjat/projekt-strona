@@ -100,7 +100,7 @@ export default function CreateArtistProfilePage() {
               {steps[activeStep]?.title}
             </span>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex w-full flex-col gap-4">
             <div className="flex w-full flex-col lg:p-10">
               <h1 className="text-lg font-medium sm:text-xl">
                 {steps[activeStep]?.title}

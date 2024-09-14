@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { steps } from "./steps";
-import { Icon } from "~/components/ui/Icon/Icon";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/Button/Button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -91,7 +90,7 @@ export default function CreateArtistProfilePage() {
                     }
                   }}
                 >
-                  <Icon name={step.icon} className="size-6" />
+                  {step.icon}
                   <span className="max-lg:hidden">{step.title}</span>
                 </motion.div>
               ))}

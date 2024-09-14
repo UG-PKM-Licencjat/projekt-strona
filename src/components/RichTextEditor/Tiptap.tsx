@@ -12,18 +12,21 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import Youtube from "@tiptap/extension-youtube";
-import Gapcursor from "@tiptap/extension-gapcursor";
 
 export default function TipTap({
   placeholder,
   onChange,
   charLimit,
+  value,
 }: {
   placeholder: string;
   onChange: (richText: string) => void;
   charLimit: number;
+  value?: string;
 }) {
   const editor = useEditor({
+    content: value,
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({}),
       Placeholder.configure({ placeholder: placeholder }),
@@ -33,7 +36,6 @@ export default function TipTap({
       Table.configure({
         resizable: true,
       }),
-      Gapcursor,
       TableRow,
       TableHeader,
       TableCell,

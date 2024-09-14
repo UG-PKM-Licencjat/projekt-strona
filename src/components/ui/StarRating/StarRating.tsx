@@ -6,19 +6,24 @@ export const StarRating = ({
   currentRating,
   maxRating = 5,
   editable = false,
+  onChange,
 }: {
   currentRating: number;
   maxRating?: number;
   editable?: boolean;
+  onChange?: (rating: number) => void;
 }) => {
   if (currentRating > maxRating) {
     currentRating = maxRating;
   }
   // TODO maybe add number rating display
   const [stars, setStars] = useState(Math.round(currentRating));
+
   const changeScore = (score: number) => {
     setStars(score);
-    // TODO add api call etc
+    if (onChange) {
+      onChange(stars);
+    }
   };
 
   if (!editable) {

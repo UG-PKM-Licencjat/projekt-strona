@@ -3,11 +3,12 @@
 import { MapPin, Search, Grid, List } from "lucide-react";
 import { useState, useEffect } from "react";
 import OfferCard, { type Offer } from "~/components/OfferCard/OfferCard";
+import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
 import { trpc } from "~/trpc/react";
 
 export default function SearchPage() {
-  const limit = 6;
+  const LIMIT = 6;
   const [viewMode, setViewMode] = useState("grid");
 
   const [location, setLocation] = useState("");
@@ -18,7 +19,7 @@ export default function SearchPage() {
     text: searchText,
     location: location,
     skip: skip,
-    limit: limit,
+    limit: LIMIT,
   });
 
   const { data: offerCount } = trpc.offers.countSearch.useQuery({
@@ -39,24 +40,24 @@ export default function SearchPage() {
   }
 
   const handlePageClick = (page: number) => {
-    setSkip((page - 1) * limit);
+    setSkip((page - 1) * LIMIT);
   };
 
   const getPaginationButtons = () => {
-    const currentPage = skip / limit + 1;
-    const totalPages = offerCount ? Math.ceil(offerCount / limit) : 0;
+    const currentPage = skip / LIMIT + 1;
+    const totalPages = offerCount ? Math.ceil(offerCount / LIMIT) : 0;
 
     const buttons = [];
 
     if (currentPage > 1) {
       buttons.push(
-        <button
+        <Button
           key="first"
           onClick={() => handlePageClick(1)}
           className="rounded-md border border-neo-castleton px-3 py-1 text-neo-castleton transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
         >
           1
-        </button>,
+        </Button>,
       );
     }
 
@@ -70,7 +71,7 @@ export default function SearchPage() {
 
     for (let i = currentPage; i <= Math.min(currentPage + 2, totalPages); i++) {
       buttons.push(
-        <button
+        <Button
           key={i}
           onClick={() => handlePageClick(i)}
           className={`rounded-md border px-3 py-1 transition-colors duration-200 ${
@@ -80,7 +81,7 @@ export default function SearchPage() {
           }`}
         >
           {i}
-        </button>,
+        </Button>,
       );
     }
 
@@ -94,13 +95,13 @@ export default function SearchPage() {
 
     if (currentPage + 2 < totalPages) {
       buttons.push(
-        <button
+        <Button
           key="last"
           onClick={() => handlePageClick(totalPages)}
           className="rounded-md border border-neo-castleton px-3 py-1 text-neo-castleton transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
         >
           {totalPages}
-        </button>,
+        </Button>,
       );
     }
 
@@ -138,12 +139,12 @@ export default function SearchPage() {
               />
             </div>
 
-            <button
+            <Button
               onClick={search}
               className="rounded-md bg-neo-pink px-4 py-2 text-white transition duration-300 hover:bg-[#4a6741]"
             >
               Szukaj
-            </button>
+            </Button>
           </div>
         </div>
         <div className="mb-4 flex items-center justify-between">
@@ -151,7 +152,7 @@ export default function SearchPage() {
             Wyniki wyszukiwania
           </h2>
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={() => setViewMode("grid")}
               className={`rounded p-2 ${
                 viewMode === "grid" ? "bg-neo-castleton" : "bg-neo-sage"
@@ -164,8 +165,8 @@ export default function SearchPage() {
                   viewMode === "grid" ? "text-neo-sage" : "text-neo-castleton"
                 }
               />
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setViewMode("list")}
               className={`rounded p-2 ${
                 viewMode === "list" ? "bg-neo-castleton" : "bg-neo-sage"
@@ -178,7 +179,7 @@ export default function SearchPage() {
                   viewMode === "list" ? "text-neo-sage" : "text-neo-castleton"
                 }
               />
-            </button>
+            </Button>
           </div>
         </div>
         <div
@@ -195,23 +196,23 @@ export default function SearchPage() {
         {offerCount && (
           <div className="mt-8 flex items-center justify-center space-x-2">
             {skip > 0 && (
-              <button
-                onClick={() => setSkip(skip - limit)}
+              <Button
+                onClick={() => setSkip(skip - LIMIT)}
                 className="rounded-md bg-neo-castleton px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
               >
                 Poprzednia
-              </button>
+              </Button>
             )}
 
             {getPaginationButtons()}
 
-            {skip / limit + 1 < Math.ceil(offerCount / limit) && (
-              <button
-                onClick={() => setSkip(skip + limit)}
+            {skip / LIMIT + 1 < Math.ceil(offerCount / LIMIT) && (
+              <Button
+                onClick={() => setSkip(skip + LIMIT)}
                 className="rounded-md bg-neo-castleton px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
               >
                 Następna
-              </button>
+              </Button>
             )}
           </div>
         )}

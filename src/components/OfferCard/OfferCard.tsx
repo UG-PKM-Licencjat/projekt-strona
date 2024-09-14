@@ -14,9 +14,10 @@ export interface Offer {
 }
 
 const OfferCard = ({ offer }: { offer: Offer }) => (
-  <div className="overflow-hidden rounded-lg bg-[#f0e4d7] shadow-md">
+  <div className="overflow-hidden rounded-lg bg-white shadow-md">
     <div className="p-4">
       <div className="mb-4 flex items-start justify-between">
+        {/* TODO CHANGE TO NEXT IMAGE WHEN IT WILL USE DB DATA HERE */}
         <img
           src="https://picsum.photos/200/300"
           alt={offer.name}

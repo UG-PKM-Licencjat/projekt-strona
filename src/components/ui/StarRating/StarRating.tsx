@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Icon } from "../Icon/Icon";
 
 export const StarRating = ({
@@ -19,15 +19,11 @@ export const StarRating = ({
   // TODO maybe add number rating display
   const [stars, setStars] = useState(Math.round(currentRating));
 
-  useEffect(() => {
+  const changeScore = (score: number) => {
+    setStars(score);
     if (onChange) {
       onChange(stars);
     }
-  }, [stars, onChange]);
-
-  const changeScore = (score: number) => {
-    setStars(score);
-    // TODO add api call etc
   };
 
   if (!editable) {

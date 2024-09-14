@@ -108,7 +108,7 @@ export default function CreateArtistProfilePage() {
               <div className="flex items-start gap-2">
                 <p
                   className={cn(
-                    "overflow-hidden text-ellipsis text-black/60 transition-[height] duration-300 ease-in-out",
+                    "overflow-hidden text-ellipsis text-neo-dark-gray transition-[height] duration-300 ease-in-out",
                     openDescription ? "h-full" : "max-md:h-6",
                   )}
                 >
@@ -116,7 +116,7 @@ export default function CreateArtistProfilePage() {
                 </p>
                 <ChevronDown
                   className={cn(
-                    "size-6 shrink-0 stroke-black/60 transition-transform md:hidden",
+                    "size-6 shrink-0 stroke-neo-dark-gray transition-transform md:hidden",
                     openDescription && "rotate-180",
                   )}
                   onClick={() =>

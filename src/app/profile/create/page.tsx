@@ -79,6 +79,11 @@ export default function CreateArtistProfilePage() {
                 onClick={() =>
                   handleStepChange(index, index > activeStep ? 1 : -1)
                 }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleStepChange(index, index > activeStep ? 1 : -1);
+                  }
+                }}
               >
                 <Icon name={step.icon} className="size-6" />
                 {step.title}
@@ -87,7 +92,7 @@ export default function CreateArtistProfilePage() {
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between p-10">
-              <h1 className="text-xl font-bold">
+              <h1 className="text-xl font-medium">
                 {steps[activeStep]?.description}
               </h1>
             </div>

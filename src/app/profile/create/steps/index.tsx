@@ -11,7 +11,8 @@ export const steps: {
 }[] = [
   {
     title: "Galeria",
-    description: "Posłuchaj, mama chce dobrze",
+    description:
+      "Każdy artysta powinien mieć swoje portfolio. Dodaj tutaj zdjęcia i filmy, którymi chcesz się pochwalić w swojej ofercie.",
     content: <Step3 />,
     icon: "user",
   },

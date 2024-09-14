@@ -61,38 +61,43 @@ export default function CreateArtistProfilePage() {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="container flex flex-1 flex-col justify-between bg-neo-gray p-8 sm:rounded-lg"
       >
-        <div className="flex flex-1 gap-8">
+        <div className="flex flex-1 gap-8 max-lg:flex-col">
           {/* Vertical stepper */}
-          <div className="flex h-full flex-col gap-4">
+          <div className="flex flex-col gap-4">
             <h2 className="font-header text-2xl font-semibold">
               Stwórz profil
             </h2>
-            {steps.map((step, index) => (
-              <motion.div
-                whileTap={{ scale: [null, 0.95] }}
-                transition={{ duration: 0.2 }}
-                className={cn(
-                  "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-4",
-                  index === activeStep && "bg-neo-sea text-neo-gray",
-                )}
-                key={index}
-                onClick={() =>
-                  handleStepChange(index, index > activeStep ? 1 : -1)
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleStepChange(index, index > activeStep ? 1 : -1);
+            <div className="flex flex-col justify-center gap-4 max-lg:flex-row">
+              {steps.map((step, index) => (
+                <motion.div
+                  whileTap={{ scale: [null, 0.95] }}
+                  transition={{ duration: 0.2 }}
+                  className={cn(
+                    "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-3 sm:p-4",
+                    index === activeStep && "bg-neo-sea text-neo-gray",
+                  )}
+                  key={index}
+                  onClick={() =>
+                    handleStepChange(index, index > activeStep ? 1 : -1)
                   }
-                }}
-              >
-                <Icon name={step.icon} className="size-6" />
-                {step.title}
-              </motion.div>
-            ))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleStepChange(index, index > activeStep ? 1 : -1);
+                    }
+                  }}
+                >
+                  <Icon name={step.icon} className="size-6" />
+                  <span className="max-lg:hidden">{step.title}</span>
+                </motion.div>
+              ))}
+            </div>
+            <span className="text-center text-xl font-semibold lg:hidden">
+              {steps[activeStep]?.title}
+            </span>
           </div>
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between p-10">
-              <h1 className="text-xl font-medium">
+            <div className="flex items-center justify-between lg:p-10">
+              <h1 className="text-lg font-medium sm:text-xl">
                 {steps[activeStep]?.description}
               </h1>
             </div>
@@ -108,14 +113,14 @@ export default function CreateArtistProfilePage() {
                 animate="center"
                 exit="exit"
                 key={`step-${activeStep}`}
-                className="w-fit rounded-lg bg-neo-gray px-10"
+                className="w-fit rounded-lg bg-neo-gray lg:px-10"
               >
                 {steps[activeStep]?.content}
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
-        <div className="flex w-full pb-20 sm:p-6">
+        <div className="flex w-full pb-10">
           <div className="container flex w-full justify-between gap-2">
             {activeStep > 0 ? (
               <Button

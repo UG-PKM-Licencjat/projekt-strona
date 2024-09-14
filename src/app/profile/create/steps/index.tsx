@@ -1,6 +1,8 @@
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
+import Step4 from "./Step4";
+import Result from "./Result";
 import { type IconType } from "~/components/ui/SvgSymbols/SvgSymbols";
 
 export const steps: {
@@ -9,13 +11,6 @@ export const steps: {
   content: React.ReactNode;
   icon: IconType;
 }[] = [
-  {
-    title: "Galeria",
-    description:
-      "Każdy artysta powinien mieć swoje portfolio. Dodaj tutaj zdjęcia i filmy, którymi chcesz się pochwalić w swojej ofercie.",
-    content: <Step3 />,
-    icon: "user",
-  },
   {
     title: "Tytuł i opis",
     description:
@@ -31,15 +26,24 @@ export const steps: {
     icon: "user",
   },
   {
-    title: "Miasto i cena",
-    description: "Mama powiedziała mi: „nie ufaj”",
+    title: "Galeria",
+    description:
+      "Każdy artysta powinien mieć swoje portfolio. Dodaj tutaj zdjęcia i filmy, którymi chcesz się pochwalić w swojej ofercie.",
     content: <Step3 />,
     icon: "user",
   },
   {
+    title: "Miasto i cena",
+    description:
+      "Ostatnim krokiem jest ustalenie lokalizacji i ceny. Wybierz obszar swojego działania i orientacyjną cenę usługi, aby szukający mógł zorientować się czy stać go na twoje usługi 😉",
+    content: <Step4 />,
+    icon: "user",
+  },
+  {
     title: "Podsumowanie",
-    description: "Się nie wygłupiaj na miarę ich potrzeb",
-    content: <Step3 />,
+    description:
+      "Sprawdź czy jesteś zadowolony z widoku oferty. Masz możliwość powrócić do wcześniej uzupełnianych sekcji i poprawić to co Twoim zdaniem nie pasuje. Jeżeli wszystko wygląda dobrze, to to już koniec. Zapisz stworzone widoki i pozostaje czekać na kontakt od szukających 😄",
+    content: <Result />,
     icon: "user",
   },
 ];

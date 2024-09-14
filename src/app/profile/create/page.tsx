@@ -9,29 +9,34 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { useToast } from "~/components/ui/use-toast";
+import { ChevronDown } from "lucide-react";
 
 const variants = {
   enter: (direction: number) => {
     return {
       y: direction > 0 ? "100%" : "-100%",
       opacity: 0,
+      // scaleY: 0,
     };
   },
   center: {
     y: 0,
     opacity: 1,
+    // scaleY: 1,
   },
   exit: (direction: number) => {
     return {
       zIndex: 0,
       y: direction < 0 ? "100%" : "-100%",
       opacity: 0,
+      // scaleY: 0,
     };
   },
 };
 
 export default function CreateArtistProfilePage() {
   const [[activeStep, direction], setStep] = useState([0, 0]);
+  const [openDescription, setOpenDescription] = useState(false);
 
   const handleStepChange = (newStep: number, direction: number) => {
     if (newStep < 0) return;
@@ -59,11 +64,11 @@ export default function CreateArtistProfilePage() {
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="container flex flex-1 flex-col justify-between bg-neo-gray p-8 sm:rounded-lg"
+        className="container flex flex-col justify-between bg-neo-gray p-8 sm:rounded-lg"
       >
-        <div className="flex flex-1 gap-8 max-lg:flex-col">
+        <div className="flex gap-8 max-lg:flex-col">
           {/* Vertical stepper */}
-          <div className="flex flex-col gap-4">
+          <div className="flex shrink-0 flex-col gap-4">
             <h2 className="font-header text-2xl font-semibold">
               Stwórz profil
             </h2>
@@ -87,19 +92,38 @@ export default function CreateArtistProfilePage() {
                   }}
                 >
                   <Icon name={step.icon} className="size-6" />
-                  <span className="max-lg:hidden">{step.title}</span>
+                  <span className="max-lg:hidden">{step.nav}</span>
                 </motion.div>
               ))}
             </div>
-            <span className="text-center text-xl font-semibold lg:hidden">
-              {steps[activeStep]?.title}
+            <span className="text-center font-semibold lg:hidden">
+              {steps[activeStep]?.nav}
             </span>
           </div>
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between lg:p-10">
+            <div className="flex w-full flex-col lg:p-10">
               <h1 className="text-lg font-medium sm:text-xl">
-                {steps[activeStep]?.description}
+                {steps[activeStep]?.title}
               </h1>
+              <div className="flex items-start gap-2">
+                <p
+                  className={cn(
+                    "overflow-hidden text-ellipsis text-black/60 transition-[height] duration-300 ease-in-out",
+                    openDescription ? "h-full" : "max-md:h-6",
+                  )}
+                >
+                  {steps[activeStep]?.description}
+                </p>
+                <ChevronDown
+                  className={cn(
+                    "size-6 shrink-0 stroke-black/60 transition-transform md:hidden",
+                    openDescription && "rotate-180",
+                  )}
+                  onClick={() =>
+                    setOpenDescription((openDescription) => !openDescription)
+                  }
+                />
+              </div>
             </div>
             <AnimatePresence
               initial={false}
@@ -112,8 +136,9 @@ export default function CreateArtistProfilePage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
+                // transition={{ duration: 0.1 }}
                 key={`step-${activeStep}`}
-                className="w-fit rounded-lg bg-neo-gray lg:px-10"
+                className="rounded-lg lg:px-10"
               >
                 {steps[activeStep]?.content}
               </motion.div>
@@ -121,7 +146,7 @@ export default function CreateArtistProfilePage() {
           </div>
         </div>
         <div className="flex w-full pb-10">
-          <div className="container flex w-full justify-between gap-2">
+          <div className="container flex w-full justify-center gap-2 sm:justify-between">
             {activeStep > 0 ? (
               <Button
                 variant="outline"

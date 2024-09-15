@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PreviewDropzone, type CustomFile, type ExpandedRouteConfig } from ".";
+import { PreviewDropzone } from ".";
+import { type CustomFile, type ExpandedRouteConfig } from "../utils";
 import type { SetStateAction } from "react";
 
 // TODO figure out how to show files in the preview

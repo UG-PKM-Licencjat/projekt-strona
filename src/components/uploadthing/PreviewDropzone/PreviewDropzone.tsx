@@ -9,9 +9,9 @@ import {
   generatePermittedFileTypes,
   getByteFileSize,
   allowedContentTextLabelGenerator,
-  type PreviewDropzoneProps,
   generateClientDropzoneAccept,
-} from ".";
+} from "../utils";
+import { type PreviewDropzoneProps } from "../PreviewDropzone";
 
 export default function PreviewDropzone({
   files,
@@ -68,8 +68,67 @@ export default function PreviewDropzone({
       maxSize: maxFileSize,
     });
 
+  type FileRejection = (typeof fileRejections)[number];
+
+  const renderErrorMessages = (fileRejections: FileRejection[]) => {
+    let tooManyFiles = false;
+    let tooManyFilesMessage: React.ReactNode = null;
+
+    const errorMessages = fileRejections.map((fileRejection) => {
+      const filteredErrors = fileRejection.errors.filter((error) => {
+        if (error.code === "too-many-files") {
+          if (!tooManyFiles) {
+            tooManyFilesMessage = (
+              <div
+                key={fileRejection.file.name}
+                className="flex items-center gap-2"
+              >
+                <Icon
+                  name="plus"
+                  className="size-6 shrink-0 rotate-45 text-neo-pink"
+                />
+                <p className="text-sm font-semibold text-red-600">
+                  Too many files
+                </p>
+              </div>
+            );
+            tooManyFiles = true;
+          }
+          return false;
+        }
+        return true;
+      });
+
+      if (filteredErrors.length > 0) {
+        return (
+          <div
+            key={fileRejection.file.name}
+            className="flex items-center gap-2"
+          >
+            <Icon
+              name="plus"
+              className="size-6 shrink-0 rotate-45 text-neo-pink"
+            />
+            <p className="text-sm font-semibold text-red-600">
+              {`${fileRejection.file.name} - ${fileRejection.errors.map((error) => error.message).join(", ")}`}
+            </p>
+          </div>
+        );
+      }
+
+      return null;
+    });
+
+    return (
+      <>
+        {tooManyFiles && tooManyFilesMessage}
+        {errorMessages}
+      </>
+    );
+  };
+
   return (
-    <>
+    <div className="flex w-full flex-col gap-1">
       <div
         className={cn(
           "mt-2 flex justify-center rounded-lg border border-dashed p-4",
@@ -161,19 +220,7 @@ export default function PreviewDropzone({
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-2 p-2">
-        {fileRejections.map((fileRejection) => (
-          <div
-            key={fileRejection.file.name}
-            className="flex items-center gap-2"
-          >
-            <Icon name="plus" className="size-6 rotate-45" />
-            <p className="text-base font-semibold text-neo-pink">
-              {`${fileRejection.file.name} - ${fileRejection.errors.map((error) => error.message).join(", ")}`}
-            </p>
-          </div>
-        ))}
-      </div>
-    </>
+      <div className="flex gap-2">{renderErrorMessages(fileRejections)}</div>
+    </div>
   );
 }

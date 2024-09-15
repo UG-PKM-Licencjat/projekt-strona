@@ -4,16 +4,17 @@ import { Icon } from "~/components/ui/Icon/Icon";
 
 export function FilePreview({
   file,
-  fileIsDeleting,
   deleteFile,
 }: {
   file: ClientUploadedFileData<null> | (File & { url: string; key: string });
-  fileIsDeleting?: string[];
   deleteFile: (fileKey: string) => void;
 }) {
   return (
     <>
-      <div className="relative flex h-44 overflow-hidden rounded-lg border-2">
+      <div
+        className="relative flex h-44 overflow-hidden rounded-lg border-2"
+        onClick={(e) => e.stopPropagation()}
+      >
         {file.type.startsWith("image") ? (
           <Image
             src={file.url}
@@ -24,7 +25,7 @@ export function FilePreview({
             sizes="20vw"
           />
         ) : file.type.startsWith("video") ? (
-          <video controls>
+          <video>
             <source src={file.url} type={file.type} />
           </video>
         ) : file.type.startsWith("audio") ? (
@@ -36,24 +37,15 @@ export function FilePreview({
             </audio>
           </div>
         ) : null}
-        {fileIsDeleting?.includes(file.key) ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white">
-            <Icon name="spinner" className="size-10 animate-spin" />
-          </div>
-        ) : null}
       </div>
       <div
-        className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-destructive p-1 transition-all duration-200 hover:bg-red-600 group-hover:rotate-0 group-hover:scale-100"
+        className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-neo-pink p-1 transition-all duration-200 hover:bg-neo-pink-hover group-hover:rotate-0 group-hover:scale-100"
         onClick={(e) => {
           e.stopPropagation();
           void deleteFile(file.key);
         }}
-        hidden={fileIsDeleting?.includes(file.key)}
       >
-        <Icon
-          name="plus"
-          className="size-4 rotate-45 stroke-destructive-foreground"
-        />
+        <Icon name="plus" className="size-4 rotate-45 text-neo-gray" />
       </div>
     </>
   );

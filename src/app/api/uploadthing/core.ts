@@ -9,6 +9,13 @@ const f = createUploadthing();
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
+  galleryUploader: f({
+    image: { maxFileCount: 5 },
+    video: { maxFileCount: 5 },
+    audio: { maxFileCount: 5 },
+  }).onUploadComplete(() => {
+    console.log("uploaded");
+  }),
   // Define as many FileRoutes as you like, each with a unique routeSlug
   createImageUploader: f(
     {
@@ -48,3 +55,5 @@ export const ourFileRouter = {
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
+
+export type FileRouterEndpoints = keyof OurFileRouter;

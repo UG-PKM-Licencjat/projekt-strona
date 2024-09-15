@@ -30,6 +30,7 @@ declare module "next-auth" {
       admin: boolean;
       firstName: string;
       lastName: string;
+      isArtist: boolean;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -63,6 +64,13 @@ export const authOptions: NextAuthOptions = {
       //   "user",
       //   await db.select().from(accounts).where(eq(accounts.userId, user.id)),
       // );
+      const isArtist = await db
+        .select({
+          isArtist: users.isArtist,
+        })
+        .from(users)
+        .where(eq(users.id, user.id))
+        .limit(1);
 
       return {
         ...session,
@@ -73,6 +81,7 @@ export const authOptions: NextAuthOptions = {
           firstName: user.firstName,
           lastName: user.lastName,
           admin: result[0]?.admin ? true : false,
+          isArtist: isArtist[0]?.isArtist ? true : false,
         },
       };
     },
@@ -85,9 +94,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-   newUser: "/createaccount",
+    newUser: "/createaccount",
   },
-
 
   adapter: DrizzleAdapter(db, {
     usersTable: users,

@@ -21,7 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
 
-const filterList: Array<string> = [];
+const filterList: Array<string> = ["/createaccount"];
 
 export const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);

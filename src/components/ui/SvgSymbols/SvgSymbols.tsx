@@ -16,11 +16,14 @@ enum Icons {
   ScrollText = "scroll-text",
   Tags = "tags",
   GirlPointing = "girl-pointing",
+  MenuBar = "menu-bar",
+  Man = "man",
   User = "user",
   Logout = "logout",
   Shield = "shield",
   Google = "google",
   Home = "home",
+  UploadWhite = "upload-white",
 }
 
 export type IconType = `${Icons}`;
@@ -185,6 +188,9 @@ const SvgSymbols = (
         fill="#C6C99D"
       />
     </symbol>
+    <symbol id={Icons.MenuBar} viewBox="0 0 50 50" fill="black">
+      <path d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z" />
+    </symbol>
     <symbol id={Icons.User}>
       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
@@ -219,6 +225,30 @@ const SvgSymbols = (
     <symbol id={Icons.Home}>
       <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
       <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    </symbol>
+
+    <symbol id={Icons.UploadWhite}>
+      <path
+        d="M63.9774 45.4837V57.6127C63.9774 59.2211 63.3385 60.7636 62.2012 61.9009C61.0639 63.0382 59.5213 63.6772 57.9129 63.6772H15.4615C13.8531 63.6772 12.3105 63.0382 11.1732 61.9009C10.0359 60.7636 9.39697 59.2211 9.39697 57.6127V45.4837"
+        stroke="white"
+        strokeWidth="11"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M51.8483 24.258L36.6871 9.09674L21.5259 24.258"
+        stroke="white"
+        strokeWidth="11"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M36.6875 9.09674V45.4837"
+        stroke="white"
+        strokeWidth="11"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </symbol>
   </svg>
 );

@@ -2,21 +2,29 @@
 
 import { MapPin, Search, Grid, List } from "lucide-react";
 import { useState, useEffect } from "react";
-import ArtistCard, { type Artist } from "~/components/ArtistCard/ArtistCard";
+import OfferCard, { type Offer } from "~/components/OfferCard/OfferCard";
+import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
 import { trpc } from "~/trpc/react";
 
 export default function SearchPage() {
+  const LIMIT = 6;
   const [viewMode, setViewMode] = useState("grid");
 
   const [location, setLocation] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [skip, setSkip] = useState(0);
 
   const { data, refetch } = trpc.offers.search.useQuery({
     text: searchText,
     location: location,
-    skip: 0,
-    limit: 5,
+    skip: skip,
+    limit: LIMIT,
+  });
+
+  const { data: offerCount } = trpc.offers.countSearch.useQuery({
+    text: searchText,
+    location: location,
   });
 
   function onLocationChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -30,6 +38,75 @@ export default function SearchPage() {
   function search() {
     void refetch();
   }
+
+  const handlePageClick = (page: number) => {
+    setSkip((page - 1) * LIMIT);
+  };
+
+  const getPaginationButtons = () => {
+    const currentPage = skip / LIMIT + 1;
+    const totalPages = offerCount ? Math.ceil(offerCount / LIMIT) : 0;
+
+    const buttons = [];
+
+    if (currentPage > 1) {
+      buttons.push(
+        <Button
+          key="first"
+          onClick={() => handlePageClick(1)}
+          className="rounded-md border border-neo-castleton px-3 py-1 text-neo-castleton transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
+        >
+          1
+        </Button>,
+      );
+    }
+
+    if (currentPage >= 3) {
+      buttons.push(
+        <span key="dots-start" className="px-2">
+          ...
+        </span>,
+      );
+    }
+
+    for (let i = currentPage; i <= Math.min(currentPage + 2, totalPages); i++) {
+      buttons.push(
+        <Button
+          key={i}
+          onClick={() => handlePageClick(i)}
+          className={`rounded-md border px-3 py-1 transition-colors duration-200 ${
+            currentPage === i
+              ? "bg-neo-castleton text-white"
+              : "border-neo-castleton text-neo-castleton hover:bg-neo-castleton hover:text-white"
+          }`}
+        >
+          {i}
+        </Button>,
+      );
+    }
+
+    if (currentPage + 2 < totalPages) {
+      buttons.push(
+        <span key="dots-end" className="px-2">
+          ...
+        </span>,
+      );
+    }
+
+    if (currentPage + 2 < totalPages) {
+      buttons.push(
+        <Button
+          key="last"
+          onClick={() => handlePageClick(totalPages)}
+          className="rounded-md border border-neo-castleton px-3 py-1 text-neo-castleton transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
+        >
+          {totalPages}
+        </Button>,
+      );
+    }
+
+    return buttons;
+  };
 
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
@@ -62,12 +139,12 @@ export default function SearchPage() {
               />
             </div>
 
-            <button
+            <Button
               onClick={search}
               className="rounded-md bg-neo-pink px-4 py-2 text-white transition duration-300 hover:bg-[#4a6741]"
             >
               Szukaj
-            </button>
+            </Button>
           </div>
         </div>
         <div className="mb-4 flex items-center justify-between">
@@ -75,9 +152,11 @@ export default function SearchPage() {
             Wyniki wyszukiwania
           </h2>
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={() => setViewMode("grid")}
-              className={`rounded p-2 ${viewMode === "grid" ? "bg-neo-castleton" : "bg-neo-sage"} transition-colors duration-200`}
+              className={`rounded p-2 ${
+                viewMode === "grid" ? "bg-neo-castleton" : "bg-neo-sage"
+              } transition-colors duration-200`}
               aria-label="Grid view"
             >
               <Grid
@@ -86,10 +165,12 @@ export default function SearchPage() {
                   viewMode === "grid" ? "text-neo-sage" : "text-neo-castleton"
                 }
               />
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setViewMode("list")}
-              className={`rounded p-2 ${viewMode === "list" ? "bg-neo-castleton" : "bg-neo-sage"} transition-colors duration-200`}
+              className={`rounded p-2 ${
+                viewMode === "list" ? "bg-neo-castleton" : "bg-neo-sage"
+              } transition-colors duration-200`}
               aria-label="List view"
             >
               <List
@@ -98,17 +179,43 @@ export default function SearchPage() {
                   viewMode === "list" ? "text-neo-sage" : "text-neo-castleton"
                 }
               />
-            </button>
+            </Button>
           </div>
         </div>
         <div
-          className={`grid ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"} gap-6`}
+          className={`grid ${
+            viewMode === "grid"
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              : "grid-cols-1"
+          } gap-6`}
         >
-          {data?.map((offer) => <h1 key={offer.id}>{offer.name}</h1>)}
-          {/* {artists.map((artist) => (
-            <ArtistCard key={artist.id} artist={artist} />
-          ))} */}
+          {data?.map((offer) => <OfferCard key={offer.id} offer={offer} />)}
         </div>
+
+        {/* Pagination Buttons */}
+        {offerCount && (
+          <div className="mt-8 flex items-center justify-center space-x-2">
+            {skip > 0 && (
+              <Button
+                onClick={() => setSkip(skip - LIMIT)}
+                className="rounded-md bg-neo-castleton px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
+              >
+                Poprzednia
+              </Button>
+            )}
+
+            {getPaginationButtons()}
+
+            {skip / LIMIT + 1 < Math.ceil(offerCount / LIMIT) && (
+              <Button
+                onClick={() => setSkip(skip + LIMIT)}
+                className="rounded-md bg-neo-castleton px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
+              >
+                Następna
+              </Button>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );

@@ -4,6 +4,7 @@ import { Icon } from "~/components/ui/Icon/Icon";
 import { cn } from "~/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FilePreview } from "~/components/uploadthing/FilePreview";
+import { CloudUploadIcon, XIcon } from "lucide-react";
 
 import {
   generatePermittedFileTypes,
@@ -12,6 +13,7 @@ import {
   generateClientDropzoneAccept,
 } from "../utils";
 import { type PreviewDropzoneProps } from "../PreviewDropzone";
+import { Button } from "~/components/ui/Button/Button";
 
 export default function PreviewDropzone({
   files,
@@ -81,14 +83,11 @@ export default function PreviewDropzone({
             tooManyFilesMessage = (
               <div
                 key={fileRejection.file.name}
-                className="flex items-center gap-2"
+                className="flex items-center gap-1"
               >
-                <Icon
-                  name="plus"
-                  className="size-6 shrink-0 rotate-45 text-neo-pink"
-                />
+                <XIcon className="size-6 shrink-0 text-neo-pink" />
                 <p className="text-sm font-semibold text-red-600">
-                  Too many files
+                  Za dużo plików
                 </p>
               </div>
             );
@@ -103,12 +102,9 @@ export default function PreviewDropzone({
         return (
           <div
             key={fileRejection.file.name}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1"
           >
-            <Icon
-              name="plus"
-              className="size-6 shrink-0 rotate-45 text-neo-pink"
-            />
+            <XIcon className="size-6 shrink-0 text-neo-pink" />
             <p className="text-sm font-semibold text-red-600">
               {`${fileRejection.file.name} - ${fileRejection.errors.map((error) => error.message).join(", ")}`}
             </p>
@@ -142,20 +138,9 @@ export default function PreviewDropzone({
       >
         <input className="sr-only" {...getInputProps()} />
         {files.length == 0 ? (
-          <div className="my-12 text-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              className="mx-auto size-14 text-gray-400"
-            >
-              <path
-                fill="currentColor"
-                fillRule="evenodd"
-                d="M5.5 17a4.5 4.5 0 0 1-1.44-8.765a4.5 4.5 0 0 1 8.302-3.046a3.5 3.5 0 0 1 4.504 4.272A4 4 0 0 1 15 17H5.5Zm3.75-2.75a.75.75 0 0 0 1.5 0V9.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0l-3.25 3.5a.75.75 0 1 0 1.1 1.02l1.95-2.1v4.59Z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-            <div className="mt-4 flex text-base leading-6 text-gray-600">
+          <div className="my-12 flex flex-col items-center">
+            <CloudUploadIcon className="size-14 text-neo-dark-gray" />
+            <div className="mt-4 flex text-base leading-6 text-black">
               <div
                 className={cn(
                   "relative cursor-pointer font-semibold text-neo-sea focus-within:outline-none focus-within:ring-2 focus-within:ring-neo-sea focus-within:ring-offset-2 hover:text-neo-sea-hover",
@@ -167,14 +152,15 @@ export default function PreviewDropzone({
               <p className="pl-1">lub przeciągnij pliki</p>
             </div>
             <div className="h-[1.25rem]">
-              <p className="text-sm leading-5 text-gray-600">
+              <p className="text-sm leading-5 text-neo-dark-gray">
                 {allowedContentTextLabelGenerator(routeConfig)}
               </p>
             </div>
             {files.length > 0 && showUploadButton && (
               <div className="mt-4 flex items-center justify-center">
-                <button
-                  className="flex h-10 w-40 items-center justify-center rounded-md bg-pink-600"
+                <Button
+                  variant="secondary"
+                  type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -190,14 +176,14 @@ export default function PreviewDropzone({
                       `Prześlij ${files.length} plik${files.length >= 5 ? "ów" : files.length >= 2 ? "i" : ""}`
                     )}
                   </span>
-                </button>
+                </Button>
               </div>
             )}
             {files.length === 0 && showUploadButton && (
               <div className="mt-4 flex items-center justify-center">
-                <button className="flex h-10 w-40 items-center justify-center rounded-md bg-pink-600">
-                  <span className="px-3 py-2 text-white">Wybierz pliki</span>
-                </button>
+                <Button variant="secondary" type="button">
+                  Wybierz pliki
+                </Button>
               </div>
             )}
           </div>

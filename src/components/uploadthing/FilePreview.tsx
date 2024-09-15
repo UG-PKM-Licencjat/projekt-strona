@@ -1,5 +1,6 @@
 import { type ClientUploadedFileData } from "uploadthing/types";
 import Image from "next/image";
+import { PlayCircleIcon } from "lucide-react";
 import { Icon } from "~/components/ui/Icon/Icon";
 
 export function FilePreview({
@@ -12,22 +13,43 @@ export function FilePreview({
   return (
     <>
       <div
-        className="relative flex h-44 overflow-hidden rounded-lg border-2"
+        className="relative flex aspect-square h-52 overflow-hidden rounded-lg border-2 border-neo-gray-hover"
         onClick={(e) => e.stopPropagation()}
       >
         {file.type.startsWith("image") ? (
-          <Image
-            src={file.url}
-            alt={file.name}
-            width={150}
-            height={150}
-            style={{ width: "100%", height: "auto" }}
-            sizes="20vw"
-          />
+          // TODO make image same as video - I give up for now...
+          <div className="grid h-full w-full [&>*]:col-start-1 [&>*]:row-start-1">
+            {/* <Image
+              src={file.url}
+              alt={file.name}
+              width={150}
+              height={150}
+              sizes="20vw"
+              className="absolute z-30 object-contain"
+            /> */}
+            <div className="flex h-full w-full">
+              <Image
+                src={file.url}
+                alt={file.name}
+                width={150}
+                height={150}
+                sizes="20vw"
+                className="object-fill blur-lg"
+              />
+            </div>
+          </div>
         ) : file.type.startsWith("video") ? (
-          <video>
-            <source src={file.url} type={file.type} />
-          </video>
+          <div className="grid place-items-center [&>*]:col-start-1 [&>*]:row-start-1">
+            <video className="h-full w-full object-fill blur-lg">
+              <source src={file.url} type={file.type} />
+            </video>
+            <div className="z-30 flex items-center justify-center">
+              <PlayCircleIcon className="text-neo-black size-10" />
+            </div>
+            <video className="z-20 object-contain">
+              <source src={file.url} type={file.type} />
+            </video>
+          </div>
         ) : file.type.startsWith("audio") ? (
           // PLACEHOLDER (?)
           <div className="flex flex-col items-center justify-center gap-2">

@@ -10,9 +10,12 @@ const f = createUploadthing();
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  createImageUploader: f({
-    image: { maxFileCount: 3 },
-  })
+  createImageUploader: f(
+    {
+      image: { maxFileCount: 3 },
+    },
+    { awaitServerData: false },
+  )
     // Set permissions and file types for this FileRoute
     // .middleware(async ({ req }) => {
     //   // This code runs on your server before upload
@@ -33,13 +36,15 @@ export const ourFileRouter = {
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       //   return { uploadedBy: metadata.userId };
     }),
-  createVideoUploader: f({
-    video: { maxFileCount: 2 },
-  })
-    .onUploadComplete(async ({ file }) => {
-      console.log("file url", file.url);
-      //   return { uploadedBy: metadata.userId };
-    }),
+  createVideoUploader: f(
+    {
+      video: { maxFileCount: 2 },
+    },
+    { awaitServerData: false },
+  ).onUploadComplete(async ({ file }) => {
+    console.log("file url", file.url);
+    //   return { uploadedBy: metadata.userId };
+  }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

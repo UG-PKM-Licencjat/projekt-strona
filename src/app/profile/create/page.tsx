@@ -36,6 +36,7 @@ const variants = {
 export default function CreateArtistProfilePage() {
   const [[activeStep, direction], setStep] = useState([0, 0]);
   const [openDescription, setOpenDescription] = useState(false);
+  const toggleDescription = () => setOpenDescription((open) => !open);
 
   const handleStepChange = (newStep: number, direction: number) => {
     if (newStep < 0) return;
@@ -63,7 +64,7 @@ export default function CreateArtistProfilePage() {
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="container flex flex-col justify-between bg-neo-gray p-8 sm:rounded-lg"
+        className="container flex flex-col justify-between bg-neo-gray p-8 md:rounded-lg"
       >
         <div className="flex gap-8 max-lg:flex-col">
           {/* Vertical stepper */}
@@ -71,7 +72,7 @@ export default function CreateArtistProfilePage() {
             <h2 className="font-header text-2xl font-semibold">
               Stwórz profil
             </h2>
-            <div className="flex flex-col justify-center gap-4 max-lg:flex-row">
+            <div className="flex flex-col justify-center gap-2 max-lg:flex-row sm:gap-4">
               {steps.map((step, index) => (
                 <motion.div
                   whileTap={{ scale: [null, 0.95] }}
@@ -95,9 +96,6 @@ export default function CreateArtistProfilePage() {
                 </motion.div>
               ))}
             </div>
-            <span className="text-center font-semibold lg:hidden">
-              {steps[activeStep]?.title}
-            </span>
           </div>
           <div className="flex w-full flex-col gap-4">
             <div className="flex w-full flex-col lg:p-10">
@@ -108,19 +106,18 @@ export default function CreateArtistProfilePage() {
                 <p
                   className={cn(
                     "overflow-hidden text-ellipsis text-neo-dark-gray transition-[height] duration-300 ease-in-out",
-                    openDescription ? "h-full" : "max-md:h-6",
+                    openDescription ? "h-full" : "max-lg:h-6",
                   )}
+                  onClick={toggleDescription}
                 >
                   {steps[activeStep]?.description}
                 </p>
                 <ChevronDown
                   className={cn(
-                    "size-6 shrink-0 stroke-neo-dark-gray transition-transform md:hidden",
+                    "size-6 shrink-0 stroke-neo-dark-gray transition-transform lg:hidden",
                     openDescription && "rotate-180",
                   )}
-                  onClick={() =>
-                    setOpenDescription((openDescription) => !openDescription)
-                  }
+                  onClick={toggleDescription}
                 />
               </div>
             </div>

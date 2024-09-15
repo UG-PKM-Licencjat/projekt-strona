@@ -7,32 +7,24 @@ import { useState } from "react";
 
 export default function Step3() {
   // TODO extract this to parent component, figure out how to pass it down and make it work
-  const [videos, setVideos] = useState<CustomFile[]>([]);
-  const {
-    startUpload: startVideoUpload,
-    routeConfig: videoRouteConfig,
-    isUploading: isVideoUploading,
-  } = useUploadThing("createVideoUploader", {
-    onClientUploadComplete: () => {
-      setVideos([]);
-      // alert("uploaded successfully!");
+  const [files, setFiles] = useState<CustomFile[]>([]);
+  const { startUpload, routeConfig, isUploading } = useUploadThing(
+    "galleryUploader",
+    {
+      onUploadError: () => {
+        alert("error occurred while uploading");
+      },
     },
-    onUploadError: () => {
-      alert("error occurred while uploading");
-    },
-    onUploadBegin: () => {
-      // alert("upload has begun");
-    },
-  });
+  );
   return (
     <div className="flex">
       <PreviewDropzone
-        files={videos}
-        setFiles={setVideos}
-        routeConfig={videoRouteConfig}
-        startUpload={startVideoUpload}
-        isUploading={isVideoUploading}
-        showUploadButton={false}
+        files={files}
+        setFiles={setFiles}
+        routeConfig={routeConfig}
+        startUpload={startUpload}
+        isUploading={isUploading}
+        showUploadButton={true}
         className="w-full"
       />
     </div>

@@ -13,15 +13,22 @@ import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import Youtube from "@tiptap/extension-youtube";
 import Gapcursor from "@tiptap/extension-gapcursor";
+import { cn } from "~/lib/utils";
 
 export default function TipTap({
   placeholder,
   onChange,
   charLimit,
+  className,
+  classNameToolbar,
+  classNameEditor,
 }: {
   placeholder: string;
   onChange: (richText: string) => void;
   charLimit: number;
+  className?: string;
+  classNameToolbar?: string;
+  classNameEditor?: string;
 }) {
   const editor = useEditor({
     immediatelyRender: false,
@@ -66,9 +73,14 @@ export default function TipTap({
     : 0;
 
   return (
-    <div className="rounded-lg bg-neo-gray px-2 py-2 text-lg ring-offset-background drop-shadow-md file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-      <Toolbar editor={editor} />
-      <EditorContent editor={editor} />
+    <div
+      className={cn(
+        "rounded-lg bg-neo-gray px-2 py-2 text-lg ring-offset-background drop-shadow-md file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+    >
+      <Toolbar editor={editor} className={classNameToolbar} />
+      <EditorContent editor={editor} className={classNameEditor} />
       <div
         className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}
       >

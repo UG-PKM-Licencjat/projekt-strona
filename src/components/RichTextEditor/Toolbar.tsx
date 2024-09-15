@@ -43,20 +43,20 @@ import {
 import { Button } from "~/components/ui/Button/Button";
 import { Toggle } from "~/components/ui/toggle";
 import { useState, type FormEvent } from "react";
+import { cn } from "~/lib/utils";
 
 type Props = {
   editor: Editor;
+  className?: string;
 };
 
-export function Toolbar({ editor }: Props) {
-  // if (!editor) {
-  //   return null;
-  // }
+export function Toolbar({ editor, className }: Props) {
+  // youtube
   const [height, setHeight] = useState(480);
   const [width, setWidth] = useState(640);
 
   const addYoutubeVideo = () => {
-    const url = prompt("Enter YouTube URL");
+    const url = prompt("Podaj link do filmu YouTube");
 
     if (url) {
       editor.commands.setYoutubeVideo({
@@ -67,10 +67,8 @@ export function Toolbar({ editor }: Props) {
     }
   };
 
-  // set base color
-
   return (
-    <div className="flex gap-1 rounded-md border bg-white p-1 active:bg-opacity-10">
+    <div className={cn("flex gap-1 rounded-md bg-white p-1", className)}>
       <TooltipProvider>
         {/* Color Picker */}
         <Tooltip>
@@ -211,7 +209,7 @@ export function Toolbar({ editor }: Props) {
         </Tooltip>
 
         {/* Bullet List */}
-        <Tooltip>
+        <Tooltip data-targetid="bulletList">
           <TooltipTrigger asChild>
             <Toggle
               size="sm"
@@ -227,7 +225,7 @@ export function Toolbar({ editor }: Props) {
         </Tooltip>
 
         {/* Ordered List */}
-        <Tooltip>
+        <Tooltip data-targetid="orderedList">
           <TooltipTrigger asChild>
             <Toggle
               size="sm"
@@ -243,7 +241,7 @@ export function Toolbar({ editor }: Props) {
         </Tooltip>
 
         {/* Blockquote */}
-        <Tooltip>
+        <Tooltip data-targetid="blockquote">
           <TooltipTrigger asChild>
             <Toggle
               size="sm"
@@ -259,7 +257,7 @@ export function Toolbar({ editor }: Props) {
         </Tooltip>
 
         {/* Horizontal Rule */}
-        <Tooltip>
+        <Tooltip data-targetid="horizontalRule">
           <TooltipTrigger asChild>
             <Toggle
               size="sm"
@@ -275,7 +273,7 @@ export function Toolbar({ editor }: Props) {
         </Tooltip>
 
         {/* Table */}
-        <Popover>
+        <Popover data-targetid="table">
           <Tooltip>
             <TooltipTrigger>
               <PopoverTrigger asChild>
@@ -291,7 +289,6 @@ export function Toolbar({ editor }: Props) {
             <TooltipContent sideOffset={4}>Tabela</TooltipContent>
           </Tooltip>
           <PopoverContent
-            // className="space-y-2"
             sideOffset={4}
             align="center"
             className="w-26 ml-2 mt-2"
@@ -514,7 +511,9 @@ export function Toolbar({ editor }: Props) {
             </div>
           </PopoverContent>
         </Popover>
-        <Popover>
+
+        {/* Youtube */}
+        <Popover data-targetid="youtube">
           <Tooltip>
             <TooltipTrigger>
               <PopoverTrigger asChild>

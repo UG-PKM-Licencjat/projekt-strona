@@ -1,5 +1,3 @@
-"use client";
-
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -26,6 +24,7 @@ export default function TipTap({
   charLimit: number;
 }) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({}),
       Placeholder.configure({ placeholder: placeholder }),

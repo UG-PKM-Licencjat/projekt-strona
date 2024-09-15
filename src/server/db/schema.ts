@@ -202,8 +202,9 @@ export const reviews = pgTable("review", {
     .notNull()
     .references(() => offers.id),
   comment: text("comment"),
-  replyTo: integer("replyTo"), // id of the review this is a reply to,
-  replies: integer("replies").default(0),
+  // TODO: Out of MVP scope - Add later
+  // replyTo: integer("replyTo"), // id of the review this is a reply to,
+  // replies: integer("replies").default(0),
 });
 
 export const reviewRelations = relations(reviews, ({ one }) => ({

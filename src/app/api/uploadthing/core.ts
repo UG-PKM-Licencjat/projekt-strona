@@ -12,7 +12,6 @@ export const ourFileRouter = {
   galleryUploader: f({
     image: { maxFileCount: 5 },
     video: { maxFileCount: 5 },
-    audio: { maxFileCount: 5 },
   }).onUploadComplete(() => {
     console.log("uploaded");
   }),

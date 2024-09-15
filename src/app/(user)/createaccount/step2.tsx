@@ -18,14 +18,13 @@ import {
 import { Data } from "./page";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
 import Image from "next/image";
 import womangoing from "public/svg/woman-going.svg";
+import { useToast } from "~/components/ui/use-toast";
 
 export default function Step2(props: {
   data: Data;
-  handleChange: ({}) => void;
+  handleChange: (data: Data) => void;
 }) {
   const { data, handleChange } = props;
   const router = useRouter();
@@ -42,30 +41,43 @@ export default function Step2(props: {
   const writenames = trpc.user.putRegistrationData.useMutation();
 
   const { data: session, update } = useSession();
+  const { toast } = useToast();
 
   async function onSubmit(isArtistString: z.infer<typeof FormSchema>) {
     const isArtist = isArtistString.type === "true" ? true : false;
 
     if (form.getValues().type !== undefined) {
-      const response = await writenames.mutateAsync({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        isArtist: isArtist,
-        registrationStatus: 2,
-      });
-
-      if (response) {
-        await update({
-          ...session,
-          user: {
-            ...session?.user,
-            firstName: data.firstName,
-            lastName: data.lastName,
-          },
+      await writenames
+        .mutateAsync({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          isArtist: isArtist,
+          registrationStatus: 2,
+        })
+        .then(async () => {
+          await update({
+            ...session,
+            user: {
+              ...session?.user,
+              firstName: data.firstName,
+              lastName: data.lastName,
+            },
+          }).catch((error) => {
+            toast({
+              title: "Błąd",
+              description: error.message,
+              variant: "destructive",
+            });
+          });
+          handleChange({ ...data, activeTab: 2 });
+        })
+        .catch((error) => {
+          toast({
+            title: "Błąd",
+            description: error.message,
+            variant: "destructive",
+          });
         });
-
-        handleChange({ activeTab: 2 });
-      }
     }
   }
 
@@ -132,7 +144,7 @@ export default function Step2(props: {
                   className="sm:w-1/2"
                   variant={"outline"}
                   onClick={() => {
-                    handleChange({ activeTab: 0 });
+                    handleChange({ ...data, activeTab: 0 });
                   }}
                 >
                   Wróć

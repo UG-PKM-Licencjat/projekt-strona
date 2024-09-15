@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "~/components/ui/Input/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/Button/Button";
 import {
@@ -18,6 +18,7 @@ import { Icon } from "~/components/ui/Icon/Icon";
 import { Data } from "./page";
 import Image from "next/image";
 import man from "public/svg/man.svg";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   //   ^: Asserts the start of the string.
@@ -56,21 +57,20 @@ const formSchema = z.object({
     .min(2, {
       message: "Nazwisko musi mieć co najmniej 2 znaki.",
     }),
-
-  image: z.string().optional(),
 });
 
 export default function Step1(props: {
   data: Data;
-  handleChange: ({}) => void;
+  handleChange: (data: Data) => void;
 }) {
   const { data, handleChange } = props;
+  const { data: session } = useSession();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      firstName: session?.user?.firstName || "",
+      lastName: session?.user?.lastName || "",
     },
   });
   const router = useRouter();
@@ -82,26 +82,16 @@ export default function Step1(props: {
     }
   }, [data.activeTab]);
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    // if sth bad display error
-
-    console.log("data", data);
-
-    // console.log("form", form.formState.errors);
+  const onSubmit = (formdata: z.infer<typeof formSchema>) => {
     handleChange({
       ...data,
-      firstName: data.firstName,
-      lastName: data.lastName,
+      firstName: formdata.firstName || "",
+      lastName: formdata.lastName || "",
       activeTab: 1,
+      isArtist: data.isArtist,
+      registrationStatus: data.registrationStatus,
     });
   };
-
-  // const handleSubmits = (form) => {
-  //   event.preventDefault();
-  //   console.log("form", form.formState);
-
-  //   onSubmit(form.getValues());
-  // };
 
   return (
     <>
@@ -123,7 +113,7 @@ export default function Step1(props: {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="gap-y-auto left bottom-0 space-y-6 pt-6"
+              className="gap-y-auto left bottom-0 h-full space-y-6 pt-6"
             >
               <div className="flex flex-col items-center">
                 <div className="relative h-44 w-44 justify-center rounded-full bg-neo-pink">
@@ -136,18 +126,6 @@ export default function Step1(props: {
                   />
                 </div>
               </div>
-              {/* <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col items-center">
-                    <FormControl className="h-44 w-44 justify-center rounded-full bg-neo-pink">
-                      <Input id="image" type="file" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
               <FormField
                 control={form.control}
                 name="firstName"

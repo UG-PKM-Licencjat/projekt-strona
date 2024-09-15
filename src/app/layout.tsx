@@ -28,9 +28,9 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await getServerAuthSession();
   return (
-    <html lang="pl" className="h-full">
+    <html lang="pl">
       <body
-        className={`${cabin.variable} ${montserrat.variable} h-full min-h-svh font-body`}
+        className={`${cabin.variable} ${montserrat.variable} flex h-svh flex-col font-body`}
       >
         {SvgSymbols}
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />

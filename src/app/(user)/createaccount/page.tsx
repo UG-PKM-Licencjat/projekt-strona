@@ -22,7 +22,7 @@ const MainForm = () => {
     activeTab: 0,
     registrationStatus: 0,
   });
-  const handleChange = (change) => {
+  const handleChange = (change: Data) => {
     console.log("change", change);
     setData({
       ...data,

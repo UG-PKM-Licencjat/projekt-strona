@@ -3,12 +3,14 @@ import Tiptap from "~/components/RichTextEditor/Tiptap";
 
 export default function Home() {
   return (
-    <Tiptap
-      placeholder="Write here.."
-      onChange={() => {
-        return;
-      }}
-      charLimit={200}
-    />
+    <div className="h-screen bg-neo-castleton p-32">
+      <Tiptap
+        placeholder="Write here.."
+        onChange={() => {
+          return;
+        }}
+        charLimit={200}
+      />
+    </div>
   );
 }

@@ -91,7 +91,7 @@ export function Toolbar({ editor }: Props) {
               data-testid="setColor"
             />
           </TooltipTrigger>
-          <TooltipContent sideOffset={4}>Select Color</TooltipContent>
+          <TooltipContent sideOffset={4}>Wybierz kolor</TooltipContent>
         </Tooltip>
 
         {/* Headings */}
@@ -108,7 +108,7 @@ export function Toolbar({ editor }: Props) {
                 <Heading className="h-4 w-4" />
               </PopoverTrigger>
             </TooltipTrigger>
-            <TooltipContent sideOffset={4}>Headings</TooltipContent>
+            <TooltipContent sideOffset={4}>Nagłówki</TooltipContent>
           </Tooltip>
           <PopoverContent
             sideOffset={4}
@@ -127,7 +127,7 @@ export function Toolbar({ editor }: Props) {
                   <TooltipTrigger asChild>
                     <Heading1 className="h-4 w-4" />
                   </TooltipTrigger>
-                  <TooltipContent sideOffset={4}>Heading 1</TooltipContent>
+                  <TooltipContent sideOffset={4}>Nagłówek 1</TooltipContent>
                 </Tooltip>
               </Toggle>
 
@@ -142,7 +142,7 @@ export function Toolbar({ editor }: Props) {
                   <TooltipTrigger asChild>
                     <Heading2 className="h-4 w-4" />
                   </TooltipTrigger>
-                  <TooltipContent sideOffset={4}>Heading 2</TooltipContent>
+                  <TooltipContent sideOffset={4}>Nagłówek 2</TooltipContent>
                 </Tooltip>
               </Toggle>
 
@@ -157,7 +157,7 @@ export function Toolbar({ editor }: Props) {
                   <TooltipTrigger asChild>
                     <Heading3 className="h-4 w-4" />
                   </TooltipTrigger>
-                  <TooltipContent sideOffset={4}>Heading 3</TooltipContent>
+                  <TooltipContent sideOffset={4}>Nagłówek 3</TooltipContent>
                 </Tooltip>
               </Toggle>
             </div>
@@ -175,7 +175,7 @@ export function Toolbar({ editor }: Props) {
               <Bold className="h-4 w-4" />
             </Toggle>
           </TooltipTrigger>
-          <TooltipContent sideOffset={4}>Bold</TooltipContent>
+          <TooltipContent sideOffset={4}>Pogrubienie</TooltipContent>
         </Tooltip>
 
         {/* Italic */}
@@ -191,7 +191,7 @@ export function Toolbar({ editor }: Props) {
               <Italic className="h-4 w-4" />
             </Toggle>
           </TooltipTrigger>
-          <TooltipContent sideOffset={4}>Italic</TooltipContent>
+          <TooltipContent sideOffset={4}>Kursywa</TooltipContent>
         </Tooltip>
 
         {/* Strikethrough */}
@@ -207,7 +207,7 @@ export function Toolbar({ editor }: Props) {
               <Strikethrough className="h-4 w-4" />
             </Toggle>
           </TooltipTrigger>
-          <TooltipContent sideOffset={4}>Strikethrough</TooltipContent>
+          <TooltipContent sideOffset={4}>Przekreślenie</TooltipContent>
         </Tooltip>
 
         {/* Bullet List */}
@@ -223,7 +223,7 @@ export function Toolbar({ editor }: Props) {
               <List className="h-4 w-4" />
             </Toggle>
           </TooltipTrigger>
-          <TooltipContent sideOffset={4}>Bullet List</TooltipContent>
+          <TooltipContent sideOffset={4}>Lista punktowana</TooltipContent>
         </Tooltip>
 
         {/* Ordered List */}
@@ -239,7 +239,7 @@ export function Toolbar({ editor }: Props) {
               <ListOrdered className="h-4 w-4" />
             </Toggle>
           </TooltipTrigger>
-          <TooltipContent sideOffset={4}>Ordered List</TooltipContent>
+          <TooltipContent sideOffset={4}>Lista numerowana</TooltipContent>
         </Tooltip>
 
         {/* Blockquote */}
@@ -255,7 +255,7 @@ export function Toolbar({ editor }: Props) {
               <MessageSquareQuote className="h-4 w-4" />
             </Toggle>
           </TooltipTrigger>
-          <TooltipContent sideOffset={4}>Blockquote</TooltipContent>
+          <TooltipContent sideOffset={4}>Cytat</TooltipContent>
         </Tooltip>
 
         {/* Horizontal Rule */}
@@ -271,20 +271,25 @@ export function Toolbar({ editor }: Props) {
               <Minus className="h-4 w-4" />
             </Toggle>
           </TooltipTrigger>
-          <TooltipContent sideOffset={4}>Horizontal Rule</TooltipContent>
+          <TooltipContent sideOffset={4}>Linia pozioma</TooltipContent>
         </Tooltip>
 
         {/* Table */}
         <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
-            >
-              <Table className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
+          <Tooltip>
+            <TooltipTrigger>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                >
+                  <Table className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={4}>Tabela</TooltipContent>
+          </Tooltip>
           <PopoverContent
             // className="space-y-2"
             sideOffset={4}
@@ -510,15 +515,20 @@ export function Toolbar({ editor }: Props) {
           </PopoverContent>
         </Popover>
         <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
-            >
-              <Youtube className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
+          <Tooltip>
+            <TooltipTrigger>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                >
+                  <Youtube className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={4}>Dodaj film z Youtube</TooltipContent>
+          </Tooltip>
           <PopoverContent className="w-80" sideOffset={4}>
             <div className="flex justify-around">
               <input

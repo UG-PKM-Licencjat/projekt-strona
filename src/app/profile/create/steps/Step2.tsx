@@ -1,4 +1,3 @@
 export default function Step2() {
-  // TODO implement this
-  return <div>Flex wrapped checkboxes here with searchbar</div>;
+  return <div>Content here</div>;
 }

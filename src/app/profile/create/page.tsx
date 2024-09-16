@@ -123,7 +123,7 @@ export default function CreateArtistProfilePage() {
             </div>
           </div>
           <div className="flex w-full flex-col gap-4">
-            <div className="flex w-full flex-col lg:p-10">
+            <div className="flex w-full flex-col lg:px-10 lg:py-5">
               <h1 className="text-lg font-medium sm:text-xl">
                 {steps[activeStep]?.title}
               </h1>
@@ -138,7 +138,7 @@ export default function CreateArtistProfilePage() {
                   transition={{ duration: 0.2 }}
                   className={cn(
                     "overflow-hidden text-ellipsis text-neo-dark-gray",
-                    openDescription ? "h-full" : "max-lg:h-6",
+                    openDescription && window.width! < 1024 ? "" : "max-lg:h-6",
                   )}
                   onClick={toggleDescription}
                 >

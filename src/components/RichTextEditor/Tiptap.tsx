@@ -1,4 +1,4 @@
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, type JSONContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount, {
@@ -12,44 +12,68 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import Youtube from "@tiptap/extension-youtube";
-import Gapcursor from "@tiptap/extension-gapcursor";
 import { cn } from "~/lib/utils";
 
-export default function TipTap({
-  placeholder,
-  onChange,
-  charLimit,
-  className,
-  classNameToolbar,
-  classNameEditor,
-}: {
+type editorVariant = "full" | "textOnly";
+type returnFormat = "html" | "json" | "text";
+
+export type TipTapProps = {
   placeholder: string;
-  onChange: (richText: string) => void;
+  returnFormat: returnFormat;
+  onChange?: (richText: string | JSONContent) => void;
+  content?: string;
   charLimit: number;
   className?: string;
   classNameToolbar?: string;
   classNameEditor?: string;
-}) {
+  variant: editorVariant;
+  toolbarActive: boolean;
+};
+
+export default function TipTap({
+  placeholder,
+  onChange,
+  content,
+  charLimit,
+  className,
+  classNameToolbar,
+  classNameEditor,
+  variant = "full",
+  returnFormat = "html",
+  toolbarActive = true,
+}: TipTapProps) {
+  const getVariant = (variant: editorVariant) => {
+    switch (variant) {
+      case "full":
+        return [
+          StarterKit.configure({}),
+          Placeholder.configure({ placeholder: placeholder }),
+          CharacterCount.configure({ limit: charLimit }),
+          TextStyle,
+          Color,
+          Table.configure({
+            resizable: true,
+          }),
+          TableRow,
+          TableHeader,
+          TableCell,
+          Youtube.configure({
+            controls: true,
+            nocookie: true,
+          }),
+        ];
+      case "textOnly":
+        return [
+          Placeholder.configure({ placeholder: placeholder }),
+          CharacterCount.configure({ limit: charLimit }),
+        ];
+    }
+  };
+
   const editor = useEditor({
+    content: content ? content : "",
     immediatelyRender: false,
-    extensions: [
-      StarterKit.configure({}),
-      Placeholder.configure({ placeholder: placeholder }),
-      CharacterCount.configure({ limit: charLimit }),
-      TextStyle,
-      Color,
-      Table.configure({
-        resizable: true,
-      }),
-      Gapcursor,
-      TableRow,
-      TableHeader,
-      TableCell,
-      Youtube.configure({
-        controls: true,
-        nocookie: true,
-      }),
-    ],
+    extensions: getVariant(variant),
     editorProps: {
       attributes: {
         class:
@@ -57,7 +81,20 @@ export default function TipTap({
       },
     },
     onUpdate({ editor }) {
-      onChange(editor.getHTML());
+      if (!onChange) {
+        return;
+      }
+      switch (returnFormat) {
+        case "html":
+          onChange(editor.getHTML());
+          break;
+        case "json":
+          onChange(editor.getJSON());
+          break;
+        case "text":
+          onChange(editor.getText());
+          break;
+      }
     },
   });
 
@@ -79,7 +116,9 @@ export default function TipTap({
         className,
       )}
     >
-      <Toolbar editor={editor} className={classNameToolbar} />
+      {toolbarActive && (
+        <Toolbar editor={editor} className={classNameToolbar} />
+      )}
       <EditorContent editor={editor} className={classNameEditor} />
       <div
         className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}
@@ -88,7 +127,7 @@ export default function TipTap({
           height="20"
           width="20"
           viewBox="0 0 20 20"
-          className={`${characterCountStorage.characters() === charLimit ? "text-red-500" : "text-purple-500"}`}
+          className={`${characterCountStorage.characters() === charLimit ? "text-neo-pink-hover" : characterCountStorage.characters() > charLimit / 2 ? "text-neo-sage-hover" : "text-neo-mantis"}`}
         >
           <circle r="10" cx="10" cy="10" fill="#e9ecef" />
           <circle

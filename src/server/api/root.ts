@@ -10,6 +10,7 @@ import { type Message } from "~/components/chat/ConversationWindow/ConversationW
 import { AdminRouter } from "./routers/admin";
 import { OffersRouter } from "./routers/offers";
 import { RatingsRouter } from "./routers/ratings";
+import { UserRouter } from "./routers/user";
 
 /**
  * This is the primary router for your server.
@@ -19,6 +20,7 @@ import { RatingsRouter } from "./routers/ratings";
 export const appRouter = createTRPCRouter({
   admin: AdminRouter,
   offers: OffersRouter,
+  user: UserRouter,
   ratings: RatingsRouter,
   clientLog: procedure
     .input(
@@ -30,12 +32,12 @@ export const appRouter = createTRPCRouter({
       }),
     )
     .mutation((opts) => {
-      logEvent(
-        opts.input.message,
-        opts.input.additionalInfo,
-        opts.input.logType,
-        opts.input.tags,
-      );
+      logEvent({
+        message: opts.input.message,
+        additionalInfo: opts.input.additionalInfo,
+        logType: opts.input.logType,
+        tags: opts.input.tags,
+      });
     }),
   getSampleMessages: procedure.input(z.string()).query(async ({ input }) => {
     const data: Array<Message> = (await (

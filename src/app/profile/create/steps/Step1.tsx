@@ -21,9 +21,9 @@ export default function Step1() {
       </Label>
       <Label className="flex flex-col gap-2">
         <span>Opis</span>
-        <Textarea placeholder="Opis" {...register("description")} />
+        <Textarea placeholder="Opis" {...register("shortDescription")} />
         <motion.div className="h-6 text-base tracking-normal text-neo-pink">
-          {errors.description?.message}
+          {errors.shortDescription?.message}
         </motion.div>
       </Label>
     </div>

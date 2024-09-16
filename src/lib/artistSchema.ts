@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const artistSchema = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
+  name: z.string().min(3),
+  description: z.string().min(3),
   links: z.array(z.string()).optional(),
   location: z.string().optional(),
   price: z

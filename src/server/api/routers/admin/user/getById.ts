@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-import { adminProcedure, procedure } from "~/server/api/trpc";
+import { procedure } from "~/server/api/trpc";
 import { eq } from "drizzle-orm";
 import logEvent from "~/server/log";
 
@@ -12,7 +12,7 @@ const getByIdProcedure = procedure
     }),
   )
   .query(async ({ input }) => {
-    logEvent("Fetching user by id", input.id);
+    logEvent({ message: "Fetching user by id", additionalInfo: input.id });
     const fetchedUser = await db.query.users.findFirst({
       where: eq(users.id, input.id),
     });

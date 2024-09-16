@@ -30,20 +30,20 @@ export interface LogEvent {
   tags: Tag[];
 }
 
-const logEvent = (
-  message: string,
-  additionalInfo = "",
-  logType: LogType = LogType.INFO,
-  tags: Tag[] = [],
-) => {
+const logEvent = (props: {
+  message: string;
+  logType?: LogType;
+  additionalInfo?: string;
+  tags?: Tag[];
+}) => {
   if (env.LOG === "false") return;
   const event: LogEvent = {
     timestamp: new Date().toISOString(),
     application: "web",
-    additionalInfo: additionalInfo,
-    logType: logType,
-    message: message,
-    tags: tags,
+    additionalInfo: props.additionalInfo ?? "",
+    logType: props.logType ?? LogType.INFO,
+    message: props.message,
+    tags: props.tags ?? [],
   };
   console.log(event);
   // Do not await this function

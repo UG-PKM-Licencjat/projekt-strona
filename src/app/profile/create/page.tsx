@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { steps } from "./steps";
+import { steps, type Fields } from "./steps";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/Button/Button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -43,14 +43,16 @@ export default function CreateArtistProfilePage() {
   const [openDescription, setOpenDescription] = useState(false);
   const toggleDescription = () => setOpenDescription((open) => !open);
 
-  const handleStepChange = (newStep: number, direction: number) => {
+  const handleStepChange = async (newStep: number, direction: number) => {
     if (newStep < 0) return;
     if (newStep >= steps.length) return;
+    await methods.trigger();
     setStep([newStep, direction]);
   };
 
   const methods = useForm<ArtistFormData>({
     resolver: zodResolver(artistSchema),
+    mode: "onTouched",
   });
 
   const { toast } = useToast();
@@ -64,6 +66,21 @@ export default function CreateArtistProfilePage() {
       ),
     });
   };
+
+  const hasErrors = (fields?: Fields[]) => {
+    if (!fields) return false;
+    return fields.some((field) => methods.formState.errors[field]?.message);
+  };
+
+  const isComplete = (fields?: Fields[]) => {
+    if (!fields) return false;
+    return fields.every(
+      (field) =>
+        methods.getValues()[field] && !methods.formState.errors[field]?.message,
+    );
+  };
+
+  console.log("hasErrors", hasErrors);
 
   return (
     <FormProvider {...methods}>
@@ -84,15 +101,20 @@ export default function CreateArtistProfilePage() {
                   transition={{ duration: 0.2 }}
                   className={cn(
                     "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-3 sm:p-4",
+                    hasErrors(step.fields) && "bg-neo-pink/30",
+                    isComplete(step.fields) && "bg-neo-sea/30",
                     index === activeStep && "bg-neo-sea text-neo-gray",
                   )}
                   key={index}
                   onClick={() =>
                     handleStepChange(index, index > activeStep ? 1 : -1)
                   }
-                  onKeyDown={(e) => {
+                  onKeyDown={async (e) => {
                     if (e.key === "Enter") {
-                      handleStepChange(index, index > activeStep ? 1 : -1);
+                      await handleStepChange(
+                        index,
+                        index > activeStep ? 1 : -1,
+                      );
                     }
                   }}
                 >
@@ -108,15 +130,16 @@ export default function CreateArtistProfilePage() {
                 {steps[activeStep]?.title}
               </h1>
               <div className="flex items-start gap-2">
-                <p
+                <motion.p
+                  layout
                   className={cn(
-                    "overflow-hidden text-ellipsis text-neo-dark-gray transition-[height] duration-300 ease-in-out",
+                    "overflow-hidden text-ellipsis text-neo-dark-gray",
                     openDescription ? "h-full" : "max-lg:h-6",
                   )}
                   onClick={toggleDescription}
                 >
                   {steps[activeStep]?.description}
-                </p>
+                </motion.p>
                 <ChevronDown
                   className={cn(
                     "size-6 shrink-0 stroke-neo-dark-gray transition-transform lg:hidden",
@@ -132,6 +155,7 @@ export default function CreateArtistProfilePage() {
               custom={direction}
             >
               <motion.div
+                layout
                 custom={direction}
                 variants={variants}
                 initial="enter"

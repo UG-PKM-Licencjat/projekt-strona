@@ -5,12 +5,16 @@ import Step4 from "./Step4";
 import Result from "./Result";
 import { Tag, FileText, Images, Coins, BadgeCheck } from "lucide-react";
 import React from "react";
+import type { ArtistFormData } from "~/lib/artistSchema";
+
+export type Fields = keyof ArtistFormData;
 
 export const steps: {
   title: string;
   description: string;
   content: React.ReactNode;
   icon: React.ReactNode;
+  fields?: Fields[];
 }[] = [
   {
     title: "Tytuł i opis",
@@ -18,6 +22,7 @@ export const steps: {
       "W tym miejscu uzupełnij tytuł swojej działaności i krótki opis, który pozwoli zrozumieć szukającemu, czym się zajmujesz i co oferujesz. Tytuł powinien jak najlepiej opisywać to czym się zajmujesz, w celu łatwiejszego znalezienia. Ten tytuł i opis są tym co wyświetli się w wynikach wyszukiwarki, więc dobrze zastanów się co chcesz w nich zawrzeć.",
     content: <Step1 />,
     icon: <FileText className="size-5 text-black sm:size-6" />,
+    fields: ["name", "description"],
   },
   {
     title: "Tagi",

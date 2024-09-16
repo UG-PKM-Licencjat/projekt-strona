@@ -1,31 +1,31 @@
 import { useFormContext } from "react-hook-form";
-import TipTap from "~/components/RichTextEditor/Tiptap";
 import { type ArtistFormData } from "~/lib/artistSchema";
+import { Input } from "~/components/ui/Input/Input";
+import { Textarea } from "~/components/ui/textarea";
+import { Label } from "~/components/ui/label";
+import { motion } from "framer-motion";
 
 export default function Step1() {
-  const { setValue, getValues } = useFormContext<ArtistFormData>();
-  const setTitle = (title: string) => setValue("name", title);
-  const setDescription = (description: string) =>
-    setValue("description", description);
-  const { name: title, description } = getValues();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ArtistFormData>();
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-md bg-white drop-shadow-md">
-        <TipTap
-          placeholder="Tytuł"
-          charLimit={100}
-          onChange={setTitle}
-          value={title}
-        />
-      </div>
-      <div className="rounded-md bg-white drop-shadow-md">
-        <TipTap
-          placeholder="Opis"
-          charLimit={200}
-          onChange={setDescription}
-          value={description}
-        />
-      </div>
+      <Label className="flex flex-col justify-between gap-2">
+        <span>Tytuł</span>
+        <Input placeholder="Tytuł" {...register("name")} autoComplete="off" />
+        <motion.div className="h-6 text-base tracking-normal text-neo-pink">
+          {errors.name?.message}
+        </motion.div>
+      </Label>
+      <Label className="flex flex-col gap-2">
+        <span>Opis</span>
+        <Textarea placeholder="Opis" {...register("description")} />
+        <motion.div className="h-6 text-base tracking-normal text-neo-pink">
+          {errors.description?.message}
+        </motion.div>
+      </Label>
     </div>
   );
 }

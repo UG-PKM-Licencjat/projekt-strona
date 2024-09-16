@@ -18,9 +18,11 @@ export default function TipTap({
   onChange,
   charLimit,
   value,
+  onBlur,
 }: {
   placeholder: string;
   onChange: (richText: string) => void;
+  onBlur: () => void;
   charLimit: number;
   value?: string;
 }) {
@@ -50,6 +52,7 @@ export default function TipTap({
           "prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none",
       },
     },
+    onBlur,
     onUpdate({ editor }) {
       onChange(editor.getHTML());
     },

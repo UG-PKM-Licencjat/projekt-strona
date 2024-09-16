@@ -15,7 +15,7 @@ const updateData = authedProcedure
   )
   .mutation(async ({ ctx, input }) => {
     try {
-      const updatedUser = await db
+      await db
         .update(users)
         .set({
           firstName: input.firstName,
@@ -30,3 +30,5 @@ const updateData = authedProcedure
       });
     }
   });
+
+export default updateData;

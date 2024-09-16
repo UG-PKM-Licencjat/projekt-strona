@@ -53,6 +53,9 @@ export default function TipTap({
       },
     },
     onBlur,
+    onFocus({ editor }) {
+      onChange(editor.getHTML());
+    },
     onUpdate({ editor }) {
       onChange(editor.getHTML());
     },

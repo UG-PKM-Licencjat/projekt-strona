@@ -14,7 +14,6 @@ import TableRow from "@tiptap/extension-table-row";
 import Youtube from "@tiptap/extension-youtube";
 import { cn } from "~/lib/utils";
 
-type editorVariant = "full" | "textOnly";
 type returnFormat = "html" | "json" | "text";
 
 export type TipTapProps = {
@@ -26,7 +25,6 @@ export type TipTapProps = {
   className?: string;
   classNameToolbar?: string;
   classNameEditor?: string;
-  variant?: editorVariant;
   toolbarActive: boolean;
 };
 
@@ -38,42 +36,29 @@ export default function TipTap({
   className,
   classNameToolbar,
   classNameEditor,
-  variant = "full",
   returnFormat = "html",
   toolbarActive = true,
 }: TipTapProps) {
-  const getVariant = (variant: editorVariant) => {
-    switch (variant) {
-      case "full":
-        return [
-          StarterKit.configure({}),
-          Placeholder.configure({ placeholder: placeholder }),
-          CharacterCount.configure({ limit: charLimit }),
-          TextStyle,
-          Color,
-          Table.configure({
-            resizable: true,
-          }),
-          TableRow,
-          TableHeader,
-          TableCell,
-          Youtube.configure({
-            controls: true,
-            nocookie: true,
-          }),
-        ];
-      case "textOnly":
-        return [
-          Placeholder.configure({ placeholder: placeholder }),
-          CharacterCount.configure({ limit: charLimit }),
-        ];
-    }
-  };
-
   const editor = useEditor({
     content: content ? content : "",
     immediatelyRender: false,
-    extensions: getVariant(variant),
+    extensions: [
+      StarterKit.configure({}),
+      Placeholder.configure({ placeholder: placeholder }),
+      CharacterCount.configure({ limit: charLimit }),
+      TextStyle,
+      Color,
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      Youtube.configure({
+        controls: true,
+        nocookie: true,
+      }),
+    ],
     editorProps: {
       attributes: {
         class:
@@ -143,9 +128,6 @@ export default function TipTap({
           <circle r="6" cx="10" cy="10" fill="white" />
         </svg>
         {characterCountStorage.characters()} / {charLimit} characters
-        {/* word count */}
-        {/* <br />
-        {characterCountStorage.words()} words */}
       </div>
     </div>
   );

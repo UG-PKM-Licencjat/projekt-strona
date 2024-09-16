@@ -30,12 +30,12 @@ export const appRouter = createTRPCRouter({
       }),
     )
     .mutation((opts) => {
-      logEvent(
-        opts.input.message,
-        opts.input.additionalInfo,
-        opts.input.logType,
-        opts.input.tags,
-      );
+      logEvent({
+        message: opts.input.message,
+        additionalInfo: opts.input.additionalInfo,
+        logType: opts.input.logType,
+        tags: opts.input.tags,
+      });
     }),
   getSampleMessages: procedure.input(z.string()).query(async ({ input }) => {
     const data: Array<Message> = (await (

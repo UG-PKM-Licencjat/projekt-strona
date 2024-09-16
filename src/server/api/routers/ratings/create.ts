@@ -25,11 +25,11 @@ export const createProcedure = procedure
       .limit(1);
 
     if (userIdResult.length === 0) {
-      logEvent(
-        `User ${userId} does not exist`,
-        JSON.stringify(userIdResult),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: `User ${userId} does not exist`,
+        additionalInfo: JSON.stringify(userIdResult),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "NOT_FOUND",
         message: "User with provided Id does not exist",
@@ -43,11 +43,11 @@ export const createProcedure = procedure
       .limit(1);
 
     if (offerIdResult.length === 0) {
-      logEvent(
-        `Offer ${offerId} does not exist`,
-        JSON.stringify(offerIdResult),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: `Offer ${offerId} does not exist`,
+        additionalInfo: JSON.stringify(offerIdResult),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "NOT_FOUND",
         message: "Offer with provided Id does not exist",
@@ -60,11 +60,11 @@ export const createProcedure = procedure
       .limit(1);
 
     if (ratingExists.length > 0) {
-      logEvent(
-        `User ${userId} has already rated offer ${offerId}`,
-        JSON.stringify(ratingExists),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: `User ${userId} has already rated offer ${offerId}`,
+        additionalInfo: JSON.stringify(ratingExists),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "CONFLICT",
         message: "User has already rated this offer",
@@ -74,18 +74,21 @@ export const createProcedure = procedure
     const result = await db.insert(ratings).values({ offerId, userId, rating });
 
     if (!result) {
-      logEvent(
-        "Failed to create rating",
-        JSON.stringify(result),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: "Failed to create rating",
+        additionalInfo: JSON.stringify(result),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to create rating",
       });
     }
 
-    logEvent(`User ${userId} rated offer ${offerId}`, JSON.stringify(result));
+    logEvent({
+      message: `User ${userId} rated offer ${offerId}`,
+      additionalInfo: JSON.stringify(result),
+    });
     return result;
   });
 

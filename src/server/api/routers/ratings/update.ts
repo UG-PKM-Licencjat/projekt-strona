@@ -17,7 +17,10 @@ export const updateProcedure = procedure
     const { input } = opts;
     const { id, newRating } = input;
 
-    logEvent("Updating rating", JSON.stringify(input));
+    logEvent({
+      message: "Updating rating",
+      additionalInfo: JSON.stringify(input),
+    });
 
     const ratingExists = await db
       .select()
@@ -26,11 +29,11 @@ export const updateProcedure = procedure
       .limit(1);
 
     if (ratingExists.length === 0) {
-      logEvent(
-        `Review with provided id does not exist`,
-        JSON.stringify(ratingExists),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: `Review with provided id does not exist`,
+        additionalInfo: JSON.stringify(ratingExists),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "NOT_FOUND",
         message: "User never rated this offer",
@@ -43,18 +46,21 @@ export const updateProcedure = procedure
       .where(eq(ratings.id, id));
 
     if (!result) {
-      logEvent(
-        "Failed to update rating",
-        JSON.stringify(result),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: "Failed to update rating",
+        additionalInfo: JSON.stringify(result),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to update rating",
       });
     }
 
-    logEvent(`User updated rating with id:${id}`, JSON.stringify(result));
+    logEvent({
+      message: `User updated rating with id:${id}`,
+      additionalInfo: JSON.stringify(result),
+    });
     return result;
   });
 

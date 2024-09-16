@@ -46,7 +46,6 @@ export default function CreateArtistProfilePage() {
   const handleStepChange = async (newStep: number, direction: number) => {
     if (newStep < 0) return;
     if (newStep >= steps.length) return;
-    await methods.trigger();
     setStep([newStep, direction]);
   };
 
@@ -138,7 +137,6 @@ export default function CreateArtistProfilePage() {
                   transition={{ duration: 0.2 }}
                   className={cn(
                     "overflow-hidden text-ellipsis text-neo-dark-gray",
-                    openDescription && window.width! < 1024 ? "" : "max-lg:h-6",
                   )}
                   onClick={toggleDescription}
                 >

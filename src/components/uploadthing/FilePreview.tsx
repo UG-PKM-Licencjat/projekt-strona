@@ -60,13 +60,13 @@ export function FilePreview({
         ) : null}
       </div>
       <div
-        className="absolute right-0 top-0 cursor-pointer rounded-full bg-neo-pink p-2 transition-all duration-200 hover:bg-neo-pink-hover group-hover:rotate-0 group-hover:scale-100 lg:rotate-180 lg:scale-0 lg:p-1"
+        className="absolute -right-1 -top-1 cursor-pointer rounded-full bg-neo-pink p-2 transition-all duration-200 hover:bg-neo-pink-hover group-hover:rotate-0 group-hover:scale-100 lg:rotate-180 lg:scale-0"
         onClick={(e) => {
           e.stopPropagation();
           void deleteFile(file.key);
         }}
       >
-        <XIcon className="size-5 text-neo-gray lg:size-4" />
+        <XIcon className="size-5 text-neo-gray" />
       </div>
     </>
   );

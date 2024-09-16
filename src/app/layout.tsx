@@ -37,7 +37,7 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           <TRPCReactProvider>
             <GlobalBehaviours>
-              <Navbar />
+              <Navbar session={session} />
               {children}
             </GlobalBehaviours>
           </TRPCReactProvider>

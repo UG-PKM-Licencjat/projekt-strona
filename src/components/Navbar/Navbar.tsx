@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import UserMenu from "./UserMenu";
 import { usePathname } from "next/navigation";
 import { NavbarLink } from "./NavbarLink";
@@ -21,13 +21,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
 import { useScrollDirection } from "~/lib/utils";
+import type { Session } from "next-auth";
 
 const filterList: Array<string> = ["/createaccount", "/profile/create"];
 
-export const Navbar = () => {
+export const Navbar = ({ session }: { session: Session | null }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
-  const { data: session } = useSession();
   const pathname = usePathname();
   const direction = useScrollDirection();
 

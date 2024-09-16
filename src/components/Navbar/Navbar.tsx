@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -20,6 +20,7 @@ import {
 } from "~/components/ui/drawer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
+import { useScrollDirection } from "~/lib/utils";
 
 const filterList: Array<string> = ["/createaccount", "/profile/create"];
 
@@ -172,28 +173,3 @@ export const Navbar = () => {
     </>
   );
 };
-
-function useScrollDirection() {
-  const [scrollDirection, setScrollDirection] = useState<"up" | "down" | null>(
-    null,
-  );
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    // function to run on scroll
-    const updateScrollDirection = () => {
-      const scrollY = window.scrollY;
-      const direction = scrollY > lastScrollY ? "down" : "up";
-      if (direction !== scrollDirection) {
-        setScrollDirection(direction);
-      }
-      lastScrollY = scrollY > 0 ? scrollY : 0;
-    };
-    window.addEventListener("scroll", updateScrollDirection); // add event listener
-    return () => {
-      window.removeEventListener("scroll", updateScrollDirection); // clean up
-    };
-  }, [scrollDirection]); // run when scroll direction changes
-
-  return scrollDirection;
-}

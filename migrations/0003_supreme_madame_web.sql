@@ -1,1 +1,0 @@
-ALTER TABLE "review" ADD COLUMN "replies" integer DEFAULT 0;

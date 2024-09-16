@@ -13,21 +13,21 @@ export const createProcedure = procedure
     z.object({
       offerId: z.string(),
       userId: z.string(),
-      comment: z.string().max(COMMENT_LENGTH),
-      replyTo: z.number().int().optional(),
+      rating: z.number().min(2).max(10),
+      comment: z.string().max(COMMENT_LENGTH).optional(),
     }),
   )
   .mutation(async (opts) => {
     const { input } = opts;
-    const { offerId, userId, comment, replyTo } = input;
+    const { offerId, userId, comment, rating } = input;
 
-    const userIdResult = await db
+    const [userIdResult] = await db
       .select()
       .from(users)
       .where(eq(users.id, userId))
       .limit(1);
 
-    if (userIdResult.length === 0) {
+    if (!userIdResult) {
       logEvent(
         `User ${userId} does not exist`,
         JSON.stringify(userIdResult),
@@ -39,16 +39,16 @@ export const createProcedure = procedure
       });
     }
 
-    const offerIdResult = await db
+    const [offerResult] = await db
       .select()
       .from(offers)
       .where(eq(offers.id, offerId))
       .limit(1);
 
-    if (offerIdResult.length === 0) {
+    if (!offerResult) {
       logEvent(
         `Offer ${offerId} does not exist`,
-        JSON.stringify(offerIdResult),
+        JSON.stringify(offerResult),
         LogType.ERROR,
       );
       return new TRPCError({
@@ -57,35 +57,32 @@ export const createProcedure = procedure
       });
     }
 
+    const ok = await db.transaction(async (tx) => {
+      const [returned] = await tx.insert(reviews).values(input).returning();
+      if (!returned) {
+        tx.rollback();
+        return false;
+      }
+
+      const newRatingsSum = offerResult.ratingsSum
+        ? offerResult.ratingsSum + rating
+        : rating;
+
+      const [returnedOffer] = await tx
+        .update(offers)
+        .set({ ratingsSum: newRatingsSum })
+        .where(eq(offers.id, offerResult.id))
+        .returning();
+
+      if (!returnedOffer) {
+        tx.rollback();
+        return false;
+      }
+
+      return true;
+    });
+
     if (replyTo) {
-      const values = { offerId, userId, comment, replyTo };
-      const { data, error } = await db.transaction(async (tx) => {
-        // add reply as a new review
-        const [returned] = await tx.insert(reviews).values(values).returning();
-
-        if (!returned) {
-          tx.rollback();
-          return { data: null, error: "Failed to create review (reply)" };
-        }
-
-        const [increment] = await tx
-          .update(reviews)
-          .set({ replies: sql`${reviews.replies} + 1` })
-          .where(eq(reviews.id, replyTo))
-          .returning();
-
-        if (!increment) {
-          tx.rollback();
-          return {
-            data: null,
-            error:
-              "Failed to increment replies count for review you're replying to",
-          };
-        }
-
-        return { data: returned, error: null };
-      });
-
       if (data) {
         logEvent(
           `User ${userId} replied to review ${replyTo} with review ${data?.id}`,

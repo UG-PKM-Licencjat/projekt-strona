@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS "offerTag" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "offer" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"ratings" integer,
+	"votes" integer,
 	"name" varchar(255) NOT NULL,
 	"price" double precision,
 	"about" text,
@@ -29,6 +31,14 @@ CREATE TABLE IF NOT EXISTS "offer" (
 	"files" jsonb,
 	"links" jsonb,
 	"location" varchar(255)
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "review" (
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "review_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"userId" varchar(255) NOT NULL,
+	"offerId" varchar(255) NOT NULL,
+	"rating" integer NOT NULL,
+	"comment" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
@@ -83,6 +93,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "offerTag" ADD CONSTRAINT "offerTag_tagId_tag_id_fk" FOREIGN KEY ("tagId") REFERENCES "public"."tag"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "review" ADD CONSTRAINT "review_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "review" ADD CONSTRAINT "review_offerId_offer_id_fk" FOREIGN KEY ("offerId") REFERENCES "public"."offer"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

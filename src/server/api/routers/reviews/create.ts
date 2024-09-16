@@ -8,6 +8,7 @@ import { eq, sql } from "drizzle-orm";
 
 const COMMENT_LENGTH = 500;
 
+// TODO: add authorization per user
 export const createProcedure = procedure
   .input(
     z.object({
@@ -27,21 +28,12 @@ export const createProcedure = procedure
       .where(eq(users.id, userId))
       .limit(1);
 
-<<<<<<< HEAD
     if (!userIdResult) {
-      logEvent(
-        `User ${userId} does not exist`,
-        JSON.stringify(userIdResult),
-        LogType.ERROR,
-      );
-=======
-    if (userIdResult.length === 0) {
       logEvent({
         message: `User ${userId} does not exist`,
         additionalInfo: JSON.stringify(userIdResult),
         logType: LogType.ERROR,
       });
->>>>>>> reviews
       return new TRPCError({
         code: "NOT_FOUND",
         message: "User with provided Id does not exist",
@@ -54,32 +46,23 @@ export const createProcedure = procedure
       .where(eq(offers.id, offerId))
       .limit(1);
 
-<<<<<<< HEAD
     if (!offerResult) {
-      logEvent(
-        `Offer ${offerId} does not exist`,
-        JSON.stringify(offerResult),
-        LogType.ERROR,
-      );
-=======
-    if (offerIdResult.length === 0) {
       logEvent({
         message: `Offer ${offerId} does not exist`,
-        additionalInfo: JSON.stringify(offerIdResult),
+        additionalInfo: JSON.stringify(offerResult),
         logType: LogType.ERROR,
       });
->>>>>>> reviews
       return new TRPCError({
         code: "NOT_FOUND",
         message: "Offer with provided Id does not exist",
       });
     }
 
-    const ok = await db.transaction(async (tx) => {
+    const { ok, data } = await db.transaction(async (tx) => {
       const [returned] = await tx.insert(reviews).values(input).returning();
       if (!returned) {
         tx.rollback();
-        return false;
+        return { ok: false, data: null };
       }
 
       const newRatingsSum = offerResult.ratingsSum
@@ -94,52 +77,15 @@ export const createProcedure = procedure
 
       if (!returnedOffer) {
         tx.rollback();
-        return false;
+        return { ok: false, data: null };
       }
 
-      return true;
+      return { ok: true, data: returned };
     });
 
-    if (replyTo) {
-      if (data) {
-        logEvent(
-          `User ${userId} replied to review ${replyTo} with review ${data?.id}`,
-          JSON.stringify(data),
-        );
-        return data;
-      } else {
-        logEvent(
-          "Failed to create review (reply)",
-          JSON.stringify(error),
-          LogType.ERROR,
-        );
-        return new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error,
-        });
-      }
-    } else {
-      const values = { offerId, userId, comment };
-      const result = await db.insert(reviews).values(values);
-      if (!result) {
-        logEvent(
-          "Failed to create review",
-          JSON.stringify(result),
-          LogType.ERROR,
-        );
-        return new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create review",
-        });
-      }
-      values = { offerId, userId, comment };
-    }
-    const result = await db.insert(reviews).values(values);
-
-    if (!result) {
+    if (!ok) {
       logEvent({
         message: "Failed to create review",
-        additionalInfo: JSON.stringify(result),
         logType: LogType.ERROR,
       });
       return new TRPCError({
@@ -149,16 +95,12 @@ export const createProcedure = procedure
     }
 
     logEvent({
-      message: `User ${userId} added review to offer ${offerId}`,
-      additionalInfo: JSON.stringify(result),
+      message: "Successfully created a new review",
+      additionalInfo: JSON.stringify(data),
+      logType: LogType.INFO,
     });
-    return result;
-      logEvent(
-        `User ${userId} added review to offer ${offerId}`,
-        JSON.stringify(result),
-      );
-      return result;
-    }
+
+    return data;
   });
 
 export default createProcedure;

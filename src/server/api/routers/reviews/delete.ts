@@ -6,6 +6,7 @@ import logEvent, { LogType } from "~/server/log";
 import { TRPCError } from "@trpc/server";
 import { eq, sql } from "drizzle-orm";
 
+// TODO: add authorization per user
 export const deleteProcedure = procedure
   .input(
     z.object({

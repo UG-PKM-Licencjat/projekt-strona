@@ -13,7 +13,7 @@ const tiptapParams: TipTapProps = {
   },
   charLimit: 200,
   content: "abc",
-  toolbarActive: false,
+  toolbarActive: true,
   className: "bg-gray-100",
   classNameEditor: "bg-pink-100",
   classNameToolbar: "bg-blue-100",

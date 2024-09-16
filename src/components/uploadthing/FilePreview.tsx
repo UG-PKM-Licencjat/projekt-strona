@@ -1,7 +1,6 @@
 import { type ClientUploadedFileData } from "uploadthing/types";
 import Image from "next/image";
-import { PlayCircleIcon } from "lucide-react";
-import { Icon } from "~/components/ui/Icon/Icon";
+import { PlayCircleIcon, XIcon } from "lucide-react";
 
 export function FilePreview({
   file,
@@ -61,13 +60,13 @@ export function FilePreview({
         ) : null}
       </div>
       <div
-        className="absolute right-0 top-0 rotate-180 scale-0 cursor-pointer rounded-full bg-neo-pink p-1 transition-all duration-200 hover:bg-neo-pink-hover group-hover:rotate-0 group-hover:scale-100"
+        className="absolute right-0 top-0 cursor-pointer rounded-full bg-neo-pink p-2 transition-all duration-200 hover:bg-neo-pink-hover group-hover:rotate-0 group-hover:scale-100 lg:rotate-180 lg:scale-0 lg:p-1"
         onClick={(e) => {
           e.stopPropagation();
           void deleteFile(file.key);
         }}
       >
-        <Icon name="plus" className="size-4 rotate-45 text-neo-gray" />
+        <XIcon className="size-5 text-neo-gray lg:size-4" />
       </div>
     </>
   );

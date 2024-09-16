@@ -9,31 +9,36 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { useToast } from "~/components/ui/use-toast";
 import { ChevronDown } from "lucide-react";
-
-const variants = {
-  enter: (direction: number) => {
-    return {
-      y: direction > 0 ? "100%" : "-100%",
-      opacity: 0,
-      // scaleY: 0,
-    };
-  },
-  center: {
-    y: 0,
-    opacity: 1,
-    // scaleY: 1,
-  },
-  exit: (direction: number) => {
-    return {
-      zIndex: 0,
-      y: direction < 0 ? "100%" : "-100%",
-      opacity: 0,
-      // scaleY: 0,
-    };
-  },
-};
+import { useWindowSize } from "@uidotdev/usehooks";
 
 export default function CreateArtistProfilePage() {
+  const window = useWindowSize();
+
+  const variants = {
+    enter: (direction: number) => {
+      return {
+        y: window.width! >= 1024 ? (direction > 0 ? 50 : -50) : 0,
+        x: window.width! < 1024 ? (direction > 0 ? 30 : -30) : 0,
+        opacity: 0,
+        // scaleY: 0,
+      };
+    },
+    center: {
+      y: 0,
+      x: 0,
+      opacity: 1,
+      // scaleY: 1,
+    },
+    exit: (direction: number) => {
+      return {
+        zIndex: 0,
+        y: window.width! >= 1024 ? (direction < 0 ? 50 : -50) : 0,
+        x: window.width! < 1024 ? (direction < 0 ? 30 : -30) : 0,
+        opacity: 0,
+        // scaleY: 0,
+      };
+    },
+  };
   const [[activeStep, direction], setStep] = useState([0, 0]);
   const [openDescription, setOpenDescription] = useState(false);
   const toggleDescription = () => setOpenDescription((open) => !open);

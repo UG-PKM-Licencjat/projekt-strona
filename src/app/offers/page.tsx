@@ -110,7 +110,7 @@ export default function SearchPage() {
           size="sm"
           variant="ghost"
           onClick={() => handlePageClick(totalPages)}
-          className="rounded-md px-3 py-1 text-neo-castleton transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
+          className="size-12 rounded-md transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
         >
           {totalPages}
         </Button>,

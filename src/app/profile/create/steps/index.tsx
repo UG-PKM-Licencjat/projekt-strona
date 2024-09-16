@@ -54,7 +54,7 @@ export const steps: {
     icon: <Images className="size-5 sm:size-6" />,
   },
   {
-    title: "Miasto i cena",
+    title: "Lokalizacja i cena",
     description:
       "Ostatnim krokiem jest ustalenie lokalizacji i ceny. Wybierz obszar swojego działania i orientacyjną cenę usługi, aby szukający mógł zorientować się czy stać go na twoje usługi 😉",
     content: <Step5 />,

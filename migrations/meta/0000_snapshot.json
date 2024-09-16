@@ -1,6 +1,6 @@
 {
-  "id": "52815593-bd23-468f-a75a-c3b3b89cc181",
-  "prevId": "4790af97-40f2-4148-9e87-69be85f93bc6",
+  "id": "c88e90ec-267d-41dd-9f0f-aa9f9f4c6825",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -192,6 +192,18 @@
           "primaryKey": true,
           "notNull": true
         },
+        "ratings": {
+          "name": "ratings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "votes": {
+          "name": "votes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "name": {
           "name": "name",
           "type": "varchar(255)",
@@ -240,78 +252,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.rating": {
-      "name": "rating",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "rating_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
-        "userId": {
-          "name": "userId",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "rating": {
-          "name": "rating",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "offerId": {
-          "name": "offerId",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "rating_userId_user_id_fk": {
-          "name": "rating_userId_user_id_fk",
-          "tableFrom": "rating",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "rating_offerId_offer_id_fk": {
-          "name": "rating_offerId_offer_id_fk",
-          "tableFrom": "rating",
-          "tableTo": "offer",
-          "columnsFrom": [
-            "offerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.review": {
       "name": "review",
       "schema": "",
@@ -345,15 +285,15 @@
           "primaryKey": false,
           "notNull": true
         },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "comment": {
           "name": "comment",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "replyTo": {
-          "name": "replyTo",
-          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
@@ -611,6 +551,20 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
+        },
+        "registrationStatus": {
+          "name": "registrationStatus",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "isArtist": {
+          "name": "isArtist",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

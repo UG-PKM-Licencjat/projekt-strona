@@ -115,3 +115,39 @@ export const generateClientDropzoneAccept = (fileTypes: string[]) => {
 function objectKeys<T extends Record<string, unknown>>(obj: T): (keyof T)[] {
   return Object.keys(obj) as (keyof T)[];
 }
+
+const errorTypes = [
+  "file-invalid-type",
+  "file-too-large",
+  "file-too-small",
+  "too-many-files",
+] as const;
+
+type ErrorCode = (typeof errorTypes)[number] | (string & NonNullable<unknown>);
+
+type translateFileRejectionProps = {
+  code?: ErrorCode;
+  fileTypes?: string[];
+  maxFileSize?: FileSize | "null";
+  minFileSize?: FileSize;
+};
+
+export function translateFileRejection({
+  code,
+  fileTypes,
+  maxFileSize,
+  minFileSize,
+}: translateFileRejectionProps) {
+  switch (code) {
+    case "file-too-large":
+      return `Plik jest większy niż ${maxFileSize ?? "Nieskończoność B"}.`;
+    case "file-too-small":
+      return `Plik jest mniejszy niż ${minFileSize ?? "0 B"}.`;
+    case "file-invalid-type":
+      return `Nieprawidłowy typ pliku, akceptowane typy to: ${fileTypes?.map(type => `${type}/*`).join(", ")}.`;
+    case "too-many-files":
+      return `Za dużo plików.`;
+    default:
+      return `Wystąpił nieznany błąd.`;
+  }
+}

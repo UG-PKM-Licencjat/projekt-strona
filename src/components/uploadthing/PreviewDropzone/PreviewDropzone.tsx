@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import { useDropzone, type FileRejection } from "react-dropzone";
 import { Icon } from "~/components/ui/Icon/Icon";
 import { cn } from "~/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +11,7 @@ import {
   getByteFileSize,
   allowedContentTextLabelGenerator,
   generateClientDropzoneAccept,
+  translateFileRejection,
 } from "../utils";
 import { type PreviewDropzoneProps } from "../PreviewDropzone";
 import { Button } from "~/components/ui/Button/Button";
@@ -32,6 +33,12 @@ export default function PreviewDropzone({
     : 0;
 
   const maxFileSize = routeConfig
+    ? Object.values(routeConfig)
+        .map((v) => v.maxFileSize)
+        .sort()[0]
+    : "null";
+
+  const maxFileSizeRaw = routeConfig
     ? Object.values(routeConfig)
         .map((v) => getByteFileSize(v.maxFileSize))
         .sort()[0]
@@ -67,10 +74,8 @@ export default function PreviewDropzone({
       accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
       disabled: disabled || isUploading,
       maxFiles: maxFileCount,
-      maxSize: maxFileSize,
+      maxSize: maxFileSizeRaw,
     });
-
-  type FileRejection = (typeof fileRejections)[number];
 
   const renderErrorMessages = (fileRejections: FileRejection[]) => {
     let tooManyFiles = false;
@@ -99,6 +104,13 @@ export default function PreviewDropzone({
       });
 
       if (filteredErrors.length > 0) {
+        const translated = fileRejection.errors.map((error) => {
+          return translateFileRejection({
+            code: error.code,
+            fileTypes,
+            maxFileSize,
+          });
+        });
         return (
           <div
             key={fileRejection.file.name}
@@ -106,7 +118,7 @@ export default function PreviewDropzone({
           >
             <XIcon className="size-6 shrink-0 text-neo-pink" />
             <p className="text-sm font-semibold text-red-600">
-              {`${fileRejection.file.name} - ${fileRejection.errors.map((error) => error.message).join(", ")}`}
+              {`${fileRejection.file.name} - ${translated.join(", ")}`}
             </p>
           </div>
         );

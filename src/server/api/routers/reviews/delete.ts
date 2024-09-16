@@ -1,6 +1,6 @@
 import { procedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
-import { reviews } from "~/server/db/schema";
+import { offers, reviews } from "~/server/db/schema";
 import { z } from "zod";
 import logEvent, { LogType } from "~/server/log";
 import { TRPCError } from "@trpc/server";
@@ -17,39 +17,43 @@ export const deleteProcedure = procedure
     const { input } = opts;
     const { id } = input;
 
-    const { data, error } = await db.transaction(async (tx) => {
-      const returned = await tx
+    const ok = await db.transaction(async (tx) => {
+      const [returned] = await tx
         .delete(reviews)
         .where(eq(reviews.id, id))
         .returning();
 
       if (!returned) {
-        return { data: null, error: "Failed to delete review" };
+        tx.rollback();
+        return false;
       }
 
-      const decrement = await tx
-        .update(reviews)
-        .set({ replyTo: sql`${reviews.replies} - 1` })
-        .where(eq(reviews.replyTo, id))
+      const [updated] = await tx
+        .update(offers)
+        .set({
+          votes: sql`${offers.votes} - 1`,
+          ratingsSum: sql`${offers.ratingsSum} - ${returned.rating}`,
+        })
         .returning();
 
-      if (!decrement) {
-        return { data: null, error: "Failed to decrement reply count" };
+      if (!updated) {
+        tx.rollback();
+        return false;
       }
 
-      return { data: returned, error: null };
+      return true;
     });
 
-    if (data) {
-      logEvent(`Review with id:${id} was deleted`, JSON.stringify(data));
-      return data;
-    } else {
-      logEvent("Failed to delete review", JSON.stringify(error), LogType.ERROR);
+    if (!ok) {
+      logEvent({ message: "Failed to delete review", logType: LogType.ERROR });
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: error,
+        message: "Failed to delete review",
       });
     }
+
+    logEvent({ message: "Failed to delete review", logType: LogType.ERROR });
+    return id;
   });
 
 export default deleteProcedure;

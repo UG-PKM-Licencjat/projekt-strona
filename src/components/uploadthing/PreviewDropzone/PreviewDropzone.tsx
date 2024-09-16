@@ -198,6 +198,7 @@ export default function PreviewDropzone({
                   exit={{ opacity: 0, scale: 0.5 }}
                   className="group relative flex p-2"
                   layout
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <FilePreview file={file} deleteFile={removeFile} />
                 </motion.div>

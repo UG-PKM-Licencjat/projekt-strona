@@ -24,7 +24,7 @@ export default function Step3() {
         routeConfig={routeConfig}
         startUpload={startUpload}
         isUploading={isUploading}
-        showUploadButton={true}
+        showUploadButton={false}
         className="w-full"
       />
     </div>

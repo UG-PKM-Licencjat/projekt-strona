@@ -68,13 +68,18 @@ export function Toolbar({ editor, className }: Props) {
   };
 
   return (
-    <div className={cn("flex gap-1 rounded-md bg-white p-1", className)}>
+    <nav
+      className={cn(
+        "flex flex-grow gap-1 overflow-x-auto rounded-md bg-white p-1",
+        className,
+      )}
+    >
       <TooltipProvider>
         {/* Color Picker */}
         <Tooltip>
           <TooltipTrigger asChild>
             <input
-              className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+              className="h-9 w-9 shrink-0 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
               type="color"
               onInput={(event: FormEvent<HTMLInputElement>) =>
                 editor
@@ -97,12 +102,9 @@ export function Toolbar({ editor, className }: Props) {
           <Tooltip>
             <TooltipTrigger
               asChild
-              className="h-9 w-9 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
+              className="h-9 w-9 shrink-0 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
             >
-              <PopoverTrigger
-                asChild
-                className="h-9 w-9 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
-              >
+              <PopoverTrigger asChild>
                 <Heading className="h-4 w-4" />
               </PopoverTrigger>
             </TooltipTrigger>
@@ -209,7 +211,7 @@ export function Toolbar({ editor, className }: Props) {
         </Tooltip>
 
         {/* Bullet List */}
-        <Tooltip data-targetid="bulletList">
+        <Tooltip>
           <TooltipTrigger asChild>
             <Toggle
               size="sm"
@@ -225,7 +227,7 @@ export function Toolbar({ editor, className }: Props) {
         </Tooltip>
 
         {/* Ordered List */}
-        <Tooltip data-targetid="orderedList">
+        <Tooltip>
           <TooltipTrigger asChild>
             <Toggle
               size="sm"
@@ -241,7 +243,7 @@ export function Toolbar({ editor, className }: Props) {
         </Tooltip>
 
         {/* Blockquote */}
-        <Tooltip data-targetid="blockquote">
+        <Tooltip>
           <TooltipTrigger asChild>
             <Toggle
               size="sm"
@@ -257,7 +259,7 @@ export function Toolbar({ editor, className }: Props) {
         </Tooltip>
 
         {/* Horizontal Rule */}
-        <Tooltip data-targetid="horizontalRule">
+        <Tooltip>
           <TooltipTrigger asChild>
             <Toggle
               size="sm"
@@ -273,17 +275,14 @@ export function Toolbar({ editor, className }: Props) {
         </Tooltip>
 
         {/* Table */}
-        <Popover data-targetid="table">
+        <Popover>
           <Tooltip>
             <TooltipTrigger>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
-                >
-                  <Table className="h-4 w-4" />
-                </Button>
+              <PopoverTrigger
+                asChild
+                className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+              >
+                <Table className="h-4 w-4" />
               </PopoverTrigger>
             </TooltipTrigger>
             <TooltipContent sideOffset={4}>Tabela</TooltipContent>
@@ -292,6 +291,7 @@ export function Toolbar({ editor, className }: Props) {
             sideOffset={4}
             align="center"
             className="w-26 ml-2 mt-2"
+            side="bottom"
           >
             <div className="grid grid-cols-2 gap-2">
               {/* Wstawienie tabeli */}
@@ -513,17 +513,14 @@ export function Toolbar({ editor, className }: Props) {
         </Popover>
 
         {/* Youtube */}
-        <Popover data-targetid="youtube">
+        <Popover>
           <Tooltip>
             <TooltipTrigger>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-white px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
-                >
-                  <Youtube className="h-4 w-4" />
-                </Button>
+              <PopoverTrigger
+                asChild
+                className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+              >
+                <Youtube className="h-4 w-4" />
               </PopoverTrigger>
             </TooltipTrigger>
             <TooltipContent sideOffset={4}>Dodaj film z Youtube</TooltipContent>
@@ -563,6 +560,6 @@ export function Toolbar({ editor, className }: Props) {
           </PopoverContent>
         </Popover>
       </TooltipProvider>
-    </div>
+    </nav>
   );
 }

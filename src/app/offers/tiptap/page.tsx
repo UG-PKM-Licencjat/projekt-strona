@@ -12,11 +12,6 @@ const tiptapParams: TipTapProps = {
     console.log(s);
   },
   charLimit: 200,
-  content: "abc",
-  toolbarActive: false,
-  className: "bg-gray-100",
-  classNameEditor: "bg-pink-100",
-  classNameToolbar: "bg-blue-100",
   returnFormat: "text",
 };
 

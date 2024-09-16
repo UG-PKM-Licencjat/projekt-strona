@@ -12,7 +12,7 @@ const deleteProcedure = adminProcedure
     }),
   )
   .mutation(async (opts) => {
-    logEvent("Deleting user", opts.input.id);
+    logEvent({ message: "Deleting user", additionalInfo: opts.input.id });
     await db.delete(sessions).where(eq(sessions.userId, opts.input.id));
     await db.delete(users).where(eq(users.id, opts.input.id));
     return;

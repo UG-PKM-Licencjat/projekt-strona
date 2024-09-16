@@ -20,10 +20,14 @@ const patchProcedure = adminProcedure
     }),
   )
   .mutation(async ({ input }) => {
-    logEvent("Deleting user", input.id);
+    logEvent({ message: "Deleting user", additionalInfo: input.id });
     const user = db.query.users.findFirst({ where: eq(users.id, input.id) });
     if (user === undefined) {
-      logEvent("User not found", input.id, LogType.ERROR);
+      logEvent({
+        message: "User not found",
+        additionalInfo: input.id,
+        logType: LogType.ERROR,
+      });
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "User not found",

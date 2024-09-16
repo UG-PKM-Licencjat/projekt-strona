@@ -27,12 +27,21 @@ export const createProcedure = procedure
       .where(eq(users.id, userId))
       .limit(1);
 
+<<<<<<< HEAD
     if (!userIdResult) {
       logEvent(
         `User ${userId} does not exist`,
         JSON.stringify(userIdResult),
         LogType.ERROR,
       );
+=======
+    if (userIdResult.length === 0) {
+      logEvent({
+        message: `User ${userId} does not exist`,
+        additionalInfo: JSON.stringify(userIdResult),
+        logType: LogType.ERROR,
+      });
+>>>>>>> reviews
       return new TRPCError({
         code: "NOT_FOUND",
         message: "User with provided Id does not exist",
@@ -45,12 +54,21 @@ export const createProcedure = procedure
       .where(eq(offers.id, offerId))
       .limit(1);
 
+<<<<<<< HEAD
     if (!offerResult) {
       logEvent(
         `Offer ${offerId} does not exist`,
         JSON.stringify(offerResult),
         LogType.ERROR,
       );
+=======
+    if (offerIdResult.length === 0) {
+      logEvent({
+        message: `Offer ${offerId} does not exist`,
+        additionalInfo: JSON.stringify(offerIdResult),
+        logType: LogType.ERROR,
+      });
+>>>>>>> reviews
       return new TRPCError({
         code: "NOT_FOUND",
         message: "Offer with provided Id does not exist",
@@ -114,7 +132,27 @@ export const createProcedure = procedure
           message: "Failed to create review",
         });
       }
+      values = { offerId, userId, comment };
+    }
+    const result = await db.insert(reviews).values(values);
 
+    if (!result) {
+      logEvent({
+        message: "Failed to create review",
+        additionalInfo: JSON.stringify(result),
+        logType: LogType.ERROR,
+      });
+      return new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to create review",
+      });
+    }
+
+    logEvent({
+      message: `User ${userId} added review to offer ${offerId}`,
+      additionalInfo: JSON.stringify(result),
+    });
+    return result;
       logEvent(
         `User ${userId} added review to offer ${offerId}`,
         JSON.stringify(result),

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import OfferCard, { type Offer } from "~/components/OfferCard/OfferCard";
 import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
+import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { trpc } from "~/trpc/react";
 
 export default function SearchPage() {
@@ -189,7 +190,11 @@ export default function SearchPage() {
               : "grid-cols-1"
           } gap-6`}
         >
-          {data?.map((offer) => <OfferCard key={offer.id} offer={offer} />)}
+          {data
+            ? data.map((offer) => <OfferCard key={offer.id} offer={offer} />)
+            : Array.from({ length: LIMIT }).map((_, ind) => (
+                <SkeletonCard key={ind} className="h-40" randomColor />
+              ))}
         </div>
 
         {/* Pagination Buttons */}

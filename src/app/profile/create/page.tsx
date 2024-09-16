@@ -4,7 +4,7 @@ import { steps, type Fields } from "./steps";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/Button/Button";
 import { motion, AnimatePresence } from "framer-motion";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, type FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { useToast } from "~/components/ui/use-toast";
@@ -13,12 +13,13 @@ import { useWindowSize } from "@uidotdev/usehooks";
 
 export default function CreateArtistProfilePage() {
   const window = useWindowSize();
+  const isMobile = window.width! < 1024;
 
   const variants = {
     enter: (direction: number) => {
       return {
-        y: window.width! >= 1024 ? (direction > 0 ? 50 : -50) : 0,
-        x: window.width! < 1024 ? (direction > 0 ? 30 : -30) : 0,
+        y: !isMobile ? (direction > 0 ? 50 : -50) : 0,
+        x: isMobile ? (direction > 0 ? 30 : -30) : 0,
         opacity: 0,
         // scaleY: 0,
       };
@@ -32,8 +33,8 @@ export default function CreateArtistProfilePage() {
     exit: (direction: number) => {
       return {
         zIndex: 0,
-        y: window.width! >= 1024 ? (direction < 0 ? 50 : -50) : 0,
-        x: window.width! < 1024 ? (direction < 0 ? 30 : -30) : 0,
+        y: !isMobile ? (direction < 0 ? 50 : -50) : 0,
+        x: isMobile ? (direction < 0 ? 30 : -30) : 0,
         opacity: 0,
         // scaleY: 0,
       };
@@ -66,6 +67,19 @@ export default function CreateArtistProfilePage() {
     });
   };
 
+  const onInvalid = (errors: FieldErrors<ArtistFormData>) => {
+    console.log("invalid", errors);
+    toast({
+      title: "Submitted form",
+      variant: "destructive",
+      description: (
+        <pre className="mt-2 w-[340px] whitespace-pre-wrap rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(errors, null, 2)}</code>
+        </pre>
+      ),
+    });
+  };
+
   const hasErrors = (fields?: Fields[]) => {
     if (!fields) return false;
     return fields.some((field) => methods.formState.errors[field]?.message);
@@ -82,7 +96,7 @@ export default function CreateArtistProfilePage() {
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={methods.handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(onSubmit, onInvalid)}
         className="container flex flex-col justify-between bg-neo-gray p-8 md:rounded-lg"
       >
         <div className="flex gap-8 max-lg:flex-col">
@@ -128,9 +142,9 @@ export default function CreateArtistProfilePage() {
               </h1>
               <div className="flex items-start gap-2">
                 <motion.p
-                  layout={window.width! < 1024}
+                  layout={isMobile}
                   animate={
-                    window.width! < 1024
+                    isMobile
                       ? { height: openDescription ? "auto" : 24 }
                       : undefined
                   }

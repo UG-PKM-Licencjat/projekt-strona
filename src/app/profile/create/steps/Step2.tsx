@@ -10,6 +10,7 @@ export default function Step2() {
   } = useController({
     name: "longDescription",
     control,
+    defaultValue: "",
   });
   return (
     <div>

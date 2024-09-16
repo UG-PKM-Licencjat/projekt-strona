@@ -46,6 +46,7 @@ declare module "next-auth" {
  *
  * @see https://next-auth.js.org/configuration/options
  */
+
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async ({ session, user }) => {
@@ -76,6 +77,11 @@ export const authOptions: NextAuthOptions = {
       };
     },
   },
+  pages: {
+   newUser: "/createaccount",
+  },
+
+
   adapter: DrizzleAdapter(db, {
     usersTable: users,
     accountsTable: accounts,

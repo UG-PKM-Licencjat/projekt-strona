@@ -1,7 +1,11 @@
 "use client";
 import React from "react";
 import { Icon } from "src/components/ui/Icon/Icon";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
+import { trpc } from "~/trpc/react";
+import { useEffect } from "react";
 
 export default function Home() {
   // // TO DO WHEN OFFERS FETCHING IS READY
@@ -20,6 +24,9 @@ export default function Home() {
   //     return () => clearInterval(intervalId);
   //   }
   // }, [isLoading]);
+
+  const session = useSession();
+
 
   return (
     <div className="min-h-screen bg-neo-castleton text-white">

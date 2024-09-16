@@ -68,13 +68,18 @@ export function Toolbar({ editor, className }: Props) {
   };
 
   return (
-    <div className={cn("flex gap-1 rounded-md bg-white p-1", className)}>
+    <nav
+      className={cn(
+        "flex flex-grow gap-1 overflow-x-auto rounded-md bg-white p-1",
+        className,
+      )}
+    >
       <TooltipProvider>
         {/* Color Picker */}
         <Tooltip>
           <TooltipTrigger asChild>
             <input
-              className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+              className="h-9 w-9 shrink-0 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
               type="color"
               onInput={(event: FormEvent<HTMLInputElement>) =>
                 editor
@@ -97,12 +102,9 @@ export function Toolbar({ editor, className }: Props) {
           <Tooltip>
             <TooltipTrigger
               asChild
-              className="h-9 w-9 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
+              className="h-9 w-9 shrink-0 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
             >
-              <PopoverTrigger
-                asChild
-                className="h-9 w-9 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
-              >
+              <PopoverTrigger asChild>
                 <Heading className="h-4 w-4" />
               </PopoverTrigger>
             </TooltipTrigger>
@@ -558,6 +560,6 @@ export function Toolbar({ editor, className }: Props) {
           </PopoverContent>
         </Popover>
       </TooltipProvider>
-    </div>
+    </nav>
   );
 }

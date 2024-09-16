@@ -25,7 +25,7 @@ export type TipTapProps = {
   className?: string;
   classNameToolbar?: string;
   classNameEditor?: string;
-  toolbarActive: boolean;
+  toolbarActive?: boolean;
 };
 
 export default function TipTap({

@@ -80,8 +80,6 @@ export default function CreateArtistProfilePage() {
     );
   };
 
-  console.log("hasErrors", hasErrors);
-
   return (
     <FormProvider {...methods}>
       <form
@@ -98,7 +96,7 @@ export default function CreateArtistProfilePage() {
               {steps.map((step, index) => (
                 <motion.div
                   whileTap={{ scale: [null, 0.95] }}
-                  transition={{ duration: 0.2 }}
+                  // transition={{ duration: 0.2 }}
                   className={cn(
                     "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-3 sm:p-4",
                     hasErrors(step.fields) && "bg-neo-pink/30",
@@ -131,7 +129,13 @@ export default function CreateArtistProfilePage() {
               </h1>
               <div className="flex items-start gap-2">
                 <motion.p
-                  layout
+                  layout={window.width! < 1024}
+                  animate={
+                    window.width! < 1024
+                      ? { height: openDescription ? "auto" : 24 }
+                      : undefined
+                  }
+                  transition={{ duration: 0.2 }}
                   className={cn(
                     "overflow-hidden text-ellipsis text-neo-dark-gray",
                     openDescription ? "h-full" : "max-lg:h-6",
@@ -161,7 +165,6 @@ export default function CreateArtistProfilePage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                // transition={{ duration: 0.1 }}
                 key={`step-${activeStep}`}
                 className="rounded-lg lg:px-10"
               >

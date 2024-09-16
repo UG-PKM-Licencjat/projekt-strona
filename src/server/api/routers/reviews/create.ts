@@ -71,7 +71,7 @@ export const createProcedure = procedure
 
       const [returnedOffer] = await tx
         .update(offers)
-        .set({ ratingsSum: newRatingsSum })
+        .set({ ratingsSum: newRatingsSum, votes: sql`${offers.votes} + 1` })
         .where(eq(offers.id, offerResult.id))
         .returning();
 

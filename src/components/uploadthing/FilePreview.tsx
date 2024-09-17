@@ -83,6 +83,7 @@ export function FilePreview({
           e.stopPropagation();
           void deleteFile(file.key);
         }}
+        data-no-dnd
       >
         <XIcon className="size-5 text-neo-gray" />
       </div>

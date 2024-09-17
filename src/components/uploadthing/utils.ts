@@ -144,7 +144,7 @@ export function translateFileRejection({
     case "file-too-small":
       return `Plik jest mniejszy niż ${minFileSize ?? "0 B"}.`;
     case "file-invalid-type":
-      return `Nieprawidłowy typ pliku, akceptowane typy to: ${fileTypes?.map(type => `${type}/*`).join(", ")}.`;
+      return `Nieprawidłowy typ pliku, akceptowane typy to: ${fileTypes?.map((type) => `${type}/*`).join(", ")}.`;
     case "too-many-files":
       return `Za dużo plików.`;
     default:

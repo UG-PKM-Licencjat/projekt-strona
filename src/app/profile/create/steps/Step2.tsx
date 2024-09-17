@@ -5,19 +5,33 @@ import type { ArtistFormData } from "~/lib/artistSchema";
 export default function Step2() {
   const { control } = useFormContext<ArtistFormData>();
   const {
-    field: { onChange, value, onBlur },
+    field: { onChange, onBlur },
     formState: { errors },
   } = useController({
     name: "longDescription",
     control,
     defaultValue: "",
   });
+
+  const {
+    field: { onChange: onChangeHTML, onBlur: onBlurHTML, value },
+  } = useController({
+    name: "longDescriptionHTML",
+    control,
+    defaultValue: "",
+  });
+
+  const handleBlur = () => {
+    onBlur();
+    onBlurHTML();
+  };
   return (
     <div>
       <TipTap
         placeholder="Opis"
         onChange={onChange}
-        onBlur={onBlur}
+        onChangeHTML={onChangeHTML}
+        onBlur={handleBlur}
         charLimit={1000}
         value={value}
       />

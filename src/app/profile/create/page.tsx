@@ -1,17 +1,23 @@
 "use client";
-import { useState } from "react";
-import { steps, type Fields } from "./steps";
-import { cn } from "~/lib/utils";
-import { Button } from "~/components/ui/Button/Button";
-import { motion, AnimatePresence } from "framer-motion";
-import { useForm, FormProvider, type FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
-import { useToast } from "~/components/ui/use-toast";
-import { ChevronDown } from "lucide-react";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
+import { Button } from "~/components/ui/Button/Button";
+import { useToast } from "~/components/ui/use-toast";
+import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
+import { cn } from "~/lib/utils";
+import { steps, type Fields } from "./steps";
+import {
+  type CustomFile,
+  PreviewDropzone,
+  useUploadThing,
+} from "~/components/uploadthing";
 
 export default function CreateArtistProfilePage() {
+  const { startUpload, isUploading } = useUploadThing("galleryUploader");
   const window = useWindowSize();
   const isMobile = window.width! < 1024;
 

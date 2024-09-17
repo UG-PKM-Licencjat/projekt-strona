@@ -16,12 +16,14 @@ import Youtube from "@tiptap/extension-youtube";
 export default function TipTap({
   placeholder,
   onChange,
+  onChangeHTML,
   charLimit,
   value,
   onBlur,
 }: {
   placeholder: string;
   onChange: (richText: string) => void;
+  onChangeHTML: (richText: string) => void;
   onBlur: () => void;
   charLimit: number;
   value?: string;
@@ -54,10 +56,12 @@ export default function TipTap({
     },
     onBlur,
     onFocus({ editor }) {
-      onChange(editor.getHTML());
+      onChangeHTML(editor.getHTML());
+      onChange(editor.getText());
     },
     onUpdate({ editor }) {
-      onChange(editor.getHTML());
+      onChangeHTML(editor.getHTML());
+      onChange(editor.getText());
     },
   });
 

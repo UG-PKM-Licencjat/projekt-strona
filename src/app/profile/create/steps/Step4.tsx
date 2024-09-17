@@ -3,7 +3,7 @@ import {
   PreviewDropzone,
   useUploadThing,
 } from "~/components/uploadthing";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -20,18 +20,20 @@ import {
 } from "@dnd-kit/sortable";
 
 import { PointerSensor, KeyboardSensor } from "~/components/Sortable/sensors";
+import { useFormContext } from "react-hook-form";
+import { ArtistFormData } from "~/lib/artistSchema";
 
 export default function Step3() {
-  // TODO extract this to parent component, figure out how to pass it down and make it work
-  const [files, setFiles] = useState<CustomFile[]>([]);
-  const { startUpload, routeConfig, isUploading } = useUploadThing(
-    "galleryUploader",
-    {
-      onUploadError: () => {
-        alert("error occurred while uploading");
-      },
-    },
-  );
+  // TODO this lags on every render, figure out why
+  const { setValue, getValues } = useFormContext<ArtistFormData>();
+  const [files, setFiles] = useState<CustomFile[]>(getValues("files") ?? []);
+
+  useEffect(() => {
+    setValue("files", files);
+  }, [files]);
+
+  const { startUpload, routeConfig, isUploading } =
+    useUploadThing("galleryUploader");
 
   // Useful for onDrag overlays and animations
   const [isDragging, setIsDragging] = useState(false);

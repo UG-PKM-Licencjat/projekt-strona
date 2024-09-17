@@ -29,6 +29,9 @@ export default async function RootLayout({
   const session = await getServerAuthSession();
   return (
     <html lang="pl">
+      <header>
+        <title>Bebop</title>
+      </header>
       <body
         className={`${cabin.variable} ${montserrat.variable} flex h-svh flex-col font-body`}
       >

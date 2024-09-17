@@ -1,9 +1,9 @@
-import { useFormContext } from "react-hook-form";
-import { type ArtistFormData } from "~/lib/artistSchema";
-import { Input } from "~/components/ui/Input/Input";
-import { Textarea } from "~/components/ui/textarea";
-import { Label } from "~/components/ui/label";
 import { motion } from "framer-motion";
+import { useFormContext } from "react-hook-form";
+import { Input } from "~/components/ui/Input/Input";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
+import { type ArtistFormData } from "~/lib/artistSchema";
 
 export default function Step1() {
   const {

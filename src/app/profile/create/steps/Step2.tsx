@@ -1,5 +1,5 @@
+import { useController, useFormContext } from "react-hook-form";
 import TipTap from "~/components/RichTextEditor/Tiptap";
-import { useFormContext, useController } from "react-hook-form";
 import type { ArtistFormData } from "~/lib/artistSchema";
 
 export default function Step2() {

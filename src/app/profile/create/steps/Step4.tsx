@@ -1,29 +1,29 @@
 import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragStartEvent,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
+import { useEffect, useState } from "react";
+import {
   type CustomFile,
   PreviewDropzone,
   useUploadThing,
 } from "~/components/uploadthing";
-import { useEffect, useState } from "react";
-import {
-  DndContext,
-  closestCenter,
-  useSensor,
-  useSensors,
-  DragStartEvent,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  rectSortingStrategy,
-} from "@dnd-kit/sortable";
 
-import { PointerSensor, KeyboardSensor } from "~/components/Sortable/sensors";
 import { useFormContext } from "react-hook-form";
+import { KeyboardSensor, PointerSensor } from "~/components/Sortable/sensors";
 import { ArtistFormData } from "~/lib/artistSchema";
 
-export default function Step3() {
+export default function Step4() {
   // TODO this lags on every render, figure out why
   const { setValue, getValues } = useFormContext<ArtistFormData>();
   const [files, setFiles] = useState<CustomFile[]>(getValues("files") ?? []);

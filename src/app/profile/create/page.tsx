@@ -7,14 +7,10 @@ import { useState } from "react";
 import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
 import { Button } from "~/components/ui/Button/Button";
 import { useToast } from "~/components/ui/use-toast";
+import { useUploadThing } from "~/components/uploadthing";
 import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { cn } from "~/lib/utils";
 import { steps, type Fields } from "./steps";
-import {
-  type CustomFile,
-  PreviewDropzone,
-  useUploadThing,
-} from "~/components/uploadthing";
 
 export default function CreateArtistProfilePage() {
   const { startUpload, isUploading } = useUploadThing("galleryUploader");

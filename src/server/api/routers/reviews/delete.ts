@@ -22,18 +22,21 @@ export const deleteProcedure = procedure
       .returning();
 
     if (!result) {
-      logEvent(
-        "Failed to delete review",
-        JSON.stringify(result),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: "Failed to delete review",
+        additionalInfo: JSON.stringify(result),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to create review",
       });
     }
 
-    logEvent(`Review with id:${id} was deleted`, JSON.stringify(result));
+    logEvent({
+      message: `Review with id:${id} was deleted`,
+      additionalInfo: JSON.stringify(result),
+    });
     return result;
   });
 

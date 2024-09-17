@@ -54,10 +54,10 @@ const createProcedure = procedure
     });
 
     if (data) {
-      logEvent(
-        `User ${userId} created offer ${data?.id}`,
-        JSON.stringify(data),
-      );
+      logEvent({
+        message: `User ${userId} created offer ${data?.id}`,
+        additionalInfo: JSON.stringify(data),
+      });
       return data;
     } else {
       throw new TRPCError({

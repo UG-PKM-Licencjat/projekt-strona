@@ -17,7 +17,6 @@ enum Icons {
   Tags = "tags",
   GirlPointing = "girl-pointing",
   MenuBar = "menu-bar",
-  Man = "man",
   User = "user",
   Logout = "logout",
   Shield = "shield",

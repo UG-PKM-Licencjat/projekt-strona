@@ -28,11 +28,11 @@ export const createProcedure = procedure
       .limit(1);
 
     if (userIdResult.length === 0) {
-      logEvent(
-        `User ${userId} does not exist`,
-        JSON.stringify(userIdResult),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: `User ${userId} does not exist`,
+        additionalInfo: JSON.stringify(userIdResult),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "NOT_FOUND",
         message: "User with provided Id does not exist",
@@ -46,11 +46,11 @@ export const createProcedure = procedure
       .limit(1);
 
     if (offerIdResult.length === 0) {
-      logEvent(
-        `Offer ${offerId} does not exist`,
-        JSON.stringify(offerIdResult),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: `Offer ${offerId} does not exist`,
+        additionalInfo: JSON.stringify(offerIdResult),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "NOT_FOUND",
         message: "Offer with provided Id does not exist",
@@ -66,21 +66,21 @@ export const createProcedure = procedure
     const result = await db.insert(reviews).values(values);
 
     if (!result) {
-      logEvent(
-        "Failed to create review",
-        JSON.stringify(result),
-        LogType.ERROR,
-      );
+      logEvent({
+        message: "Failed to create review",
+        additionalInfo: JSON.stringify(result),
+        logType: LogType.ERROR,
+      });
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to create review",
       });
     }
 
-    logEvent(
-      `User ${userId} added review to offer ${offerId}`,
-      JSON.stringify(result),
-    );
+    logEvent({
+      message: `User ${userId} added review to offer ${offerId}`,
+      additionalInfo: JSON.stringify(result),
+    });
     return result;
   });
 

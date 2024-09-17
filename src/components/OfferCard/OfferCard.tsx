@@ -14,7 +14,7 @@ export interface Offer {
 }
 
 const OfferCard = ({ offer }: { offer: Offer }) => (
-  <div className="overflow-hidden rounded-lg bg-white shadow-md">
+  <div className="h-min overflow-hidden rounded-lg bg-white shadow-md">
     <div className="p-4">
       <div className="mb-4 flex items-start justify-between">
         {/* TODO CHANGE TO NEXT IMAGE WHEN IT WILL USE DB DATA HERE */}
@@ -24,7 +24,7 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
           className="h-20 w-20 rounded-full border-2 border-[#5f8d4e] object-cover"
         />
         {offer.price && (
-          <div className="rounded-full bg-[#5f8d4e] px-3 py-1 text-sm font-semibold text-[#f0e4d7]">
+          <div className="rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-[#f0e4d7]">
             {offer.price} zł
           </div>
         )}
@@ -39,14 +39,14 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
           <span>{offer.location}</span>
         </div>
         <div className="flex items-center gap-1">
-          <Star size={14} className="text-[#97b085]" />
+          <Star size={14} className="text-neo-castleton" />
           <span>5.0</span>
           {/* TODO: rating */}
         </div>
       </div>
     </div>
     <Link href={`/offers/${offer.id}`}>
-      <div className="w-full bg-[#2d6a4f] py-2 text-center text-[#f0e4d7] transition duration-300 hover:bg-[#4a6741]">
+      <div className="w-full bg-neo-castleton py-2 text-center text-white transition duration-300 hover:bg-neo-castleton-hover">
         Sprawdź
       </div>
     </Link>

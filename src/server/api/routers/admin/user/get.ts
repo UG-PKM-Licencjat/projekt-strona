@@ -9,7 +9,7 @@ const getProcedure = procedure.query(async ({ ctx }) => {
   // console.log(ctx.session);
   try {
     const columns = getTableColumns(users);
-    logEvent("Fetching users");
+    logEvent({ message: "Fetching users" });
     const fetchedUsers = await db
       .select({
         ...columns,
@@ -24,7 +24,7 @@ const getProcedure = procedure.query(async ({ ctx }) => {
       .groupBy(users.id);
     return fetchedUsers;
   } catch (error) {
-    logEvent("Failed to fetch users", LogType.ERROR);
+    logEvent({ message: "Failed to fetch users", logType: LogType.ERROR });
     return [];
   }
 });

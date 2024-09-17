@@ -133,6 +133,8 @@ export const offers = pgTable("offer", {
   id: varchar("id", { length: 255 })
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  ratingsSum: integer("ratings"),
+  votes: integer("votes"),
   userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id),
@@ -149,31 +151,13 @@ export const offers = pgTable("offer", {
 export const offersRelations = relations(offers, ({ many, one }) => ({
   users: one(users, { fields: [offers.userId], references: [users.id] }),
   offerTags: many(offerTags),
-  ratings: many(ratings),
   reviews: many(reviews),
 }));
 
 export const usersRelations = relations(users, ({ many, one }) => ({
   offers: one(offers),
   accounts: many(accounts),
-  ratings: many(ratings),
   reviews: many(reviews),
-}));
-
-export const ratings = pgTable("rating", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => users.id),
-  rating: integer("rating").notNull(),
-  offerId: varchar("offerId", { length: 255 })
-    .notNull()
-    .references(() => offers.id),
-});
-
-export const ratingsRelations = relations(ratings, ({ one }) => ({
-  user: one(users, { fields: [ratings.userId], references: [users.id] }),
-  offer: one(offers, { fields: [ratings.offerId], references: [offers.id] }),
 }));
 
 export const reviews = pgTable("review", {
@@ -184,9 +168,11 @@ export const reviews = pgTable("review", {
   offerId: varchar("offerId", { length: 255 })
     .notNull()
     .references(() => offers.id),
+  rating: integer("rating").notNull(),
   comment: text("comment"),
-  replyTo: integer("replyTo"), // id of the review this is a reply to,
-  replies: integer("replies").default(0),
+  // TODO: Out of MVP scope - Add later
+  // replyTo: integer("replyTo"), // id of the review this is a reply to,
+  // replies: integer("replies").default(0),
 });
 
 export const reviewRelations = relations(reviews, ({ one }) => ({

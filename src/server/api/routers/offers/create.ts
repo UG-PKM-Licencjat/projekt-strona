@@ -60,6 +60,10 @@ const createProcedure = procedure
       });
       return data;
     } else {
+      logEvent(
+        `Failed to create offer for user ${userId}`,
+        JSON.stringify(error),
+      );
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: error,

@@ -45,8 +45,10 @@ import { Button } from "~/components/ui/Button/Button";
 import { Toggle } from "~/components/ui/toggle";
 import {
   cloneElement,
+  useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type FormEvent,
@@ -94,56 +96,77 @@ export function Toolbar({ editor, className }: Props) {
   const [visibleButtons, setVisibleButtons] = useState<ButtonName[]>([]);
   const [showMore, setShowMore] = useState(false);
 
-  useLayoutEffect(() => {
-    const button_name_list = [...BUTTON_NAMES_LIST];
-    const doAdapt = () => {
-      const mainToolbar = mainToolbarRef.current;
-      if (mainToolbar) {
-        setVisibleButtons(button_name_list);
+  const button_name_list = useMemo(() => [...BUTTON_NAMES_LIST], []);
 
-        let isOverflowing = false;
-        const buttonsArray = Array.from(mainToolbar.children);
+  const doAdapt = useCallback(() => {
+    const mainToolbar = mainToolbarRef.current;
+    if (mainToolbar) {
+      setVisibleButtons([...BUTTON_NAMES_LIST]);
 
-        buttonsArray.forEach((button) => {
-          if (!isFullyVisible(button as HTMLElement)) {
-            isOverflowing = true;
-            return false;
+      let isOverflowing = false;
+      const buttonsArray = Array.from(mainToolbar.children);
+
+      buttonsArray.forEach((button) => {
+        if (!isFullyVisible(button as HTMLElement)) {
+          isOverflowing = true;
+          return false;
+        }
+      });
+
+      if (isOverflowing) {
+        const tempVisibleButtons: ButtonName[] = [];
+
+        buttonsArray.forEach((button, index) => {
+          const btn = button as HTMLElement;
+          if (isFullyVisible(btn)) {
+            tempVisibleButtons.push(BUTTON_NAMES_LIST[index]!);
           }
         });
 
-        if (isOverflowing) {
-          const tempVisibleButtons: ButtonName[] = [];
-
-          buttonsArray.forEach((button, index) => {
-            const btn = button as HTMLElement;
-            if (isFullyVisible(btn)) {
-              tempVisibleButtons.push(button_name_list[index]!);
-            }
-          });
-
-          setVisibleButtons(tempVisibleButtons);
-          setShowMore(true);
-        } else {
-          setShowMore(false);
-        }
+        setVisibleButtons(tempVisibleButtons);
+        setShowMore(true);
+      } else {
+        setShowMore(false);
       }
+    }
+  }, [mainToolbarRef]);
+
+  const isFullyVisible = (element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+    const mainToolbarRect = mainToolbarRef.current?.getBoundingClientRect();
+    return rect.right <= (mainToolbarRect!.right - 40 || 0);
+  };
+
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      doAdapt();
     };
 
-    const isFullyVisible = (element: HTMLElement) => {
-      const rect = element.getBoundingClientRect();
-      const mainToolbarRect = mainToolbarRef.current?.getBoundingClientRect();
-      return rect.right <= (mainToolbarRect!.right - 40 || 0);
+    window.addEventListener("resize", handleResize);
+
+    // Delay the first call to doAdapt to ensure elements are mounted
+    const timer = setTimeout(() => {
+      doAdapt();
+    }, 100);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
     };
+  }, [doAdapt]);
+
+  useLayoutEffect(() => {
+    if (mainToolbarRef.current) {
+      doAdapt();
+    }
 
     window.addEventListener("resize", doAdapt);
-    doAdapt();
 
     return () => {
       window.removeEventListener("resize", doAdapt);
     };
-  }, [mainToolbarRef]);
+  }, [doAdapt]);
 
-  // if in visibleButtons
   const isButtonVisible = (buttonName: ButtonName) => {
     return visibleButtons.includes(buttonName);
   };

@@ -19,7 +19,7 @@ export function FilePreview({
     <>
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger type="button">
             <div
               className="relative flex aspect-square h-36 place-items-center overflow-hidden rounded-lg border-2 border-neo-gray-hover"
               onClick={(e) => e.stopPropagation()}

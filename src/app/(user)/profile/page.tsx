@@ -94,8 +94,8 @@ export default function GreenProfileEditWithShadcnForms() {
   }
 
   return (
-    <div className="bg-neo box-border flex h-svh w-full flex-1 justify-center overflow-y-auto bg-neo-castleton">
-      <div className="flex h-max items-center justify-center rounded-xl px-6 py-10 md:w-4/6 md:bg-neo-gray">
+    <div className="box-border flex w-full flex-1 items-center justify-center bg-neo-castleton">
+      <div className="mb-8 flex h-max items-center justify-center rounded-xl px-6 py-10 md:mb-0 md:w-4/6 md:bg-neo-gray">
         <div>
           <h1 className="pb-6 text-2xl font-bold leading-none text-neo-gray-hover md:text-neo-castleton">
             Edit Profile

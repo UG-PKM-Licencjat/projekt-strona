@@ -13,8 +13,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
-// NextAuth basics
-
 export const accounts = pgTable(
   "account",
   {
@@ -94,7 +92,7 @@ export const users = pgTable("user", {
     mode: "date",
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
-  image: varchar("image", { length: 255 }), // TODO figure out image storage
+  image: varchar("image", { length: 255 }),
   isPremium: boolean("isPremium").default(false).notNull(),
   isAdmin: boolean("isAdmin").default(false).notNull(),
   isActive: boolean("isActive").default(true).notNull(),
@@ -135,6 +133,9 @@ export const offers = pgTable("offer", {
   id: varchar("id", { length: 255 })
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => users.id),
   // TODO delete this?
   name: varchar("name", { length: 255 }).notNull(),
   price: doublePrecision("price"),
@@ -145,36 +146,16 @@ export const offers = pgTable("offer", {
   location: varchar("location", { length: 255 }),
 });
 
-export const offerRelations = relations(offers, ({ many }) => ({
-  userOffers: many(userOffers),
+export const offersRelations = relations(offers, ({ many, one }) => ({
+  users: one(users, { fields: [offers.userId], references: [users.id] }),
   offerTags: many(offerTags),
   ratings: many(ratings),
   reviews: many(reviews),
 }));
 
-export const userOffers = pgTable(
-  "userOffer",
-  {
-    userId: varchar("userId", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    offerId: varchar("offerId", { length: 255 })
-      .notNull()
-      .references(() => offers.id),
-  },
-  (userOffer) => ({
-    compoundKey: primaryKey({ columns: [userOffer.userId, userOffer.offerId] }),
-  }),
-);
-
-export const userOffersRelations = relations(userOffers, ({ one }) => ({
-  user: one(users, { fields: [userOffers.userId], references: [users.id] }),
-  offer: one(offers, { fields: [userOffers.offerId], references: [offers.id] }),
-}));
-
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
+  offers: one(offers),
   accounts: many(accounts),
-  userOffers: many(userOffers),
   ratings: many(ratings),
   reviews: many(reviews),
 }));

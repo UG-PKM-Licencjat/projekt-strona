@@ -5,6 +5,8 @@ import { cn } from "~/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FilePreview } from "~/components/uploadthing/FilePreview";
 import { CloudUploadIcon, XIcon } from "lucide-react";
+import { SortableItem } from "~/components/Sortable/SortableItem";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   generatePermittedFileTypes,
@@ -49,7 +51,7 @@ export default function PreviewDropzone({
       const modifiedFiles = acceptedFiles.map((file) => {
         return Object.assign(file, {
           url: URL.createObjectURL(file),
-          key: crypto.randomUUID(),
+          key: uuidv4(),
         });
       });
       setFiles((files) => {
@@ -209,10 +211,11 @@ export default function PreviewDropzone({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
                   className="group relative flex p-2"
-                  layout
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <FilePreview file={file} deleteFile={removeFile} />
+                  <SortableItem key={file.key} sortId={file.key}>
+                    <FilePreview file={file} deleteFile={removeFile} />
+                  </SortableItem>
                 </motion.div>
               ))}
             </AnimatePresence>

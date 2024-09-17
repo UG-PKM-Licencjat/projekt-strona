@@ -6,15 +6,11 @@ import {
 import { useState } from "react";
 import {
   DndContext,
-  MeasuringStrategy,
   closestCenter,
   useSensor,
   useSensors,
-  type MeasuringConfiguration,
-  DragOverlay,
   DragStartEvent,
   DragEndEvent,
-  UniqueIdentifier,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -23,7 +19,6 @@ import {
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { SortableItem } from "~/components/Sortable/SortableItem";
 import { PointerSensor, KeyboardSensor } from "~/components/Sortable/sensors";
 
 export default function Step3() {

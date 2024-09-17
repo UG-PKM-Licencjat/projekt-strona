@@ -27,9 +27,8 @@ export default function Home() {
 
   const session = useSession();
 
-
   return (
-    <div className="min-h-screen bg-neo-castleton text-white">
+    <div className="flex h-screen flex-col bg-neo-castleton text-white">
       <header className="container flex h-[500px] flex-col pt-4">
         <div className="relative mx-10 flex flex-1 flex-col justify-center gap-10">
           <h1 className="ml-5 mt-4 text-5xl max-lg:text-4xl">
@@ -47,9 +46,9 @@ export default function Home() {
           />
         </div>
       </header>
-
+      <footer className="mt-16 flex-grow bg-black"></footer>
       {/* Categories Section */}
-      <section className="bg-white px-10 py-8 text-black">
+      {/* <section className="bg-white px-10 py-8 text-black">
         <div className="mx-auto max-w-4xl">
           <h4 className="mb-4 text-2xl font-bold">Kategorie</h4>
           <div className="grid grid-cols-2 gap-4 text-lg sm:grid-cols-3">
@@ -94,16 +93,16 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Promoted Offers Section */}
-      <section className="bg-gray-100 px-10 py-8">
+      {/* <section className="bg-gray-100 px-10 py-8">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {[...Array<number>(9)].map((el, idx) => {
             return <SkeletonCard key={idx} className="h-40" randomColor />;
           })}
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }

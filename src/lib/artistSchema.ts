@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { CustomFile } from "~/components/uploadthing";
 
 const fileSchema = z
   .instanceof(File)

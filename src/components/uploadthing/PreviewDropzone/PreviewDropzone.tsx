@@ -1,22 +1,21 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { CloudUploadIcon, XIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useDropzone, type FileRejection } from "react-dropzone";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { cn } from "~/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
-import { FilePreview } from "~/components/uploadthing/FilePreview";
-import { CloudUploadIcon, XIcon } from "lucide-react";
-import { SortableItem } from "~/components/Sortable/SortableItem";
 import { v4 as uuidv4 } from "uuid";
-
+import { SortableItem } from "~/components/Sortable/SortableItem";
+import { Button } from "~/components/ui/Button/Button";
+import { Icon } from "~/components/ui/Icon/Icon";
+import { FilePreview } from "~/components/uploadthing/FilePreview";
+import { cn } from "~/lib/utils";
+import { type PreviewDropzoneProps } from "../PreviewDropzone";
 import {
-  generatePermittedFileTypes,
-  getByteFileSize,
   allowedContentTextLabelGenerator,
   generateClientDropzoneAccept,
+  generatePermittedFileTypes,
+  getByteFileSize,
   translateFileRejection,
 } from "../utils";
-import { type PreviewDropzoneProps } from "../PreviewDropzone";
-import { Button } from "~/components/ui/Button/Button";
 
 export default function PreviewDropzone({
   files,

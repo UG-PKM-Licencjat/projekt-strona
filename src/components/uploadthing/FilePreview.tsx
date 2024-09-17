@@ -1,6 +1,6 @@
-import { type ClientUploadedFileData } from "uploadthing/types";
-import Image from "next/image";
 import { FileImageIcon, FileVideoIcon, XIcon } from "lucide-react";
+import Image from "next/image";
+import { type ClientUploadedFileData } from "uploadthing/types";
 import {
   Tooltip,
   TooltipContent,

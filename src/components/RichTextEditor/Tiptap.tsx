@@ -1,6 +1,4 @@
-"use client";
-
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, type JSONContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount, {
@@ -14,18 +12,36 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import Youtube from "@tiptap/extension-youtube";
-import Gapcursor from "@tiptap/extension-gapcursor";
+import { cn } from "~/lib/utils";
+
+type returnFormat = "html" | "json" | "text";
+
+export type TipTapProps = {
+  placeholder: string;
+  returnFormat: returnFormat;
+  onChange?: (richText: string | JSONContent) => void;
+  content?: string;
+  charLimit: number;
+  className?: string;
+  classNameToolbar?: string;
+  classNameEditor?: string;
+  toolbarActive?: boolean;
+};
 
 export default function TipTap({
   placeholder,
   onChange,
+  content,
   charLimit,
-}: {
-  placeholder: string;
-  onChange: (richText: string) => void;
-  charLimit: number;
-}) {
+  className,
+  classNameToolbar,
+  classNameEditor,
+  returnFormat = "html",
+  toolbarActive = true,
+}: TipTapProps) {
   const editor = useEditor({
+    content: content ? content : "",
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({}),
       Placeholder.configure({ placeholder: placeholder }),
@@ -35,7 +51,6 @@ export default function TipTap({
       Table.configure({
         resizable: true,
       }),
-      Gapcursor,
       TableRow,
       TableHeader,
       TableCell,
@@ -51,7 +66,20 @@ export default function TipTap({
       },
     },
     onUpdate({ editor }) {
-      onChange(editor.getHTML());
+      if (!onChange) {
+        return;
+      }
+      switch (returnFormat) {
+        case "html":
+          onChange(editor.getHTML());
+          break;
+        case "json":
+          onChange(editor.getJSON());
+          break;
+        case "text":
+          onChange(editor.getText());
+          break;
+      }
     },
   });
 
@@ -67,14 +95,16 @@ export default function TipTap({
     : 0;
 
   return (
-    <div>
-      {/* {editor && (
-        <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
-          <Toolbar editor={editor} />
-        </BubbleMenu>
-      )} */}
-      <Toolbar editor={editor} />
-      <EditorContent editor={editor} />
+    <div
+      className={cn(
+        "rounded-lg bg-neo-gray px-2 py-2 text-lg ring-offset-background drop-shadow-md file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+    >
+      {toolbarActive && (
+        <Toolbar editor={editor} className={classNameToolbar} />
+      )}
+      <EditorContent editor={editor} className={classNameEditor} />
       <div
         className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}
       >
@@ -82,7 +112,7 @@ export default function TipTap({
           height="20"
           width="20"
           viewBox="0 0 20 20"
-          className={`${characterCountStorage.characters() === charLimit ? "text-red-500" : "text-purple-500"}`}
+          className={`${characterCountStorage.characters() === charLimit ? "text-neo-pink-hover" : characterCountStorage.characters() > charLimit / 2 ? "text-neo-sage-hover" : "text-neo-mantis"}`}
         >
           <circle r="10" cx="10" cy="10" fill="#e9ecef" />
           <circle
@@ -98,9 +128,6 @@ export default function TipTap({
           <circle r="6" cx="10" cy="10" fill="white" />
         </svg>
         {characterCountStorage.characters()} / {charLimit} characters
-        {/* word count */}
-        {/* <br />
-        {characterCountStorage.words()} words */}
       </div>
     </div>
   );

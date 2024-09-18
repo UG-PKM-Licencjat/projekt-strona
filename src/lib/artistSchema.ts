@@ -11,7 +11,7 @@ export const artistSchema = z.object({
   longDescriptionHTML: z.string().optional(),
   links: z.array(z.string()).optional(),
   location: z.string().optional(),
-  files: z.array(fileSchema).min(1),
+  files: z.array(fileSchema).optional(),
   price: z
     .string()
     .regex(/^\d{1,9}(\,\d{1,2})?$/, {

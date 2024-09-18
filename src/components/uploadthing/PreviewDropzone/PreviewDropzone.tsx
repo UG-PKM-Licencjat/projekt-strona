@@ -169,7 +169,7 @@ export default function PreviewDropzone({
                 {allowedContentTextLabelGenerator(routeConfig)}
               </p>
             </div>
-            {files.length > 0 && showUploadButton && (
+            {files.length > 0 && showUploadButton && startUpload && (
               <div className="mt-4 flex items-center justify-center">
                 <Button
                   variant="secondary"

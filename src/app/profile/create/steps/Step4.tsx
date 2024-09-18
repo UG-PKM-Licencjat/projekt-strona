@@ -19,6 +19,8 @@ import { useFormContext } from "react-hook-form";
 import { KeyboardSensor, PointerSensor } from "~/components/Sortable/sensors";
 import { ArtistFormData } from "~/lib/artistSchema";
 import { useFileStore } from "~/stores/fileStore";
+import { ErrorMessage } from "@hookform/error-message";
+import CustomError from "./CustomError";
 
 export default function Step4() {
   // TODO this lags on every render, figure out why
@@ -68,6 +70,7 @@ export default function Step4() {
             showUploadButton={true}
             className="w-full"
           />
+          <CustomError name="files" />
         </div>
       </SortableContext>
     </DndContext>

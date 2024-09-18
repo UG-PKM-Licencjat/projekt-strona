@@ -13,13 +13,12 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
-import { PreviewDropzone, getRouteConfig } from "~/components/uploadthing";
+import { getRouteConfig, PreviewDropzone } from "~/components/uploadthing";
 
 import { useFormContext } from "react-hook-form";
 import { KeyboardSensor, PointerSensor } from "~/components/Sortable/sensors";
 import { ArtistFormData } from "~/lib/artistSchema";
 import { useFileStore } from "~/stores/fileStore";
-import { ErrorMessage } from "@hookform/error-message";
 import CustomError from "./CustomError";
 
 export default function Step4() {

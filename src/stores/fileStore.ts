@@ -1,6 +1,6 @@
+import { SetStateAction } from "react";
 import { create } from "zustand";
 import { CustomFile } from "~/components/uploadthing";
-import { SetStateAction } from "react";
 
 interface FileStore<T> {
   touched: boolean;

@@ -5,14 +5,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
+import { ClientUploadedFileData } from "uploadthing/types";
 import { Button } from "~/components/ui/Button/Button";
 import { useToast } from "~/components/ui/use-toast";
 import { uploadFiles } from "~/components/uploadthing";
 import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { cn } from "~/lib/utils";
-import { steps, type Fields } from "./steps";
 import { useFileStore } from "~/stores/fileStore";
-import { ClientUploadedFileData } from "uploadthing/types";
+import { steps, type Fields } from "./steps";
 
 export default function CreateArtistProfilePage() {
   const window = useWindowSize();

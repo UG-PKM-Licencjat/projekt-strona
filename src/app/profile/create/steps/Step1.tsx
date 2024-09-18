@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useFormContext } from "react-hook-form";
 import { Input } from "~/components/ui/Input/Input";
 import { Label } from "~/components/ui/label";

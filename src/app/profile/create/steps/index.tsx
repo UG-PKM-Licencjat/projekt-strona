@@ -52,6 +52,7 @@ export const steps: {
       "Każdy artysta powinien mieć swoje portfolio. Dodaj tutaj zdjęcia i filmy, którymi chcesz się pochwalić w swojej ofercie.",
     content: <Step4 />,
     icon: <Images className="size-5 sm:size-6" />,
+    fields: ["files"],
   },
   {
     title: "Lokalizacja i cena",

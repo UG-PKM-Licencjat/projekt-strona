@@ -22,11 +22,16 @@ import { useFileStore } from "~/stores/fileStore";
 
 export default function Step4() {
   // TODO this lags on every render, figure out why
-  const { setValue } = useFormContext<ArtistFormData>();
-  const { files, setFiles } = useFileStore();
+  const {
+    setValue,
+    trigger,
+    formState: { errors },
+  } = useFormContext<ArtistFormData>();
+  const { files, touched, setFiles } = useFileStore();
 
   useEffect(() => {
     setValue("files", files);
+    if (touched) trigger("files");
   }, [files]);
 
   const { startUpload, routeConfig, isUploading } =

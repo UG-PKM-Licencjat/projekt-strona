@@ -27,7 +27,6 @@ export default function Step2(props: {
   handleChange: (data: Data) => void;
 }) {
   const { data, handleChange } = props;
-  const router = useRouter();
   const FormSchema = z.object({
     type: z.string({
       message: "To pole jest wymagane",

@@ -4,6 +4,7 @@ import { authedProcedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import logEvent from "~/server/log";
 
 const putRegistrationData = authedProcedure
   .input(
@@ -19,8 +20,7 @@ const putRegistrationData = authedProcedure
       if (!ctx.session?.user.id) {
         return [];
       }
-      console.log("your input", input);
-      const fetchedUsers = await db
+      const putRegistrationData = await db
         .update(users)
         .set({
           firstName: input.firstName,
@@ -29,7 +29,11 @@ const putRegistrationData = authedProcedure
           registrationStatus: input.registrationStatus,
         })
         .where(eq(users.id, ctx.session?.user.id));
-      return fetchedUsers;
+      logEvent({
+        message: `User ${ctx.session?.user.id} created profile`,
+        additionalInfo: JSON.stringify(input),
+      });
+      return putRegistrationData;
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

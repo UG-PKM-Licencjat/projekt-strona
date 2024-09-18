@@ -23,19 +23,49 @@ import Image from "next/image";
 import profile from "public/svg/profile.svg";
 
 const formSchema = z.object({
-  firstName: z.string().min(2, {
-    message: "First name must be at least 2 characters.",
+  //   ^: Asserts the start of the string.
+  // [\p{L}\p{M}]: Matches one or more Unicode letter (\p{L}) or mark (\p{M}) characters. This allows for letters with accents or diacritics.
+  // +: Ensures that there is at least one character that is a letter or mark.
+  // (?: ... ): Defines a non-capturing group for the following pattern.
+  // [\p{Pd}']: Matches a Unicode dash (\p{Pd}) or apostrophe ('). This allows for hyphens and apostrophes in the name.
+  // [\p{L}\p{M}]: Matches one or more Unicode letter or mark characters, following the hyphen or apostrophe.
+  // +: Ensures that there is at least one letter or mark after the hyphen or apostrophe.
+  // {0,2}: Allows the non-capturing group to repeat between 0 and 2 times, meaning the name can have up to two additional parts separated by hyphens or apostrophes.
+  // $: Asserts the end of the string.
+  // /u: Enables Unicode mode, which allows for proper matching of Unicode characters.
+  firstName: z
+    .string()
+    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}'][\p{L}\p{M}]+){0,2}$/u, {
+      message: "Pseudonim zawiera nieprawidłowe znaki.",
+    })
+    .min(2, {
+      message: "Imię musi mieć co najmniej 2 znaki.",
+    }),
+  //     ^: Asserts the start of the string.
+  // [\p{L}\p{M}]: Matches one or more Unicode letter (\p{L}) or mark (\p{M}) characters.
+  // +: Ensures that there is at least one letter or mark.
+  // (?: ... ): Defines a non-capturing group for the following pattern.
+  // [\p{Pd}' ]: Matches a Unicode dash (\p{Pd}), apostrophe ('), or space ( ). This allows for hyphens, apostrophes, and spaces within the name.
+  // [\p{L}\p{M}]: Matches one or more Unicode letter or mark characters, following the hyphen, apostrophe, or space.
+  // +: Ensures that there is at least one letter or mark after the hyphen, apostrophe, or space.
+  // {0,2}: Allows the non-capturing group to repeat between 0 and 2 times, allowing up to two additional segments separated by hyphens, apostrophes, or spaces.
+  // $: Asserts the end of the string.
+  // /u: Enables Unicode mode.
+  lastName: z
+    .string()
+    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}' ][\p{L}\p{M}]+){0,2}$/u, {
+      message: "Nazwisko zawiera nieprawidłowe znaki.",
+    })
+    .min(2, {
+      message: "Nazwisko musi mieć co najmniej 2 znaki.",
+    }),
+  isArtist: z.boolean({
+    message: "To pole jest wymagane",
   }),
-  lastName: z.string().min(2, {
-    message: "Last name must be at least 2 characters.",
-  }),
-  isArtist: z.boolean().default(false),
 });
 
 export default function GreenProfileEditWithShadcnForms() {
-  //   const [photoUrl, setPhotoUrl] = useState(
-  //     "/placeholder.svg?height=128&width=128",
-  //   );
+  const [photoUrl, setPhotoUrl] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,16 +76,16 @@ export default function GreenProfileEditWithShadcnForms() {
     },
   });
 
-  //   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //     const file = event.target.files?.[0];
-  //     if (file) {
-  //       const reader = new FileReader();
-  //       reader.onloadend = () => {
-  //         setPhotoUrl(reader.result as string);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   };
+  // const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPhotoUrl(reader.result as string);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const { data: session } = useSession();
 

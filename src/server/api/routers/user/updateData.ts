@@ -4,6 +4,7 @@ import { users } from "~/server/db/schema";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import logEvent from "~/server/log";
 
 const updateData = authedProcedure
   .input(

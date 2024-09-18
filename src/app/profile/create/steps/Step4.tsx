@@ -24,7 +24,6 @@ export default function Step4() {
   // TODO this lags on every render, figure out why
   const { setValue } = useFormContext<ArtistFormData>();
   const { files, setFiles } = useFileStore();
-  // const [files, setFiles] = useState<CustomFile[]>(getValues("files") ?? []);
 
   useEffect(() => {
     setValue("files", files);

@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { trpc } from "~/trpc/react";
 import { useEffect } from "react";
+import playingpiano from "public/svg/playingpiano.svg";
+import Image from "next/image";
 
 export default function Home() {
   // // TO DO WHEN OFFERS FETCHING IS READY
@@ -28,15 +30,28 @@ export default function Home() {
   const session = useSession();
 
   return (
-    <div className="flex h-screen flex-col bg-neo-castleton text-white">
-      <header className="container flex h-[500px] flex-col pt-4">
-        <div className="relative mx-10 flex flex-1 flex-col justify-center gap-10">
-          <h1 className="ml-5 mt-4 text-5xl max-lg:text-4xl">
+    <div className="flex h-screen flex-col text-white md:bg-neo-castleton">
+      <header className="flex h-[500px] flex-col bg-neo-castleton md:container md:pt-4">
+        <Image
+          src={playingpiano}
+          alt="playing piano"
+          className="w-screen md:hidden"
+          sizes="(max-width: 768px) 100vw, 200px"
+        />
+        <div className="relative flex w-full flex-1 flex-col justify-center gap-10 px-10 max-md:gap-0 max-md:bg-white">
+          <h1 className="mt-4 text-5xl font-bold max-lg:text-4xl max-md:text-3xl max-md:text-black">
             Poczuj <span className="text-neo-sage">rytm...</span>
           </h1>
-          <h2 className="mt-2 flex w-2/3 justify-end pl-10 text-4xl text-black max-lg:text-3xl">
+          <h2 className="mt-2 flex w-2/3 justify-end pl-10 text-4xl text-black max-lg:text-3xl max-md:w-full max-md:pl-0 max-md:pr-4 max-md:text-left max-md:text-xl max-md:text-neo-castleton">
             <span className="text-neo-sage">...</span>
-            na weselu swojej babci
+            na weselu swojej córki
+          </h2>
+          <h2 className="text-black max-md:text-xl md:hidden">
+            <span className="text-neo-pink">Wyszukuj</span>, bądź <br />
+            <span className="text-neo-mantis">reklamuj</span> muzykę, <br />
+            rękodzieło i inne <br />
+            wyrazy
+            <span className="text-neo-sage"> sztuki</span>
           </h2>
           <Icon
             className="absolute right-14 h-full max-md:hidden"

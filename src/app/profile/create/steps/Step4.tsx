@@ -13,7 +13,7 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
-import { PreviewDropzone, useUploadThing } from "~/components/uploadthing";
+import { PreviewDropzone, getRouteConfig } from "~/components/uploadthing";
 
 import { useFormContext } from "react-hook-form";
 import { KeyboardSensor, PointerSensor } from "~/components/Sortable/sensors";
@@ -36,8 +36,7 @@ export default function Step4() {
     if (touched) trigger("files");
   }, [files]);
 
-  const { startUpload, routeConfig, isUploading } =
-    useUploadThing("galleryUploader");
+  const routeConfig = getRouteConfig("galleryUploader");
 
   // Useful for onDrag overlays and animations
   const [isDragging, setIsDragging] = useState(false);
@@ -65,9 +64,7 @@ export default function Step4() {
             files={files}
             setFiles={setFiles}
             routeConfig={routeConfig}
-            startUpload={startUpload}
-            isUploading={isUploading}
-            showUploadButton={true}
+            showUploadButton={false}
             className="w-full"
           />
           <CustomError name="files" />

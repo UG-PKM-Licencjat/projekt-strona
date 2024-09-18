@@ -7,14 +7,14 @@ import { useState } from "react";
 import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
 import { Button } from "~/components/ui/Button/Button";
 import { useToast } from "~/components/ui/use-toast";
-import { useUploadThing } from "~/components/uploadthing";
+import { uploadFiles } from "~/components/uploadthing";
 import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { cn } from "~/lib/utils";
 import { steps, type Fields } from "./steps";
 import { useFileStore } from "~/stores/fileStore";
+import { ClientUploadedFileData } from "uploadthing/types";
 
 export default function CreateArtistProfilePage() {
-  const { startUpload, isUploading } = useUploadThing("galleryUploader");
   const window = useWindowSize();
   const isMobile = window.width! < 1024;
   const files = useFileStore((state) => state.files);
@@ -61,7 +61,12 @@ export default function CreateArtistProfilePage() {
 
   const { toast } = useToast();
   const onSubmit = async (data: ArtistFormData) => {
-    const uploadedFiles = await startUpload(files);
+    let uploadedFiles: ClientUploadedFileData<null>[] | undefined = [];
+    if (files.length > 0) {
+      uploadedFiles = await uploadFiles("galleryUploader", {
+        files,
+      });
+    }
     toast({
       title: "Submitted form",
       description: (

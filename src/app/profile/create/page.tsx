@@ -94,10 +94,11 @@ export default function CreateArtistProfilePage() {
 
   const isComplete = (fields?: Fields[]) => {
     if (!fields) return false;
-    return fields.every(
-      (field) =>
-        methods.getValues()[field] && !methods.formState.errors[field]?.message,
-    );
+    return fields.every((field) => {
+      const value = methods.getValues(field);
+      const error = methods.formState.errors[field]?.message;
+      return value?.length && !error;
+    });
   };
 
   return (
@@ -178,7 +179,7 @@ export default function CreateArtistProfilePage() {
               custom={direction}
             >
               <motion.div
-                layout
+                layout="position"
                 custom={direction}
                 variants={variants}
                 initial="enter"

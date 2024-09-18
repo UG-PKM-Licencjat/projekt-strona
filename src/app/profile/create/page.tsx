@@ -11,11 +11,13 @@ import { useUploadThing } from "~/components/uploadthing";
 import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { cn } from "~/lib/utils";
 import { steps, type Fields } from "./steps";
+import { useFileStore } from "~/stores/fileStore";
 
 export default function CreateArtistProfilePage() {
   const { startUpload, isUploading } = useUploadThing("galleryUploader");
   const window = useWindowSize();
   const isMobile = window.width! < 1024;
+  const files = useFileStore((state) => state.files);
 
   const variants = {
     enter: (direction: number) => {
@@ -58,12 +60,15 @@ export default function CreateArtistProfilePage() {
   });
 
   const { toast } = useToast();
-  const onSubmit = (data: ArtistFormData) => {
+  const onSubmit = async (data: ArtistFormData) => {
+    const uploadedFiles = await startUpload(files);
     toast({
       title: "Submitted form",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          <code className="text-white">
+            {JSON.stringify({ ...data, files: uploadedFiles }, null, 2)}
+          </code>
         </pre>
       ),
     });

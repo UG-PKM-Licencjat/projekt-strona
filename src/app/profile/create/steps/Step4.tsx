@@ -13,20 +13,18 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
-import {
-  type CustomFile,
-  PreviewDropzone,
-  useUploadThing,
-} from "~/components/uploadthing";
+import { PreviewDropzone, useUploadThing } from "~/components/uploadthing";
 
 import { useFormContext } from "react-hook-form";
 import { KeyboardSensor, PointerSensor } from "~/components/Sortable/sensors";
 import { ArtistFormData } from "~/lib/artistSchema";
+import { useFileStore } from "~/stores/fileStore";
 
 export default function Step4() {
   // TODO this lags on every render, figure out why
-  const { setValue, getValues } = useFormContext<ArtistFormData>();
-  const [files, setFiles] = useState<CustomFile[]>(getValues("files") ?? []);
+  const { setValue } = useFormContext<ArtistFormData>();
+  const { files, setFiles } = useFileStore();
+  // const [files, setFiles] = useState<CustomFile[]>(getValues("files") ?? []);
 
   useEffect(() => {
     setValue("files", files);

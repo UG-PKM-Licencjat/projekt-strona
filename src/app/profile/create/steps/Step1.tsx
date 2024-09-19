@@ -6,10 +6,7 @@ import { type ArtistFormData } from "~/lib/artistSchema";
 import CustomError from "./CustomError";
 
 export default function Step1() {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext<ArtistFormData>();
+  const { register } = useFormContext<ArtistFormData>();
   return (
     <div className="flex flex-col gap-4">
       <Label className="flex flex-col justify-between gap-2">

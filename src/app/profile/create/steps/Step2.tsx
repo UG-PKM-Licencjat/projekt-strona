@@ -7,7 +7,6 @@ export default function Step2() {
   const { control } = useFormContext<ArtistFormData>();
   const {
     field: { onChange, onBlur },
-    formState: { errors },
   } = useController({
     name: "longDescription",
     control,

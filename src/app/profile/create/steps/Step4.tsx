@@ -1,8 +1,8 @@
 import {
   closestCenter,
   DndContext,
-  DragEndEvent,
-  DragStartEvent,
+  type DragEndEvent,
+  type DragStartEvent,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -17,23 +17,19 @@ import { getRouteConfig, PreviewDropzone } from "~/components/uploadthing";
 
 import { useFormContext } from "react-hook-form";
 import { KeyboardSensor, PointerSensor } from "~/components/Sortable/sensors";
-import { ArtistFormData } from "~/lib/artistSchema";
+import { type ArtistFormData } from "~/lib/artistSchema";
 import { useFileStore } from "~/stores/fileStore";
 import CustomError from "./CustomError";
 
 export default function Step4() {
   // TODO this lags on every render, figure out why
-  const {
-    setValue,
-    trigger,
-    formState: { errors },
-  } = useFormContext<ArtistFormData>();
+  const { setValue, trigger } = useFormContext<ArtistFormData>();
   const { files, touched, setFiles } = useFileStore();
 
   useEffect(() => {
     setValue("files", files);
-    if (touched) trigger("files");
-  }, [files]);
+    if (touched) void trigger("files");
+  }, [files, setValue, touched, trigger]);
 
   const routeConfig = getRouteConfig("galleryUploader");
 
@@ -72,7 +68,7 @@ export default function Step4() {
     </DndContext>
   );
 
-  function handleDragStart(event: DragStartEvent) {
+  function handleDragStart(_event: DragStartEvent) {
     setIsDragging(true);
   }
 
@@ -86,7 +82,7 @@ export default function Step4() {
     if (active.id !== over?.id) {
       setFiles((files) => {
         const oldIndex = files.findIndex((file) => file.key === active?.id);
-        const newIndex = files.findIndex((file) => file.key === over?.id!);
+        const newIndex = files.findIndex((file) => file.key === over?.id);
 
         return arrayMove(files, oldIndex, newIndex);
       });

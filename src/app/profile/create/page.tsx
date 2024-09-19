@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
-import { ClientUploadedFileData } from "uploadthing/types";
+import { type ClientUploadedFileData } from "uploadthing/types";
 import { Button } from "~/components/ui/Button/Button";
 import { useToast } from "~/components/ui/use-toast";
 import { uploadFiles } from "~/components/uploadthing";
@@ -156,6 +156,11 @@ export default function CreateArtistProfilePage() {
               <div className="flex items-start gap-2">
                 <motion.p
                   layout={isMobile}
+                  initial={
+                    isMobile
+                      ? { height: openDescription ? "auto" : 24 }
+                      : undefined
+                  }
                   animate={
                     isMobile
                       ? { height: openDescription ? "auto" : 24 }

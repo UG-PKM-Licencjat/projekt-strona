@@ -20,6 +20,10 @@ export const artistSchema = z.object({
   longDescriptionHTML: z.string().optional(),
   links: z.array(z.string()).optional(),
   location: z.string().optional(),
+  tags: z
+    .array(z.number()) // z.number as those are id's
+    .min(1, { message: "Musisz wybrać chociaż 1 tag." })
+    .max(5, { message: "Możesz wybrać maksymalnie 5 tagów." }),
   files: z.array(fileSchema).optional(),
   price: z
     .string()

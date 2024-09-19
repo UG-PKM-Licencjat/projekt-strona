@@ -1,6 +1,4 @@
 import { Button } from "~/components/ui/Button/Button";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import forest from "public/svg/forest.svg";

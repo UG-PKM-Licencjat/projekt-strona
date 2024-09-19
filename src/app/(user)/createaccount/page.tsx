@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Step1 from "./step1";
 import Step2 from "./step2";
 import Step3 from "./step3";
-import { cons } from "effect/List";
 
 export interface Data {
   firstName: string;
@@ -36,9 +35,9 @@ const MainForm = () => {
   }, [data, activeTab, setData]);
 
   const formElements = [
-    <Step1 data={data} handleChange={handleChange} />,
-    <Step2 data={data} handleChange={handleChange} />,
-    <Step3 />,
+    <Step1 key="step1" data={data} handleChange={handleChange} />,
+    <Step2 key="step2" data={data} handleChange={handleChange} />,
+    <Step3 key="step3" />,
   ];
 
   return <>{formElements[activeTab]}</>;

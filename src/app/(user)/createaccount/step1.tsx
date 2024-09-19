@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "~/components/ui/Input/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/Button/Button";
 import {
@@ -12,10 +12,9 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Icon } from "~/components/ui/Icon/Icon";
-import { Data } from "./page";
+import { type Data } from "./page";
 import Image from "next/image";
 import man from "public/svg/man.svg";
 import { useSession } from "next-auth/react";
@@ -69,11 +68,10 @@ export default function Step1(props: {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: session?.user?.firstName || "",
-      lastName: session?.user?.lastName || "",
+      firstName: session?.user?.firstName ?? "",
+      lastName: session?.user?.lastName ?? "",
     },
   });
-  const router = useRouter();
 
   useEffect(() => {
     if (data.firstName && data.lastName) {

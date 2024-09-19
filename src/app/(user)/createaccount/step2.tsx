@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "~/components/ui/Button/Button";
-import { useRouter } from "next/navigation";
 import {
   RadioGroup,
   RadioGroupLabelItem,
@@ -15,7 +14,7 @@ import {
   FormItem,
   FormMessage,
 } from "~/components/ui/form";
-import { Data } from "./page";
+import { type Data } from "./page";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -27,7 +26,6 @@ export default function Step2(props: {
   handleChange: (data: Data) => void;
 }) {
   const { data, handleChange } = props;
-  const router = useRouter();
   const FormSchema = z.object({
     type: z.string({
       message: "To pole jest wymagane",
@@ -86,12 +84,11 @@ export default function Step2(props: {
       <div className="mb-6 h-4 w-auto self-start rounded-lg bg-secondary md:bg-neo-castleton">
         <div className="h-4 w-2/3 self-start rounded-lg bg-neo-pink"></div>
       </div>
-      <div className="col flex h-full">
+      <div className="flex h-full">
         <div className="flex h-full w-full flex-col justify-between pb-10">
           <div>
             <h1 className="mb-4 self-start text-start font-header text-2xl font-medium leading-none text-primary">
               Czy jesteś
-              <br className="sm:hidden" />
               <span className="text-neo-mantis md:text-neo-castleton">
                 {" "}
                 artystą?
@@ -119,18 +116,14 @@ export default function Step2(props: {
                       <FormItem>
                         <FormControl>
                           <RadioGroupLabelItem value="true" id="r1">
-                            <div className=" ">
-                              Tak, chcę się reklamować na Bebop!
-                            </div>
+                            Tak, chcę się reklamować na Bebop!
                           </RadioGroupLabelItem>
                         </FormControl>
                       </FormItem>
                       <FormItem>
                         <FormControl>
                           <RadioGroupLabelItem value="false " id="r2">
-                            <div className=" ">
-                              Nie, chcę tylko przeglądać oferty.
-                            </div>
+                            Nie, chcę tylko przeglądać oferty.
                           </RadioGroupLabelItem>
                         </FormControl>
                         <FormMessage />

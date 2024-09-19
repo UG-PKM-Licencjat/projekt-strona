@@ -3,5 +3,5 @@ export default function OfferLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="flex h-screen flex-col">{children}</div>;
+  return <div className="flex flex-1 flex-col">{children}</div>;
 }

@@ -121,7 +121,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5]">
+    <div className="flex-1 bg-[#f5f5f5]">
       <main className="container mx-auto flex h-full flex-col p-4">
         <div className="mb-8 rounded-lg bg-neo-castleton p-4 shadow-md">
           <div className="flex flex-col gap-4 md:flex-row">

@@ -30,15 +30,14 @@ export default async function RootLayout({
   return (
     <html lang="pl">
       <body
-        className={`${cabin.variable} ${montserrat.variable} flex h-svh flex-col font-body`}
+        className={`${cabin.variable} ${montserrat.variable} flex min-h-svh flex-col font-body`}
       >
         {SvgSymbols}
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <SessionProvider session={session}>
           <TRPCReactProvider>
             <GlobalBehaviours>
-              <Navbar session={session} />
-              {children}
+              <Navbar session={session}>{children}</Navbar>
             </GlobalBehaviours>
           </TRPCReactProvider>
         </SessionProvider>

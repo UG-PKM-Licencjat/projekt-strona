@@ -21,7 +21,7 @@ export function FilePreview({
         <Tooltip>
           <TooltipTrigger type="button">
             <div
-              className="relative flex aspect-square h-32 place-items-center overflow-hidden rounded-lg border-2 border-neo-gray-hover sm:h-36"
+              className="relative flex aspect-square h-28 place-items-center overflow-hidden rounded-lg border-2 border-neo-gray-hover sm:h-36"
               onClick={(e) => e.stopPropagation()}
             >
               {file.type.startsWith("image") ? (

@@ -140,7 +140,7 @@ export default function PreviewDropzone({
     <div className="flex w-full flex-col gap-1">
       <div
         className={cn(
-          "mt-2 flex justify-center rounded-lg border border-dashed p-4",
+          "mt-2 flex justify-center rounded-lg border border-dashed sm:p-4",
           className,
           isDragActive
             ? "border-neo-castleton bg-neo-castleton/10"

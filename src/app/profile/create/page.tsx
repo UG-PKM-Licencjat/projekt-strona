@@ -16,7 +16,7 @@ import { steps, type Fields } from "./steps";
 
 export default function CreateArtistProfilePage() {
   const window = useWindowSize();
-  const isMobile = window.width! < 1024;
+  const isMobile = window.width! <= 1024;
   const files = useFileStore((state) => state.files);
 
   const variants = {
@@ -112,13 +112,13 @@ export default function CreateArtistProfilePage() {
         onSubmit={methods.handleSubmit(onSubmit, onInvalid)}
         className="container flex flex-col justify-between bg-neo-gray p-8 md:rounded-lg"
       >
-        <div className="flex gap-8 max-lg:flex-col">
+        <div className="flex gap-8 max-xl:flex-col">
           {/* Vertical stepper */}
           <div className="flex shrink-0 flex-col gap-4">
             <h2 className="font-header text-2xl font-semibold">
               Stwórz profil
             </h2>
-            <div className="flex flex-col justify-center gap-2 max-lg:flex-row sm:gap-4">
+            <div className="flex flex-col justify-center gap-2 max-xl:flex-row sm:gap-4">
               {steps.map((step, index) => (
                 <motion.div
                   whileTap={{ scale: [null, 0.95] }}
@@ -143,13 +143,13 @@ export default function CreateArtistProfilePage() {
                   }}
                 >
                   {step.icon}
-                  <span className="max-lg:hidden">{step.title}</span>
+                  <span className="max-xl:hidden">{step.title}</span>
                 </motion.div>
               ))}
             </div>
           </div>
           <div className="flex w-full flex-col gap-4">
-            <div className="flex w-full flex-col lg:px-10 lg:py-5">
+            <div className="flex w-full flex-col xl:px-10 xl:py-5">
               <h1 className="text-lg font-medium sm:text-xl">
                 {steps[activeStep]?.title}
               </h1>
@@ -176,7 +176,7 @@ export default function CreateArtistProfilePage() {
                 </motion.p>
                 <ChevronDown
                   className={cn(
-                    "size-6 shrink-0 stroke-neo-dark-gray transition-transform lg:hidden",
+                    "size-6 shrink-0 stroke-neo-dark-gray transition-transform xl:hidden",
                     openDescription && "rotate-180",
                   )}
                   onClick={toggleDescription}
@@ -203,7 +203,7 @@ export default function CreateArtistProfilePage() {
             </AnimatePresence>
           </div>
         </div>
-        <div className="flex w-full pb-10">
+        <div className="mt-5 flex w-full pb-10">
           <div className="container flex w-full justify-center gap-2 sm:justify-between">
             {activeStep > 0 ? (
               <Button

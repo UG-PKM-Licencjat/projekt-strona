@@ -12,7 +12,7 @@ export const artistSchema = z.object({
   links: z.array(z.string()).optional(),
   location: z.string().optional(),
   tags: z
-    .array(z.number()) // z.number as those are id's
+    .array(z.object({ id: z.number(), name: z.string() })) // z.number as those are id's
     .min(1, { message: "Musisz wybrać chociaż 1 tag." })
     .max(5, { message: "Możesz wybrać maksymalnie 5 tagów." }),
   files: z.array(fileSchema).optional(),

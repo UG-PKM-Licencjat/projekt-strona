@@ -36,11 +36,11 @@ export default function Step3() {
             </Button>
           </Link>
         </div>
-        <div className="col-start-2 col-end-4 hidden h-max xl:block">
+        <div className="fle col-start-2 col-end-4 hidden h-full items-end xl:flex">
           <Image
             src={forest}
             alt="forest"
-            className="ml-20 hidden h-full w-max object-cover xl:block"
+            className="mb-10 ml-20 hidden w-4/6 object-contain xl:block"
           />
         </div>
       </div>

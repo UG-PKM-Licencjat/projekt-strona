@@ -1,5 +1,5 @@
 import { procedure } from "~/server/api/trpc";
-import { offers, userOffers } from "~/server/db/schema";
+import { offers } from "~/server/db/schema";
 import { eq, getTableColumns } from "drizzle-orm";
 import { db } from "~/server/db";
 import { z } from "zod";
@@ -23,8 +23,7 @@ const getByUserIdProcedure = procedure
         ...columns,
       })
       .from(offers)
-      .leftJoin(userOffers, eq(offers.id, userOffers.offerId))
-      .where(eq(userOffers.userId, input.userId));
+      .where(eq(offers.userId, input.userId));
     return fetchedOffers;
   });
 

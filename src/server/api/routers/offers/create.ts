@@ -1,23 +1,25 @@
 import { procedure } from "~/server/api/trpc";
 import { offerSchema } from "~/lib/offerSchema";
 import { db } from "~/server/db";
-import { offers, offerTags, users, userOffers } from "~/server/db/schema";
+import { offers, offerTags, users } from "~/server/db/schema";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import logEvent from "~/server/log";
 import { TRPCError } from "@trpc/server";
 
+// TODO REMAKE IT as it is mock
 const createProcedure = procedure
   .input(offerSchema.extend({ userId: z.string() }))
   .mutation(async (opts) => {
     const { input } = opts;
     const { userId, tags, price, ...filteredInput } = input;
     const parsedPrice = parseFloat(price);
+
     // TODO check if offer already exists to disallow duplicates
     const { data, error } = await db.transaction(async (tx) => {
       const [returned] = await tx
         .insert(offers)
-        .values({ ...filteredInput, price: parsedPrice })
+        .values({ userId: userId, price: parsedPrice, ...filteredInput })
         .returning();
 
       if (!returned) {
@@ -60,6 +62,10 @@ const createProcedure = procedure
       });
       return data;
     } else {
+      logEvent(
+        `Failed to create offer for user ${userId}`,
+        JSON.stringify(error),
+      );
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: error,

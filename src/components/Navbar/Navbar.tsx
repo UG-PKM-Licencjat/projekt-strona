@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
 import { signIn, signOut } from "next-auth/react";
@@ -24,13 +24,23 @@ import type { Session } from "next-auth";
 
 const filterList: Array<string> = ["/createaccount"];
 
-export const Navbar = ({ session }: { session: Session | null }) => {
+export const Navbar = ({
+  session,
+  children,
+}: {
+  session: Session | null;
+  children?: React.ReactNode;
+}) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
   const pathname = usePathname();
-  const direction = useScrollDirection();
 
-  if (filterList.includes(pathname)) return <></>;
+  if (filterList.includes(pathname))
+    return (
+      <>
+        <div className="flex flex-1 flex-col overflow-auto">{children}</div>
+      </>
+    );
 
   return (
     <>
@@ -65,10 +75,11 @@ export const Navbar = ({ session }: { session: Session | null }) => {
           </div>
         </div>
       </nav>
+      <div className="flex flex-1 flex-col overflow-auto">{children}</div>
       <nav
         className={cn(
-          "fixed bottom-0 z-50 flex w-full items-center justify-center transition-transform sm:hidden",
-          direction === "down" && "translate-y-[200%]",
+          "sticky bottom-0 z-50 flex w-full items-center justify-center transition-transform sm:hidden",
+          // direction === "down" && "translate-y-[200%]",
         )}
       >
         <div className="flex w-full items-center justify-around bg-neo-castleton p-4">
@@ -172,28 +183,3 @@ export const Navbar = ({ session }: { session: Session | null }) => {
     </>
   );
 };
-
-function useScrollDirection() {
-  const [scrollDirection, setScrollDirection] = useState<"up" | "down" | null>(
-    null,
-  );
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    // function to run on scroll
-    const updateScrollDirection = () => {
-      const scrollY = window.scrollY;
-      const direction = scrollY > lastScrollY ? "down" : "up";
-      if (direction !== scrollDirection) {
-        setScrollDirection(direction);
-      }
-      lastScrollY = scrollY > 0 ? scrollY : 0;
-    };
-    window.addEventListener("scroll", updateScrollDirection); // add event listener
-    return () => {
-      window.removeEventListener("scroll", updateScrollDirection); // clean up
-    };
-  }, [scrollDirection]); // run when scroll direction changes
-
-  return scrollDirection;
-}

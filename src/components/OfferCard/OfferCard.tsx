@@ -5,6 +5,8 @@ import Link from "next/link";
 export interface Offer {
   id: string;
   name: string;
+  ratingsSum: number | null;
+  votes: number | null;
   price: number | null;
   about: string | null;
   skills: unknown;
@@ -38,11 +40,13 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
           <MapPin size={14} />
           <span>{offer.location}</span>
         </div>
-        <div className="flex items-center gap-1">
-          <Star size={14} className="text-neo-castleton" />
-          <span>5.0</span>
-          {/* TODO: rating */}
-        </div>
+        {offer.ratingsSum && offer.votes && (
+          <div className="flex items-center gap-1">
+            <Star size={14} className="text-neo-castleton" />
+            <span>{(offer.ratingsSum / 2 / offer.votes).toFixed(1)}</span>
+            {/* TODO: rating */}
+          </div>
+        )}
       </div>
     </div>
     <Link href={`/offers/${offer.id}`}>

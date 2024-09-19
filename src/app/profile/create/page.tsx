@@ -15,8 +15,9 @@ import { useFileStore } from "~/stores/fileStore";
 import { steps, type Fields } from "./steps";
 
 export default function CreateArtistProfilePage() {
-  const window = useWindowSize();
-  const isMobile = window.width! <= 1024;
+  const { width } = useWindowSize();
+  const isMobile = width ? width <= 1280 : window.innerWidth <= 1280;
+  console.log("isMobile", isMobile);
   const files = useFileStore((state) => state.files);
 
   const variants = {
@@ -159,16 +160,16 @@ export default function CreateArtistProfilePage() {
                   initial={
                     isMobile
                       ? { height: openDescription ? "auto" : 24 }
-                      : undefined
+                      : { height: "auto" }
                   }
                   animate={
                     isMobile
                       ? { height: openDescription ? "auto" : 24 }
-                      : undefined
+                      : { height: "auto" }
                   }
                   transition={{ duration: 0.2 }}
                   className={cn(
-                    "overflow-hidden text-ellipsis text-neo-dark-gray",
+                    "h-auto overflow-hidden text-ellipsis text-neo-dark-gray",
                   )}
                   onClick={toggleDescription}
                 >

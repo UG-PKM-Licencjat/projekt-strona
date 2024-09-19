@@ -132,6 +132,7 @@ const Distance = () => {
       );
 
       // distance jest w metrach, można podzielić przez 1000, aby uzyskać kilometry
+      console.log(place);
       console.log(`Odległość: ${distance / 1000} km`);
     } else {
       if (!placeLocation) console.log("Brak współrzędnych dla 1");
@@ -164,13 +165,13 @@ const Distance = () => {
       <Button variant={"default"} onClick={calculateDistance}>
         check distance
       </Button>
-      <Map
+      {/* <Map
         defaultZoom={3}
         defaultCenter={{ lat: 22.54992, lng: 0 }}
         gestureHandling={"greedy"}
         disableDefaultUI={true}
         streetViewControl={false}
-      />
+      /> */}
     </div>
   );
 };

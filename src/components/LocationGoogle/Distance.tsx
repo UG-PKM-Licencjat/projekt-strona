@@ -1,25 +1,15 @@
 "use client";
 
 import {
-  AdvancedMarker,
   APIProvider,
-  ControlPosition,
   Map,
-  MapControl,
-  useApiIsLoaded,
-  useApiLoadingStatus,
   useMapsLibrary,
+  useMap,
 } from "@vis.gl/react-google-maps";
-import { LocateFixedIcon } from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/Input/Input";
 import { env } from "~/env";
 import { PlaceAutocompleteClassic } from "./autocomplete-classic";
-import MapHandler from "./map-handler";
-import { toast } from "../ui/use-toast";
-import { set } from "zod";
-import { is } from "drizzle-orm";
 
 type Position = google.maps.LatLngLiteral | undefined;
 type PlaceResult = google.maps.places.PlaceResult;
@@ -107,6 +97,8 @@ const Distance = () => {
   //     console.log(result);
   //   }, [location]);
 
+  const map = useMap();
+
   const geocodingApiLoaded = useMapsLibrary("geocoding");
   const places = useMapsLibrary("places");
   const geometry = useMapsLibrary("geometry");
@@ -152,14 +144,10 @@ const Distance = () => {
   return (
     <div className="h-screen">
       <h1>Dodaj ofertę</h1>
-      <APIProvider
-        apiKey={env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}
-        onLoad={() => console.log("Maps API has loaded.")}
-      >
-        <div className="mb-28 flex gap-4">
-          <PlaceAutocompleteClassic onPlaceSelect={setPlace} />
-          <PlaceAutocompleteClassic onPlaceSelect={setPlaceToCheck} />
-          {/* <Input
+      <div className="mb-28 flex gap-4">
+        <PlaceAutocompleteClassic onPlaceSelect={setPlace} />
+        <PlaceAutocompleteClassic onPlaceSelect={setPlaceToCheck} />
+        {/* <Input
             className="w-[150px]"
             type="number"
             id="radius"
@@ -172,18 +160,17 @@ const Distance = () => {
               setRadius(parseInt(e.target.value));
             }}
           /> */}
-        </div>
-        <Button variant={"default"} onClick={calculateDistance}>
-          check distance
-        </Button>
-        <Map
-          defaultZoom={3}
-          defaultCenter={{ lat: 22.54992, lng: 0 }}
-          gestureHandling={"greedy"}
-          disableDefaultUI={true}
-          streetViewControl={false}
-        />
-      </APIProvider>
+      </div>
+      <Button variant={"default"} onClick={calculateDistance}>
+        check distance
+      </Button>
+      <Map
+        defaultZoom={3}
+        defaultCenter={{ lat: 22.54992, lng: 0 }}
+        gestureHandling={"greedy"}
+        disableDefaultUI={true}
+        streetViewControl={false}
+      />
     </div>
   );
 };

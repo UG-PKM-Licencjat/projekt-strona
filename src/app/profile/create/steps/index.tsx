@@ -45,6 +45,7 @@ export const steps: {
       "Następnym krokiem jest wybór tagów. Tagi to słowa klucze, które jeszcze bardziej usprawniają wyszukiwanie ofert. Dodaj ich kilka, aby ułatwić szukającym dotarcie do twojej oferty!",
     content: <Step3 />,
     icon: <Tag className="size-5 sm:size-6" />,
+    fields: ["tags"],
   },
   {
     title: "Galeria",

@@ -1,25 +1,26 @@
 import React from "react";
+import { cn } from "~/lib/utils";
 
 interface TagProps {
   /**
    * zawartość Taga
    */
-  label: string;
+  children: React.ReactNode;
   className?: string;
-  bgColor?: string;
 }
 
 /**
  * Tag opisujący profil użytkownika bądź ofertę
  */
-export const Tag = ({ label, bgColor, className }: TagProps) => {
-  const bg = bgColor ?? "bg-purple-400";
-  const cl = className ?? "";
+export const Tag = ({ children, className }: TagProps) => {
   return (
     <div
-      className={`${cl} flex h-10 items-center rounded-lg ${bg} px-4 font-normal text-white`}
+      className={cn(
+        `flex h-10 select-none items-center rounded-lg bg-purple-400 px-4 font-normal text-white`,
+        className,
+      )}
     >
-      {label}
+      {children}
     </div>
   );
 };

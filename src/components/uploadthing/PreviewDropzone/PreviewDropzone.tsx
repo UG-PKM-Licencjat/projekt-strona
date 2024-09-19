@@ -201,7 +201,7 @@ export default function PreviewDropzone({
             )}
           </div>
         ) : (
-          <div className="relative flex flex-wrap gap-2 p-2">
+          <div className="relative flex flex-wrap justify-center gap-2 p-2">
             <AnimatePresence initial={false}>
               {files.map((file) => (
                 <motion.div

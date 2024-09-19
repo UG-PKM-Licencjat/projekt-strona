@@ -26,14 +26,12 @@ export default function CreateArtistProfilePage() {
         y: !isMobile ? (direction > 0 ? 50 : -50) : 0,
         x: isMobile ? (direction > 0 ? 30 : -30) : 0,
         opacity: 0,
-        // scaleY: 0,
       };
     },
     center: {
       y: 0,
       x: 0,
       opacity: 1,
-      // scaleY: 1,
     },
     exit: (direction: number) => {
       return {
@@ -41,7 +39,6 @@ export default function CreateArtistProfilePage() {
         y: !isMobile ? (direction < 0 ? 50 : -50) : 0,
         x: isMobile ? (direction < 0 ? 30 : -30) : 0,
         opacity: 0,
-        // scaleY: 0,
       };
     },
   };

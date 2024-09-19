@@ -12,6 +12,12 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 import { Toaster } from "~/components/ui/toaster";
 import { Navbar } from "~/components/Navbar/Navbar";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Bebop",
+  description: "Bebop - serwis dla artystów",
+};
 
 const cabin = Cabin({
   subsets: ["latin"],

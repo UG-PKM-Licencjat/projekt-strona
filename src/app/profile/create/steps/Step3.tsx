@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { Tag } from "~/components/Tag/Tag";
 import { Input } from "~/components/ui/Input/Input";
 import { ArtistFormData } from "~/lib/artistSchema";
+import CustomError from "./CustomError";
 
 // Mock data for front development purposes
 const tags = [
@@ -49,7 +50,7 @@ export default function Step3() {
   return (
     <div className="my-4 flex flex-col gap-4">
       <div className="flex flex-col gap-2">
-        Wybrane tagi
+        <span>Wybrane tagi</span>
         <div className="flex gap-3">
           {resultTags.map((resultTag) => (
             <div
@@ -67,6 +68,7 @@ export default function Step3() {
             </div>
           ))}
         </div>
+        <CustomError name="tags" />
       </div>
       <div>
         <Input

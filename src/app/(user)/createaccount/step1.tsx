@@ -99,7 +99,7 @@ export default function Step1(props: {
         <div className="h-4 w-1/3 self-start rounded-lg bg-neo-pink"></div>
       </div>
       <div className="flex h-full flex-row pb-10">
-        <div className="flex w-full flex-col justify-between">
+        <div className="flex w-full flex-col">
           <h1 className="w-full text-center font-header text-2xl font-medium leading-none text-primary xl:text-left">
             Cieszymy się, że
             <br className="sm:hidden" />
@@ -113,7 +113,7 @@ export default function Step1(props: {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="gap-y-auto left bottom-0 h-full space-y-6 pt-6"
+              className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-6 pt-6"
             >
               <div className="flex flex-col items-center">
                 <div className="relative h-44 w-44 justify-center rounded-full bg-neo-pink">

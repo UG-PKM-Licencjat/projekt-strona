@@ -1,12 +1,12 @@
 import { useController, useFormContext } from "react-hook-form";
 import TipTap from "~/components/RichTextEditor/Tiptap";
 import type { ArtistFormData } from "~/lib/artistSchema";
+import CustomError from "./CustomError";
 
 export default function Step2() {
   const { control } = useFormContext<ArtistFormData>();
   const {
     field: { onChange, onBlur },
-    formState: { errors },
   } = useController({
     name: "longDescription",
     control,
@@ -33,11 +33,9 @@ export default function Step2() {
         onChangeHTML={onChangeHTML}
         onBlur={handleBlur}
         charLimit={1000}
-        value={value}
+        content={value}
       />
-      <div className="h-6 text-base tracking-normal text-neo-pink">
-        {errors.longDescription?.message}
-      </div>
+      <CustomError name="longDescription" />
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import {
   KeyboardSensor as LibKeyboardSensor,
   PointerSensor as LibPointerSensor,
-  type MeasuringConfiguration,
-  MeasuringStrategy,
 } from "@dnd-kit/core";
 
 import type { PointerEvent, KeyboardEvent } from "react";
@@ -33,7 +31,7 @@ function shouldHandleEvent(element: HTMLElement | null) {
   let cur = element;
 
   while (cur) {
-    if (cur.dataset && cur.dataset.noDnd) {
+    if (cur.dataset?.noDnd) {
       return false;
     }
     cur = cur.parentElement;

@@ -5,17 +5,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
+import { type ClientUploadedFileData } from "uploadthing/types";
 import { Button } from "~/components/ui/Button/Button";
 import { useToast } from "~/components/ui/use-toast";
-import { useUploadThing } from "~/components/uploadthing";
+import { uploadFiles } from "~/components/uploadthing";
 import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { cn } from "~/lib/utils";
+import { useFileStore } from "~/stores/fileStore";
 import { steps, type Fields } from "./steps";
 
 export default function CreateArtistProfilePage() {
-  const { startUpload, isUploading } = useUploadThing("galleryUploader");
-  const window = useWindowSize();
-  const isMobile = window.width! < 1024;
+  const { width } = useWindowSize();
+  const isMobile = width ? width <= 1280 : window.innerWidth <= 1280;
+  console.log("isMobile", isMobile);
+  const files = useFileStore((state) => state.files);
 
   const variants = {
     enter: (direction: number) => {
@@ -23,14 +26,12 @@ export default function CreateArtistProfilePage() {
         y: !isMobile ? (direction > 0 ? 50 : -50) : 0,
         x: isMobile ? (direction > 0 ? 30 : -30) : 0,
         opacity: 0,
-        // scaleY: 0,
       };
     },
     center: {
       y: 0,
       x: 0,
       opacity: 1,
-      // scaleY: 1,
     },
     exit: (direction: number) => {
       return {
@@ -38,7 +39,6 @@ export default function CreateArtistProfilePage() {
         y: !isMobile ? (direction < 0 ? 50 : -50) : 0,
         x: isMobile ? (direction < 0 ? 30 : -30) : 0,
         opacity: 0,
-        // scaleY: 0,
       };
     },
   };
@@ -58,12 +58,20 @@ export default function CreateArtistProfilePage() {
   });
 
   const { toast } = useToast();
-  const onSubmit = (data: ArtistFormData) => {
+  const onSubmit = async (data: ArtistFormData) => {
+    let uploadedFiles: ClientUploadedFileData<null>[] | undefined = [];
+    if (files.length > 0) {
+      uploadedFiles = await uploadFiles("galleryUploader", {
+        files,
+      });
+    }
     toast({
       title: "Submitted form",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          <code className="text-white">
+            {JSON.stringify({ ...data, files: uploadedFiles }, null, 2)}
+          </code>
         </pre>
       ),
     });
@@ -89,10 +97,11 @@ export default function CreateArtistProfilePage() {
 
   const isComplete = (fields?: Fields[]) => {
     if (!fields) return false;
-    return fields.every(
-      (field) =>
-        methods.getValues()[field] && !methods.formState.errors[field]?.message,
-    );
+    return fields.every((field) => {
+      const value = methods.getValues(field);
+      const error = methods.formState.errors[field]?.message;
+      return value?.length && !error;
+    });
   };
 
   return (
@@ -101,13 +110,13 @@ export default function CreateArtistProfilePage() {
         onSubmit={methods.handleSubmit(onSubmit, onInvalid)}
         className="container flex flex-col justify-between bg-neo-gray p-8 md:rounded-lg"
       >
-        <div className="flex gap-8 max-lg:flex-col">
+        <div className="flex gap-8 max-xl:flex-col">
           {/* Vertical stepper */}
           <div className="flex shrink-0 flex-col gap-4">
             <h2 className="font-header text-2xl font-semibold">
               Stwórz profil
             </h2>
-            <div className="flex flex-col justify-center gap-2 max-lg:flex-row sm:gap-4">
+            <div className="flex flex-col justify-center gap-2 max-xl:flex-row sm:gap-4">
               {steps.map((step, index) => (
                 <motion.div
                   whileTap={{ scale: [null, 0.95] }}
@@ -132,27 +141,32 @@ export default function CreateArtistProfilePage() {
                   }}
                 >
                   {step.icon}
-                  <span className="max-lg:hidden">{step.title}</span>
+                  <span className="max-xl:hidden">{step.title}</span>
                 </motion.div>
               ))}
             </div>
           </div>
           <div className="flex w-full flex-col gap-4">
-            <div className="flex w-full flex-col lg:px-10 lg:py-5">
+            <div className="flex w-full flex-col xl:px-10 xl:py-5">
               <h1 className="text-lg font-medium sm:text-xl">
                 {steps[activeStep]?.title}
               </h1>
               <div className="flex items-start gap-2">
                 <motion.p
                   layout={isMobile}
+                  initial={
+                    isMobile
+                      ? { height: openDescription ? "auto" : 24 }
+                      : { height: "auto" }
+                  }
                   animate={
                     isMobile
                       ? { height: openDescription ? "auto" : 24 }
-                      : undefined
+                      : { height: "auto" }
                   }
                   transition={{ duration: 0.2 }}
                   className={cn(
-                    "overflow-hidden text-ellipsis text-neo-dark-gray",
+                    "h-auto overflow-hidden text-ellipsis text-neo-dark-gray",
                   )}
                   onClick={toggleDescription}
                 >
@@ -160,7 +174,7 @@ export default function CreateArtistProfilePage() {
                 </motion.p>
                 <ChevronDown
                   className={cn(
-                    "size-6 shrink-0 stroke-neo-dark-gray transition-transform lg:hidden",
+                    "size-6 shrink-0 stroke-neo-dark-gray transition-transform xl:hidden",
                     openDescription && "rotate-180",
                   )}
                   onClick={toggleDescription}
@@ -173,7 +187,7 @@ export default function CreateArtistProfilePage() {
               custom={direction}
             >
               <motion.div
-                layout
+                layout="position"
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -187,7 +201,7 @@ export default function CreateArtistProfilePage() {
             </AnimatePresence>
           </div>
         </div>
-        <div className="flex w-full pb-10">
+        <div className="mt-5 flex w-full pb-10">
           <div className="container flex w-full justify-center gap-2 sm:justify-between">
             {activeStep > 0 ? (
               <Button

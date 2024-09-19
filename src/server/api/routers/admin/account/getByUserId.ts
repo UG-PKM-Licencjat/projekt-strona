@@ -1,6 +1,6 @@
-import { adminProcedure, procedure } from "~/server/api/trpc";
+import { procedure } from "~/server/api/trpc";
 import { accounts } from "~/server/db/schema";
-import { eq, count, getTableColumns } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { z } from "zod";
 import logEvent from "~/server/log";
@@ -12,7 +12,10 @@ const getByUserIdProcedure = procedure
     }),
   )
   .query(async ({ input }) => {
-    logEvent("Fetching accounts by userId", input.userId);
+    logEvent({
+      message: "Fetching accounts by userId",
+      additionalInfo: input.userId,
+    });
     const fetchedAccounts = await db.query.accounts.findMany({
       where: eq(accounts.userId, input.userId),
     });

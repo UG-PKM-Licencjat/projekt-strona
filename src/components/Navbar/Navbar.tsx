@@ -25,13 +25,23 @@ import type { Session } from "next-auth";
 
 const filterList: Array<string> = ["/createaccount", "/profile/create"];
 
-export const Navbar = ({ session }: { session: Session | null }) => {
+export const Navbar = ({
+  session,
+  children,
+}: {
+  session: Session | null;
+  children?: React.ReactNode;
+}) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
   const pathname = usePathname();
-  const direction = useScrollDirection();
 
-  if (filterList.includes(pathname)) return <></>;
+  if (filterList.includes(pathname))
+    return (
+      <>
+        <div className="flex flex-1 flex-col overflow-auto">{children}</div>
+      </>
+    );
 
   return (
     <>
@@ -66,10 +76,11 @@ export const Navbar = ({ session }: { session: Session | null }) => {
           </div>
         </div>
       </nav>
+      <div className="flex flex-1 flex-col overflow-auto">{children}</div>
       <nav
         className={cn(
-          "fixed bottom-0 z-50 flex w-full items-center justify-center transition-transform sm:hidden",
-          direction === "down" && "translate-y-[200%]",
+          "sticky bottom-0 z-50 flex w-full items-center justify-center transition-transform sm:hidden",
+          // direction === "down" && "translate-y-[200%]",
         )}
       >
         <div className="flex w-full items-center justify-around bg-neo-castleton p-4">

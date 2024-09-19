@@ -12,6 +12,12 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 import { Toaster } from "~/components/ui/toaster";
 import { Navbar } from "~/components/Navbar/Navbar";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Bebop",
+  description: "Bebop - serwis dla artystów",
+};
 
 const cabin = Cabin({
   subsets: ["latin"],
@@ -30,15 +36,14 @@ export default async function RootLayout({
   return (
     <html lang="pl">
       <body
-        className={`${cabin.variable} ${montserrat.variable} flex h-svh flex-col font-body`}
+        className={`${cabin.variable} ${montserrat.variable} flex min-h-svh flex-col font-body`}
       >
         {SvgSymbols}
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <SessionProvider session={session}>
           <TRPCReactProvider>
             <GlobalBehaviours>
-              <Navbar session={session} />
-              {children}
+              <Navbar session={session}>{children}</Navbar>
             </GlobalBehaviours>
           </TRPCReactProvider>
         </SessionProvider>

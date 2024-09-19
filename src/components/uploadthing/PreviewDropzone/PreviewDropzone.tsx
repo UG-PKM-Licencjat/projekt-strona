@@ -73,7 +73,7 @@ export default function PreviewDropzone({
     useDropzone({
       onDrop,
       accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
-      disabled: disabled || isUploading,
+      disabled: disabled ?? isUploading,
       maxFiles: maxFileCount,
       maxSize: maxFileSizeRaw,
     });
@@ -140,7 +140,7 @@ export default function PreviewDropzone({
     <div className="flex w-full flex-col gap-1">
       <div
         className={cn(
-          "mt-2 flex justify-center rounded-lg border border-dashed p-4",
+          "relative mt-2 flex justify-center rounded-lg border border-dashed sm:p-4",
           className,
           isDragActive
             ? "border-neo-castleton bg-neo-castleton/10"
@@ -169,7 +169,7 @@ export default function PreviewDropzone({
                 {allowedContentTextLabelGenerator(routeConfig)}
               </p>
             </div>
-            {files.length > 0 && showUploadButton && (
+            {files.length > 0 && showUploadButton && startUpload && (
               <div className="mt-4 flex items-center justify-center">
                 <Button
                   variant="secondary"
@@ -201,7 +201,7 @@ export default function PreviewDropzone({
             )}
           </div>
         ) : (
-          <div className="relative flex flex-wrap gap-2 p-2">
+          <div className="relative flex flex-wrap justify-center gap-2 p-2">
             <AnimatePresence initial={false}>
               {files.map((file) => (
                 <motion.div
@@ -220,6 +220,14 @@ export default function PreviewDropzone({
             </AnimatePresence>
           </div>
         )}
+        <div
+          className={cn(
+            "absolute bottom-2 right-2",
+            files.length === maxFileCount && "text-neo-castleton",
+          )}
+        >
+          {files.length}/{maxFileCount}
+        </div>
       </div>
       <div className="flex gap-2">{renderErrorMessages(fileRejections)}</div>
     </div>

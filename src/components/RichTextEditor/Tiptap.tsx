@@ -1,4 +1,4 @@
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, type JSONContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount, {
@@ -12,24 +12,37 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import Youtube from "@tiptap/extension-youtube";
+import { cn } from "~/lib/utils";
+
+export type TipTapProps = {
+  placeholder: string;
+  onChange?: (richText: string) => void;
+  onChangeHTML?: (richText: string) => void;
+  onChangeJSON?: (richText: JSONContent) => void;
+  onBlur?: () => void;
+  content?: string;
+  charLimit: number;
+  className?: string;
+  classNameToolbar?: string;
+  classNameEditor?: string;
+  toolbarActive?: boolean;
+};
 
 export default function TipTap({
   placeholder,
   onChange,
   onChangeHTML,
-  charLimit,
-  value,
+  onChangeJSON,
   onBlur,
-}: {
-  placeholder: string;
-  onChange: (richText: string) => void;
-  onChangeHTML: (richText: string) => void;
-  onBlur: () => void;
-  charLimit: number;
-  value?: string;
-}) {
+  content,
+  charLimit,
+  className,
+  classNameToolbar,
+  classNameEditor,
+  toolbarActive = true,
+}: TipTapProps) {
   const editor = useEditor({
-    content: value,
+    content: content ? content : "",
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({}),
@@ -56,12 +69,14 @@ export default function TipTap({
     },
     onBlur,
     onFocus({ editor }) {
-      onChangeHTML(editor.getHTML());
-      onChange(editor.getText());
+      if (onChange) onChange(editor.getText());
+      if (onChangeHTML) onChangeHTML(editor.getHTML());
+      if (onChangeJSON) onChangeJSON(editor.getJSON());
     },
     onUpdate({ editor }) {
-      onChangeHTML(editor.getHTML());
-      onChange(editor.getText());
+      if (onChange) onChange(editor.getText());
+      if (onChangeHTML) onChangeHTML(editor.getHTML());
+      if (onChangeJSON) onChangeJSON(editor.getJSON());
     },
   });
 
@@ -77,14 +92,16 @@ export default function TipTap({
     : 0;
 
   return (
-    <div>
-      {/* {editor && (
-        <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
-          <Toolbar editor={editor} />
-        </BubbleMenu>
-      )} */}
-      <Toolbar editor={editor} />
-      <EditorContent editor={editor} />
+    <div
+      className={cn(
+        "rounded-lg bg-neo-gray px-2 py-2 text-lg ring-offset-background drop-shadow-md file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+    >
+      {toolbarActive && (
+        <Toolbar editor={editor} className={classNameToolbar} />
+      )}
+      <EditorContent editor={editor} className={classNameEditor} />
       <div
         className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}
       >
@@ -92,7 +109,7 @@ export default function TipTap({
           height="20"
           width="20"
           viewBox="0 0 20 20"
-          className={`${characterCountStorage.characters() === charLimit ? "text-red-500" : "text-purple-500"}`}
+          className={`${characterCountStorage.characters() === charLimit ? "text-neo-pink-hover" : characterCountStorage.characters() > charLimit / 2 ? "text-neo-sage-hover" : "text-neo-mantis"}`}
         >
           <circle r="10" cx="10" cy="10" fill="#e9ecef" />
           <circle
@@ -108,9 +125,6 @@ export default function TipTap({
           <circle r="6" cx="10" cy="10" fill="white" />
         </svg>
         {characterCountStorage.characters()} / {charLimit} characters
-        {/* word count */}
-        {/* <br />
-        {characterCountStorage.words()} words */}
       </div>
     </div>
   );

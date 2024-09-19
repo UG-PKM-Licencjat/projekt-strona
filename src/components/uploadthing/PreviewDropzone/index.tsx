@@ -6,8 +6,8 @@ export interface PreviewDropzoneProps {
   files: CustomFile[];
   setFiles: (value: SetStateAction<CustomFile[]>) => void;
   routeConfig?: ExpandedRouteConfig;
-  startUpload: (files: CustomFile[]) => void;
-  isUploading: boolean;
+  startUpload?: (files: CustomFile[]) => void;
+  isUploading?: boolean;
   className?: string;
   showUploadButton?: boolean;
   disabled?: boolean;

@@ -1,8 +1,8 @@
 import {
   closestCenter,
   DndContext,
-  DragEndEvent,
-  DragStartEvent,
+  type DragEndEvent,
+  type DragStartEvent,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -13,27 +13,25 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
-import {
-  type CustomFile,
-  PreviewDropzone,
-  useUploadThing,
-} from "~/components/uploadthing";
+import { getRouteConfig, PreviewDropzone } from "~/components/uploadthing";
 
 import { useFormContext } from "react-hook-form";
 import { KeyboardSensor, PointerSensor } from "~/components/Sortable/sensors";
-import { ArtistFormData } from "~/lib/artistSchema";
+import { type ArtistFormData } from "~/lib/artistSchema";
+import { useFileStore } from "~/stores/fileStore";
+import CustomError from "./CustomError";
 
 export default function Step4() {
   // TODO this lags on every render, figure out why
-  const { setValue, getValues } = useFormContext<ArtistFormData>();
-  const [files, setFiles] = useState<CustomFile[]>(getValues("files") ?? []);
+  const { setValue, trigger } = useFormContext<ArtistFormData>();
+  const { files, touched, setFiles } = useFileStore();
 
   useEffect(() => {
     setValue("files", files);
-  }, [files]);
+    if (touched) void trigger("files");
+  }, [files, setValue, touched, trigger]);
 
-  const { startUpload, routeConfig, isUploading } =
-    useUploadThing("galleryUploader");
+  const routeConfig = getRouteConfig("galleryUploader");
 
   // Useful for onDrag overlays and animations
   const [isDragging, setIsDragging] = useState(false);
@@ -61,17 +59,16 @@ export default function Step4() {
             files={files}
             setFiles={setFiles}
             routeConfig={routeConfig}
-            startUpload={startUpload}
-            isUploading={isUploading}
-            showUploadButton={true}
+            showUploadButton={false}
             className="w-full"
           />
+          <CustomError name="files" />
         </div>
       </SortableContext>
     </DndContext>
   );
 
-  function handleDragStart(event: DragStartEvent) {
+  function handleDragStart(_event: DragStartEvent) {
     setIsDragging(true);
   }
 
@@ -85,7 +82,7 @@ export default function Step4() {
     if (active.id !== over?.id) {
       setFiles((files) => {
         const oldIndex = files.findIndex((file) => file.key === active?.id);
-        const newIndex = files.findIndex((file) => file.key === over?.id!);
+        const newIndex = files.findIndex((file) => file.key === over?.id);
 
         return arrayMove(files, oldIndex, newIndex);
       });

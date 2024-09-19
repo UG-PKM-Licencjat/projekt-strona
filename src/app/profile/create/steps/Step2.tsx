@@ -33,7 +33,7 @@ export default function Step2() {
         onChangeHTML={onChangeHTML}
         onBlur={handleBlur}
         charLimit={1000}
-        value={value}
+        content={value}
       />
       <CustomError name="longDescription" />
     </div>

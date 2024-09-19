@@ -1,10 +1,18 @@
 "use client";
 
-import { MapPin, Search, Grid, List } from "lucide-react";
+import {
+  MapPin,
+  Search,
+  Grid,
+  List,
+  ChevronRight,
+  ChevronLeft,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import OfferCard, { type Offer } from "~/components/OfferCard/OfferCard";
 import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
+import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { trpc } from "~/trpc/react";
 
 export default function SearchPage() {
@@ -53,8 +61,10 @@ export default function SearchPage() {
       buttons.push(
         <Button
           key="first"
+          variant="ghost"
+          size="icon"
           onClick={() => handlePageClick(1)}
-          className="rounded-md border border-neo-castleton px-3 py-1 text-neo-castleton transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
+          className="size-12 rounded-md transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
         >
           1
         </Button>,
@@ -73,11 +83,11 @@ export default function SearchPage() {
       buttons.push(
         <Button
           key={i}
+          size="icon"
+          variant="ghost"
           onClick={() => handlePageClick(i)}
-          className={`rounded-md border px-3 py-1 transition-colors duration-200 ${
-            currentPage === i
-              ? "bg-neo-castleton text-white"
-              : "border-neo-castleton text-neo-castleton hover:bg-neo-castleton hover:text-white"
+          className={`size-12 rounded-md transition-colors duration-200 hover:bg-neo-castleton hover:text-white ${
+            currentPage === i ? "bg-neo-castleton text-white" : ""
           }`}
         >
           {i}
@@ -97,8 +107,10 @@ export default function SearchPage() {
       buttons.push(
         <Button
           key="last"
+          size="sm"
+          variant="ghost"
           onClick={() => handlePageClick(totalPages)}
-          className="rounded-md border border-neo-castleton px-3 py-1 text-neo-castleton transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
+          className="size-12 rounded-md transition-colors duration-200 hover:bg-neo-castleton hover:text-white"
         >
           {totalPages}
         </Button>,
@@ -109,8 +121,8 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5]">
-      <main className="container mx-auto p-4">
+    <div className="flex-1 bg-[#f5f5f5]">
+      <main className="container mx-auto flex h-full flex-col p-4">
         <div className="mb-8 rounded-lg bg-neo-castleton p-4 shadow-md">
           <div className="flex flex-col gap-4 md:flex-row">
             <div className="relative flex-grow">
@@ -153,9 +165,13 @@ export default function SearchPage() {
           </h2>
           <div className="flex gap-2">
             <Button
+              size="icon"
+              variant="ghost"
               onClick={() => setViewMode("grid")}
-              className={`rounded p-2 ${
-                viewMode === "grid" ? "bg-neo-castleton" : "bg-neo-sage"
+              className={`${
+                viewMode === "grid"
+                  ? "bg-neo-castleton hover:bg-neo-castleton"
+                  : "bg-neo-sage hover:bg-neo-sage-hover"
               } transition-colors duration-200`}
               aria-label="Grid view"
             >
@@ -167,9 +183,13 @@ export default function SearchPage() {
               />
             </Button>
             <Button
+              size="icon"
+              variant="ghost"
               onClick={() => setViewMode("list")}
-              className={`rounded p-2 ${
-                viewMode === "list" ? "bg-neo-castleton" : "bg-neo-sage"
+              className={`${
+                viewMode === "list"
+                  ? "bg-neo-castleton hover:bg-neo-castleton"
+                  : "bg-neo-sage hover:bg-neo-sage-hover"
               } transition-colors duration-200`}
               aria-label="List view"
             >
@@ -183,37 +203,49 @@ export default function SearchPage() {
           </div>
         </div>
         <div
-          className={`grid ${
+          className={`grid flex-1 ${
             viewMode === "grid"
               ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               : "grid-cols-1"
           } gap-6`}
         >
-          {data?.map((offer) => <OfferCard key={offer.id} offer={offer} />)}
+          {data
+            ? data.map((offer) => <OfferCard key={offer.id} offer={offer} />)
+            : Array.from({ length: LIMIT }).map((_, ind) => (
+                <SkeletonCard key={ind} className="h-40" randomColor />
+              ))}
         </div>
 
         {/* Pagination Buttons */}
         {offerCount && (
           <div className="mt-8 flex items-center justify-center space-x-2">
-            {skip > 0 && (
+            {
               <Button
                 onClick={() => setSkip(skip - LIMIT)}
-                className="rounded-md bg-neo-castleton px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
+                size="icon"
+                variant="ghost"
+                className="size-12"
+                disabled={skip == 0}
+                // className="rounded-md px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
               >
-                Poprzednia
+                <ChevronLeft />
               </Button>
-            )}
+            }
 
             {getPaginationButtons()}
 
-            {skip / LIMIT + 1 < Math.ceil(offerCount / LIMIT) && (
+            {
               <Button
                 onClick={() => setSkip(skip + LIMIT)}
-                className="rounded-md bg-neo-castleton px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
+                size="icon"
+                variant="ghost"
+                className={`size-12 ${skip > 0 ? "disabled" : ""}`}
+                disabled={skip / LIMIT + 1 >= Math.ceil(offerCount / LIMIT)}
+                // className="rounded-md px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
               >
-                Następna
+                <ChevronRight />
               </Button>
-            )}
+            }
           </div>
         )}
       </main>

@@ -1,6 +1,6 @@
 {
-  "id": "52815593-bd23-468f-a75a-c3b3b89cc181",
-  "prevId": "4790af97-40f2-4148-9e87-69be85f93bc6",
+  "id": "745cb207-1f64-463a-9395-a86dafe60dc6",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -192,6 +192,24 @@
           "primaryKey": true,
           "notNull": true
         },
+        "ratings": {
+          "name": "ratings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "votes": {
+          "name": "votes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "name": {
           "name": "name",
           "type": "varchar(255)",
@@ -236,71 +254,13 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.rating": {
-      "name": "rating",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "rating_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
-        "userId": {
-          "name": "userId",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "rating": {
-          "name": "rating",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "offerId": {
-          "name": "offerId",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
       "foreignKeys": {
-        "rating_userId_user_id_fk": {
-          "name": "rating_userId_user_id_fk",
-          "tableFrom": "rating",
+        "offer_userId_user_id_fk": {
+          "name": "offer_userId_user_id_fk",
+          "tableFrom": "offer",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "rating_offerId_offer_id_fk": {
-          "name": "rating_offerId_offer_id_fk",
-          "tableFrom": "rating",
-          "tableTo": "offer",
-          "columnsFrom": [
-            "offerId"
           ],
           "columnsTo": [
             "id"
@@ -345,15 +305,15 @@
           "primaryKey": false,
           "notNull": true
         },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "comment": {
           "name": "comment",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "replyTo": {
-          "name": "replyTo",
-          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
@@ -481,63 +441,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.userOffer": {
-      "name": "userOffer",
-      "schema": "",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "offerId": {
-          "name": "offerId",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "userOffer_userId_user_id_fk": {
-          "name": "userOffer_userId_user_id_fk",
-          "tableFrom": "userOffer",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "userOffer_offerId_offer_id_fk": {
-          "name": "userOffer_offerId_offer_id_fk",
-          "tableFrom": "userOffer",
-          "tableTo": "offer",
-          "columnsFrom": [
-            "offerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "userOffer_userId_offerId_pk": {
-          "name": "userOffer_userId_offerId_pk",
-          "columns": [
-            "userId",
-            "offerId"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
     "public.user": {
       "name": "user",
       "schema": "",
@@ -611,6 +514,20 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
+        },
+        "registrationStatus": {
+          "name": "registrationStatus",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "isArtist": {
+          "name": "isArtist",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

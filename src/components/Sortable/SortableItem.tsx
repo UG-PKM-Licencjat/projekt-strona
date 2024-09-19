@@ -1,11 +1,7 @@
 import React from "react";
-import {
-  useSortable,
-  defaultAnimateLayoutChanges,
-  type AnimateLayoutChanges,
-} from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { UniqueIdentifier } from "@dnd-kit/core";
+import { type UniqueIdentifier } from "@dnd-kit/core";
 
 export function SortableItem({
   children,
@@ -15,13 +11,20 @@ export function SortableItem({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: sortId });
 
-  const style = {
+  const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
+    touchAction: "none",
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      {...props}
+    >
       {children}
     </div>
   );

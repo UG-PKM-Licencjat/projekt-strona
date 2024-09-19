@@ -16,7 +16,7 @@ export const Tag = ({ children, className }: TagProps) => {
   return (
     <div
       className={cn(
-        `flex h-10 items-center rounded-lg bg-purple-400 px-4 font-normal text-white`,
+        `flex h-10 select-none items-center rounded-lg bg-purple-400 px-4 font-normal text-white`,
         className,
       )}
     >

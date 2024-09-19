@@ -4,9 +4,15 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Tag } from "~/components/Tag/Tag";
 import { Input } from "~/components/ui/Input/Input";
-import { ArtistFormData } from "~/lib/artistSchema";
+import { type ArtistFormData } from "~/lib/artistSchema";
 import CustomError from "./CustomError";
-import { Check, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
+
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "~/components/ui/popover";
 
 // Mock data for front development purposes
 const tags = [
@@ -29,27 +35,28 @@ const tags = [
 ];
 
 export default function Step3() {
-  const {
-    setValue,
-    formState: { errors },
-    trigger,
-    getValues,
-  } = useFormContext<ArtistFormData>();
+  const { setValue, trigger, getValues } = useFormContext<ArtistFormData>();
 
   const [inputText, setInputText] = useState("");
-  const [focus, setFocus] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [touched, setTouched] = useState(false);
   const [resultTags, setResultTags] = useState<{ id: number; name: string }[]>(
     getValues("tags") ?? [],
   );
 
   function onInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     setInputText(event.target.value);
+    setOpen(true);
   }
 
   useEffect(() => {
     setValue("tags", resultTags);
-    void trigger("tags");
-  }, [resultTags, setValue, trigger]);
+    if (touched) void trigger("tags");
+  }, [resultTags, setValue, trigger, touched]);
+
+  const filteredTags = tags.filter(
+    (tag) => !resultTags.includes(tag) && tag.name.includes(inputText),
+  );
 
   return (
     <div className="my-4 flex flex-col gap-4">
@@ -72,40 +79,45 @@ export default function Step3() {
             </div>
           ))}
         </div>
-        <CustomError name="tags" />
       </div>
-      <div>
-        <Input
-          value={inputText}
-          onChange={onInputChange}
-          onFocus={() => {
-            setFocus(true);
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger>
+          <Input
+            value={inputText}
+            onChange={onInputChange}
+            placeholder="Wpisz nazwę tagu tutaj"
+          />
+        </PopoverTrigger>
+        <PopoverContent
+          className="overflow-y-auto rounded border border-gray-300 bg-neo-gray p-0 shadow-lg"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          style={{
+            width: "var(--radix-popover-trigger-width)",
+            maxHeight: "var(--radix-popover-content-available-height)",
           }}
-          onBlur={() => setTimeout(() => setFocus(false), 150)}
-          placeholder="Wpisz nazwę tagu tutaj"
-        />
-        {focus && (
-          <div className="relative left-0 right-0 mt-1 max-h-48 overflow-y-scroll rounded border border-gray-300 bg-neo-gray shadow-lg">
-            {tags
-              .filter(
-                (tag) =>
-                  !resultTags.includes(tag) && tag.name.includes(inputText),
-              )
-              .map((tag) => (
-                <div
-                  key={tag.id}
-                  className="px-6 py-2 tracking-wider hover:bg-neo-gray-hover"
-                  onClick={() => {
-                    setResultTags((prev) => [...prev, tag]);
-                    setInputText("");
-                  }}
-                >
-                  <p>{tag.name}</p>
-                </div>
-              ))}
-          </div>
-        )}
-      </div>
+          onInteractOutside={() => setTouched(true)}
+        >
+          {filteredTags.length > 0 &&
+            filteredTags.map((tag) => (
+              <div
+                key={tag.id}
+                className="cursor-pointer px-6 py-2 tracking-wider hover:bg-neo-gray-hover"
+                onClick={() => {
+                  setResultTags((prev) => [...prev, tag]);
+                  setInputText("");
+                }}
+              >
+                <p>{tag.name}</p>
+              </div>
+            ))}
+          {filteredTags.length === 0 && (
+            <div className="px-6 py-2 tracking-wider">
+              <p>Brak wyników</p>
+            </div>
+          )}
+        </PopoverContent>
+      </Popover>
+      <CustomError name="tags" />
     </div>
   );
 }

@@ -52,7 +52,8 @@ export default function Step3() {
   useEffect(() => {
     setValue("tags", resultTags);
     if (touched) void trigger("tags");
-  }, [resultTags, setValue, trigger, touched]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultTags, setValue]);
 
   const filteredTags = tags.filter(
     (tag) => !resultTags.includes(tag) && tag.name.includes(inputText),
@@ -60,6 +61,7 @@ export default function Step3() {
 
   return (
     <div className="my-4 flex flex-col gap-4">
+      <CustomError name="tags" />
       <div className="flex flex-col gap-2">
         <span>Wybrane tagi</span>
         <div className="flex flex-wrap gap-3">
@@ -85,17 +87,17 @@ export default function Step3() {
           <Input
             value={inputText}
             onChange={onInputChange}
+            onFocus={() => setTouched(true)}
             placeholder="Wpisz nazwę tagu tutaj"
           />
         </PopoverTrigger>
         <PopoverContent
-          className="overflow-y-auto rounded border border-gray-300 bg-neo-gray p-0 shadow-lg"
+          className="max-h-64 overflow-y-auto rounded border border-gray-300 bg-neo-gray p-0 shadow-lg"
           onOpenAutoFocus={(e) => e.preventDefault()}
           style={{
             width: "var(--radix-popover-trigger-width)",
-            maxHeight: "var(--radix-popover-content-available-height)",
           }}
-          onInteractOutside={() => setTouched(true)}
+          onInteractOutside={() => void trigger("tags")}
         >
           {filteredTags.length > 0 &&
             filteredTags.map((tag) => (
@@ -117,7 +119,6 @@ export default function Step3() {
           )}
         </PopoverContent>
       </Popover>
-      <CustomError name="tags" />
     </div>
   );
 }

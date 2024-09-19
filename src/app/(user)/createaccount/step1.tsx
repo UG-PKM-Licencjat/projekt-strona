@@ -32,11 +32,11 @@ const formSchema = z.object({
   // /u: Enables Unicode mode, which allows for proper matching of Unicode characters.
   firstName: z
     .string()
-    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}'][\p{L}\p{M}]+){0,2}$/u, {
-      message: "Pseudonim zawiera nieprawidłowe znaki.",
-    })
     .min(2, {
       message: "Imię musi mieć co najmniej 2 znaki.",
+    })
+    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}'][\p{L}\p{M}]+){0,2}$/u, {
+      message: "Pseudonim zawiera nieprawidłowe znaki.",
     }),
   //     ^: Asserts the start of the string.
   // [\p{L}\p{M}]: Matches one or more Unicode letter (\p{L}) or mark (\p{M}) characters.
@@ -50,11 +50,11 @@ const formSchema = z.object({
   // /u: Enables Unicode mode.
   lastName: z
     .string()
-    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}' ][\p{L}\p{M}]+){0,2}$/u, {
-      message: "Nazwisko zawiera nieprawidłowe znaki.",
-    })
     .min(2, {
       message: "Nazwisko musi mieć co najmniej 2 znaki.",
+    })
+    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}' ][\p{L}\p{M}]+){0,2}$/u, {
+      message: "Nazwisko zawiera nieprawidłowe znaki.",
     }),
 });
 

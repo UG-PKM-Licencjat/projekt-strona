@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import { Icon } from "src/components/ui/Icon/Icon";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
-import { trpc } from "~/trpc/react";
-import { useEffect } from "react";
+// import { useSession } from "next-auth/react";
+// import { redirect } from "next/navigation";
+// import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
+// import { trpc } from "~/trpc/react";
+// import { useEffect } from "react";
 import playingpiano from "public/svg/playingpiano.svg";
 import Image from "next/image";
 
@@ -27,10 +27,10 @@ export default function Home() {
   //   }
   // }, [isLoading]);
 
-  const session = useSession();
+  // const session = useSession();
 
   return (
-    <div className="flex h-screen flex-col text-white md:bg-neo-castleton">
+    <div className="flex flex-col text-white md:bg-neo-castleton">
       <header className="flex h-[500px] flex-col bg-neo-castleton md:container md:pt-4">
         <Image
           src={playingpiano}

@@ -93,7 +93,7 @@ export const generatePermittedFileTypes = (config?: ExpandedRouteConfig) => {
   return { fileTypes, multiple: maxFileCount.some((v) => v && v > 1) };
 };
 
-const generateMimeTypes = (
+export const generateMimeTypes = (
   typesOrRouteConfig: string[] | ExpandedRouteConfig,
 ) => {
   const fileTypes = Array.isArray(typesOrRouteConfig)

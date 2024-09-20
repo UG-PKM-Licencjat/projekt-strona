@@ -54,6 +54,9 @@ export default function CreateArtistProfilePage() {
   const methods = useForm<ArtistFormData>({
     resolver: zodResolver(artistSchema),
     mode: "onTouched",
+    defaultValues: {
+      distance: 0,
+    },
   });
 
   const { toast } = useToast();
@@ -99,7 +102,7 @@ export default function CreateArtistProfilePage() {
     return fields.every((field) => {
       const value = methods.getValues(field);
       const error = methods.formState.errors[field]?.message;
-      return value?.length && !error;
+      return value && Object.keys(value).length && !error;
     });
   };
 

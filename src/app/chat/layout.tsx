@@ -7,6 +7,7 @@ import { type UserWithMessage } from "~/components/chat/ConversationsNav/Convers
 import { trpc } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 
 export default function ChatLayout({
   children,
@@ -23,21 +24,27 @@ export default function ChatLayout({
     session?.user.id ?? "",
   );
 
+  const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
+    messages?.map((message) =>
+      message.from == session?.user.id ? message.to : message.from,
+    ) ?? [],
+  );
+
   useEffect(() => {
     const userId = session?.user.id;
-    if (!userId) return;
-    //void re(); // TODO: not too good idea
-    const mapped: Array<UserWithMessage> | undefined = messages?.map(
-      (message) =>
+    if (!userId || !userDataForSample) return;
+
+    const mapped: Array<UserWithMessage> | undefined = userDataForSample.map(
+      (userData) =>
         ({
-          name: "Test name", // TODO: get user name from the server
-          lastMessage: message.message,
-          image: "https://picsum.photos/id/100/400/400", // TODO: fetch from server
-          userId: message.from == userId ? message.to : message.from,
+          userId: userData.id,
+          name: userData.name ?? "",
+          lastMessage: "", //message.message,
+          image: userData.image ?? "",
         }) satisfies UserWithMessage,
     );
     setSampleMessages(mapped ?? []);
-  }, [messages, session?.user.id]);
+  }, [messages, session?.user.id, userDataForSample]);
 
   return (
     <div className="flex h-screen bg-[#4a8573] text-[#005243]">

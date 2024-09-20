@@ -3,7 +3,7 @@ import { Input } from "~/components/ui/Input/Input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { type ArtistFormData } from "~/lib/artistSchema";
-import CustomError from "./CustomError";
+import CustomError from "~/components/CustomError";
 
 export default function Step1() {
   const { register } = useFormContext<ArtistFormData>();

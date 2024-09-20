@@ -3,7 +3,7 @@ import APIProviderWrapper from "~/components/LocationGoogle/APIProviderWrapper";
 import { PlaceAutocompleteClassic } from "~/components/LocationGoogle/autocomplete-classic";
 import { Input } from "~/components/ui/Input/Input";
 import { Label } from "~/components/ui/label";
-import CustomError from "./CustomError";
+import CustomError from "~/components/CustomError";
 import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
 import MapHandler from "~/components/LocationGoogle/map-handler";
 import { Circle } from "~/components/LocationGoogle/Circle";

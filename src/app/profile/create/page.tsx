@@ -17,7 +17,6 @@ import { steps, type Fields } from "./steps";
 export default function CreateArtistProfilePage() {
   const { width } = useWindowSize();
   const isMobile = width ? width <= 1280 : window.innerWidth <= 1280;
-  console.log("isMobile", isMobile);
   const files = useFileStore((state) => state.files);
 
   const variants = {

@@ -7,9 +7,9 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await getServerAuthSession();
-  if (!session) {
-    redirect("/");
-  }
+  // if (!session) {
+  //   redirect("/");
+  // }
   return (
     <div className="flex flex-1 flex-col bg-neo-castleton">
       <div className="flex flex-1 md:p-20">{children}</div>

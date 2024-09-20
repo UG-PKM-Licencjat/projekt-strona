@@ -8,7 +8,7 @@ interface AvatarStore {
   avatar: File | undefined;
   setAvatar: (avatar: File) => void;
   setAvatarUrl: (avatarUrl: string) => void;
-  uploadAvatar: () => Promise<ClientUploadedFileData<null> | undefined>;
+  uploadAvatar: () => Promise<string | undefined>;
 }
 
 export const useAvatarStore = create<AvatarStore>((set, get) => ({
@@ -20,13 +20,13 @@ export const useAvatarStore = create<AvatarStore>((set, get) => ({
   setAvatarUrl: (avatarUrl) => set({ avatarUrl, gotSessionImage: true }),
   uploadAvatar: async () => {
     const avatar = get().avatar;
-    if (!avatar) return undefined;
+    if (!avatar) return get().avatarUrl;
     return uploadFiles("avatarUploader", {
       files: [avatar],
     })
       .then((uploadedFiles) => {
         if (!uploadedFiles) return;
-        return uploadedFiles[0];
+        return uploadedFiles[0]?.url;
       })
       .catch((error) => {
         console.error(error);

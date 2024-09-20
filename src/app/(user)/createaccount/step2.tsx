@@ -15,12 +15,13 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { type Data } from "./page";
-import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import womangoing from "public/svg/woman-going.svg";
 import { useToast } from "~/components/ui/use-toast";
 import { useAvatarStore } from "~/stores/avatarStore";
+import { useState } from "react";
+import { LoaderCircleIcon } from "lucide-react";
 
 export default function Step2(props: {
   data: Data;
@@ -28,11 +29,16 @@ export default function Step2(props: {
 }) {
   const { data, handleChange } = props;
   const FormSchema = z.object({
-    type: z.string({
-      message: "To pole jest wymagane",
-    }),
+    type: z
+      .string({
+        message: "To pole jest wymagane",
+      })
+      .min(1, {
+        message: "To pole jest wymagane",
+      }),
   });
   const uploadAvatar = useAvatarStore((state) => state.uploadAvatar);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -40,46 +46,32 @@ export default function Step2(props: {
 
   const writenames = trpc.user.putRegistrationData.useMutation();
 
-  const { data: session, update } = useSession();
   const { toast } = useToast();
 
   async function onSubmit(isArtistString: z.infer<typeof FormSchema>) {
     const isArtist = isArtistString.type === "true" ? true : false;
-    const avatar = await uploadAvatar();
-    if (!avatar) {
-      toast({
-        title: "Error uploading avatar",
-        description: "Avatar upload failed",
-        variant: "destructive",
-      });
-      return;
-    }
 
     if (form.getValues().type !== undefined) {
+      setIsProcessing(true);
+      const avatar = await uploadAvatar();
+      if (!avatar) {
+        toast({
+          title: "Error uploading avatar",
+          description: "Avatar upload failed",
+          variant: "destructive",
+        });
+        setIsProcessing(false);
+        return;
+      }
       await writenames
         .mutateAsync({
           firstName: data.firstName,
           lastName: data.lastName,
-          image: avatar.url,
+          image: avatar,
           isArtist: isArtist,
           registrationStatus: 2,
         })
         .then(async () => {
-          await update({
-            ...session,
-            user: {
-              ...session?.user,
-              firstName: data.firstName,
-              lastName: data.lastName,
-              image: avatar.url,
-            },
-          }).catch((error) => {
-            toast({
-              title: "Błąd",
-              description: error.message,
-              variant: "destructive",
-            });
-          });
           handleChange({ ...data, activeTab: 2 });
         })
         .catch((error) => {
@@ -128,14 +120,22 @@ export default function Step2(props: {
                     >
                       <FormItem>
                         <FormControl>
-                          <RadioGroupLabelItem value="true" id="r1">
+                          <RadioGroupLabelItem
+                            value="true"
+                            id="r1"
+                            disabled={isProcessing}
+                          >
                             Tak, chcę się reklamować na Bebop!
                           </RadioGroupLabelItem>
                         </FormControl>
                       </FormItem>
                       <FormItem>
                         <FormControl>
-                          <RadioGroupLabelItem value="false " id="r2">
+                          <RadioGroupLabelItem
+                            value="false"
+                            id="r2"
+                            disabled={isProcessing}
+                          >
                             Nie, chcę tylko przeglądać oferty.
                           </RadioGroupLabelItem>
                         </FormControl>
@@ -152,6 +152,7 @@ export default function Step2(props: {
                   onClick={() => {
                     handleChange({ ...data, activeTab: 0 });
                   }}
+                  disabled={isProcessing}
                 >
                   Wróć
                 </Button>
@@ -159,8 +160,13 @@ export default function Step2(props: {
                   className="sm:w-1/2"
                   type="submit"
                   onClick={() => onSubmit(form.getValues())}
+                  disabled={isProcessing}
                 >
-                  Zakończ
+                  {isProcessing ? (
+                    <LoaderCircleIcon className="size-8 animate-spin" />
+                  ) : (
+                    "Zakończ"
+                  )}
                 </Button>
               </div>
             </form>

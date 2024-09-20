@@ -24,6 +24,7 @@ const putRegistrationData = authedProcedure
       const fetchedUsers = await db
         .update(users)
         .set({
+          name: input.firstName + " " + input.lastName,
           firstName: input.firstName,
           lastName: input.lastName,
           image: input.image,

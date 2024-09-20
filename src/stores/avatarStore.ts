@@ -1,4 +1,3 @@
-import { type ClientUploadedFileData } from "uploadthing/types";
 import { create } from "zustand";
 import { uploadFiles } from "~/components/uploadthing";
 

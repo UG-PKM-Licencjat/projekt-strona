@@ -5,6 +5,9 @@ import { ZodError } from "zod";
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
 import type { Session } from "next-auth";
+import { users } from "~/server/db/schema";
+import logEvent, { LogType } from "../log";
+import { eq } from "drizzle-orm";
 
 /**
  * 1. CONTEXT
@@ -85,6 +88,24 @@ export const authMiddleware = t.middleware(async ({ next }) => {
   if (!session) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+  const [userIdResult] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1);
+
+  if (!userIdResult) {
+    logEvent({
+      message: `User ${session.user.id} does not exist`,
+      additionalInfo: JSON.stringify(userIdResult),
+      logType: LogType.ERROR,
+    });
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "User with provided Id does not exist",
+    });
+  }
+
   // return session in context
   return next({ ctx: { session } });
 });

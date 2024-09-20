@@ -45,12 +45,7 @@ export const appRouter = createTRPCRouter({
         `https://chat-swxn.onrender.com/messages/sample?user=${input}`,
       )
     ).json()) as Array<Message>; // TODO: validate with zod and fix it to be safe
-    console.log("================================"); //.result!.data! as Array<UserWithMessage>;
-    console.log(data);
-    console.log("=========================");
-    // logEvent(
-    //   `Fetched sample messages for user ${input} with first element name: ${data[0]?.name}`,
-    // );
+
     return data;
   }),
 });

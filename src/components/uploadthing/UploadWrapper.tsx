@@ -15,13 +15,15 @@ export default function UploadWrapper({
 }: UploadWrapperProps) {
   const routeConfig = getRouteConfig(endpoint);
   const mimeTypes = generateMimeTypes(routeConfig);
+  const maxFileCount = Object.values(routeConfig).map((v) => v.maxFileCount);
+  const multiple = maxFileCount.some((v) => v && v > 1);
 
   return (
     <label>
       <input
         className="sr-only"
         type="file"
-        multiple={false}
+        multiple={multiple}
         accept={mimeTypes.join(",")}
         onChange={(e) => {
           const file = e.target.files?.[0];

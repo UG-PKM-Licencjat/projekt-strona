@@ -41,7 +41,7 @@ export default function CreateArtistProfilePage() {
       };
     },
   };
-  const [[activeStep, direction], setStep] = useState([4, 0]);
+  const [[activeStep, direction], setStep] = useState([0, 0]);
   const [openDescription, setOpenDescription] = useState(false);
   const toggleDescription = () => setOpenDescription((open) => !open);
 

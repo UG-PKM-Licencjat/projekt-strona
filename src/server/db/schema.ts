@@ -4,6 +4,7 @@ import {
   index,
   integer,
   pgTable,
+  jsonb,
   primaryKey,
   text,
   timestamp,
@@ -148,9 +149,8 @@ export const offers = pgTable("offer", {
     mode: "xy",
     srid: 4326,
   }).notNull(),
-  files: varchar("files", { length: 255 })
-    .array()
-    .default(sql`ARRAY[]::varchar[]`),
+  distance: integer("distance").default(0),
+  files: jsonb("files"),
 });
 
 export const offersRelations = relations(offers, ({ many, one }) => ({

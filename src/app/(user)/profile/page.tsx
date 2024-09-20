@@ -114,6 +114,14 @@ export default function GreenProfileEditWithShadcnForms() {
         });
       })
       .catch((error) => {
+        if (!session) {
+          toast({
+            title: "Error",
+            description: "Sesja wygasła, zaloguj się ponownie, aby kontynuować",
+            variant: "destructive",
+          });
+          return;
+        }
         toast({
           title: "Error",
           description:
@@ -125,7 +133,7 @@ export default function GreenProfileEditWithShadcnForms() {
 
   return (
     <div className="box-border flex w-full flex-1 items-center justify-center bg-neo-castleton">
-      <div className="mb-8 flex h-max items-center justify-center rounded-xl px-6 py-10 md:mb-0 md:w-4/6 md:bg-neo-gray">
+      <div className="mb-8 flex items-end justify-center rounded-xl px-6 py-10 md:mb-0 md:w-4/6 md:bg-neo-gray">
         <div>
           <h1 className="pb-6 text-2xl font-bold leading-none text-neo-gray-hover md:text-neo-castleton">
             Edit Profile
@@ -148,7 +156,7 @@ export default function GreenProfileEditWithShadcnForms() {
                     className="flex cursor-pointer items-center justify-center rounded-md bg-neo-pink px-4 py-2 text-white transition-colors hover:bg-neo-pink-hover"
                   >
                     <CameraIcon className="mr-2 h-5 w-5" />
-                    Change Photo
+                    Zmień zdjęcie
                   </FormLabel>
                 </div>
               </div>
@@ -158,9 +166,9 @@ export default function GreenProfileEditWithShadcnForms() {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-black">First Name</FormLabel>
+                      <FormLabel className="text-black">Imię</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your first name" {...field} />
+                        <Input placeholder="Imię" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -171,9 +179,9 @@ export default function GreenProfileEditWithShadcnForms() {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-black">Last Name</FormLabel>
+                      <FormLabel className="text-black">Nazwisko</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your last name" {...field} />
+                        <Input placeholder="Nazwisko" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -192,13 +200,13 @@ export default function GreenProfileEditWithShadcnForms() {
                         className="bg-green-200 data-[state=checked]:bg-neo-castleton"
                       />
                     </FormControl>
-                    <FormLabel className="text-black">I am an artist</FormLabel>
+                    <FormLabel className="text-black">Jestem artystą</FormLabel>
                   </FormItem>
                 )}
               />
               <div className="flex w-full">
                 <Button className="w-full" type="submit">
-                  Save Changes
+                  Zapisz zmiany
                 </Button>
               </div>
             </form>
@@ -207,7 +215,7 @@ export default function GreenProfileEditWithShadcnForms() {
         <Image
           src={profile}
           alt="Profile edit"
-          className="ml-20 mr-4 hidden w-96 xl:block"
+          className="ml-20 mr-4 hidden h-full w-96 items-end xl:flex"
           width="500"
           height="500"
         />

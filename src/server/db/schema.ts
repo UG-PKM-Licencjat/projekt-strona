@@ -10,6 +10,7 @@ import {
   timestamp,
   varchar,
   boolean,
+  geometry,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -138,14 +139,19 @@ export const offers = pgTable("offer", {
   userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id),
-  // TODO delete this?
   name: varchar("name", { length: 255 }).notNull(),
-  price: doublePrecision("price"),
-  about: text("about"),
-  skills: jsonb("skills"),
-  files: jsonb("files"),
-  links: jsonb("links"),
-  location: varchar("location", { length: 255 }),
+  price: doublePrecision("price").notNull(),
+  shortDescription: varchar("shortDescription", { length: 255 }).notNull(),
+  longDescription: text("longDescription").notNull(),
+  locationName: varchar("locationName", { length: 255 }).notNull(),
+  location: geometry("location", {
+    type: "point",
+    mode: "xy",
+    srid: 4326,
+  }).notNull(),
+  files: varchar("files", { length: 255 })
+    .array()
+    .default(sql`ARRAY[]::varchar[]`),
 });
 
 export const offersRelations = relations(offers, ({ many, one }) => ({

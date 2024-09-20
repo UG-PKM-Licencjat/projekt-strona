@@ -27,7 +27,6 @@ export default function Step2(props: {
   handleChange: (data: Data) => void;
 }) {
   const { data, handleChange } = props;
-  const router = useRouter();
   const FormSchema = z.object({
     type: z.string({
       message: "To pole jest wymagane",
@@ -55,6 +54,14 @@ export default function Step2(props: {
           registrationStatus: 2,
         })
         .then(async () => {
+          if (!session) {
+            toast({
+              title: "Błąd",
+              description: "Sesja wygasła, zaloguj się ponownie",
+              variant: "destructive",
+            });
+          }
+
           await update({
             ...session,
             user: {
@@ -65,18 +72,27 @@ export default function Step2(props: {
           }).catch((error) => {
             toast({
               title: "Błąd",
-              description: error.message,
+              description:
+                "Nie udało się zaktualizować sesji zaloguj się ponownie",
               variant: "destructive",
             });
           });
           handleChange({ ...data, activeTab: 2 });
         })
         .catch((error) => {
-          toast({
-            title: "Błąd",
-            description: error.message,
-            variant: "destructive",
-          });
+          if (error.code === " UNAUTHORIZED") {
+            toast({
+              title: "Błąd",
+              description: "Nie jesteś zalogowany",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Błąd",
+              description: "Nie udało się zaktualizować danych",
+              variant: "destructive",
+            });
+          }
         });
     }
   }

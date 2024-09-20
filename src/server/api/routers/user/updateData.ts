@@ -1,55 +1,53 @@
+import { authedProcedure } from "../../trpc";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-import { authedProcedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import logEvent from "~/server/log";
+import logEvent, { LogType } from "~/server/log";
 
-const putRegistrationData = authedProcedure
+const updateData = authedProcedure
   .input(
     z.object({
       firstName: z.string(),
       lastName: z.string(),
       isArtist: z.boolean(),
-      registrationStatus: z.number(),
     }),
   )
   .mutation(async ({ ctx, input }) => {
     try {
-      if (!ctx.session?.user.id) {
-        return [];
-      }
-      const putRegistrationData = await db
+      const updateResult = await db
         .update(users)
         .set({
           firstName: input.firstName,
           lastName: input.lastName,
           isArtist: input.isArtist,
-          registrationStatus: input.registrationStatus,
         })
-        .where(eq(users.id, ctx.session?.user.id));
-      if (!putRegistrationData) {
+        .where(eq(users.id, ctx.session?.user.id))
+        .returning();
+
+      if (!updateResult) {
         logEvent({
           message: `User ${ctx.session?.user.id} does not exist`,
-          additionalInfo: JSON.stringify(putRegistrationData),
+          additionalInfo: JSON.stringify(updateResult),
+          logType: LogType.ERROR,
         });
         return new TRPCError({
           code: "NOT_FOUND",
           message: "User with provided Id does not exist",
         });
       }
-      logEvent({
-        message: `User ${ctx.session?.user.id} created profile`,
-        additionalInfo: JSON.stringify(input),
-      });
-      return putRegistrationData;
     } catch (error) {
-      throw new TRPCError({
+      logEvent({
+        message: "Failed to update user data",
+        additionalInfo: JSON.stringify(error),
+        logType: LogType.ERROR,
+      });
+
+      return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to save user data",
+        message: "Failed to update user data",
       });
     }
   });
-
-export default putRegistrationData;
+export default updateData;

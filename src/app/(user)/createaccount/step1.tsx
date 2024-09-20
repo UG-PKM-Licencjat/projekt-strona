@@ -13,11 +13,13 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { useEffect } from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
 import { type Data } from "./page";
 import Image from "next/image";
 import man from "public/svg/man.svg";
 import { useSession } from "next-auth/react";
+import { UploadIcon } from "lucide-react";
+import { useAvatarStore } from "~/stores/avatarStore";
+import UploadWrapper from "~/components/uploadthing/UploadWrapper";
 
 const formSchema = z.object({
   //   ^: Asserts the start of the string.
@@ -65,12 +67,23 @@ export default function Step1(props: {
   const { data, handleChange } = props;
   const { data: session } = useSession();
 
+  const [avatarUrl, setAvatarUrl, setAvatar] = useAvatarStore((state) => [
+    state.avatarUrl,
+    state.setAvatarUrl,
+    state.setAvatar,
+  ]);
+
+  useEffect(() => {
+    setAvatarUrl(session?.user?.image ?? "");
+  }, [session?.user?.image]);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: session?.user?.firstName ?? "",
       lastName: session?.user?.lastName ?? "",
     },
+    mode: "onTouched",
   });
 
   useEffect(() => {
@@ -114,15 +127,23 @@ export default function Step1(props: {
               className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-6 pt-6"
             >
               <div className="flex flex-col items-center">
-                <div className="relative h-44 w-44 justify-center rounded-full bg-neo-pink">
-                  <Icon
-                    width="100"
-                    height="100"
-                    name="upload-white"
-                    viewBox="0 0 74 73"
-                    className="absolute bottom-2 left-0 right-0 top-0 m-auto"
-                  />
-                </div>
+                <UploadWrapper endpoint="avatarUploader" onChange={setAvatar}>
+                  <div className="grid size-44 cursor-pointer place-items-center overflow-hidden rounded-full [&>*]:col-start-1 [&>*]:row-start-1">
+                    {avatarUrl && (
+                      <Image
+                        src={avatarUrl}
+                        alt="avatar"
+                        height={100}
+                        width={100}
+                        referrerPolicy="no-referrer"
+                        className="h-full w-full overflow-hidden object-cover"
+                      />
+                    )}
+                    <div className="z-50 flex size-full items-center justify-center bg-black/20 transition-all hover:opacity-100 md:opacity-0">
+                      <UploadIcon className="size-20 text-white" />
+                    </div>
+                  </div>
+                </UploadWrapper>
               </div>
               <FormField
                 control={form.control}
@@ -163,6 +184,7 @@ export default function Step1(props: {
             src={man}
             alt="man"
             className="ml-20 hidden h-full w-max object-cover xl:block"
+            priority={true}
           />
         </div>
       </div>

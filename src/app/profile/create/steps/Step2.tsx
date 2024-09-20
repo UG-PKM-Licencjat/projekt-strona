@@ -1,7 +1,7 @@
 import { useController, useFormContext } from "react-hook-form";
 import TipTap from "~/components/RichTextEditor/Tiptap";
 import type { ArtistFormData } from "~/lib/artistSchema";
-import CustomError from "~/components/CustomError";
+import CustomError from "~/components/Form/CustomError";
 
 export default function Step2() {
   const { control } = useFormContext<ArtistFormData>();

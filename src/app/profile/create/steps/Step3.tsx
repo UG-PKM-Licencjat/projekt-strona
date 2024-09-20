@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { Tag } from "~/components/Tag/Tag";
 import { Input } from "~/components/ui/Input/Input";
 import { type ArtistFormData } from "~/lib/artistSchema";
-import CustomError from "~/components/CustomError";
+import CustomError from "~/components/Form/CustomError";
 import { XIcon } from "lucide-react";
 
 import {

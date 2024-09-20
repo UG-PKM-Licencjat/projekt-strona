@@ -19,7 +19,7 @@ import { useFormContext } from "react-hook-form";
 import { KeyboardSensor, PointerSensor } from "~/components/Sortable/sensors";
 import { type ArtistFormData } from "~/lib/artistSchema";
 import { useFileStore } from "~/stores/fileStore";
-import CustomError from "~/components/CustomError";
+import CustomError from "~/components/Form/CustomError";
 
 export default function Step4() {
   // TODO this lags on every render, figure out why

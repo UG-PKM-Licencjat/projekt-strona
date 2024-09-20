@@ -30,7 +30,7 @@ export const PlaceAutocompleteClassic = ({
   useEffect(() => {
     if (!places || !inputRef.current) return;
 
-    const options = {
+    const options: google.maps.places.AutocompleteOptions = {
       fields: ["geometry", "name", "formatted_address", "address_component"],
       componentRestrictions: { country: "pl" },
       types: [

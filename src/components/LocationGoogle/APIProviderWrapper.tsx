@@ -10,6 +10,8 @@ export default function APIProviderWrapper({
     <APIProvider
       apiKey={env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}
       onLoad={() => console.log("Maps API has loaded.")}
+      region="PL"
+      language="pl"
     >
       {children}
     </APIProvider>

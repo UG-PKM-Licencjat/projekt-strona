@@ -87,7 +87,7 @@ export default function GreenProfileEditWithShadcnForms() {
   //   }
   // };
 
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   useEffect(() => {
     if (session?.user?.firstName && session?.user?.lastName) {
@@ -107,11 +107,30 @@ export default function GreenProfileEditWithShadcnForms() {
         isArtist: values.isArtist,
       })
       .then(() => {
-        toast({
-          title: "Sukces",
-          description: "Zaktualizowano profil",
-          variant: "default",
-        });
+        update({
+          ...session,
+          user: {
+            ...session?.user,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            isArtist: values.isArtist,
+          },
+        })
+          .catch((error) => {
+            toast({
+              title: "Error",
+              description:
+                "Nie udało się zaktualizować sesji, zaloguj się ponownie",
+              variant: "destructive",
+            });
+          })
+          .then(() => {
+            toast({
+              title: "Success",
+              description: "Profil został zaktualizowany",
+              variant: "default",
+            });
+          });
       })
       .catch((error) => {
         if (!session) {

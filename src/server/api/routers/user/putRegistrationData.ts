@@ -29,6 +29,16 @@ const putRegistrationData = authedProcedure
           registrationStatus: input.registrationStatus,
         })
         .where(eq(users.id, ctx.session?.user.id));
+      if (!putRegistrationData) {
+        logEvent({
+          message: `User ${ctx.session?.user.id} does not exist`,
+          additionalInfo: JSON.stringify(putRegistrationData),
+        });
+        return new TRPCError({
+          code: "NOT_FOUND",
+          message: "User with provided Id does not exist",
+        });
+      }
       logEvent({
         message: `User ${ctx.session?.user.id} created profile`,
         additionalInfo: JSON.stringify(input),

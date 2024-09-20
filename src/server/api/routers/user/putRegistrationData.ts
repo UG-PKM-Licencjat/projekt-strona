@@ -10,6 +10,7 @@ const putRegistrationData = authedProcedure
     z.object({
       firstName: z.string(),
       lastName: z.string(),
+      image: z.string(),
       isArtist: z.boolean(),
       registrationStatus: z.number(),
     }),
@@ -25,6 +26,7 @@ const putRegistrationData = authedProcedure
         .set({
           firstName: input.firstName,
           lastName: input.lastName,
+          image: input.image,
           isArtist: input.isArtist,
           registrationStatus: input.registrationStatus,
         })

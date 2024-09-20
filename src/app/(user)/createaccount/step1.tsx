@@ -67,15 +67,19 @@ export default function Step1(props: {
   const { data, handleChange } = props;
   const { data: session } = useSession();
 
-  const [avatarUrl, setAvatarUrl, setAvatar] = useAvatarStore((state) => [
-    state.avatarUrl,
-    state.setAvatarUrl,
-    state.setAvatar,
-  ]);
+  const [avatarUrl, setAvatarUrl, setAvatar, gotSessionImage] = useAvatarStore(
+    (state) => [
+      state.avatarUrl,
+      state.setAvatarUrl,
+      state.setAvatar,
+      state.gotSessionImage,
+    ],
+  );
 
   useEffect(() => {
+    if (gotSessionImage) return;
     setAvatarUrl(session?.user?.image ?? "");
-  }, [session?.user?.image]);
+  }, [session?.user?.image, gotSessionImage]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),

@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { uploadFiles } from "~/components/uploadthing";
 
 interface AvatarStore {
+  gotSessionImage: boolean;
   avatarUrl: string;
   avatar: File | undefined;
   setAvatar: (avatar: File) => void;
@@ -11,11 +12,12 @@ interface AvatarStore {
 }
 
 export const useAvatarStore = create<AvatarStore>((set, get) => ({
+  gotSessionImage: false,
   avatarUrl: "",
   avatar: undefined,
   setAvatar: (avatar) =>
     set({ avatar, avatarUrl: URL.createObjectURL(avatar) }),
-  setAvatarUrl: (avatarUrl) => set({ avatarUrl }),
+  setAvatarUrl: (avatarUrl) => set({ avatarUrl, gotSessionImage: true }),
   uploadAvatar: async () => {
     const avatar = get().avatar;
     if (!avatar) return undefined;

@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import womangoing from "public/svg/woman-going.svg";
 import { useToast } from "~/components/ui/use-toast";
+import { useAvatarStore } from "~/stores/avatarStore";
 
 export default function Step2(props: {
   data: Data;
@@ -31,6 +32,7 @@ export default function Step2(props: {
       message: "To pole jest wymagane",
     }),
   });
+  const uploadAvatar = useAvatarStore((state) => state.uploadAvatar);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -43,12 +45,22 @@ export default function Step2(props: {
 
   async function onSubmit(isArtistString: z.infer<typeof FormSchema>) {
     const isArtist = isArtistString.type === "true" ? true : false;
+    const avatar = await uploadAvatar();
+    if (!avatar) {
+      toast({
+        title: "Error uploading avatar",
+        description: "Avatar upload failed",
+        variant: "destructive",
+      });
+      return;
+    }
 
     if (form.getValues().type !== undefined) {
       await writenames
         .mutateAsync({
           firstName: data.firstName,
           lastName: data.lastName,
+          image: avatar.url,
           isArtist: isArtist,
           registrationStatus: 2,
         })
@@ -59,6 +71,7 @@ export default function Step2(props: {
               ...session?.user,
               firstName: data.firstName,
               lastName: data.lastName,
+              image: avatar.url,
             },
           }).catch((error) => {
             toast({

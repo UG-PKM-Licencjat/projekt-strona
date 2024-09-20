@@ -23,6 +23,10 @@ export const artistSchema = z.object({
     x: z.number(),
     y: z.number(),
   }),
+  distance: z
+    .number()
+    .min(0, { message: "Odległość musi być dodatnia." })
+    .max(600, { message: "Odległość nie może przekraczać 600 km." }),
   tags: z
     .array(z.object({ id: z.number(), name: z.string() })) // z.number as those are id's
     .min(1, { message: "Musisz wybrać chociaż 1 tag." })

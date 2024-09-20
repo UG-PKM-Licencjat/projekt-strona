@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
 import APIProviderWrapper from "~/components/LocationGoogle/APIProviderWrapper";
 import { PlaceAutocompleteClassic } from "~/components/LocationGoogle/autocomplete-classic";
-import { Input } from "~/components/ui/Input/Input";
 import { Label } from "~/components/ui/label";
 import CustomError from "~/components/Form/CustomError";
 import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
 import MapHandler from "~/components/LocationGoogle/map-handler";
 import { Circle } from "~/components/LocationGoogle/Circle";
+import { useFormContext } from "react-hook-form";
+import { type ArtistFormData } from "~/lib/artistSchema";
+import { Slider } from "~/components/ui/slider";
 
 type PlaceResult = google.maps.places.PlaceResult;
 type Position = google.maps.LatLngLiteral | undefined;
 
 export default function Step5() {
-  // City select - chip inputs with searchbox
-  // Price picker - two options, single price or range (slider?)
+  const { setValue, getValues, register, watch } =
+    useFormContext<ArtistFormData>();
+
+  const distance = watch("distance");
 
   const [place, setPlace] = useState<PlaceResult | null>(null);
-  const [distance, setDistance] = useState<number>(0);
+
+  const { ref, onChange, name } = register("distance", { valueAsNumber: true });
 
   // add zoom level management
 
@@ -54,6 +59,9 @@ export default function Step5() {
       // error handling na brak kordów (to sie na 99,9 nie wydarzy nigdy z tego co rozumiem)
       return;
     }
+    setValue("location", { x: placeLocation.lng(), y: placeLocation.lat() });
+    setValue("locationName", place.formatted_address ?? "");
+    console.log("place", place);
     setPlacePosition({
       lat: placeLocation.lat(),
       lng: placeLocation.lng(),
@@ -76,14 +84,18 @@ export default function Step5() {
           <Label className="flex flex-col justify-between gap-2">
             <span>Maksymalna Odległość</span>
             <span>(ogarnąć nieograniczoną)</span>
-            <Input
-              type="number"
-              min={0}
-              step={1}
-              placeholder="Odległość (km)"
-              value={distance}
-              onChange={(e) => setDistance(parseInt(e.target.value))}
-            />
+            <div className="flex flex-col gap-2">
+              <Slider
+                ref={ref}
+                min={0}
+                max={600}
+                step={1}
+                onChange={onChange}
+                name={name}
+                defaultValue={[getValues("distance")]}
+              />
+              {distance}km
+            </div>
             <CustomError name="distance" />
           </Label>
         </div>

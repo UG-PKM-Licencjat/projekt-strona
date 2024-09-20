@@ -17,7 +17,6 @@ interface UserMenuProps {
   session: Session;
 }
 
-
 const UserMenu = ({ session }: UserMenuProps) => {
   return (
     <DropdownMenu>
@@ -28,7 +27,7 @@ const UserMenu = ({ session }: UserMenuProps) => {
             alt={session.user.name!}
             referrerPolicy="no-referrer"
           />
-          <AvatarFallback>
+          <AvatarFallback className="uppercase">
             {session.user.firstName[0]}
             {session.user.lastName[0]}
           </AvatarFallback>

@@ -20,7 +20,6 @@ import {
 } from "~/components/ui/drawer";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
-import { useScrollDirection } from "~/lib/utils";
 import type { Session } from "next-auth";
 
 const filterList: Array<string> = ["/createaccount", "/profile/create"];
@@ -102,7 +101,7 @@ export const Navbar = ({
                     alt={session.user.name!}
                     referrerPolicy="no-referrer"
                   />
-                  <AvatarFallback>
+                  <AvatarFallback className="uppercase">
                     {session.user.firstName[0]}
                     {session.user.lastName[0]}
                   </AvatarFallback>

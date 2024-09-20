@@ -47,10 +47,10 @@ export default function ChatLayout({
   }, [messages, session?.user.id, userDataForSample]);
 
   return (
-    <div className="flex h-screen bg-[#4a8573] text-[#005243]">
+    <div className="flex flex-1 gap-5 bg-neo-castleton text-neo-castleton md:bg-neo-gray-hover">
       {/* Sidebar for desktop and mobile */}
       <div
-        className={`fixed inset-y-0 left-0 z-20 w-64 transform overflow-y-auto bg-neo-castleton p-4 transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-20 w-64 transform overflow-y-auto bg-neo-castleton p-4 transition-transform duration-300 ease-in-out md:m-6 md:w-80 md:rounded-lg ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:translate-x-0`}
       >

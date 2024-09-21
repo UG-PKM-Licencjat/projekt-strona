@@ -11,6 +11,7 @@ import { type ArtistFormData } from "~/lib/artistSchema";
 import { Slider } from "~/components/ui/slider";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { Button } from "~/components/ui/Button/Button";
+import { Input } from "~/components/ui/Input/Input";
 
 type PlaceResult = google.maps.places.PlaceResult;
 type Position = google.maps.LatLngLiteral | undefined;
@@ -99,7 +100,7 @@ export default function Step5() {
                 setValue("locationPlaceholder", locationName ?? "");
               }}
               onPlaceSelect={setPlace}
-              placeholder={"Wpisz lokalizację.."}
+              placeholder={"Wpisz lokalizację..."}
             />
             <CustomError name="locationName" />
           </Label>
@@ -167,6 +168,15 @@ export default function Step5() {
           <MapHandler place={place} />
         </div>
       </APIProviderWrapper>
+      <Label className="flex flex-col justify-between gap-2">
+        <span>Cena</span>
+        {/* TODO use a mask to make it nicer */}
+        <div className="flex items-center gap-2">
+          <Input placeholder="Podaj cenę" {...register("price")} />
+          <span className="text-lg">zł</span>
+        </div>
+        <CustomError name="price" />
+      </Label>
     </div>
   );
 }

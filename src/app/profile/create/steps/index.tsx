@@ -61,7 +61,7 @@ export const steps: {
       "Ostatnim krokiem jest ustalenie lokalizacji i ceny. Wybierz obszar swojego działania i orientacyjną cenę usługi, aby szukający mógł zorientować się czy stać go na twoje usługi 😉",
     content: <Step5 />,
     icon: <Coins className="size-5 sm:size-6" />,
-    fields: ["location", "distance"],
+    fields: ["location", "distance", "price"],
   },
   {
     title: "Podsumowanie",

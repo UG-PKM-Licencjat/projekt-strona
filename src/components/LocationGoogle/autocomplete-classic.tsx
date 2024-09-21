@@ -1,15 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
-import { Input } from "~/components/ui/Input/Input";
+import { Input, type InputProps } from "~/components/ui/Input/Input";
 
 // aliases
 type PlaceResult = google.maps.places.PlaceResult;
 type Autocomplete = google.maps.places.Autocomplete;
 
-interface Props {
+interface Props extends InputProps {
   onPlaceSelect: (place: PlaceResult | null) => void;
-  className?: string;
-  placeholder?: string;
 }
 
 // This is an example of the classic "Place Autocomplete" widget.
@@ -17,8 +15,7 @@ interface Props {
 
 export const PlaceAutocompleteClassic = ({
   onPlaceSelect,
-  className,
-  placeholder,
+  ...props
 }: Props) => {
   const [placeAutocomplete, setPlaceAutocomplete] =
     useState<Autocomplete | null>(null);
@@ -46,7 +43,6 @@ export const PlaceAutocompleteClassic = ({
 
   useEffect(() => {
     if (!placeAutocomplete) return;
-
     placeAutocomplete.addListener("place_changed", () => {
       onPlaceSelect(placeAutocomplete.getPlace());
     });
@@ -54,7 +50,7 @@ export const PlaceAutocompleteClassic = ({
 
   return (
     <div className="autocomplete-container">
-      <Input ref={inputRef} className={className} placeholder={placeholder} />
+      <Input ref={inputRef} {...props} />
     </div>
   );
 };

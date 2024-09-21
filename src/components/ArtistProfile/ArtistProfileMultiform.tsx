@@ -138,7 +138,15 @@ export function ArtistProfileMultiform({
     return fields.every((field) => {
       const value = methods.getValues(field);
       const error = methods.formState.errors[field]?.message;
-      return value && Object.keys(value).length && !error;
+      switch (typeof value) {
+        case "string":
+        case "number":
+          return value && !error;
+        case "object":
+          return Object.keys(value).length > 0 && !error;
+        default:
+          return false;
+      }
     });
   };
 

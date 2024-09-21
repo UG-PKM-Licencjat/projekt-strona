@@ -11,6 +11,7 @@ import { AdminRouter } from "./routers/admin";
 import { OffersRouter } from "./routers/offers";
 import { UserRouter } from "./routers/user";
 import { ReviewsRouter } from "./routers/reviews";
+import AccountRouter from "./routers/admin/account";
 
 /**
  * This is the primary router for your server.
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   offers: OffersRouter,
   user: UserRouter,
   reviews: ReviewsRouter,
+  accounts: AccountRouter,
   clientLog: procedure
     .input(
       z.object({
@@ -39,15 +41,22 @@ export const appRouter = createTRPCRouter({
         tags: opts.input.tags,
       });
     }),
-  getSampleMessages: procedure.input(z.string()).query(async ({ input }) => {
-    const data: Array<Message> = (await (
-      await fetch(
-        `https://chat-swxn.onrender.com/messages/sample?user=${input}`,
-      )
-    ).json()) as Array<Message>; // TODO: validate with zod and fix it to be safe
+  getSampleMessages: procedure
+    .input(z.string())
+    .query(async ({ input, ctx }) => {
+      const data: Array<Message> = (await (
+        await fetch(
+          `https://chat-swxn.onrender.com/messages/sample?user=${input}`,
+          {
+            headers: {
+              Authorization: `Bearer ${ctx.session?.user.idToken}`,
+            },
+          },
+        )
+      ).json()) as Array<Message>; // TODO: validate with zod and fix it to be safe
 
-    return data;
-  }),
+      return data;
+    }),
 });
 
 // export type definition of API

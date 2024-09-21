@@ -17,7 +17,7 @@ export default function ChatLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
 
   const { data: session } = useSession();
-  const [sampleMessages, setSampleMessages] = useState<UserWithMessage[]>([]);
+  // const [sampleMessages, setSampleMessages] = useState<UserWithMessage[]>([]);
   const router = useRouter();
 
   const { data: messages } = trpc.getSampleMessages.useQuery(
@@ -25,25 +25,27 @@ export default function ChatLayout({
   );
 
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
-    messages?.map((message) =>
-      message.from == session?.user.id ? message.to : message.from,
-    ) ?? [],
+    [],
+    // messages?.map((message) =>
+    //   message.from == session?.user.id ? message.to : message.from,
+    // ) ?? [],
   );
 
   useEffect(() => {
+    console.log(messages);
     const userId = session?.user.id;
     if (!userId || !userDataForSample) return;
 
-    const mapped: Array<UserWithMessage> | undefined = userDataForSample.map(
-      (userData) =>
-        ({
-          userId: userData.id,
-          name: userData.name ?? "",
-          lastMessage: "", //message.message,
-          image: userData.image ?? "",
-        }) satisfies UserWithMessage,
-    );
-    setSampleMessages(mapped ?? []);
+    // const mapped: Array<UserWithMessage> | undefined = userDataForSample.map(
+    //   (userData) =>
+    //     ({
+    //       userId: userData.id,
+    //       name: userData.name ?? "",
+    //       lastMessage: "", //message.message,
+    //       image: userData.image ?? "",
+    //     }) satisfies UserWithMessage,
+    // );
+    // setSampleMessages(mapped ?? []);
   }, [messages, session?.user.id, userDataForSample]);
 
   return (
@@ -55,21 +57,31 @@ export default function ChatLayout({
         } md:relative md:translate-x-0`}
       >
         <h2 className="mb-4 text-2xl font-bold text-white">Rozmowy</h2>
-        {sampleMessages.map((conversation, index) => (
-          <div
-            onClick={() => {
-              router.push(`/chat/${conversation.userId}`);
-            }}
-            key={index}
-            className="mb-2 flex cursor-pointer items-center rounded p-2 text-white transition-colors hover:bg-[#4a8573]"
-          >
-            <Avatar className="mr-2 h-8 w-8">
-              <AvatarImage src={conversation.image} alt={conversation.name} />
-              <AvatarFallback>{conversation.name}</AvatarFallback>
-            </Avatar>
-            <span>{conversation.name}</span>
-          </div>
-        ))}
+        {userDataForSample
+          ?.map(
+            (userData) =>
+              ({
+                userId: userData.id,
+                name: userData.name ?? "",
+                lastMessage: "", //message.message,
+                image: userData.image ?? "",
+              }) satisfies UserWithMessage,
+          )
+          .map((conversation, index) => (
+            <div
+              onClick={() => {
+                router.push(`/chat/${conversation.userId}`);
+              }}
+              key={index}
+              className="mb-2 flex cursor-pointer items-center rounded p-2 text-white transition-colors hover:bg-[#4a8573]"
+            >
+              <Avatar className="mr-2 h-8 w-8">
+                <AvatarImage src={conversation.image} alt={conversation.name} />
+                <AvatarFallback>{conversation.name}</AvatarFallback>
+              </Avatar>
+              <span>{conversation.name}</span>
+            </div>
+          ))}
       </div>
 
       {/* Toggle Button for Mobile */}

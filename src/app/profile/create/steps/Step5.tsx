@@ -10,6 +10,7 @@ import { useFormContext } from "react-hook-form";
 import { type ArtistFormData } from "~/lib/artistSchema";
 import { Slider } from "~/components/ui/slider";
 import { MinusIcon, PlusIcon } from "lucide-react";
+import { Button } from "~/components/ui/Button/Button";
 
 type PlaceResult = google.maps.places.PlaceResult;
 type Position = google.maps.LatLngLiteral | undefined;
@@ -80,7 +81,7 @@ export default function Step5() {
   }, [place]);
 
   return (
-    <div className="flex h-full justify-between">
+    <div className="grid grid-cols-2 place-content-center max-sm:grid-cols-1">
       <APIProviderWrapper>
         <div className="flex flex-col gap-4">
           <Label className="flex flex-col justify-between gap-2">
@@ -102,36 +103,47 @@ export default function Step5() {
             />
             <CustomError name="locationName" />
           </Label>
-          <Label className="flex flex-col justify-between gap-6">
+          <Label
+            htmlFor="slider"
+            className="flex flex-col justify-between gap-6"
+          >
             <span>Maksymalna Odległość</span>
             <div className="flex w-full flex-col items-center gap-2">
               <div className="flex w-full items-center gap-2">
-                <div
-                  className="shrink-0 cursor-pointer rounded-full p-1 transition-colors hover:bg-black/20"
+                <Button
+                  variant="ghost"
+                  type="button"
+                  className="size-auto shrink-0 rounded-full p-1"
                   onClick={decrement}
+                  disabled={!location}
                 >
                   <MinusIcon className="size-5" />
-                </div>
+                </Button>
                 <Slider
+                  id="slider"
                   min={MIN_DISTANCE}
                   max={MAX_DISTANCE}
                   step={STEP}
                   onValueChange={(value) => setValue("distance", value[0]!)}
                   value={[distance]}
+                  disabled={!location}
                 />
-                <div
-                  className="shrink-0 cursor-pointer rounded-full p-1 transition-colors hover:bg-black/20"
+                <Button
+                  variant="ghost"
+                  type="button"
+                  className="size-auto shrink-0 rounded-full p-1"
                   onClick={increment}
+                  disabled={!location}
                 >
                   <PlusIcon className="size-5" />
-                </div>
+                </Button>
               </div>
               {distance}km
             </div>
             <CustomError name="distance" />
           </Label>
         </div>
-        <div className="w-1/2 overflow-hidden rounded-md border">
+        <div className="aspect-video w-full overflow-hidden rounded-md border">
           <Map
             defaultZoom={placePosition ? 10 : 5}
             defaultCenter={center}

@@ -148,7 +148,7 @@ export default function CreateArtistProfilePage() {
               ))}
             </div>
           </div>
-          <div className="flex w-full flex-col gap-4">
+          <div className="flex w-full flex-col gap-6">
             <div className="flex w-full flex-col xl:px-10 xl:py-5">
               <h1 className="text-lg font-medium sm:text-xl">
                 {steps[activeStep]?.title}

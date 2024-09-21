@@ -14,11 +14,13 @@ export const artistSchema = z.object({
     .min(3, { message: "Opis musi mieć co najmniej 3 znaki." })
     .max(400, { message: "Opis nie może przekraczać 400 znaków." }),
   longDescription: z
-    .string()
+    .string({ message: "Opis musi mieć co najmniej 10 znaków." })
     .min(10, { message: "Opis musi mieć co najmniej 10 znaków." })
     .max(4000, { message: "Opis nie może przekraczać 4000 znaków." }),
   longDescriptionHTML: z.string().optional(),
-  locationName: z.string().min(1, { message: "Lokalizacja jest wymagana." }),
+  locationName: z
+    .string({ message: "Lokalizacja jest wymagane." })
+    .min(1, { message: "Lokalizacja jest wymagana." }),
   locationPlaceholder: z.string(),
   location: z.object({
     x: z.number(),
@@ -29,7 +31,9 @@ export const artistSchema = z.object({
     .min(0, { message: "Odległość musi być dodatnia." })
     .max(600, { message: "Odległość nie może przekraczać 600 km." }),
   tags: z
-    .array(z.object({ id: z.number(), name: z.string() })) // z.number as those are id's
+    .array(z.object({ id: z.number(), name: z.string() }), {
+      message: "Musisz wybrać chociaż 1 tag.",
+    })
     .min(1, { message: "Musisz wybrać chociaż 1 tag." })
     .max(5, { message: "Możesz wybrać maksymalnie 5 tagów." }),
   files: z.array(fileSchema).optional(),

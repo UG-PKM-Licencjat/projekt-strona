@@ -48,31 +48,18 @@ export default function Step5() {
   const [placePosition, setPlacePosition] = useState<Position | null>(null);
   const location = getValues("location");
 
-  const defaultPos = {
-    lat: location?.y ?? 52.2297,
-    lng: location?.x ?? 21.0122,
-  };
-
-  const [center, setCenter] = useState<Position>(defaultPos);
-
-  // Get user location
   useEffect(() => {
-    const success = (position: GeolocationPosition) => {
-      console.log("success", position);
-      setCenter({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-    };
+    if (!location) return;
+    setPlacePosition({
+      lat: location.y,
+      lng: location.x,
+    });
+  }, [location]);
 
-    const error = () => {
-      console.log("Unable to retrieve your location");
-      // default location
-      setCenter(defaultPos);
-    };
-
-    navigator.geolocation.getCurrentPosition(success, error);
-  }, []);
+  const center = {
+    lat: location?.y ?? 51.9194,
+    lng: location?.x ?? 19.1451,
+  };
 
   // Set place position (coords)
   useEffect(() => {
@@ -83,8 +70,8 @@ export default function Step5() {
       return;
     }
     setValue("location", { x: placeLocation.lng(), y: placeLocation.lat() });
-    setValue("locationName", place.formatted_address ?? "");
-    setValue("locationPlaceholder", place.formatted_address ?? "");
+    setValue("locationName", place.name ?? "");
+    setValue("locationPlaceholder", place.name ?? "");
     void trigger("locationName");
     setPlacePosition({
       lat: placeLocation.lat(),
@@ -115,11 +102,10 @@ export default function Step5() {
             />
             <CustomError name="locationName" />
           </Label>
-          <Label className="flex flex-col justify-between gap-2">
+          <Label className="flex flex-col justify-between gap-6">
             <span>Maksymalna Odległość</span>
-            <span>(ogarnąć nieograniczoną)</span>
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
+            <div className="flex w-full flex-col items-center gap-2">
+              <div className="flex w-full items-center gap-2">
                 <div
                   className="shrink-0 cursor-pointer rounded-full p-1 transition-colors hover:bg-black/20"
                   onClick={decrement}
@@ -147,7 +133,7 @@ export default function Step5() {
         </div>
         <div className="w-1/2 overflow-hidden rounded-md border">
           <Map
-            defaultZoom={10}
+            defaultZoom={placePosition ? 10 : 5}
             defaultCenter={center}
             gestureHandling={"greedy"}
             streetViewControl={false}
@@ -156,7 +142,7 @@ export default function Step5() {
             {distance > 0 && (
               <Circle
                 radius={distance * 1000} // m to km
-                center={placePosition ? placePosition : center}
+                center={placePosition}
                 strokeColor={"#0c4cb3"}
                 strokeOpacity={1}
                 strokeWeight={3}
@@ -165,7 +151,7 @@ export default function Step5() {
               />
             )}
           </Map>
-          <AdvancedMarker position={placePosition ? placePosition : center} />
+          <AdvancedMarker position={placePosition} />
           <MapHandler place={place} />
         </div>
       </APIProviderWrapper>

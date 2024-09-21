@@ -36,7 +36,11 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
     if (!newMessage) return;
 
     set((state) => {
-      if ((state.conversations[otherUserId] ?? []).includes(newMessage))
+      if (
+        (state.conversations[otherUserId] ?? []).find(
+          (msg) => msg.timestamp === newMessage.timestamp,
+        )
+      )
         return { conversations: state.conversations };
 
       return {
@@ -55,9 +59,13 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
     const messages = await fetchMessagesRest(session, otherUserId);
 
     set((state) => {
-      const filtered = messages.filter(
-        (msg) => !state.conversations[otherUserId]?.includes(msg),
-      );
+      const filtered = messages.filter((msg) => {
+        const a = state.conversations[otherUserId];
+        if (a?.find((val) => val.timestamp === msg.timestamp)) {
+          return false;
+        }
+        return true;
+      });
 
       return {
         conversations: {
@@ -70,12 +78,10 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
       };
     });
   },
-  // TODO do it only once
   fetchSampleMessages: async (session: Session) => {
     const messages = await fetchSampleMessagesRest(session);
 
     set((state) => {
-      console.log(state.conversations);
       const convs = { ...(state.conversations ?? []) };
       if (!messages) return { conversations: convs };
 
@@ -84,7 +90,7 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
         if (convs[otherUserId]) return;
         convs[otherUserId] = [msg];
       });
-      console.log(state.conversations);
+
       return {
         conversations: convs,
       };
@@ -93,7 +99,11 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
   // TODO rethink about sorting here and rethink if needed
   addMessage: (userId: string, message: Message) =>
     set((state) => {
-      if ((state.conversations[userId] ?? []).includes(message))
+      if (
+        (state.conversations[userId] ?? []).find(
+          (msg) => msg.timestamp === message.timestamp,
+        )
+      )
         return { conversations: state.conversations };
 
       return {

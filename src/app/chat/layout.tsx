@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { type UserWithMessage } from "~/components/chat/ConversationsNav/ConversationsNav";
 
 import { trpc } from "~/trpc/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 import { useConversationsStore } from "~/stores";
@@ -19,9 +19,13 @@ export default function ChatLayout({
   const { data: session } = useSession();
   const router = useRouter();
   const store = useConversationsStore();
+  const pathname = usePathname();
+  const pathUserId = pathname.split("/")[2]; // Needed as this layout doesnt have [userId]
 
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
-    Object.entries(store.conversations).map((entry) => entry[0]),
+    Object.entries(store.conversations)
+      .map((entry) => entry[0])
+      .filter((e) => e !== session?.user.id),
   );
 
   return (
@@ -49,7 +53,7 @@ export default function ChatLayout({
                 router.push(`/chat/${conversation.userId}`);
               }}
               key={index}
-              className="mb-2 flex cursor-pointer items-center rounded p-2 text-white transition-colors hover:bg-[#4a8573]"
+              className={`mb-2 flex cursor-pointer items-center rounded p-2 text-white transition-colors hover:bg-neo-sea ${(pathUserId ?? "") == conversation.userId ? "bg-neo-sea" : ""}`}
             >
               <Avatar className="mr-2 h-8 w-8">
                 <AvatarImage src={conversation.image} alt={conversation.name} />

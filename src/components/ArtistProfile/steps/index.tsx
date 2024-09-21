@@ -34,7 +34,7 @@ export const steps: {
   },
   {
     title: "Główny opis",
-    description: "PLACEHOLDER",
+    description: "Przyszła pora na główną część twojej oferty.",
     content: <Step2 />,
     icon: <FileText className="size-5 sm:size-6" />,
     fields: ["longDescription"],
@@ -61,7 +61,7 @@ export const steps: {
       "Ostatnim krokiem jest ustalenie lokalizacji i ceny. Wybierz obszar swojego działania i orientacyjną cenę usługi, aby szukający mógł zorientować się czy stać go na twoje usługi 😉",
     content: <Step5 />,
     icon: <Coins className="size-5 sm:size-6" />,
-    fields: ["locationName", "distance", "price"],
+    fields: ["price", "locationName", "distance"],
   },
   {
     title: "Podsumowanie",

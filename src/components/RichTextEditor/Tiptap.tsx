@@ -26,6 +26,7 @@ export type TipTapProps = {
   classNameToolbar?: string;
   classNameEditor?: string;
   toolbarActive?: boolean;
+  editable?: boolean;
 };
 
 export default function TipTap({
@@ -40,9 +41,11 @@ export default function TipTap({
   classNameToolbar,
   classNameEditor,
   toolbarActive = true,
+  editable = true,
 }: TipTapProps) {
   const editor = useEditor({
     content: content ? content : "",
+    editable: editable,
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({}),
@@ -102,30 +105,32 @@ export default function TipTap({
         <Toolbar editor={editor} className={classNameToolbar} />
       )}
       <EditorContent editor={editor} className={classNameEditor} />
-      <div
-        className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}
-      >
-        <svg
-          height="20"
-          width="20"
-          viewBox="0 0 20 20"
-          className={`${characterCountStorage.characters() === charLimit ? "text-neo-pink-hover" : characterCountStorage.characters() > charLimit / 2 ? "text-neo-sage-hover" : "text-neo-mantis"}`}
+      {toolbarActive && (
+        <div
+          className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}
         >
-          <circle r="10" cx="10" cy="10" fill="#e9ecef" />
-          <circle
-            r="5"
-            cx="10"
-            cy="10"
-            fill="transparent"
-            stroke="currentColor"
-            strokeWidth="10"
-            strokeDasharray={`calc(${percentage} * 31.4 / 100) 31.4`}
-            transform="rotate(-90) translate(-20)"
-          />
-          <circle r="6" cx="10" cy="10" fill="white" />
-        </svg>
-        {characterCountStorage.characters()} / {charLimit} characters
-      </div>
+          <svg
+            height="20"
+            width="20"
+            viewBox="0 0 20 20"
+            className={`${characterCountStorage.characters() === charLimit ? "text-neo-pink-hover" : characterCountStorage.characters() > charLimit / 2 ? "text-neo-sage-hover" : "text-neo-mantis"}`}
+          >
+            <circle r="10" cx="10" cy="10" fill="#e9ecef" />
+            <circle
+              r="5"
+              cx="10"
+              cy="10"
+              fill="transparent"
+              stroke="currentColor"
+              strokeWidth="10"
+              strokeDasharray={`calc(${percentage} * 31.4 / 100) 31.4`}
+              transform="rotate(-90) translate(-20)"
+            />
+            <circle r="6" cx="10" cy="10" fill="white" />
+          </svg>
+          {characterCountStorage.characters()} / {charLimit} characters
+        </div>
+      )}
     </div>
   );
 }

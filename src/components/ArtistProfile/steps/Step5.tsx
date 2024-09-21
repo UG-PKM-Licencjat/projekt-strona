@@ -83,67 +83,73 @@ export default function Step5() {
 
   return (
     <div className="grid grid-cols-2 place-content-center max-sm:grid-cols-1">
-      <APIProviderWrapper>
-        <div className="flex flex-col gap-4">
-          <Label className="flex flex-col justify-between gap-2">
-            <span>Twoja Lokalizacja</span>
-            <PlaceAutocompleteClassic
-              value={locationPlaceholder}
-              onChange={(e) => setValue("locationPlaceholder", e.target.value)}
-              onBlur={(e) => {
-                void onBlur(e);
-                const locationName = getValues("locationName");
-                if (!locationName) {
-                  setValue("locationName", "");
-                  void trigger("locationName");
-                }
-                setValue("locationPlaceholder", locationName ?? "");
-              }}
-              onPlaceSelect={setPlace}
-              placeholder={"Wpisz lokalizację..."}
-            />
-            <CustomError name="locationName" />
-          </Label>
-          <Label
-            htmlFor="slider"
-            className="flex flex-col justify-between gap-6"
-          >
-            <span>Maksymalna Odległość</span>
-            <div className="flex w-full flex-col items-center gap-2">
-              <div className="flex w-full items-center gap-2">
-                <Button
-                  variant="ghost"
-                  type="button"
-                  className="size-auto shrink-0 rounded-full p-1"
-                  onClick={decrement}
-                  disabled={!location}
-                >
-                  <MinusIcon className="size-5" />
-                </Button>
-                <Slider
-                  id="slider"
-                  min={MIN_DISTANCE}
-                  max={MAX_DISTANCE}
-                  step={STEP}
-                  onValueChange={(value) => setValue("distance", value[0]!)}
-                  value={[distance]}
-                  disabled={!location}
-                />
-                <Button
-                  variant="ghost"
-                  type="button"
-                  className="size-auto shrink-0 rounded-full p-1"
-                  onClick={increment}
-                  disabled={!location}
-                >
-                  <PlusIcon className="size-5" />
-                </Button>
-              </div>
-              {distance}km
-            </div>
-            <CustomError name="distance" />
-          </Label>
+      <Label className="flex flex-col gap-2">
+        <span>Cena</span>
+        {/* TODO use a mask to make it nicer */}
+        <div className="flex items-center gap-2">
+          <Input placeholder="Podaj cenę" {...register("price")} />
+          <span className="text-lg">zł</span>
         </div>
+        <CustomError name="price" />
+      </Label>
+      <APIProviderWrapper>
+        {/* <div className="flex flex-col gap-4"> */}
+        <Label className="flex flex-col justify-between gap-2">
+          <span>Twoja Lokalizacja</span>
+          <PlaceAutocompleteClassic
+            value={locationPlaceholder}
+            onChange={(e) => setValue("locationPlaceholder", e.target.value)}
+            onBlur={(e) => {
+              void onBlur(e);
+              const locationName = getValues("locationName");
+              if (!locationName) {
+                setValue("locationName", "");
+                void trigger("locationName");
+              }
+              setValue("locationPlaceholder", locationName ?? "");
+            }}
+            onPlaceSelect={setPlace}
+            placeholder={"Wpisz lokalizację..."}
+          />
+          <CustomError name="locationName" />
+        </Label>
+        <Label htmlFor="slider" className="flex flex-col justify-between gap-6">
+          <span>Maksymalna Odległość</span>
+          <div className="flex w-full flex-col items-center gap-2">
+            <div className="flex w-full items-center gap-2">
+              <Button
+                variant="ghost"
+                type="button"
+                className="size-auto shrink-0 rounded-full p-1"
+                onClick={decrement}
+                disabled={!location}
+              >
+                <MinusIcon className="size-5" />
+              </Button>
+              <Slider
+                id="slider"
+                min={MIN_DISTANCE}
+                max={MAX_DISTANCE}
+                step={STEP}
+                onValueChange={(value) => setValue("distance", value[0]!)}
+                value={[distance]}
+                disabled={!location}
+              />
+              <Button
+                variant="ghost"
+                type="button"
+                className="size-auto shrink-0 rounded-full p-1"
+                onClick={increment}
+                disabled={!location}
+              >
+                <PlusIcon className="size-5" />
+              </Button>
+            </div>
+            {distance}km
+          </div>
+          <CustomError name="distance" />
+        </Label>
+        {/* </div> */}
         <div className="aspect-video w-full overflow-hidden rounded-md border">
           <Map
             defaultZoom={placePosition ? 10 : 5}
@@ -168,15 +174,6 @@ export default function Step5() {
           <MapHandler place={place} />
         </div>
       </APIProviderWrapper>
-      <Label className="flex flex-col justify-between gap-2">
-        <span>Cena</span>
-        {/* TODO use a mask to make it nicer */}
-        <div className="flex items-center gap-2">
-          <Input placeholder="Podaj cenę" {...register("price")} />
-          <span className="text-lg">zł</span>
-        </div>
-        <CustomError name="price" />
-      </Label>
     </div>
   );
 }

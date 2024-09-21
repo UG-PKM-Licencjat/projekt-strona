@@ -132,3 +132,5 @@ export const Circle = forwardRef((props: CircleProps, ref: CircleRef) => {
 
   return null;
 });
+
+Circle.displayName = "Circle";

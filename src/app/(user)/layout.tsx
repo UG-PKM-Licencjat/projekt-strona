@@ -7,11 +7,9 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <div className="box-border flex h-full w-full flex-1 items-center justify-center overflow-y-auto bg-neo-castleton">
-        <div className="rounded-xlg w-full rounded-xl bg-none sm:h-5/6 sm:w-9/12 md:bg-neo-gray md:[@media(max-height:750px)]:h-full">
-          <div className="w-full justify-between rounded-lg px-6 py-10 align-middle sm:px-12">
-            {children}
-          </div>
+      <div className="flex w-full flex-1 items-center justify-center bg-neo-castleton">
+        <div className="w-full justify-between rounded-lg bg-transparent px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:h-[700px] md:bg-neo-gray 2xl:h-[800px]">
+          {children}
         </div>
       </div>
     </>

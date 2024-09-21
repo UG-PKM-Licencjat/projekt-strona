@@ -67,28 +67,36 @@ export default function CreateArtistProfilePage() {
         files,
       });
     }
+    const price = data.price?.replace(",", ".");
+    const parsedPrice = parseFloat(price!);
+    const profileData = {
+      name: data.name,
+      shortDescription: data.shortDescription,
+      longDescription: data.longDescription,
+      files: uploadedFiles,
+      locationName: data.locationName,
+      location: data.location,
+      distance: data.distance,
+      price: parsedPrice,
+      tags: data.tags,
+    };
     toast({
       title: "Submitted form",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">
-            {JSON.stringify({ ...data, files: uploadedFiles }, null, 2)}
+            {JSON.stringify(profileData, null, 2)}
           </code>
         </pre>
       ),
     });
   };
 
-  const onInvalid = (errors: FieldErrors<ArtistFormData>) => {
-    console.log("invalid", errors);
+  const onInvalid = (_errors: FieldErrors<ArtistFormData>) => {
     toast({
-      title: "Submitted form",
+      title: "Błąd walidacji",
       variant: "destructive",
-      description: (
-        <pre className="mt-2 w-[340px] whitespace-pre-wrap rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(errors, null, 2)}</code>
-        </pre>
-      ),
+      description: "Popraw błędy w formularzu i spróbuj ponownie.",
     });
   };
 

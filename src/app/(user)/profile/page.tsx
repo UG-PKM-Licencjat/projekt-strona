@@ -197,7 +197,7 @@ export default function GreenProfileEditWithShadcnForms() {
         Edytuj profil
       </h1>
 
-      <div className="flex h-full flex-row justify-stretch pb-10">
+      <div className="flex h-full flex-row justify-stretch pb-10 max-xl:flex-col">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -264,7 +264,7 @@ export default function GreenProfileEditWithShadcnForms() {
             </div>
           </form>
         </Form>
-        <div className="ml-20 hidden w-full flex-col items-center justify-between xl:flex">
+        <div className="w-full flex-col items-center justify-between xl:ml-20 xl:flex">
           <Image
             src={profile}
             alt="man"
@@ -273,7 +273,7 @@ export default function GreenProfileEditWithShadcnForms() {
           <AlertDialog open={isOpen}>
             <Button
               variant="outline"
-              className="w-1/2"
+              className="w-1/2 max-xl:mt-4 max-xl:w-full"
               type="submit"
               onClick={() => {
                 setIsOpen(true);

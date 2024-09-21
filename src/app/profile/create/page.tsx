@@ -1,8 +1,6 @@
 import { ArtistProfileMultiform } from "~/components/ArtistProfile/ArtistProfileMultiform";
-// import { trpc } from "~/trpc/react";
 import { api } from "~/trpc/server";
 import { getServerAuthSession } from "~/server/auth";
-// import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 const testOffer = {

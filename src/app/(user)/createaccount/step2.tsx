@@ -91,24 +91,23 @@ export default function Step2(props: {
       </div>
       <div className="flex h-full">
         <div className="flex h-full w-full flex-col justify-between pb-10">
-          <div>
-            <h1 className="mb-4 self-start text-start font-header text-2xl font-medium leading-none text-primary">
-              Czy jesteś
-              <span className="text-neo-mantis md:text-neo-castleton">
-                {" "}
-                artystą?
-              </span>
-            </h1>
-            <p className="text-neo-dark-gray">
-              Wiemy, że w każdym drzemie artysta
-            </p>
-          </div>
-
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex h-full w-full flex-col justify-between gap-5"
             >
+              <div>
+                <h1 className="mb-4 self-start text-start font-header text-2xl font-medium leading-none text-primary">
+                  Czy jesteś
+                  <span className="text-neo-mantis md:text-neo-castleton">
+                    {" "}
+                    artystą?
+                  </span>
+                </h1>
+                <p className="text-neo-dark-gray">
+                  Wiemy, że w każdym drzemie artysta
+                </p>
+              </div>
               <FormField
                 control={form.control}
                 name="type"
@@ -117,6 +116,7 @@ export default function Step2(props: {
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      className="flex flex-col gap-4"
                     >
                       <FormItem>
                         <FormControl>
@@ -145,6 +145,7 @@ export default function Step2(props: {
                   </FormControl>
                 )}
               />
+              <div></div>
               <div className="flex flex-col justify-between gap-5 sm:flex-row">
                 <Button
                   className="sm:w-1/2"

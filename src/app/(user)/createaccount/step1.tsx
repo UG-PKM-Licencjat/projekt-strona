@@ -132,7 +132,7 @@ export default function Step1(props: {
             >
               <div className="flex flex-col items-center">
                 <UploadWrapper endpoint="avatarUploader" onChange={setAvatar}>
-                  <div className="grid size-44 cursor-pointer place-items-center overflow-hidden rounded-full [&>*]:col-start-1 [&>*]:row-start-1">
+                  <div className="grid size-44 cursor-pointer place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
                     {avatarUrl && (
                       <Image
                         src={avatarUrl}

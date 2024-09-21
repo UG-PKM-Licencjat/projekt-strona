@@ -21,7 +21,7 @@ export default function Custom404() {
           Przepraszamy, strona mogła zostać usunięta lub adres jest
           nieprawidłowy.
         </p>
-        <Button className="rounded bg-neo-pink px-4 py-2 font-bold text-white transition duration-300">
+        <Button className="bg-neo-pink px-4 py-2 font-bold text-white">
           <Link href="/">Wróć na stronę główną</Link>
         </Button>
       </div>

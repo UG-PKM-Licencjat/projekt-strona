@@ -1,4 +1,9 @@
 import { ArtistProfileMultiform } from "~/components/ArtistProfile/ArtistProfileMultiform";
+// import { trpc } from "~/trpc/react";
+import { api } from "~/trpc/server";
+import { getServerAuthSession } from "~/server/auth";
+// import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 const testOffer = {
   distance: 30,
@@ -35,7 +40,11 @@ const testOffer = {
   },
 };
 
-export default function CreateArtistProfilePage() {
+export default async function CreateArtistProfilePage() {
+  const session = await getServerAuthSession();
+  if (!session) redirect("/");
+  const hasOffer = await api.offers.checkByUserId({ userId: session.user.id });
+  if (hasOffer) redirect("/");
   return (
     <ArtistProfileMultiform
       title="Stwórz profil"

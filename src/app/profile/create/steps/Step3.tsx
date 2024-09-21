@@ -56,7 +56,9 @@ export default function Step3() {
   }, [resultTags, setValue]);
 
   const filteredTags = tags.filter(
-    (tag) => !resultTags.includes(tag) && tag.name.includes(inputText),
+    (tag) =>
+      !resultTags.includes(tag) &&
+      tag.name.toLowerCase().includes(inputText.toLowerCase()),
   );
 
   return (
@@ -88,7 +90,7 @@ export default function Step3() {
             value={inputText}
             onChange={onInputChange}
             onFocus={() => setTouched(true)}
-            placeholder="Wpisz nazwę tagu tutaj"
+            placeholder="Wyszukaj tagi..."
           />
         </PopoverTrigger>
         <PopoverContent

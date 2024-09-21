@@ -43,6 +43,8 @@ export default function Conversation({
   }, [session?.user.id, userId]);
 
   async function handleSubmit() {
+    if (!otherProviderId) return;
+    const otherAccountProv = otherProviderId[0]?.providerAccountId;
     const response = await fetch("https://chat-swxn.onrender.com/messages", {
       method: "POST",
       headers: {
@@ -54,7 +56,7 @@ export default function Conversation({
         from: session?.user.id,
         to: userId,
         fromSub: session?.user.providerAccountId,
-        toSub: otherProviderId,
+        toSub: otherAccountProv,
       }),
     });
     // Todo also validate

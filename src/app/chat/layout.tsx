@@ -25,10 +25,10 @@ export default function ChatLayout({
   );
 
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
-    [],
-    // messages?.map((message) =>
-    //   message.from == session?.user.id ? message.to : message.from,
-    // ) ?? [],
+    // [],
+    messages?.map((message) =>
+      message.from == session?.user.id ? message.to : message.from,
+    ) ?? [],
   );
 
   useEffect(() => {

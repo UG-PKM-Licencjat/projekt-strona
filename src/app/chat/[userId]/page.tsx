@@ -54,7 +54,7 @@ export default function Conversation({
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-neo-gray-hover">
+    <div className="flex flex-1 flex-col bg-neo-gray-hover md:p-6">
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
@@ -89,7 +89,7 @@ export default function Conversation({
         ))}
       </div>
 
-      <div className="p-4">
+      <div className="">
         <div className="flex">
           <Input
             value={message}

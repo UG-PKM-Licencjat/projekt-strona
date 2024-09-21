@@ -7,6 +7,7 @@ import { type Message } from "src/components/chat/ConversationWindow/Conversatio
 import { Button } from "src/components/ui/Button/Button";
 import { Input } from "src/components/ui/Input/Input";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { useConversationsStore } from "~/stores";
 import { trpc } from "~/trpc/react";
 
 export default function Conversation({
@@ -16,62 +17,29 @@ export default function Conversation({
 }) {
   const { userId } = params;
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<Array<Message>>([]);
   const { data: session } = useSession();
 
   const { data: otherProviderId } =
     trpc.accounts.getProviderId.useQuery(userId);
 
+  const store = useConversationsStore();
+
   void useMemo(async () => {
-    console.log("Loading data for", session?.user.id);
-    const response = await fetch(
-      `https://chat-swxn.onrender.com/messages?userA=${session?.user.id}&userB=${userId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session?.user.idToken}`,
-        },
-      },
-    );
-
-    // TODO: Validate schema?
-    const initialMessages = (await response.json()) as {
-      messages: Array<Message>;
-    };
-
-    setMessages(initialMessages.messages);
-  }, [session?.user.id, userId]);
+    if (!session) return;
+    await store.fetchMessagesForUser(session, userId);
+  }, [session, userId]);
 
   async function handleSubmit() {
-    if (!otherProviderId) return;
-    const response = await fetch("https://chat-swxn.onrender.com/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.user.idToken}`,
-      },
-      body: JSON.stringify({
-        message: message,
-        from: session?.user.id,
-        to: userId,
-        fromSub: session?.user.providerAccountId,
-        toSub: otherProviderId,
-      }),
-    });
-    // Todo also validate
-    const newMessage = (await response.json()) as { message: Message };
-    // TODO when status will be known change it to exact one
-    if (response.status < 300) {
-      setMessages([...messages, newMessage.message]);
-    }
-    setMessage("");
+    if (!otherProviderId || !session) return;
+    await store.sendMessage(message, session, userId, otherProviderId);
   }
 
   return (
     <div className="flex flex-1 flex-col bg-neo-gray-hover md:p-6">
       <div className="flex-1 overflow-y-auto p-4">
-        {messages.map((message) => (
+        {(store.conversations[userId] ?? []).map((message) => (
           <div
-            key={message.timestamp}
+            key={message.from + message.to + message.timestamp}
             className={`mb-4 flex ${message.from === session?.user.id ? "flex-row-reverse" : ""}`}
           >
             {/* TODO CHANGE ALL ANOTHERS HERE */}

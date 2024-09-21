@@ -14,14 +14,14 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const log = trpc.clientLog.useMutation();
+  // const log = trpc.clientLog.useMutation();
 
   useEffect(() => {
-    log.mutate({
-      message: error.message,
-      additionalInfo: "error",
-      tags: ["ERROR", "FRONTEND"],
-    });
+    // log.mutate({
+    //   message: error.message,
+    //   additionalInfo: "error",
+    //   tags: ["ERROR", "FRONTEND"],
+    // });
   }, []);
 
   return (

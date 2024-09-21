@@ -8,6 +8,7 @@ import { trpc } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Message } from "~/components/chat/ConversationWindow/ConversationWindow";
+import { useConversationsStore } from "~/stores";
 
 export default function ChatLayout({
   children,
@@ -15,38 +16,18 @@ export default function ChatLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
-
   const { data: session } = useSession();
-  // const [sampleMessages, setSampleMessages] = useState<UserWithMessage[]>([]);
   const router = useRouter();
+  const store = useConversationsStore();
 
-  const { data: messages } = trpc.getSampleMessages.useQuery(
-    session?.user.id ?? "",
-  );
-
+  // useEffect(() => {
+  //   console.log(messages);
+  //   const userId = session?.user.id;
+  //   if (!userId || !userDataForSample) return;
+  // }, [messages, session?.user.id, userDataForSample]);
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
-    // [],
-    messages?.map((message) =>
-      message.from == session?.user.id ? message.to : message.from,
-    ) ?? [],
+    Object.entries(store.conversations).map((entry) => entry[0]),
   );
-
-  useEffect(() => {
-    console.log(messages);
-    const userId = session?.user.id;
-    if (!userId || !userDataForSample) return;
-
-    // const mapped: Array<UserWithMessage> | undefined = userDataForSample.map(
-    //   (userData) =>
-    //     ({
-    //       userId: userData.id,
-    //       name: userData.name ?? "",
-    //       lastMessage: "", //message.message,
-    //       image: userData.image ?? "",
-    //     }) satisfies UserWithMessage,
-    // );
-    // setSampleMessages(mapped ?? []);
-  }, [messages, session?.user.id, userDataForSample]);
 
   return (
     <div className="flex flex-1 gap-5 bg-neo-castleton text-neo-castleton md:bg-neo-gray-hover">

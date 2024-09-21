@@ -14,15 +14,15 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const log = trpc.clientLog.useMutation();
+  // const log = trpc.clientLog.useMutation();
 
-  useEffect(() => {
-    log.mutate({
-      message: error.message,
-      additionalInfo: "error",
-      tags: ["ERROR", "FRONTEND"],
-    });
-  }, []);
+  // useEffect(() => {
+  //   log.mutate({
+  //     message: error.message,
+  //     additionalInfo: "error",
+  //     tags: ["ERROR", "FRONTEND"],
+  //   });
+  // }, []);
 
   return (
     <div className="mt-10 flex flex-col items-center justify-center px-4">

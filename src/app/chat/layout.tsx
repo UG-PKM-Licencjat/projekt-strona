@@ -20,11 +20,6 @@ export default function ChatLayout({
   const router = useRouter();
   const store = useConversationsStore();
 
-  // useEffect(() => {
-  //   console.log(messages);
-  //   const userId = session?.user.id;
-  //   if (!userId || !userDataForSample) return;
-  // }, [messages, session?.user.id, userDataForSample]);
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
     Object.entries(store.conversations).map((entry) => entry[0]),
   );

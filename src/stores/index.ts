@@ -35,37 +35,47 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
 
     if (!newMessage) return;
 
-    set((state) => ({
-      conversations: {
-        ...state.conversations,
-        [otherUserId]: [
-          ...(state.conversations[otherUserId] ?? []),
-          newMessage,
-        ],
-      },
-    }));
+    set((state) => {
+      if ((state.conversations[otherUserId] ?? []).includes(newMessage))
+        return { conversations: state.conversations };
+
+      return {
+        conversations: {
+          ...state.conversations,
+          [otherUserId]: [
+            ...(state.conversations[otherUserId] ?? []),
+            newMessage,
+          ],
+        },
+      };
+    });
   },
   // TODO sort if needed
   fetchMessagesForUser: async (session: Session, otherUserId: string) => {
     const messages = await fetchMessagesRest(session, otherUserId);
 
-    set((state) => ({
-      conversations: {
-        ...state.conversations,
-        [otherUserId]: [
-          ...(state.conversations[otherUserId] ?? []),
-          ...messages.filter(
-            (msg) => !state.conversations[otherUserId]?.includes(msg),
-          ),
-        ],
-      },
-    }));
+    set((state) => {
+      const filtered = messages.filter(
+        (msg) => !state.conversations[otherUserId]?.includes(msg),
+      );
+
+      return {
+        conversations: {
+          ...state.conversations,
+          [otherUserId]: [
+            ...(state.conversations[otherUserId] ?? []),
+            ...filtered,
+          ],
+        },
+      };
+    });
   },
   // TODO do it only once
   fetchSampleMessages: async (session: Session) => {
     const messages = await fetchSampleMessagesRest(session);
 
     set((state) => {
+      console.log(state.conversations);
       const convs = { ...(state.conversations ?? []) };
       if (!messages) return { conversations: convs };
 
@@ -74,7 +84,7 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
         if (convs[otherUserId]) return;
         convs[otherUserId] = [msg];
       });
-
+      console.log(state.conversations);
       return {
         conversations: convs,
       };
@@ -82,12 +92,17 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
   },
   // TODO rethink about sorting here and rethink if needed
   addMessage: (userId: string, message: Message) =>
-    set((state) => ({
-      conversations: {
-        ...state.conversations,
-        [userId]: [...(state.conversations[userId] ?? []), message],
-      },
-    })),
+    set((state) => {
+      if ((state.conversations[userId] ?? []).includes(message))
+        return { conversations: state.conversations };
+
+      return {
+        conversations: {
+          ...state.conversations,
+          [userId]: [...(state.conversations[userId] ?? []), message],
+        },
+      };
+    }),
 }));
 
 async function fetchSampleMessagesRest(session: Session) {

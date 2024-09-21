@@ -25,12 +25,15 @@ export default function Conversation({
   const store = useConversationsStore();
 
   void useMemo(async () => {
+    console.log("Info: ");
+    console.log(store.conversations);
     if (!session) return;
     await store.fetchMessagesForUser(session, userId);
-  }, [session, userId]);
+  }, []);
 
   async function handleSubmit() {
     if (!otherProviderId || !session) return;
+    setMessage("");
     await store.sendMessage(message, session, userId, otherProviderId);
   }
 

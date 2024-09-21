@@ -11,7 +11,7 @@ import { AdminRouter } from "./routers/admin";
 import { OffersRouter } from "./routers/offers";
 import { UserRouter } from "./routers/user";
 import { ReviewsRouter } from "./routers/reviews";
-import AccountRouter from "./routers/admin/account";
+import { AccountsRouter } from "./routers/accounts";
 
 /**
  * This is the primary router for your server.
@@ -23,7 +23,7 @@ export const appRouter = createTRPCRouter({
   offers: OffersRouter,
   user: UserRouter,
   reviews: ReviewsRouter,
-  accounts: AccountRouter,
+  accounts: AccountsRouter,
   clientLog: procedure
     .input(
       z.object({

@@ -19,9 +19,8 @@ export default function Conversation({
   const [messages, setMessages] = useState<Array<Message>>([]);
   const { data: session } = useSession();
 
-  const { data: otherProviderId } = trpc.accounts.getByUserId.useQuery({
-    userId: userId,
-  });
+  const { data: otherProviderId } =
+    trpc.accounts.getProviderId.useQuery(userId);
 
   void useMemo(async () => {
     console.log("Loading data for", session?.user.id);
@@ -44,7 +43,6 @@ export default function Conversation({
 
   async function handleSubmit() {
     if (!otherProviderId) return;
-    const otherAccountProv = otherProviderId[0]?.providerAccountId;
     const response = await fetch("https://chat-swxn.onrender.com/messages", {
       method: "POST",
       headers: {
@@ -56,7 +54,7 @@ export default function Conversation({
         from: session?.user.id,
         to: userId,
         fromSub: session?.user.providerAccountId,
-        toSub: otherAccountProv,
+        toSub: otherProviderId,
       }),
     });
     // Todo also validate

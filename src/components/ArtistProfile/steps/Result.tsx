@@ -30,12 +30,12 @@ export default function Result() {
         <Value>{data.shortDescription}</Value>
       </div>
       <div className="flex items-center gap-2">
-        <h3>Opis główny: </h3>
+        <h3>Główny opis: </h3>
         <Dialog>
           <DialogTrigger className="w-fit">
             <EyeIcon className="size-5" />
           </DialogTrigger>
-          <DialogContent className="max-h-[80svh] max-w-[60svw] overflow-y-auto">
+          <DialogContent className="max-h-full max-w-full overflow-y-auto lg:max-h-[80svh] lg:max-w-[60svw]">
             <DialogHeader>
               <DialogTitle>Główny opis</DialogTitle>
               <DialogDescription></DialogDescription>

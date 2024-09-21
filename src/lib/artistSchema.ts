@@ -17,7 +17,7 @@ export const artistSchema = z.object({
     .string({ message: "Opis musi mieć co najmniej 10 znaków." })
     .min(10, { message: "Opis musi mieć co najmniej 10 znaków." })
     .max(4000, { message: "Opis nie może przekraczać 4000 znaków." }),
-  longDescriptionHTML: z.string().optional(),
+  longDescriptionHTML: z.string(),
   locationName: z
     .string({ message: "Lokalizacja jest wymagane." })
     .min(1, { message: "Lokalizacja jest wymagana." }),

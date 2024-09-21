@@ -15,6 +15,7 @@ import {
 } from "~/components/ui/popover";
 
 // Mock data for front development purposes
+// TODO fetch tags from database to another zustand store
 const tags = [
   { id: 1, name: "JavaScript" },
   { id: 2, name: "Python" },

@@ -13,6 +13,8 @@ import { artistSchema, type ArtistFormData } from "~/lib/artistSchema";
 import { cn } from "~/lib/utils";
 import { useFileStore } from "~/stores/fileStore";
 import { steps, type Fields } from "./steps";
+import { trpc } from "~/trpc/react";
+import { type TRPCError } from "@trpc/server";
 
 interface ArtistProfileMultiformProps {
   defaultData?: ArtistFormData;
@@ -55,6 +57,8 @@ export function ArtistProfileMultiform({
   const [openDescription, setOpenDescription] = useState(false);
   const toggleDescription = () => setOpenDescription((open) => !open);
 
+  const createOffer = trpc.offers.create.useMutation();
+
   const handleStepChange = async (newStep: number, direction: number) => {
     if (newStep < 0) return;
     if (newStep >= steps.length) return;
@@ -72,6 +76,7 @@ export function ArtistProfileMultiform({
 
   const { toast } = useToast();
   const onSubmit = async (data: ArtistFormData) => {
+    // TODO cache the responses here to avoid multiple uploads
     let uploadedFiles: ClientUploadedFileData<null>[] | undefined = [];
     if (files.length > 0) {
       uploadedFiles = await uploadFiles("galleryUploader", {
@@ -83,7 +88,7 @@ export function ArtistProfileMultiform({
     const profileData = {
       name: data.name,
       shortDescription: data.shortDescription,
-      longDescription: data.longDescription,
+      longDescription: data.longDescriptionHTML,
       files: uploadedFiles,
       locationName: data.locationName,
       location: data.location,
@@ -91,16 +96,28 @@ export function ArtistProfileMultiform({
       price: parsedPrice,
       tags: data.tags,
     };
-    toast({
-      title: "Submitted form",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(profileData, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
+    createOffer
+      .mutateAsync(profileData)
+      .then((result) => {
+        toast({
+          title: "Submitted form",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                {JSON.stringify(result, null, 2)}
+              </code>
+            </pre>
+          ),
+        });
+      })
+      .catch((error: TRPCError) => {
+        // TODO rethink if this is the best way to communicate errors to user
+        toast({
+          title: "Wystąpił błąd",
+          description: error.message,
+          variant: "destructive",
+        });
+      });
   };
 
   const onInvalid = (_errors: FieldErrors<ArtistFormData>) => {

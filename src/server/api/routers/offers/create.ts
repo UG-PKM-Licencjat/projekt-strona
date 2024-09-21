@@ -9,6 +9,7 @@ import { z } from "zod";
 
 const offersSchema = createInsertSchema(offers, {
   files: z.array(z.object({ url: z.string(), type: z.string() })),
+  location: z.object({ x: z.number(), y: z.number() }),
 })
   .extend({
     tags: z.array(
@@ -24,7 +25,7 @@ const createProcedure = authedProcedure
   .input(offersSchema)
   .mutation(async ({ ctx, input }) => {
     if (!ctx.session.user.id) {
-      return new TRPCError({
+      throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "User is not authenticated",
       });
@@ -43,21 +44,18 @@ const createProcedure = authedProcedure
         additionalInfo: JSON.stringify(userIdResult),
         logType: LogType.ERROR,
       });
-      return new TRPCError({
+      throw new TRPCError({
         code: "NOT_FOUND",
         message: "User with provided Id does not exist",
       });
     }
 
-    const { tags: selectedTags, location, ...filteredInput } = input;
-
-    // UWAGA NIE WIEM CZY OK !
-    const parsedLocation = JSON.parse(`${location}`);
+    const { tags: selectedTags, ...filteredInput } = input;
 
     const [offerResult] = await db
       .select()
-      .from(users)
-      .where(eq(users.id, userId))
+      .from(offers)
+      .where(eq(offers.userId, userId))
       .limit(1);
 
     if (offerResult) {
@@ -66,7 +64,7 @@ const createProcedure = authedProcedure
         additionalInfo: JSON.stringify(offerResult),
         logType: LogType.ERROR,
       });
-      return new TRPCError({
+      throw new TRPCError({
         code: "CONFLICT",
         message:
           "User has already created an offer. If you want to update it, please use the update endpoint.",
@@ -76,7 +74,7 @@ const createProcedure = authedProcedure
     const { data, error } = await db.transaction(async (tx) => {
       const [offerReturned] = await tx
         .insert(offers)
-        .values({ userId, location: parsedLocation, ...filteredInput })
+        .values({ userId, ...filteredInput })
         .returning();
 
       if (!offerReturned) {
@@ -122,7 +120,7 @@ const createProcedure = authedProcedure
         message: error,
         logType: LogType.ERROR,
       });
-      return new TRPCError({
+      throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: error,
       });

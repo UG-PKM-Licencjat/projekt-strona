@@ -12,8 +12,7 @@ const deleteAccount = authedProcedure.mutation(async ({ ctx }) => {
       .delete(sessions)
       .where(eq(sessions.userId, ctx.session?.user.id))
       .returning();
-    console.log("deletinggg");
-    console.log(deleteSession);
+
     if (!deleteSession) {
       logEvent({
         message: `User ${ctx.session?.user.id} failed to delete session while deleting account`,
@@ -30,8 +29,6 @@ const deleteAccount = authedProcedure.mutation(async ({ ctx }) => {
       .where(eq(users.id, ctx.session?.user.id))
       .returning();
 
-    console.log(deleteAccount);
-
     if (!deleteAccount) {
       return new TRPCError({
         code: "NOT_FOUND",
@@ -47,7 +44,6 @@ const deleteAccount = authedProcedure.mutation(async ({ ctx }) => {
 
     return deleteAccount;
   } catch (error) {
-    console.error(error);
     logEvent({
       message: `User ${ctx.session?.user.id} failed to delete account`,
       additionalInfo: JSON.stringify(error),

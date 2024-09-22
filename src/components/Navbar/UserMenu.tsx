@@ -17,7 +17,6 @@ interface UserMenuProps {
   session: Session;
 }
 
-
 const UserMenu = ({ session }: UserMenuProps) => {
   return (
     <DropdownMenu>
@@ -35,7 +34,9 @@ const UserMenu = ({ session }: UserMenuProps) => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>{session.user.name}</DropdownMenuLabel>
+        <DropdownMenuLabel className="max-w-60 break-words">
+          {session.user.firstName} {session.user.lastName}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link

@@ -111,7 +111,7 @@ export const Navbar = ({
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle className="font-header text-2xl text-black">
-                  {session?.user.name}
+                  {session?.user.firstName} {session?.user.lastName}
                 </DrawerTitle>
                 <DrawerDescription></DrawerDescription>
               </DrawerHeader>

@@ -34,25 +34,42 @@ const UserMenu = ({ session }: UserMenuProps) => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>{session.user.firstName} {session.user.lastName}</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {session.user.firstName} {session.user.lastName}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link
-            href="/profile"
-            className="flex cursor-pointer items-center gap-2"
-          >
-            <Icon name="user" className="size-5" />
-            Profil
-          </Link>
-        </DropdownMenuItem>
-        {session.user?.admin && (
+        {session.user.registered && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link
+                href="/profile"
+                className="flex cursor-pointer items-center gap-2"
+              >
+                <Icon name="user" className="size-5" />
+                Profil
+              </Link>
+            </DropdownMenuItem>
+            {session.user?.admin && (
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/admin"
+                  className="flex cursor-pointer items-center gap-2"
+                >
+                  <Icon name="shield" className="size-5" />
+                  Panel Administratora
+                </Link>
+              </DropdownMenuItem>
+            )}
+          </>
+        )}
+        {!session.user.registered && (
           <DropdownMenuItem asChild>
             <Link
-              href="/admin"
+              href="/createaccount"
               className="flex cursor-pointer items-center gap-2"
             >
-              <Icon name="shield" className="size-5" />
-              Panel Administratora
+              <Icon name="user" className="size-5" />
+              Dokończ tworzenie profilu
             </Link>
           </DropdownMenuItem>
         )}

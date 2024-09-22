@@ -12,6 +12,7 @@ const updateData = authedProcedure
       firstName: z.string(),
       lastName: z.string(),
       isArtist: z.boolean(),
+      avatar: z.string().optional(),
     }),
   )
   .mutation(async ({ ctx, input }) => {
@@ -22,6 +23,7 @@ const updateData = authedProcedure
           firstName: input.firstName,
           lastName: input.lastName,
           isArtist: input.isArtist,
+          image: input.avatar,
         })
         .where(eq(users.id, ctx.session?.user.id))
         .returning();

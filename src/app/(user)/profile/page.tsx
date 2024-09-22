@@ -7,7 +7,7 @@ import * as z from "zod";
 import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
 import { Switch } from "~/components/ui/switch";
-import { CameraIcon } from "lucide-react";
+import { CameraIcon, LoaderCircleIcon } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -21,7 +21,9 @@ import { trpc } from "~/trpc/react";
 import { toast } from "~/components/ui/use-toast";
 import Image from "next/image";
 import profile from "public/svg/profile.svg";
-import { Icon } from "~/components/ui/Icon/Icon";
+import { useRouter } from "next/navigation";
+import { useAvatarStore } from "~/stores/avatarStore";
+import UploadWrapper from "~/components/uploadthing/UploadWrapper";
 
 const formSchema = z.object({
   //   ^: Asserts the start of the string.
@@ -66,7 +68,7 @@ const formSchema = z.object({
 });
 
 export default function GreenProfileEditWithShadcnForms() {
-  const [photoUrl, setPhotoUrl] = useState("");
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,61 +79,75 @@ export default function GreenProfileEditWithShadcnForms() {
     },
   });
 
-  // const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setPhotoUrl(reader.result as string);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
   const { data: session, update } = useSession();
+
+  const [avatarUrl, setAvatarUrl, setAvatar, uploadAvatar] = useAvatarStore(
+    (state) => [
+      state.avatarUrl,
+      state.setAvatarUrl,
+      state.setAvatar,
+      state.uploadAvatar,
+    ],
+  );
+
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (session?.user?.firstName && session?.user?.lastName) {
       form.setValue("firstName", session.user.firstName);
       form.setValue("lastName", session.user.lastName);
       form.setValue("isArtist", session.user.isArtist);
+      setAvatarUrl(session?.user?.image ?? "");
     }
   }, [session]);
 
   const updateValues = trpc.user.updateData.useMutation();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (
+      values.firstName === session?.user?.firstName &&
+      values.lastName === session?.user?.lastName &&
+      values.isArtist === session?.user?.isArtist &&
+      avatarUrl === session?.user?.image
+    ) {
+      toast({
+        title: "Error",
+        description: "Nie wprowadzono zmian",
+        variant: "destructive",
+      });
+      return;
+    }
+    console.log("formValues", values);
+    console.log("session", session?.user);
+    setIsProcessing(true);
+    const avatar = await uploadAvatar();
+    if (!avatar) {
+      toast({
+        title: "Error uploading avatar",
+        description: "Avatar upload failed",
+        variant: "destructive",
+      });
+      setIsProcessing(false);
+      return;
+    }
     await updateValues
       .mutateAsync({
         firstName: values.firstName,
         lastName: values.lastName,
         isArtist: values.isArtist,
+        avatar: avatar,
       })
-      .then(() => {
-        update({
-          ...session,
+      .then(async () => {
+        void update({
           user: {
-            ...session?.user,
             firstName: values.firstName,
             lastName: values.lastName,
             isArtist: values.isArtist,
+            image: avatar,
           },
-        })
-          .catch((error) => {
-            toast({
-              title: "Error",
-              description:
-                "Nie udało się zaktualizować sesji, zaloguj się ponownie",
-              variant: "destructive",
-            });
-          })
-          .then(() => {
-            toast({
-              title: "Success",
-              description: "Profil został zaktualizowany",
-              variant: "default",
-            });
-          });
+        });
+        setIsProcessing(false);
+        router.refresh();
       })
       .catch((error) => {
         if (!session) {
@@ -140,8 +156,10 @@ export default function GreenProfileEditWithShadcnForms() {
             description: "Sesja wygasła, zaloguj się ponownie, aby kontynuować",
             variant: "destructive",
           });
+          setIsProcessing(false);
           return;
         }
+        setIsProcessing(false);
         toast({
           title: "Error",
           description:
@@ -164,14 +182,28 @@ export default function GreenProfileEditWithShadcnForms() {
             className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-8 pt-6 xl:w-3/4"
           >
             <div className="h-3/8 flex flex-col items-center gap-8">
-              <div className="relative flex h-44 w-44 justify-center rounded-full bg-neo-pink"></div>
-              <FormLabel
-                htmlFor="photo"
-                className="flex cursor-pointer items-center justify-center rounded-md bg-neo-pink px-4 py-2 text-white transition-colors hover:bg-neo-pink-hover"
-              >
-                <CameraIcon className="mr-2 h-5 w-5" />
-                Zmień zdjęcie
-              </FormLabel>
+              <div className="grid size-44 place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
+                {avatarUrl && (
+                  <Image
+                    src={avatarUrl}
+                    alt="avatar"
+                    height={100}
+                    width={100}
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full overflow-hidden object-cover"
+                  />
+                )}
+              </div>
+              <Button size="sm" type="button" disabled={isProcessing}>
+                <UploadWrapper
+                  endpoint="avatarUploader"
+                  onChange={setAvatar}
+                  className="flex cursor-pointer items-center gap-2"
+                >
+                  <CameraIcon className="size-6" />
+                  Zmień zdjęcie
+                </UploadWrapper>
+              </Button>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <FormField
@@ -181,7 +213,11 @@ export default function GreenProfileEditWithShadcnForms() {
                   <FormItem>
                     <FormLabel className="text-black">Imię</FormLabel>
                     <FormControl>
-                      <Input placeholder="Imię" {...field} />
+                      <Input
+                        disabled={isProcessing}
+                        placeholder="Imię"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -194,7 +230,11 @@ export default function GreenProfileEditWithShadcnForms() {
                   <FormItem>
                     <FormLabel className="text-black">Nazwisko</FormLabel>
                     <FormControl>
-                      <Input placeholder="Nazwisko" {...field} />
+                      <Input
+                        disabled={isProcessing}
+                        placeholder="Nazwisko"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -208,6 +248,7 @@ export default function GreenProfileEditWithShadcnForms() {
                 <FormItem className="flex flex-row items-center space-x-2 space-y-0">
                   <FormControl>
                     <Switch
+                      disabled={isProcessing}
                       checked={field.value}
                       onCheckedChange={field.onChange}
                       className="bg-green-200 data-[state=checked]:bg-neo-sage md:data-[state=checked]:bg-neo-castleton"
@@ -218,8 +259,12 @@ export default function GreenProfileEditWithShadcnForms() {
               )}
             />
             <div className="flex w-full">
-              <Button className="w-full" type="submit">
-                Zapisz zmiany
+              <Button className="w-full" type="submit" disabled={isProcessing}>
+                {isProcessing ? (
+                  <LoaderCircleIcon className="size-8 animate-spin" />
+                ) : (
+                  "Zapisz zmiany"
+                )}
               </Button>
             </div>
           </form>

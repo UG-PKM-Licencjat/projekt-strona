@@ -6,10 +6,9 @@ describe("Profile Edit Form - Successful Update", () => {
     // cy.login();
   });
   it("should show error on submit", () => {
-    // cy.get("body").should("be.visible");
     cy.setCookie(
       "next-auth.session-token",
-      "554a0218-2964-43de-a9cc-9775a39ca853",
+      "00afceb7-4b7c-49be-aa46-4466179d0360",
     );
     cy.setCookie(
       "next-auth.csrf-token",
@@ -19,12 +18,11 @@ describe("Profile Edit Form - Successful Update", () => {
     cy.reload();
     cy.get('input[name="firstName"]').type("Ala");
     cy.get('input[name="lastName"]').type("Kot");
-    cy.get('button[type="submit"]').click();
-
-    cy.get(".group").as("popout");
-    cy.get("@popout").should("exist");
-    cy.get("@popout")
-      .find(".grid > .font-semibold")
-      .should("have.text", "Sukces");
+    cy.get("button[id='delete-account']").click();
+    cy.get("h2").should("have.text", "Czy jesteś tego pewien?");
+    cy.get("#confirm-delete").click();
+    cy.url().should("include", "/");
   });
+  //yes button click
+  // cy.get(".justify-between > .inline-flex").click();
 });

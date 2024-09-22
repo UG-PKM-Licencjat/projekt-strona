@@ -55,6 +55,7 @@ export default function Home() {
           </h2>
           <Icon
             className="absolute right-14 h-full max-md:hidden"
+            id="photo"
             name="girl-pointing"
             stroke="transparent"
             viewBox="0 0 204 410"

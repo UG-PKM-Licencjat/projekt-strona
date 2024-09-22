@@ -274,7 +274,7 @@ export default function GreenProfileEditWithShadcnForms() {
             <Button
               variant="outline"
               className="w-1/2 max-xl:mt-4 max-xl:w-full"
-              type="submit"
+              id="delete-account"
               onClick={() => {
                 setIsOpen(true);
               }}
@@ -296,7 +296,7 @@ export default function GreenProfileEditWithShadcnForms() {
                 <Button
                   variant="outline"
                   className="w-1/2"
-                  type="submit"
+                  id="confirm-delete"
                   onClick={() => {
                     onDelete();
                   }}
@@ -306,7 +306,7 @@ export default function GreenProfileEditWithShadcnForms() {
                 <Button
                   variant="secondary"
                   className="w-1/2"
-                  type="submit"
+                  id="cancel-delete"
                   onClick={() => {
                     setIsOpen(false);
                   }}

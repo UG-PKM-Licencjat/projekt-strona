@@ -56,7 +56,7 @@ export const Navbar = ({
               <Icon name="logo" className="h-[50px]" viewBox="0 0 151 44" />
             </Link>
             <div className="flex items-center gap-6">
-              <NavbarLink href="/offers" icon="magnifier">
+              <NavbarLink href="/search" icon="magnifier">
                 <span className="hidden sm:flex">Szukaj</span>
               </NavbarLink>
               {session && (
@@ -95,7 +95,7 @@ export const Navbar = ({
           <MobileNavLink href="/">
             <Icon name="home" className="size-10" />
           </MobileNavLink>
-          <MobileNavLink href="/offers">
+          <MobileNavLink href="/search">
             <Icon name="magnifier" className="size-10" />
           </MobileNavLink>
           <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>

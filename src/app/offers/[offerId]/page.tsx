@@ -25,7 +25,7 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
   const position = { lat: data.location.y, lng: data.location.x };
 
   return (
-    <main className="flex-1 justify-between rounded-lg bg-transparent px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:bg-neo-gray">
+    <main className="container flex-1 justify-between rounded-lg bg-transparent px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:bg-neo-gray">
       <div className="mx-auto max-w-4xl space-y-6">
         <div className="flex justify-between">
           {/* Offer header */}
@@ -94,8 +94,7 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
             <div className="space-y-2">
               <h2 className="text-xl font-semibold">Tagi</h2>
               <div className="flex flex-wrap gap-2">
-                {data.offerTags &&
-                  data.offerTags.map((el) => <Tag key={el.id}>{el.name}</Tag>)}
+                {data.offerTags?.map((el) => <Tag key={el.id}>{el.name}</Tag>)}
               </div>
             </div>
 

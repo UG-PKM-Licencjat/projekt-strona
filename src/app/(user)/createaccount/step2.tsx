@@ -22,11 +22,13 @@ import { useToast } from "~/components/ui/use-toast";
 import { useAvatarStore } from "~/stores/avatarStore";
 import { useState } from "react";
 import { LoaderCircleIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Step2(props: {
   data: Data;
   handleChange: (data: Data) => void;
 }) {
+  const router = useRouter();
   const { data, handleChange } = props;
   const FormSchema = z.object({
     type: z
@@ -68,18 +70,29 @@ export default function Step2(props: {
           firstName: data.firstName,
           lastName: data.lastName,
           image: avatar,
-          isArtist: isArtist,
-          registrationStatus: 2,
+          registered: true,
         })
         .then(async () => {
-          handleChange({ ...data, activeTab: 2 });
+          if (isArtist) {
+            router.push("/profile/create");
+          } else {
+            handleChange({ ...data, activeTab: 2 });
+          }
         })
         .catch((error) => {
-          toast({
-            title: "Błąd",
-            description: error.message,
-            variant: "destructive",
-          });
+          if (error.code === " UNAUTHORIZED") {
+            toast({
+              title: "Błąd",
+              description: "Nie jesteś zalogowany",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Błąd",
+              description: "Nie udało się zaktualizować danych",
+              variant: "destructive",
+            });
+          }
         });
     }
   }

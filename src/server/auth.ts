@@ -15,6 +15,7 @@ import {
   sessions,
   accounts,
   verificationTokens,
+  offers,
 } from "src/server/db/schema";
 
 /**
@@ -30,6 +31,10 @@ declare module "next-auth" {
       admin: boolean;
       firstName: string;
       lastName: string;
+      providerAccountId: string;
+      idToken: string;
+      isArtist: boolean;
+      registered: boolean;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -53,6 +58,8 @@ export const authOptions: NextAuthOptions = {
       const result = await db
         .select({
           admin: accounts.admin,
+          providerAccountId: accounts.providerAccountId,
+          idToken: accounts.id_token,
         })
         .from(accounts)
         .where(eq(accounts.userId, user.id))
@@ -63,24 +70,42 @@ export const authOptions: NextAuthOptions = {
       //   "user",
       //   await db.select().from(accounts).where(eq(accounts.userId, user.id)),
       // );
+      const [isArtist] = await db
+        .select({
+          isArtist: offers.userId,
+        })
+        .from(offers)
+        .where(eq(offers.userId, user.id))
+        .limit(1);
+
+      const [registered] = await db
+        .select({
+          registered: users.registered,
+        })
+        .from(users)
+        .where(eq(users.id, user.id))
+        .limit(1);
 
       return {
         ...session,
         user: {
           id: user.id,
+          providerAccountId: result[0]?.providerAccountId ?? "",
           image: user.image,
           name: user.name,
+          idToken: result[0]?.idToken ?? "",
           firstName: user.firstName,
           lastName: user.lastName,
           admin: result[0]?.admin ? true : false,
+          isArtist: isArtist?.isArtist ? true : false,
+          registered: registered?.registered ? true : false,
         },
       };
     },
   },
   pages: {
-   newUser: "/createaccount",
+    newUser: "/createaccount",
   },
-
 
   adapter: DrizzleAdapter(db, {
     usersTable: users,

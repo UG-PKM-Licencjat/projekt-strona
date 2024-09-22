@@ -97,8 +97,7 @@ export const users = pgTable("user", {
   isPremium: boolean("isPremium").default(false).notNull(),
   isAdmin: boolean("isAdmin").default(false).notNull(),
   isActive: boolean("isActive").default(true).notNull(),
-  registrationStatus: integer("registrationStatus").default(0).notNull(),
-  isArtist: boolean("isArtist").default(false).notNull(),
+  registered: boolean("registered").default(false).notNull(),
 });
 
 export const tags = pgTable("tag", {

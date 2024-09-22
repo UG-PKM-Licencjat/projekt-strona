@@ -7,6 +7,7 @@ import { type Message } from "src/components/chat/ConversationWindow/Conversatio
 import { Button } from "src/components/ui/Button/Button";
 import { Input } from "src/components/ui/Input/Input";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { trpc } from "~/trpc/react";
 
 export default function Conversation({
   params,
@@ -18,10 +19,18 @@ export default function Conversation({
   const [messages, setMessages] = useState<Array<Message>>([]);
   const { data: session } = useSession();
 
+  const { data: otherProviderId } =
+    trpc.accounts.getProviderId.useQuery(userId);
+
   void useMemo(async () => {
     console.log("Loading data for", session?.user.id);
     const response = await fetch(
       `https://chat-swxn.onrender.com/messages?userA=${session?.user.id}&userB=${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.idToken}`,
+        },
+      },
     );
 
     // TODO: Validate schema?
@@ -33,15 +42,19 @@ export default function Conversation({
   }, [session?.user.id, userId]);
 
   async function handleSubmit() {
+    if (!otherProviderId) return;
     const response = await fetch("https://chat-swxn.onrender.com/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.user.idToken}`,
       },
       body: JSON.stringify({
         message: message,
         from: session?.user.id,
         to: userId,
+        fromSub: session?.user.providerAccountId,
+        toSub: otherProviderId,
       }),
     });
     // Todo also validate
@@ -54,7 +67,7 @@ export default function Conversation({
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-neo-gray-hover">
+    <div className="flex flex-1 flex-col bg-neo-gray-hover md:p-6">
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
@@ -89,7 +102,7 @@ export default function Conversation({
         ))}
       </div>
 
-      <div className="p-4">
+      <div className="">
         <div className="flex">
           <Input
             value={message}

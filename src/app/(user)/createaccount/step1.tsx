@@ -103,8 +103,6 @@ export default function Step1(props: {
       firstName: formdata.firstName || "",
       lastName: formdata.lastName || "",
       activeTab: 1,
-      isArtist: data.isArtist,
-      registrationStatus: data.registrationStatus,
     });
   };
 

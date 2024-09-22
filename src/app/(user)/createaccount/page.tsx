@@ -7,9 +7,7 @@ import Step3 from "./step3";
 export interface Data {
   firstName: string;
   lastName: string;
-  isArtist: boolean;
   activeTab: number;
-  registrationStatus: number;
 }
 
 const MainForm = () => {
@@ -17,9 +15,7 @@ const MainForm = () => {
   const [data, setData] = useState<Data>({
     firstName: "",
     lastName: "",
-    isArtist: false,
     activeTab: 0,
-    registrationStatus: 0,
   });
   const handleChange = (change: Data) => {
     console.log("change", change);

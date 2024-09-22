@@ -21,6 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
 import type { Session } from "next-auth";
+import { BrushIcon } from "lucide-react";
 
 const filterList: Array<string> = ["/createaccount", "/profile/create"];
 
@@ -56,9 +57,13 @@ export const Navbar = ({
               </NavbarLink>
               {session && (
                 <>
-                  <NavbarLink href="/chat" icon="message-square">
-                    Czat
-                  </NavbarLink>
+                  {session.user.registered && (
+                    <>
+                      <NavbarLink href="/chat" icon="message-square">
+                        Czat
+                      </NavbarLink>
+                    </>
+                  )}
                   <UserMenu session={session} />
                 </>
               )}
@@ -111,7 +116,7 @@ export const Navbar = ({
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle className="font-header text-2xl text-black">
-                  {session?.user.name}
+                  {session?.user.firstName} {session?.user.lastName}
                 </DrawerTitle>
                 <DrawerDescription></DrawerDescription>
               </DrawerHeader>
@@ -128,31 +133,62 @@ export const Navbar = ({
               )}
               {session && (
                 <div className="grid grid-cols-2 gap-4 p-8 text-xl font-semibold">
-                  <Link
-                    href="/profile"
-                    onClick={closeDrawer}
-                    className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-pink p-4 text-white"
-                  >
-                    <Icon name="user" className="size-14" />
-                    Profil
-                  </Link>
-                  <Link
-                    href="/chat"
-                    onClick={closeDrawer}
-                    className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-sage p-4 text-white"
-                  >
-                    <Icon name="message-square" className="size-14" />
-                    Czat
-                  </Link>
+                  {session.user.registered && (
+                    <>
+                      <Link
+                        href="/profile"
+                        onClick={closeDrawer}
+                        className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-pink p-4 text-white"
+                      >
+                        <Icon name="user" className="size-14" />
+                        Profil
+                      </Link>
+                      <Link
+                        href="/chat"
+                        onClick={closeDrawer}
+                        className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-sage p-4 text-white"
+                      >
+                        <Icon name="message-square" className="size-14" />
+                        Czat
+                      </Link>
+                      <Link
+                        href={
+                          session.user.isArtist
+                            ? "/profile/edit"
+                            : "/profile/create"
+                        }
+                        onClick={closeDrawer}
+                        className={cn(
+                          "flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-mantis p-4 text-white",
+                          !session.user.admin && "col-span-2 aspect-[2/1]",
+                        )}
+                      >
+                        <BrushIcon className="size-14" />
+                        {session.user.isArtist
+                          ? "Edytuj profil artysty"
+                          : "Stwórz profil artysty"}
+                      </Link>
 
-                  {session.user?.admin && (
+                      {session.user?.admin && (
+                        <Link
+                          href="/admin"
+                          onClick={closeDrawer}
+                          className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-mantis p-4 text-white"
+                        >
+                          <Icon name="shield" className="size-14" />
+                          Panel Administratora
+                        </Link>
+                      )}
+                    </>
+                  )}
+                  {!session.user.registered && (
                     <Link
-                      href="/admin"
+                      href="/createaccount"
                       onClick={closeDrawer}
-                      className="col-span-2 flex aspect-[2/1] size-full flex-col items-center justify-center rounded-lg bg-neo-mantis p-4 text-white"
+                      className="col-span-2 flex aspect-[2/1] size-full flex-col items-center justify-center rounded-lg bg-neo-pink p-4 text-white"
                     >
-                      <Icon name="shield" className="size-14" />
-                      Panel Administratora
+                      <Icon name="user" className="size-14" />
+                      Dokończ tworzenie profilu
                     </Link>
                   )}
                 </div>

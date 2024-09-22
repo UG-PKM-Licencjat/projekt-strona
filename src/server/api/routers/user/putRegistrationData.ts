@@ -4,6 +4,7 @@ import { authedProcedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import logEvent from "~/server/log";
 
 const putRegistrationData = authedProcedure
   .input(
@@ -11,8 +12,7 @@ const putRegistrationData = authedProcedure
       firstName: z.string(),
       lastName: z.string(),
       image: z.string(),
-      isArtist: z.boolean(),
-      registrationStatus: z.number(),
+      registered: z.boolean(),
     }),
   )
   .mutation(async ({ ctx, input }) => {
@@ -20,19 +20,31 @@ const putRegistrationData = authedProcedure
       if (!ctx.session?.user.id) {
         return [];
       }
-      console.log("your input", input);
-      const fetchedUsers = await db
+      const putRegistrationData = await db
         .update(users)
         .set({
           name: input.firstName + " " + input.lastName,
           firstName: input.firstName,
           lastName: input.lastName,
           image: input.image,
-          isArtist: input.isArtist,
-          registrationStatus: input.registrationStatus,
+          registered: input.registered,
         })
         .where(eq(users.id, ctx.session?.user.id));
-      return fetchedUsers;
+      if (!putRegistrationData) {
+        logEvent({
+          message: `User ${ctx.session?.user.id} does not exist`,
+          additionalInfo: JSON.stringify(putRegistrationData),
+        });
+        return new TRPCError({
+          code: "NOT_FOUND",
+          message: "User with provided Id does not exist",
+        });
+      }
+      logEvent({
+        message: `User ${ctx.session?.user.id} created profile`,
+        additionalInfo: JSON.stringify(input),
+      });
+      return putRegistrationData;
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

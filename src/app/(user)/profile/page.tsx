@@ -176,7 +176,7 @@ export default function GreenProfileEditWithShadcnForms() {
   async function onDelete() {
     await deleteAccount
       .mutateAsync()
-      .then((response) => {
+      .then(async (response) => {
         if (!response) {
           toast({
             title: "Destructive",
@@ -190,7 +190,7 @@ export default function GreenProfileEditWithShadcnForms() {
             variant: "default",
           });
           setIsOpen(false);
-          signOut({ callbackUrl: "/" });
+          await signOut({ callbackUrl: "/" });
         }
       })
       .catch((error) => {
@@ -319,7 +319,7 @@ export default function GreenProfileEditWithShadcnForms() {
                   className="w-1/2"
                   type="submit"
                   onClick={() => {
-                    onDelete();
+                    void onDelete();
                   }}
                 >
                   Tak

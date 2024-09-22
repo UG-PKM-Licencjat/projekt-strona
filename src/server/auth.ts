@@ -95,8 +95,7 @@ export const authOptions: NextAuthOptions = {
         );
 
       if (
-        googleAccount &&
-        googleAccount.refresh_token &&
+        googleAccount?.refresh_token &&
         (googleAccount.expires_at ?? 0) * 1000 < Date.now()
       ) {
         // If the access token has expired, try to refresh it
@@ -107,7 +106,7 @@ export const authOptions: NextAuthOptions = {
             method: "POST",
             body: new URLSearchParams({
               client_id: env.GOOGLE_CLIENT_ID,
-              client_secret: env.GOOGLE_CLIENT_SECRET!,
+              client_secret: env.GOOGLE_CLIENT_SECRET,
               grant_type: "refresh_token",
               refresh_token: googleAccount.refresh_token,
             }),
@@ -183,6 +182,12 @@ export const authOptions: NextAuthOptions = {
           email: profile.email,
           image: profile.picture,
         };
+      },
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+        },
       },
     }),
 

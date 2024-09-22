@@ -84,7 +84,6 @@ export const procedure = t.procedure;
 
 export const authMiddleware = t.middleware(async ({ next }) => {
   const session: Session | null = await getServerAuthSession();
-  console.log("trpc authorization", session);
   if (!session) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }

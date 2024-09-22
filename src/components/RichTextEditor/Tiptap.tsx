@@ -14,33 +14,38 @@ import TableRow from "@tiptap/extension-table-row";
 import Youtube from "@tiptap/extension-youtube";
 import { cn } from "~/lib/utils";
 
-type returnFormat = "html" | "json" | "text";
-
 export type TipTapProps = {
   placeholder: string;
-  returnFormat: returnFormat;
-  onChange?: (richText: string | JSONContent) => void;
+  onChange?: (richText: string) => void;
+  onChangeHTML?: (richText: string) => void;
+  onChangeJSON?: (richText: JSONContent) => void;
+  onBlur?: () => void;
   content?: string;
   charLimit: number;
   className?: string;
   classNameToolbar?: string;
   classNameEditor?: string;
   toolbarActive?: boolean;
+  editable?: boolean;
 };
 
 export default function TipTap({
   placeholder,
   onChange,
+  onChangeHTML,
+  onChangeJSON,
+  onBlur,
   content,
   charLimit,
   className,
   classNameToolbar,
   classNameEditor,
-  returnFormat = "html",
   toolbarActive = true,
+  editable = true,
 }: TipTapProps) {
   const editor = useEditor({
     content: content ? content : "",
+    editable: editable,
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({}),
@@ -65,21 +70,16 @@ export default function TipTap({
           "prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none",
       },
     },
+    onBlur,
+    onFocus({ editor }) {
+      if (onChange) onChange(editor.getText());
+      if (onChangeHTML) onChangeHTML(editor.getHTML());
+      if (onChangeJSON) onChangeJSON(editor.getJSON());
+    },
     onUpdate({ editor }) {
-      if (!onChange) {
-        return;
-      }
-      switch (returnFormat) {
-        case "html":
-          onChange(editor.getHTML());
-          break;
-        case "json":
-          onChange(editor.getJSON());
-          break;
-        case "text":
-          onChange(editor.getText());
-          break;
-      }
+      if (onChange) onChange(editor.getText());
+      if (onChangeHTML) onChangeHTML(editor.getHTML());
+      if (onChangeJSON) onChangeJSON(editor.getJSON());
     },
   });
 
@@ -105,30 +105,32 @@ export default function TipTap({
         <Toolbar editor={editor} className={classNameToolbar} />
       )}
       <EditorContent editor={editor} className={classNameEditor} />
-      <div
-        className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}
-      >
-        <svg
-          height="20"
-          width="20"
-          viewBox="0 0 20 20"
-          className={`${characterCountStorage.characters() === charLimit ? "text-neo-pink-hover" : characterCountStorage.characters() > charLimit / 2 ? "text-neo-sage-hover" : "text-neo-mantis"}`}
+      {toolbarActive && (
+        <div
+          className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}
         >
-          <circle r="10" cx="10" cy="10" fill="#e9ecef" />
-          <circle
-            r="5"
-            cx="10"
-            cy="10"
-            fill="transparent"
-            stroke="currentColor"
-            strokeWidth="10"
-            strokeDasharray={`calc(${percentage} * 31.4 / 100) 31.4`}
-            transform="rotate(-90) translate(-20)"
-          />
-          <circle r="6" cx="10" cy="10" fill="white" />
-        </svg>
-        {characterCountStorage.characters()} / {charLimit} characters
-      </div>
+          <svg
+            height="20"
+            width="20"
+            viewBox="0 0 20 20"
+            className={`${characterCountStorage.characters() === charLimit ? "text-neo-pink-hover" : characterCountStorage.characters() > charLimit / 2 ? "text-neo-sage-hover" : "text-neo-mantis"}`}
+          >
+            <circle r="10" cx="10" cy="10" fill="#e9ecef" />
+            <circle
+              r="5"
+              cx="10"
+              cy="10"
+              fill="transparent"
+              stroke="currentColor"
+              strokeWidth="10"
+              strokeDasharray={`calc(${percentage} * 31.4 / 100) 31.4`}
+              transform="rotate(-90) translate(-20)"
+            />
+            <circle r="6" cx="10" cy="10" fill="white" />
+          </svg>
+          {characterCountStorage.characters()} / {charLimit} characters
+        </div>
+      )}
     </div>
   );
 }

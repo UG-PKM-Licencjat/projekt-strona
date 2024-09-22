@@ -1,11 +1,8 @@
 import { generateReactHelpers } from "@uploadthing/react";
 
 import type { OurFileRouter } from "~/app/api/uploadthing/core";
-export {
-  PreviewDropzone,
-  type CustomFile,
-  type ExpandedRouteConfig,
-} from "./PreviewDropzone";
+export { PreviewDropzone } from "./PreviewDropzone";
+export { type CustomFile, type ExpandedRouteConfig } from "./utils";
 
-export const { useUploadThing, uploadFiles } =
+export const { useUploadThing, uploadFiles, getRouteConfig } =
   generateReactHelpers<OurFileRouter>();

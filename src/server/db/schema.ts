@@ -4,12 +4,13 @@ import {
   index,
   integer,
   pgTable,
-  primaryKey,
   jsonb,
+  primaryKey,
   text,
   timestamp,
   varchar,
   boolean,
+  geometry,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -96,8 +97,7 @@ export const users = pgTable("user", {
   isPremium: boolean("isPremium").default(false).notNull(),
   isAdmin: boolean("isAdmin").default(false).notNull(),
   isActive: boolean("isActive").default(true).notNull(),
-  registrationStatus: integer("registrationStatus").default(0).notNull(),
-  isArtist: boolean("isArtist").default(false).notNull(),
+  registered: boolean("registered").default(false).notNull(),
 });
 
 export const tags = pgTable("tag", {
@@ -138,14 +138,18 @@ export const offers = pgTable("offer", {
   userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id),
-  // TODO delete this?
   name: varchar("name", { length: 255 }).notNull(),
-  price: doublePrecision("price"),
-  about: text("about"),
-  skills: jsonb("skills"),
-  files: jsonb("files"),
-  links: jsonb("links"),
-  location: varchar("location", { length: 255 }),
+  price: doublePrecision("price").notNull(),
+  shortDescription: varchar("shortDescription", { length: 255 }).notNull(),
+  longDescription: text("longDescription").notNull(),
+  locationName: varchar("locationName", { length: 255 }).notNull(),
+  location: geometry("location", {
+    type: "point",
+    mode: "xy",
+    srid: 4326,
+  }).notNull(),
+  distance: integer("distance").default(0).notNull(),
+  files: jsonb("files").$type<{ url: string; type: string }[]>(),
 });
 
 export const offersRelations = relations(offers, ({ many, one }) => ({

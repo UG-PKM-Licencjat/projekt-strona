@@ -9,5 +9,5 @@ export default defineConfig({
   dbCredentials: {
     url: env.POSTGRES_URL,
   },
-  tablesFilter: ["projekt-strona_*"],
+  extensionsFilters: ["postgis"],
 });

@@ -11,8 +11,8 @@ const putRegistrationData = authedProcedure
     z.object({
       firstName: z.string(),
       lastName: z.string(),
-      isArtist: z.boolean(),
-      registrationStatus: z.number(),
+      image: z.string(),
+      registered: z.boolean(),
     }),
   )
   .mutation(async ({ ctx, input }) => {
@@ -23,10 +23,11 @@ const putRegistrationData = authedProcedure
       const putRegistrationData = await db
         .update(users)
         .set({
+          name: input.firstName + " " + input.lastName,
           firstName: input.firstName,
           lastName: input.lastName,
-          isArtist: input.isArtist,
-          registrationStatus: input.registrationStatus,
+          image: input.image,
+          registered: input.registered,
         })
         .where(eq(users.id, ctx.session?.user.id));
       if (!putRegistrationData) {

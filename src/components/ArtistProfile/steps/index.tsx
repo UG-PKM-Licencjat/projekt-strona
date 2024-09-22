@@ -34,10 +34,10 @@ export const steps: {
   },
   {
     title: "Główny opis",
-    description: "PLACEHOLDER",
+    description: "Przyszła pora na główną część twojej oferty.",
     content: <Step2 />,
     icon: <FileText className="size-5 sm:size-6" />,
-    fields: ["longDescription"],
+    fields: ["longDescriptionHTML"],
   },
   {
     title: "Tagi",
@@ -45,6 +45,7 @@ export const steps: {
       "Następnym krokiem jest wybór tagów. Tagi to słowa klucze, które jeszcze bardziej usprawniają wyszukiwanie ofert. Dodaj ich kilka, aby ułatwić szukającym dotarcie do twojej oferty!",
     content: <Step3 />,
     icon: <Tag className="size-5 sm:size-6" />,
+    fields: ["tags"],
   },
   {
     title: "Galeria",
@@ -52,6 +53,7 @@ export const steps: {
       "Każdy artysta powinien mieć swoje portfolio. Dodaj tutaj zdjęcia i filmy, którymi chcesz się pochwalić w swojej ofercie.",
     content: <Step4 />,
     icon: <Images className="size-5 sm:size-6" />,
+    fields: ["files"],
   },
   {
     title: "Lokalizacja i cena",
@@ -59,6 +61,7 @@ export const steps: {
       "Ostatnim krokiem jest ustalenie lokalizacji i ceny. Wybierz obszar swojego działania i orientacyjną cenę usługi, aby szukający mógł zorientować się czy stać go na twoje usługi 😉",
     content: <Step5 />,
     icon: <Coins className="size-5 sm:size-6" />,
+    fields: ["price", "locationName", "distance"],
   },
   {
     title: "Podsumowanie",

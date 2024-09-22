@@ -8,11 +8,9 @@ export interface Offer {
   ratingsSum: number | null;
   votes: number | null;
   price: number | null;
-  about: string | null;
-  skills: unknown;
+  shortDescription: string;
   files: unknown;
-  links: unknown;
-  location: string | null;
+  locationName: string | null;
 }
 
 const OfferCard = ({ offer }: { offer: Offer }) => (
@@ -34,11 +32,13 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
       <h3 className="mb-2 text-lg font-semibold text-[#2d6a4f]">
         {offer.name}
       </h3>
-      <p className="mb-4 line-clamp-2 text-sm text-[#4a6741]">{offer.about}</p>
+      <p className="mb-4 line-clamp-2 text-sm text-[#4a6741]">
+        {offer.shortDescription}
+      </p>
       <div className="flex items-center justify-between text-sm text-[#2d6a4f]">
         <div className="flex items-center gap-1">
           <MapPin size={14} />
-          <span>{offer.location}</span>
+          <span>{offer.locationName}</span>
         </div>
         {offer.ratingsSum && offer.votes && (
           <div className="flex items-center gap-1">

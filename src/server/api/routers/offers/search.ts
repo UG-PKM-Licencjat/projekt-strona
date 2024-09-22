@@ -2,14 +2,13 @@ import { z } from "zod";
 import { procedure } from "../../trpc";
 import { db } from "~/server/db";
 import { offers } from "~/server/db/schema";
-import { and, eq, like, or, type SQL } from "drizzle-orm";
 import { buildSearchQuery } from "./util";
 
 const searchProcedure = procedure
   .input(
     z.object({
       text: z.string(),
-      location: z.string(),
+      location: z.object({ x: z.number(), y: z.number() }),
       skip: z.number(),
       limit: z.number(),
     }),

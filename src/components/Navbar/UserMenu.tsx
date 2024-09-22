@@ -12,6 +12,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { BrushIcon } from "lucide-react";
 
 interface UserMenuProps {
   session: Session;
@@ -27,7 +28,7 @@ const UserMenu = ({ session }: UserMenuProps) => {
             alt={session.user.name!}
             referrerPolicy="no-referrer"
           />
-          <AvatarFallback>
+          <AvatarFallback className="uppercase">
             {session.user.firstName[0]}
             {session.user.lastName[0]}
           </AvatarFallback>
@@ -38,23 +39,51 @@ const UserMenu = ({ session }: UserMenuProps) => {
           {session.user.firstName} {session.user.lastName}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link
-            href="/profile"
-            className="flex cursor-pointer items-center gap-2"
-          >
-            <Icon name="user" className="size-5" />
-            Profil
-          </Link>
-        </DropdownMenuItem>
-        {session.user?.admin && (
+        {session.user.registered && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link
+                href="/profile"
+                className="flex cursor-pointer items-center gap-2"
+              >
+                <Icon name="user" className="size-5" />
+                Profil
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={
+                  session.user.isArtist ? "/profile/edit" : "/profile/create"
+                }
+                className="flex cursor-pointer items-center gap-2"
+              >
+                <BrushIcon className="size-5" />
+                {session.user.isArtist
+                  ? "Edytuj profil artysty"
+                  : "Stwórz profil artysty"}
+              </Link>
+            </DropdownMenuItem>
+            {session.user?.admin && (
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/admin"
+                  className="flex cursor-pointer items-center gap-2"
+                >
+                  <Icon name="shield" className="size-5" />
+                  Panel Administratora
+                </Link>
+              </DropdownMenuItem>
+            )}
+          </>
+        )}
+        {!session.user.registered && (
           <DropdownMenuItem asChild>
             <Link
-              href="/admin"
+              href="/createaccount"
               className="flex cursor-pointer items-center gap-2"
             >
-              <Icon name="shield" className="size-5" />
-              Panel Administratora
+              <Icon name="user" className="size-5" />
+              Dokończ tworzenie profilu
             </Link>
           </DropdownMenuItem>
         )}

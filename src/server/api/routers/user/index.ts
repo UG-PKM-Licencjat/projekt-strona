@@ -3,10 +3,12 @@ import putRegistrationDataProcedure from "~/server/api/routers/user/putRegistrat
 import updateData from "./updateData";
 import fetchManyProcedure from "./fetchMany";
 import deleteAccount from "./deleteAccount";
+import isRegistered from "./isRegistered";
 
 export const UserRouter = createTRPCRouter({
   putRegistrationData: putRegistrationDataProcedure,
   fetchManyUsers: fetchManyProcedure,
   updateData: updateData,
   delete: deleteAccount,
+  isRegistered: isRegistered,
 });

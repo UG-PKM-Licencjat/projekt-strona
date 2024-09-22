@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "~/components/ui/Button/Button";
-import { useRouter } from "next/navigation";
 import {
   RadioGroup,
   RadioGroupLabelItem,
@@ -15,23 +14,33 @@ import {
   FormItem,
   FormMessage,
 } from "~/components/ui/form";
-import { Data } from "./page";
-import { useSession } from "next-auth/react";
+import { type Data } from "./page";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import womangoing from "public/svg/woman-going.svg";
 import { useToast } from "~/components/ui/use-toast";
+import { useAvatarStore } from "~/stores/avatarStore";
+import { useState } from "react";
+import { LoaderCircleIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Step2(props: {
   data: Data;
   handleChange: (data: Data) => void;
 }) {
+  const router = useRouter();
   const { data, handleChange } = props;
   const FormSchema = z.object({
-    type: z.string({
-      message: "To pole jest wymagane",
-    }),
+    type: z
+      .string({
+        message: "To pole jest wymagane",
+      })
+      .min(1, {
+        message: "To pole jest wymagane",
+      }),
   });
+  const uploadAvatar = useAvatarStore((state) => state.uploadAvatar);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -39,45 +48,36 @@ export default function Step2(props: {
 
   const writenames = trpc.user.putRegistrationData.useMutation();
 
-  const { data: session, update } = useSession();
   const { toast } = useToast();
 
   async function onSubmit(isArtistString: z.infer<typeof FormSchema>) {
     const isArtist = isArtistString.type === "true" ? true : false;
 
     if (form.getValues().type !== undefined) {
+      setIsProcessing(true);
+      const avatar = await uploadAvatar();
+      if (!avatar) {
+        toast({
+          title: "Error uploading avatar",
+          description: "Avatar upload failed",
+          variant: "destructive",
+        });
+        setIsProcessing(false);
+        return;
+      }
       await writenames
         .mutateAsync({
           firstName: data.firstName,
           lastName: data.lastName,
-          isArtist: isArtist,
-          registrationStatus: 2,
+          image: avatar,
+          registered: true,
         })
         .then(async () => {
-          if (!session) {
-            toast({
-              title: "Błąd",
-              description: "Sesja wygasła, zaloguj się ponownie",
-              variant: "destructive",
-            });
+          if (isArtist) {
+            router.push("/profile/create");
+          } else {
+            handleChange({ ...data, activeTab: 2 });
           }
-
-          await update({
-            ...session,
-            user: {
-              ...session?.user,
-              firstName: data.firstName,
-              lastName: data.lastName,
-            },
-          }).catch((error) => {
-            toast({
-              title: "Błąd",
-              description:
-                "Nie udało się zaktualizować sesji zaloguj się ponownie",
-              variant: "destructive",
-            });
-          });
-          handleChange({ ...data, activeTab: 2 });
         })
         .catch((error) => {
           if (error.code === " UNAUTHORIZED") {
@@ -102,27 +102,25 @@ export default function Step2(props: {
       <div className="mb-6 h-4 w-auto self-start rounded-lg bg-secondary md:bg-neo-castleton">
         <div className="h-4 w-2/3 self-start rounded-lg bg-neo-pink"></div>
       </div>
-      <div className="col flex h-full">
+      <div className="flex h-full">
         <div className="flex h-full w-full flex-col justify-between pb-10">
-          <div>
-            <h1 className="mb-4 self-start text-start font-header text-2xl font-medium leading-none text-primary">
-              Czy jesteś
-              <br className="sm:hidden" />
-              <span className="text-neo-mantis md:text-neo-castleton">
-                {" "}
-                artystą?
-              </span>
-            </h1>
-            <p className="text-neo-dark-gray">
-              Wiemy, że w każdym drzemie artysta
-            </p>
-          </div>
-
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex h-full w-full flex-col justify-between gap-5"
             >
+              <div>
+                <h1 className="mb-4 self-start text-start font-header text-2xl font-medium leading-none text-primary">
+                  Czy jesteś
+                  <span className="text-neo-mantis md:text-neo-castleton">
+                    {" "}
+                    artystą?
+                  </span>
+                </h1>
+                <p className="text-neo-dark-gray">
+                  Wiemy, że w każdym drzemie artysta
+                </p>
+              </div>
               <FormField
                 control={form.control}
                 name="type"
@@ -131,22 +129,27 @@ export default function Step2(props: {
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      className="flex flex-col gap-4"
                     >
                       <FormItem>
                         <FormControl>
-                          <RadioGroupLabelItem value="true" id="r1">
-                            <div className=" ">
-                              Tak, chcę się reklamować na Bebop!
-                            </div>
+                          <RadioGroupLabelItem
+                            value="true"
+                            id="r1"
+                            disabled={isProcessing}
+                          >
+                            Tak, chcę się reklamować na Bebop!
                           </RadioGroupLabelItem>
                         </FormControl>
                       </FormItem>
                       <FormItem>
                         <FormControl>
-                          <RadioGroupLabelItem value="false " id="r2">
-                            <div className=" ">
-                              Nie, chcę tylko przeglądać oferty.
-                            </div>
+                          <RadioGroupLabelItem
+                            value="false"
+                            id="r2"
+                            disabled={isProcessing}
+                          >
+                            Nie, chcę tylko przeglądać oferty.
                           </RadioGroupLabelItem>
                         </FormControl>
                         <FormMessage />
@@ -155,6 +158,7 @@ export default function Step2(props: {
                   </FormControl>
                 )}
               />
+              <div></div>
               <div className="flex flex-col justify-between gap-5 sm:flex-row">
                 <Button
                   className="sm:w-1/2"
@@ -162,6 +166,7 @@ export default function Step2(props: {
                   onClick={() => {
                     handleChange({ ...data, activeTab: 0 });
                   }}
+                  disabled={isProcessing}
                 >
                   Wróć
                 </Button>
@@ -169,8 +174,13 @@ export default function Step2(props: {
                   className="sm:w-1/2"
                   type="submit"
                   onClick={() => onSubmit(form.getValues())}
+                  disabled={isProcessing}
                 >
-                  Zakończ
+                  {isProcessing ? (
+                    <LoaderCircleIcon className="size-8 animate-spin" />
+                  ) : (
+                    "Zakończ"
+                  )}
                 </Button>
               </div>
             </form>

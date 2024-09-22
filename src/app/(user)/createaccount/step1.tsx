@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "~/components/ui/Input/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/Button/Button";
 import {
@@ -12,13 +12,14 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { Data } from "./page";
+import { type Data } from "./page";
 import Image from "next/image";
 import man from "public/svg/man.svg";
 import { useSession } from "next-auth/react";
+import { UploadIcon } from "lucide-react";
+import { useAvatarStore } from "~/stores/avatarStore";
+import UploadWrapper from "~/components/uploadthing/UploadWrapper";
 
 const formSchema = z.object({
   //   ^: Asserts the start of the string.
@@ -33,11 +34,11 @@ const formSchema = z.object({
   // /u: Enables Unicode mode, which allows for proper matching of Unicode characters.
   firstName: z
     .string()
-    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}'][\p{L}\p{M}]+){0,2}$/u, {
-      message: "Pseudonim zawiera nieprawidłowe znaki.",
-    })
     .min(2, {
       message: "Imię musi mieć co najmniej 2 znaki.",
+    })
+    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}'][\p{L}\p{M}]+){0,2}$/u, {
+      message: "Pseudonim zawiera nieprawidłowe znaki.",
     }),
   //     ^: Asserts the start of the string.
   // [\p{L}\p{M}]: Matches one or more Unicode letter (\p{L}) or mark (\p{M}) characters.
@@ -51,11 +52,11 @@ const formSchema = z.object({
   // /u: Enables Unicode mode.
   lastName: z
     .string()
-    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}' ][\p{L}\p{M}]+){0,2}$/u, {
-      message: "Nazwisko zawiera nieprawidłowe znaki.",
-    })
     .min(2, {
       message: "Nazwisko musi mieć co najmniej 2 znaki.",
+    })
+    .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}' ][\p{L}\p{M}]+){0,2}$/u, {
+      message: "Nazwisko zawiera nieprawidłowe znaki.",
     }),
 });
 
@@ -66,14 +67,28 @@ export default function Step1(props: {
   const { data, handleChange } = props;
   const { data: session } = useSession();
 
+  const [avatarUrl, setAvatarUrl, setAvatar, gotSessionImage] = useAvatarStore(
+    (state) => [
+      state.avatarUrl,
+      state.setAvatarUrl,
+      state.setAvatar,
+      state.gotSessionImage,
+    ],
+  );
+
+  useEffect(() => {
+    if (gotSessionImage) return;
+    setAvatarUrl(session?.user?.image ?? "");
+  }, [session?.user?.image, gotSessionImage]);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: session?.user?.firstName || "",
-      lastName: session?.user?.lastName || "",
+      firstName: session?.user?.firstName ?? "",
+      lastName: session?.user?.lastName ?? "",
     },
+    mode: "onTouched",
   });
-  const router = useRouter();
 
   useEffect(() => {
     if (data.firstName && data.lastName) {
@@ -88,8 +103,6 @@ export default function Step1(props: {
       firstName: formdata.firstName || "",
       lastName: formdata.lastName || "",
       activeTab: 1,
-      isArtist: data.isArtist,
-      registrationStatus: data.registrationStatus,
     });
   };
 
@@ -116,15 +129,23 @@ export default function Step1(props: {
               className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-6 pt-6"
             >
               <div className="flex flex-col items-center">
-                <div className="relative h-44 w-44 justify-center rounded-full bg-neo-pink">
-                  <Icon
-                    width="100"
-                    height="100"
-                    name="upload-white"
-                    viewBox="0 0 74 73"
-                    className="absolute bottom-2 left-0 right-0 top-0 m-auto"
-                  />
-                </div>
+                <UploadWrapper endpoint="avatarUploader" onChange={setAvatar}>
+                  <div className="grid size-44 cursor-pointer place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
+                    {avatarUrl && (
+                      <Image
+                        src={avatarUrl}
+                        alt="avatar"
+                        height={100}
+                        width={100}
+                        referrerPolicy="no-referrer"
+                        className="h-full w-full overflow-hidden object-cover"
+                      />
+                    )}
+                    <div className="z-50 flex size-full items-center justify-center bg-black/20 transition-all hover:opacity-100 md:opacity-0">
+                      <UploadIcon className="size-20 text-white" />
+                    </div>
+                  </div>
+                </UploadWrapper>
               </div>
               <FormField
                 control={form.control}
@@ -165,6 +186,7 @@ export default function Step1(props: {
             src={man}
             alt="man"
             className="ml-20 hidden h-full w-max object-cover xl:block"
+            priority={true}
           />
         </div>
       </div>

@@ -23,8 +23,7 @@ const testOffer = {
 
 export default async function CreateArtistProfilePage() {
   const session = await getServerAuthSession();
-  if (!session) redirect("/");
-  const isArtist = session.user.isArtist;
+  const isArtist = session?.user.isArtist;
   if (isArtist) redirect("/");
   return (
     <ArtistProfileMultiform

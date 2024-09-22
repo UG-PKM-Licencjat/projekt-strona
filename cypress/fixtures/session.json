@@ -1,0 +1,19 @@
+{
+  "user": {
+    "name": "test",
+    "email": "test@test.com",
+    "slug": "test0000",
+    "id": "strasnedlouhejstring",
+    "image": "https://avatars.githubusercontent.com/u/112759319?v=4"
+  },
+  "userInfo": {
+    "bio": "Lorem Testum",
+    "name": "test",
+    "email": "test@test.com",
+    "slug": "test0000",
+    "id": "strasnedlouhejstring",
+    "isActive": "true"
+  },
+  "expires": "3000-01-01T00:00:00.000Z",
+  "accessToken": "test"
+}

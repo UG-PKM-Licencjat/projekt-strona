@@ -1,5 +1,4 @@
 import { ArtistProfileMultiform } from "~/components/ArtistProfile/ArtistProfileMultiform";
-import { api } from "~/trpc/server";
 import { getServerAuthSession } from "~/server/auth";
 import { redirect } from "next/navigation";
 
@@ -25,8 +24,8 @@ const testOffer = {
 export default async function CreateArtistProfilePage() {
   const session = await getServerAuthSession();
   if (!session) redirect("/");
-  const hasOffer = await api.offers.checkByUserId({ userId: session.user.id });
-  if (hasOffer) redirect("/");
+  const isArtist = session.user.isArtist;
+  if (isArtist) redirect("/");
   return (
     <ArtistProfileMultiform
       title="Stwórz profil"

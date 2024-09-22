@@ -2,15 +2,17 @@
 
 import React from "react";
 import { trpc } from "~/trpc/react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import Image from "next/image";
+// import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Card, CardContent } from "~/components/ui/card";
 import { Tag } from "~/components/Tag/Tag";
-import { DollarSign, Mail, MapPin } from "lucide-react";
+import { DollarSign, MapPin, MessageSquareIcon } from "lucide-react";
 import { Button } from "~/components/ui/Button/Button";
 import APIProviderWrapper from "~/components/LocationGoogle/APIProviderWrapper";
 import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
 import { Circle } from "~/components/LocationGoogle/Circle";
 import TipTap from "~/components/RichTextEditor/Tiptap";
+import Link from "next/link";
 
 export default function OfferView({ params }: { params: { offerId: string } }) {
   const { offerId } = params;
@@ -24,36 +26,33 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
   const position = { lat: data.location.y, lng: data.location.x };
 
   return (
-    <div className="container flex flex-1 flex-col justify-between gap-2 rounded-lg bg-transparent px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:bg-neo-gray">
-      <div className="flex justify-between">
+    <div className="container relative flex flex-1 flex-col justify-between gap-2 bg-neo-gray px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:rounded-lg">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Offer header */}
-        <div className="flex items-center space-x-4">
-          <Avatar className="h-32 w-32 border-4 border-white">
-            <AvatarImage
-              src="/placeholder-avatar.jpg"
-              alt="Artist's profile picture"
-            />
-            <AvatarFallback>AP</AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-3xl font-bold">{data.name}</h1>
-            <p className="flex text-lg text-muted-foreground">
-              {data.shortDescription}
-            </p>
-          </div>
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="text-3xl font-bold leading-none">{data.name}</h1>
+          <p className="flex text-lg text-muted-foreground">
+            {data.shortDescription}
+          </p>
         </div>
 
         {/* Offer location & price */}
         <APIProviderWrapper>
-          <div className="flex flex-col items-end justify-end space-y-4">
-            <div className="flex items-center gap-2">
-              <MapPin className="size-8 text-muted-foreground" />
-              <span className="text-lg">Gdańsk</span>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center gap-2">
+                <DollarSign className="size-8 text-neo-dark-gray" />
+                <span className="text-xl font-semibold">123123123 zł</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="size-8 text-neo-dark-gray" />
+                <span className="text-lg">Gdańsk</span>
+              </div>
             </div>
-            <div className="h-[250px] w-[250px] overflow-hidden rounded-md">
+            <div className="h-full w-full overflow-hidden rounded-md max-lg:aspect-[21/9]">
               <Map
                 defaultCenter={position}
-                defaultZoom={8}
+                defaultZoom={10}
                 gestureHandling={"greedy"}
                 streetViewControl={false}
                 mapId="OFFER_MAP"
@@ -115,18 +114,19 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
             )}
           </div>
 
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="flex items-center space-x-2">
-              <DollarSign className="h-5 w-5 text-muted-foreground" />
-              <span>123123123 zł</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between gap-4 sm:flex-row">
-            <Button className="w-full sm:w-auto">
-              <Mail className="mr-2 h-4 w-4" />
-              Kontakt
-            </Button>
+          <div className="flex w-full justify-start md:justify-end">
+            <Link href={`/chat/${data.users.id}`}>
+              <Button className="flex gap-2" size="lg" variant="secondary">
+                <Image
+                  src={data.users.image!}
+                  alt={data.users.name!}
+                  width={40}
+                  height={40}
+                  className="overflow-hidden rounded-full"
+                />
+                <span className="text-lg">Skontaktuj się</span>
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

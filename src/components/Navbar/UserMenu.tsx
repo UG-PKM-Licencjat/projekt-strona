@@ -34,8 +34,8 @@ const UserMenu = ({ session }: UserMenuProps) => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>
-          {session.user.firstName} <br /> {session.user.lastName}
+        <DropdownMenuLabel className="max-w-60 break-words">
+          {session.user.firstName} {session.user.lastName}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

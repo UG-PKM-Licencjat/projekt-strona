@@ -29,7 +29,7 @@ export default function GlobalBehaviours({
   useEffect(() => {
     if (!data) return;
     const socketConnection = new WebSocket(
-      `wss://chat-swxn.onrender.com/connect?id=${data.user.id}`,
+      `wss://chat-swxn.onrender.com/connect?id=${data.user.id}&token=Bearer ${data.user.providerAccountId}`,
     );
 
     socketConnection.onmessage = (event: MessageEvent<string>) => {

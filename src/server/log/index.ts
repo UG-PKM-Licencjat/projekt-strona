@@ -17,6 +17,8 @@ export const tagValues = [
   "API",
   "ROUTER",
   "CLICKSTREAM",
+  "ERROR",
+  "FRONTEND",
 ] as const; // add more tags here
 export type Tag = (typeof tagValues)[number];
 

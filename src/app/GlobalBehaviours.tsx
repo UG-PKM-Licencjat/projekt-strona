@@ -3,7 +3,6 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useConversationsStore } from "~/stores";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
-import { trpc } from "~/trpc/react";
 import { useSession } from "next-auth/react";
 import { useToast } from "~/components/ui/use-toast";
 
@@ -12,8 +11,6 @@ export default function GlobalBehaviours({
 }: {
   children: React.ReactNode;
 }) {
-  const path = usePathname();
-  // const log = trpc.clientLog.useMutation();
   const conversations = useConversationsStore();
   const { data } = useSession();
   const store = useConversationsStore();

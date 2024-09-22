@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import { Button } from "src/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import error500 from "public/svg/error500.svg";
-import { trpc } from "~/trpc/react";
 
 export default function Error({
   error,
@@ -14,16 +12,6 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  // const log = trpc.clientLog.useMutation();
-
-  // useEffect(() => {
-  //   log.mutate({
-  //     message: error.message,
-  //     additionalInfo: "error",
-  //     tags: ["ERROR", "FRONTEND"],
-  //   });
-  // }, []);
-
   return (
     <div className="mt-10 flex flex-col items-center justify-center px-4">
       <div className="text-center">

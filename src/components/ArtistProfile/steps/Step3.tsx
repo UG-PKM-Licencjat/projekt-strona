@@ -7,6 +7,7 @@ import { Input } from "~/components/ui/Input/Input";
 import { type ArtistFormData } from "~/lib/artistSchema";
 import CustomError from "~/components/Form/CustomError";
 import { XIcon } from "lucide-react";
+import { trpc } from "~/trpc/react";
 
 import {
   Popover,
@@ -14,29 +15,9 @@ import {
   PopoverContent,
 } from "~/components/ui/popover";
 
-// Mock data for front development purposes
-// TODO fetch tags from database to another zustand store
-const tags = [
-  { id: 1, name: "JavaScript" },
-  { id: 2, name: "Python" },
-  { id: 3, name: "Java" },
-  { id: 4, name: "React" },
-  { id: 5, name: "Node.js" },
-  { id: 6, name: "Django" },
-  { id: 7, name: "Machine Learning" },
-  { id: 8, name: "DevOps" },
-  { id: 9, name: "AWS" },
-  { id: 10, name: "Cybersecurity" },
-  { id: 11, name: "Node.js" },
-  { id: 12, name: "Django" },
-  { id: 13, name: "Machine Learning" },
-  { id: 14, name: "DevOps" },
-  { id: 15, name: "AWS" },
-  { id: 101, name: "Cybersecurity" },
-];
-
 export default function Step3() {
   const { setValue, trigger, getValues } = useFormContext<ArtistFormData>();
+  const { data: tags } = trpc.offers.getAllTags.useQuery();
 
   const [inputText, setInputText] = useState("");
   const [open, setOpen] = useState(false);
@@ -56,7 +37,7 @@ export default function Step3() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resultTags, setValue]);
 
-  const filteredTags = tags.filter(
+  const filteredTags = tags?.filter(
     (tag) =>
       !resultTags.includes(tag) &&
       tag.name.toLowerCase().includes(inputText.toLowerCase()),
@@ -102,8 +83,8 @@ export default function Step3() {
           }}
           onInteractOutside={() => void trigger("tags")}
         >
-          {filteredTags.length > 0 &&
-            filteredTags.map((tag) => (
+          {filteredTags && filteredTags?.length > 0 &&
+            filteredTags?.map((tag) => (
               <div
                 key={tag.id}
                 className="cursor-pointer px-6 py-2 tracking-wider hover:bg-neo-gray-hover"
@@ -115,7 +96,7 @@ export default function Step3() {
                 <p>{tag.name}</p>
               </div>
             ))}
-          {filteredTags.length === 0 && (
+          {filteredTags?.length === 0 && (
             <div className="px-6 py-2 tracking-wider">
               <p>Brak wyników</p>
             </div>

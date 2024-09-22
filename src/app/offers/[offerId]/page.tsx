@@ -55,7 +55,7 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
                 <span className="text-lg">Gdańsk</span>
               </div>
             </div>
-            <div className="h-full w-full overflow-hidden rounded-md max-lg:aspect-[21/9]">
+            <div className="h-full min-h-[200px] w-full overflow-hidden rounded-md max-lg:aspect-[21/9]">
               <Map
                 defaultCenter={position}
                 defaultZoom={10}

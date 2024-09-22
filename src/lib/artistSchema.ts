@@ -12,7 +12,7 @@ export const artistSchema = z.object({
   shortDescription: z
     .string()
     .min(3, { message: "Opis musi mieć co najmniej 3 znaki." })
-    .max(400, { message: "Opis nie może przekraczać 400 znaków." }),
+    .max(255, { message: "Opis nie może przekraczać 255 znaków." }),
   longDescription: z
     .string({ message: "Opis musi mieć co najmniej 10 znaków." })
     .min(10, { message: "Opis musi mieć co najmniej 10 znaków." })

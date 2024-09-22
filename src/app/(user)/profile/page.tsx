@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
-import { Switch } from "~/components/ui/switch";
 import { CameraIcon, LoaderCircleIcon } from "lucide-react";
 import {
   Form,
@@ -75,7 +74,6 @@ export default function GreenProfileEditWithShadcnForms() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      isArtist: false,
     },
   });
 
@@ -96,7 +94,6 @@ export default function GreenProfileEditWithShadcnForms() {
     if (session?.user?.firstName && session?.user?.lastName) {
       form.setValue("firstName", session.user.firstName);
       form.setValue("lastName", session.user.lastName);
-      form.setValue("isArtist", session.user.isArtist);
       setAvatarUrl(session?.user?.image ?? "");
     }
   }, [session]);
@@ -107,7 +104,6 @@ export default function GreenProfileEditWithShadcnForms() {
     if (
       values.firstName === session?.user?.firstName &&
       values.lastName === session?.user?.lastName &&
-      values.isArtist === session?.user?.isArtist &&
       avatarUrl === session?.user?.image
     ) {
       toast({
@@ -134,7 +130,6 @@ export default function GreenProfileEditWithShadcnForms() {
       .mutateAsync({
         firstName: values.firstName,
         lastName: values.lastName,
-        isArtist: values.isArtist,
         avatar: avatar,
       })
       .then(async () => {
@@ -142,7 +137,6 @@ export default function GreenProfileEditWithShadcnForms() {
           user: {
             firstName: values.firstName,
             lastName: values.lastName,
-            isArtist: values.isArtist,
             image: avatar,
           },
         });
@@ -179,7 +173,7 @@ export default function GreenProfileEditWithShadcnForms() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-8 pt-6 xl:w-3/4"
+            className="gap-y-auto left bottom-0 flex h-full flex-col justify-center space-y-8 pt-6 xl:w-3/4"
           >
             <div className="h-3/8 flex flex-col items-center gap-8">
               <div className="grid size-44 place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
@@ -241,24 +235,7 @@ export default function GreenProfileEditWithShadcnForms() {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="isArtist"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                  <FormControl>
-                    <Switch
-                      disabled={isProcessing}
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      className="bg-green-200 data-[state=checked]:bg-neo-sage md:data-[state=checked]:bg-neo-castleton"
-                    />
-                  </FormControl>
-                  <FormLabel className="text-black">Jestem artystą</FormLabel>
-                </FormItem>
-              )}
-            />
-            <div className="flex w-full">
+            <div className="flex w-full place-self-end">
               <Button className="w-full" type="submit" disabled={isProcessing}>
                 {isProcessing ? (
                   <LoaderCircleIcon className="size-8 animate-spin" />

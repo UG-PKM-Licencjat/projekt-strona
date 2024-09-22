@@ -1,121 +1,134 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { Tag } from "~/components/Tag/Tag";
-import { redirect } from "next/navigation";
-import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
-import { StarRating } from "~/components/ui/StarRating/StarRating";
+import React, { useEffect, useRef } from "react";
 import { trpc } from "~/trpc/react";
-import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/router";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Card, CardContent } from "~/components/ui/card";
+import { Tag } from "~/components/Tag/Tag";
+import { DollarSign, Edit, Mail, MapPin } from "lucide-react";
+import { Button } from "~/components/ui/Button/Button";
+import { APIProvider } from "@vis.gl/react-google-maps";
+import APIProviderWrapper from "~/components/LocationGoogle/APIProviderWrapper";
+import { AdvancedMarker, Map, useMap } from "@vis.gl/react-google-maps";
+import { Circle, type CircleRef } from "~/components/LocationGoogle/Circle";
 
-export default function OfferPage({ params }: { params: { offerId: string } }) {
-  const [tags, setTags] = useState<{ name: string; id: number }[]>([
-    { name: "hashtag1", id: 0 },
-    { name: "hashtag2", id: 1 },
-    { name: "hashtag3", id: 2 },
-  ]);
-  const description = [
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos eum fugit ex sed saepe quo consectetur nostrum illo autem recusandae.",
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat alias facere itaque natus repellendus debitis voluptas facilis maiores quia rerum.",
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut inventore, libero dignissimos rerum quos, dolorem amet consectetur labore sint odio vero itaque obcaecati earum? Recusandae odio laborum aut voluptatum nesciunt?",
-  ];
-  let uriDecoded: string;
-  try {
-    uriDecoded = decodeURIComponent(params.offerId);
-  } catch (e) {
-    redirect("/offers");
+export default function OfferView({ params }: { params: { offerId: string } }) {
+  const { offerId } = params;
+
+  const { data } = trpc.offers.getById.useQuery(offerId);
+
+  if (!data) {
+    return <div>Loading...</div>;
   }
-  const { data } = trpc.offers.get.useQuery({ id: uriDecoded });
 
-  useEffect(() => {
-    console.log(data);
-    if (data) {
-      data?.offerTags ? setTags(data?.offerTags) : null;
-    }
-  }, [data]);
+  const position = { lat: data.location.y, lng: data.location.x };
 
   return (
-    <div className="flex flex-col items-start gap-20 px-16 py-8">
-      <div className="fixed bottom-10 right-10 cursor-pointer rounded-full bg-primary p-4">
-        <Link
-          href={`/chat/${data?.userOffers ? data.userOffers[0]?.userId : ""}`}
-        >
-          <Icon
-            name="message-square"
-            className="size-8 stroke-primary-foreground"
-          />
-        </Link>
-      </div>
-      {/* HEADER */}
-      <div className="flex items-start gap-10">
-        <div className="relative size-64">
-          <Image
-            src="https://utfs.io/f/2d3da5b8-2b91-40b1-801a-f17f936fd1e3-n92lk7.jpg"
-            alt="avatar"
-            fill={true}
-            sizes="(max-width: 768px) 100vw, 640px"
-            className="rounded-full"
-          />
+    <main className="flex-1 justify-between rounded-lg bg-transparent px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:bg-neo-gray">
+      <div className="mx-auto max-w-4xl space-y-6">
+        <div className="flex justify-between">
+          {/* Offer header */}
+          <div className="flex items-center space-x-4">
+            <Avatar className="h-32 w-32 border-4 border-white">
+              <AvatarImage
+                src="/placeholder-avatar.jpg"
+                alt="Artist's profile picture"
+              />
+              <AvatarFallback>AP</AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-3xl font-bold">{data.name}</h1>
+              <p className="flex w-1/2 text-lg text-muted-foreground">
+                {data.shortDescription}
+              </p>
+            </div>
+          </div>
+
+          {/* Offer location & price */}
+          <APIProviderWrapper>
+            <div className="flex flex-col items-end justify-end space-y-4">
+              <div className="flex items-center space-x-2">
+                <MapPin className="h-5 w-5 text-muted-foreground" />
+                <span>Gdańsk</span>
+              </div>
+              <div className="h-[250px] w-[250px] overflow-hidden rounded-md">
+                <Map
+                  defaultCenter={position}
+                  defaultZoom={8}
+                  gestureHandling={"greedy"}
+                  streetViewControl={false}
+                  mapId="OFFER_MAP"
+                >
+                  {data.distance > 0 && (
+                    <Circle
+                      radius={data.distance * 1000} // m to km
+                      center={position}
+                      strokeColor={"#0c4cb3"}
+                      strokeOpacity={1}
+                      strokeWeight={3}
+                      fillColor={"#3b82f6"}
+                      fillOpacity={0.3}
+                    />
+                  )}
+                  <AdvancedMarker position={position} />
+                </Map>
+              </div>
+            </div>
+          </APIProviderWrapper>
         </div>
 
-        <div className="mt-4 flex flex-col items-start justify-center gap-4">
-          <div className="flex items-end justify-center gap-12">
-            <h1 className="break-all text-4xl font-semibold uppercase text-blue-950">
-              Offer {uriDecoded}
-              {/* MICHAŁ MATCZAK */}
-            </h1>
-            <h3 className="text-2xl font-bold capitalize text-black/40">
-              {/* Warszawa */}
-              Location
-            </h3>
-          </div>
-          <div className="flex items-center justify-center gap-4">
-            <StarRating currentRating={3.4} />
-            <Icon name="badge-check" className="size-12" />
-          </div>
-          <div className="flex items-start justify-center gap-4">
-            {!tags && (
-              <div className="animate-pulse rounded-md bg-muted-foreground px-40 py-6" />
-            )}
-            {tags?.map((tag, index) => <Tag label={tag.name} key={index} />)}
-          </div>
-          {/* TODO quick placeholder - get someone to design this */}
-          <div className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
-            <Icon name="wallet" className="size-8" />
-            100 000 zł
-          </div>
-        </div>
+        <Card className="w-full">
+          <CardContent className="space-y-6 pt-6">
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold">Główny opis</h2>
+              <div className="prose max-w-none">
+                <p>
+                  Opis z różnymi <span className="text-red-500">efektami</span>{" "}
+                  asdasdasdasd
+                </p>
+                <p>asdasdasdasdasd</p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold">Tagi</h2>
+              <div className="flex flex-wrap gap-2">
+                {data.offerTags &&
+                  data.offerTags.map((el) => <Tag key={el.id}>{el.name}</Tag>)}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold">Galeria</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="flex aspect-square items-center justify-center rounded-md bg-gray-200"
+                  >
+                    <span className="text-gray-400">Image {i}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+              <div className="flex items-center space-x-2">
+                <DollarSign className="h-5 w-5 text-muted-foreground" />
+                <span>123123123 zł</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between gap-4 sm:flex-row">
+              <Button className="w-full sm:w-auto">
+                <Mail className="mr-2 h-4 w-4" />
+                Kontakt
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-
-      {/* O MNIE */}
-      <OfferSegment heading="O MNIE" info={description} />
-
-      {/* CO OFERUJĘ */}
-      <OfferSegment heading="CO OFERUJĘ" info={description} />
-
-      {/* MOJE PORTFOLIO */}
-      <OfferSegment
-        heading="MOJE PORTFOLIO"
-        info={[
-          "https://www.youtube.com/embed/F2YpXC1itEE",
-          "https://www.youtube.com/embed/F2YpXC1itEE",
-        ]}
-        type="video"
-      />
-
-      {/* LINKI */}
-      <OfferSegment
-        heading="LINKI"
-        info={["https://www.youtube.com/embed/F2YpXC1itEE"]}
-        type="link"
-      />
-
-      {/* OPINIE */}
-      <OfferSegment heading="OPINIE">
-        TUTAJ IDĄ KOMENTARZE I OPINIE
-      </OfferSegment>
-    </div>
+    </main>
   );
 }

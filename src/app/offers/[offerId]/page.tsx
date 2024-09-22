@@ -40,8 +40,7 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
             <div>
               <h1 className="text-3xl font-bold">{data.name}</h1>
               <p className="flex w-1/2 text-lg text-muted-foreground">
-                {data.shortDescription}{" "}
-                AGSKHDGSAHDASHJGDSAGDSJAHGJSHADGSHJAGDSHJADGSAJDASDGJHSADASGDHJSAGDHJASGDJSADHJA
+                {data.shortDescription}
               </p>
             </div>
           </div>
@@ -122,10 +121,6 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
             </div>
 
             <div className="flex flex-col justify-between gap-4 sm:flex-row">
-              <Button variant="outline" className="w-full sm:w-auto">
-                <Edit className="mr-2 h-4 w-4" />
-                Edytuj ofertę
-              </Button>
               <Button className="w-full sm:w-auto">
                 <Mail className="mr-2 h-4 w-4" />
                 Kontakt

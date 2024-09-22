@@ -61,9 +61,6 @@ const formSchema = z.object({
     .min(2, {
       message: "Nazwisko musi mieć co najmniej 2 znaki.",
     }),
-  isArtist: z.boolean({
-    message: "To pole jest wymagane",
-  }),
 });
 
 export default function GreenProfileEditWithShadcnForms() {
@@ -101,6 +98,7 @@ export default function GreenProfileEditWithShadcnForms() {
   const updateValues = trpc.user.updateData.useMutation();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("test");
     if (
       values.firstName === session?.user?.firstName &&
       values.lastName === session?.user?.lastName &&

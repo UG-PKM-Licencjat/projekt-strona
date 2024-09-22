@@ -6,6 +6,7 @@ import GetAllTagsProcedure from "./getAllTags";
 import searchProcedure from "./search";
 import countSearchProcedure from "./countSearch";
 import checkByUserIdProcedure from "./checkByUserId";
+import getByUserIdProcedure from "./getByUserId";
 
 export const OffersRouter = createTRPCRouter({
   getById: GetByIdProcedure,
@@ -14,4 +15,5 @@ export const OffersRouter = createTRPCRouter({
   search: searchProcedure,
   countSearch: countSearchProcedure,
   checkByUserId: checkByUserIdProcedure,
+  getByUserId: getByUserIdProcedure,
 });

@@ -21,6 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
 import type { Session } from "next-auth";
+import { BrushIcon } from "lucide-react";
 
 const filterList: Array<string> = ["/createaccount", "/profile/create"];
 
@@ -150,12 +151,29 @@ export const Navbar = ({
                         <Icon name="message-square" className="size-14" />
                         Czat
                       </Link>
+                      <Link
+                        href={
+                          session.user.isArtist
+                            ? "/profile/edit"
+                            : "/profile/create"
+                        }
+                        onClick={closeDrawer}
+                        className={cn(
+                          "flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-mantis p-4 text-white",
+                          !session.user.admin && "col-span-2 aspect-[2/1]",
+                        )}
+                      >
+                        <BrushIcon className="size-14" />
+                        {session.user.isArtist
+                          ? "Edytuj profil artysty"
+                          : "Stwórz profil artysty"}
+                      </Link>
 
                       {session.user?.admin && (
                         <Link
                           href="/admin"
                           onClick={closeDrawer}
-                          className="col-span-2 flex aspect-[2/1] size-full flex-col items-center justify-center rounded-lg bg-neo-mantis p-4 text-white"
+                          className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-mantis p-4 text-white"
                         >
                           <Icon name="shield" className="size-14" />
                           Panel Administratora
@@ -167,7 +185,7 @@ export const Navbar = ({
                     <Link
                       href="/createaccount"
                       onClick={closeDrawer}
-                      className="col-span-2 flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-pink p-4 text-white"
+                      className="col-span-2 flex aspect-[2/1] size-full flex-col items-center justify-center rounded-lg bg-neo-pink p-4 text-white"
                     >
                       <Icon name="user" className="size-14" />
                       Dokończ tworzenie profilu

@@ -12,6 +12,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { BrushIcon } from "lucide-react";
 
 interface UserMenuProps {
   session: Session;
@@ -47,6 +48,19 @@ const UserMenu = ({ session }: UserMenuProps) => {
               >
                 <Icon name="user" className="size-5" />
                 Profil
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={
+                  session.user.isArtist ? "/profile/edit" : "/profile/create"
+                }
+                className="flex cursor-pointer items-center gap-2"
+              >
+                <BrushIcon className="size-5" />
+                {session.user.isArtist
+                  ? "Edytuj profil artysty"
+                  : "Stwórz profil artysty"}
               </Link>
             </DropdownMenuItem>
             {session.user?.admin && (

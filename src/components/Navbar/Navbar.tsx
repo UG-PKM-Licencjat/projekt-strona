@@ -23,7 +23,11 @@ import { Button } from "~/components/ui/Button/Button";
 import type { Session } from "next-auth";
 import { BrushIcon } from "lucide-react";
 
-const filterList: Array<string> = ["/createaccount", "/profile/create"];
+const filterList: Array<string> = [
+  "/createaccount",
+  "/profile/create",
+  "/profile/edit",
+];
 
 export const Navbar = ({
   session,

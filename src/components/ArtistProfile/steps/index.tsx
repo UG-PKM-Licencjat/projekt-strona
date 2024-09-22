@@ -37,7 +37,7 @@ export const steps: {
     description: "Przyszła pora na główną część twojej oferty.",
     content: <Step2 />,
     icon: <FileText className="size-5 sm:size-6" />,
-    fields: ["longDescription"],
+    fields: ["longDescriptionHTML"],
   },
   {
     title: "Tagi",

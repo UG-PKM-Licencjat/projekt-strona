@@ -15,7 +15,7 @@ import { useFileStore } from "~/stores/fileStore";
 import { steps, type Fields } from "./steps";
 import { trpc } from "~/trpc/react";
 import { type TRPCError } from "@trpc/server";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Image from "next/image";
 import forest from "public/svg/forest.svg";
 import forestmini from "public/svg/forestmini.svg";
@@ -83,6 +83,8 @@ export function ArtistProfileMultiform({
   const toggleDescription = () => setOpenDescription((open) => !open);
 
   const createOffer = trpc.offers.create.useMutation();
+  // TODO create update procedure
+  // const updateOffer = trpc.offers.update.useMutation();
 
   const handleStepChange = async (newStep: number, direction: number) => {
     if (newStep < 0) return;
@@ -102,8 +104,14 @@ export function ArtistProfileMultiform({
   const { toast } = useToast();
   const onSubmit = async (data: ArtistFormData) => {
     setIsSubmitting(true);
+    if (edit) {
+      // TODO handle updating
+      setIsSubmitting(false);
+      redirect("/");
+      // return;
+    }
     // TODO cache the responses here to avoid multiple uploads
-    let uploadedFiles: ClientUploadedFileData<null>[] | undefined = [];
+    let uploadedFiles: ClientUploadedFileData<null>[] | undefined;
     if (files.length > 0) {
       uploadedFiles = await uploadFiles("galleryUploader", {
         files,
@@ -324,7 +332,7 @@ export function ArtistProfileMultiform({
               )}
               {activeStep === steps.length - 1 ? (
                 <Button type="submit" key="submit-button">
-                  Stwórz profil
+                  {edit ? "Zapisz" : "Stwórz profil"}
                 </Button>
               ) : (
                 <Button

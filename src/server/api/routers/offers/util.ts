@@ -3,15 +3,19 @@ import { offers } from "~/server/db/schema";
 
 export function buildSearchQuery(
   text: string,
-  location: string,
+  location: { x: number; y: number },
 ): SQL | undefined {
   let query: SQL | undefined;
 
   if (text !== "")
-    query = or(like(offers.name, `%${text}%`), like(offers.about, `%${text}%`));
+    query = or(
+      like(offers.name, `%${text}%`),
+      like(offers.shortDescription, `%${text}%`),
+    );
 
-  if (location !== "" && text === "") query = eq(offers.location, location);
-  else if (location !== "") query = and(eq(offers.location, location), query);
+  // TODO: add location search
+  // if (location !== "" && text === "") query = eq(offers.location, location);
+  // else if (location !== "") query = and(eq(offers.location, location), query);
 
   return query;
 }

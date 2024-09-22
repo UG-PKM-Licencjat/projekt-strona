@@ -3,16 +3,16 @@
 import React from "react";
 import { trpc } from "~/trpc/react";
 import Image from "next/image";
-// import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Card, CardContent } from "~/components/ui/card";
 import { Tag } from "~/components/Tag/Tag";
-import { DollarSign, MapPin, MessageSquareIcon } from "lucide-react";
+import { ArrowLeftIcon, DollarSign, MapPin } from "lucide-react";
 import { Button } from "~/components/ui/Button/Button";
 import APIProviderWrapper from "~/components/LocationGoogle/APIProviderWrapper";
 import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
 import { Circle } from "~/components/LocationGoogle/Circle";
 import TipTap from "~/components/RichTextEditor/Tiptap";
 import Link from "next/link";
+import { OfferFilePreview } from "~/components/OfferFilePreview";
 
 export default function OfferView({ params }: { params: { offerId: string } }) {
   const { offerId } = params;
@@ -27,6 +27,12 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
 
   return (
     <div className="container relative flex flex-1 flex-col justify-between gap-2 bg-neo-gray px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:rounded-lg">
+      <div className="flex w-full items-center justify-start">
+        <Button variant="link" className="flex items-center gap-2 px-0">
+          <ArrowLeftIcon className="size-6" />
+          Cofnij
+        </Button>
+      </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Offer header */}
         <div className="flex flex-col items-center gap-2">
@@ -99,12 +105,7 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
             <h2 className="text-xl font-semibold">Galeria</h2>
             <div className="flex flex-wrap gap-4">
               {data.files?.map((file, index) => (
-                <div
-                  key={index}
-                  className="flex aspect-square w-44 items-center justify-center rounded-md bg-gray-200"
-                >
-                  <span className="text-gray-400">Image {index}</span>
-                </div>
+                <OfferFilePreview key={index} file={file} />
               ))}
             </div>
             {data.files?.length === 0 && (

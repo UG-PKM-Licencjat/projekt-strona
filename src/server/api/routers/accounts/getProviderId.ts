@@ -19,7 +19,7 @@ const getProviderId = authedProcedure
       logEvent({
         message: `User ${opts.input} does not exist`,
       });
-      return new TRPCError({
+      throw new TRPCError({
         code: "NOT_FOUND",
         message: "User with provided Id does not exist",
       });

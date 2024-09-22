@@ -15,7 +15,7 @@ import { useFileStore } from "~/stores/fileStore";
 import { steps, type Fields } from "./steps";
 import { trpc } from "~/trpc/react";
 import { type TRPCError } from "@trpc/server";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import forest from "public/svg/forest.svg";
 import forestmini from "public/svg/forestmini.svg";
@@ -107,8 +107,8 @@ export function ArtistProfileMultiform({
     if (edit) {
       // TODO handle updating
       setIsSubmitting(false);
-      redirect("/");
-      // return;
+      router.push("/");
+      return;
     }
     // TODO cache the responses here to avoid multiple uploads
     let uploadedFiles: ClientUploadedFileData<null>[] | undefined;

@@ -2,7 +2,7 @@ import { ArtistProfileMultiform } from "~/components/ArtistProfile/ArtistProfile
 import { getServerAuthSession } from "~/server/auth";
 import { redirect } from "next/navigation";
 import { api } from "~/trpc/server";
-import { ArtistFormData } from "~/lib/artistSchema";
+import { type ArtistFormData } from "~/lib/artistSchema";
 
 // TODO fetch offer data
 
@@ -16,7 +16,7 @@ export default async function CreateArtistProfilePage() {
     name: rawOffer?.name,
     shortDescription: rawOffer?.shortDescription,
     longDescriptionHTML: rawOffer?.longDescription,
-    longDescription: "",
+    longDescription: "1234567890", // Go over character limit initially to avoid errors
     locationName: rawOffer?.locationName,
     locationPlaceholder: rawOffer?.locationName,
     location: rawOffer?.location,

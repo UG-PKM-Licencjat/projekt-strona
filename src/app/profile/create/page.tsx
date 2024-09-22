@@ -41,8 +41,8 @@ const testOffer = {
 export default async function CreateArtistProfilePage() {
   const session = await getServerAuthSession();
   if (!session) redirect("/");
-  const hasOffer = await api.offers.checkByUserId({ userId: session.user.id });
-  if (hasOffer) redirect("/");
+  // const hasOffer = await api.offers.checkByUserId({ userId: session.user.id });
+  // if (hasOffer) redirect("/");
   return (
     <ArtistProfileMultiform
       title="Stwórz profil"

@@ -17,22 +17,16 @@ import {
 // Mock data for front development purposes
 // TODO fetch tags from database to another zustand store
 const tags = [
-  { id: 1, name: "JavaScript" },
-  { id: 2, name: "Python" },
-  { id: 3, name: "Java" },
-  { id: 4, name: "React" },
-  { id: 5, name: "Node.js" },
-  { id: 6, name: "Django" },
-  { id: 7, name: "Machine Learning" },
-  { id: 8, name: "DevOps" },
-  { id: 9, name: "AWS" },
-  { id: 10, name: "Cybersecurity" },
-  { id: 11, name: "Node.js" },
-  { id: 12, name: "Django" },
-  { id: 13, name: "Machine Learning" },
-  { id: 14, name: "DevOps" },
-  { id: 15, name: "AWS" },
-  { id: 101, name: "Cybersecurity" },
+  { id: 1, name: "Rock" },
+  { id: 2, name: "Pop" },
+  { id: 3, name: "Jazz" },
+  { id: 4, name: "Hip-Hop" },
+  { id: 5, name: "Classical" },
+  { id: 6, name: "Electronic" },
+  { id: 7, name: "Blues" },
+  { id: 8, name: "Reggae" },
+  { id: 9, name: "Country" },
+  { id: 10, name: "Metal" },
 ];
 
 export default function Step3() {

@@ -116,9 +116,11 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "storybook": "^8.2.9",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "@types/bun": "latest"
   },
   "ct3aMetadata": {
     "initVersion": "7.36.2"
-  }
+  },
+  "module": "index.ts"
 }

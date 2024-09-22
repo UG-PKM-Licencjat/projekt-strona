@@ -41,22 +41,6 @@ export const appRouter = createTRPCRouter({
         tags: opts.input.tags,
       });
     }),
-  getSampleMessages: procedure
-    .input(z.string())
-    .query(async ({ input, ctx }) => {
-      const data: Array<Message> = (await (
-        await fetch(
-          `https://chat-swxn.onrender.com/messages/sample?user=${input}`,
-          {
-            headers: {
-              Authorization: `Bearer ${ctx.session?.user.idToken}`,
-            },
-          },
-        )
-      ).json()) as Array<Message>; // TODO: validate with zod and fix it to be safe
-
-      return data;
-    }),
 });
 
 // export type definition of API

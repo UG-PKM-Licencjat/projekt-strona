@@ -8,7 +8,7 @@ import {
 import { type Adapter } from "next-auth/adapters";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import { db } from "src/server/db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { env } from "~/env.js";
 import {
   users,
@@ -26,6 +26,7 @@ import {
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
+    error?: "RefreshTokenError";
     user: {
       id: string;
       admin: boolean;
@@ -85,6 +86,62 @@ export const authOptions: NextAuthOptions = {
         .from(users)
         .where(eq(users.id, user.id))
         .limit(1);
+
+      const [googleAccount] = await db
+        .select()
+        .from(accounts)
+        .where(
+          and(eq(accounts.userId, user.id), eq(accounts.provider, "google")),
+        );
+
+      if (
+        googleAccount &&
+        googleAccount.refresh_token &&
+        (googleAccount.expires_at ?? 0) * 1000 < Date.now()
+      ) {
+        // If the access token has expired, try to refresh it
+        try {
+          // https://accounts.google.com/.well-known/openid-configuration
+          // We need the `token_endpoint`.
+          const response = await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            body: new URLSearchParams({
+              client_id: env.GOOGLE_CLIENT_ID,
+              client_secret: env.GOOGLE_CLIENT_SECRET!,
+              grant_type: "refresh_token",
+              refresh_token: googleAccount.refresh_token,
+            }),
+          });
+
+          console.log("response", response);
+
+          const tokensOrError = await response.json();
+
+          if (!response.ok) throw tokensOrError;
+
+          const newTokens = tokensOrError as {
+            access_token: string;
+            expires_in: number;
+            refresh_token?: string;
+            id_token: string;
+          };
+
+          await db
+            .update(accounts)
+            .set({
+              access_token: newTokens.access_token,
+              id_token: newTokens.id_token,
+              expires_at: Math.floor(Date.now() / 1000) + newTokens.expires_in,
+              refresh_token:
+                newTokens.refresh_token ?? googleAccount.refresh_token,
+            })
+            .where(eq(accounts.userId, googleAccount.userId));
+        } catch (error) {
+          console.error("Error refreshing access_token", error);
+          // If we fail to refresh the token, return an error so we can handle it on the page
+          session.error = "RefreshTokenError";
+        }
+      }
 
       return {
         ...session,

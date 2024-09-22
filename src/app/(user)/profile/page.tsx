@@ -15,11 +15,19 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { trpc } from "~/trpc/react";
 import { toast } from "~/components/ui/use-toast";
 import Image from "next/image";
 import profile from "public/svg/profile.svg";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "~/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import { useAvatarStore } from "~/stores/avatarStore";
 import UploadWrapper from "~/components/uploadthing/UploadWrapper";
@@ -161,13 +169,46 @@ export default function GreenProfileEditWithShadcnForms() {
       });
   }
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const deleteAccount = trpc.user.delete.useMutation();
+
+  async function onDelete() {
+    await deleteAccount
+      .mutateAsync()
+      .then((response) => {
+        if (!response) {
+          toast({
+            title: "Destructive",
+            description: "Konto nie istnieje",
+            variant: "default",
+          });
+        } else {
+          toast({
+            title: "Success",
+            description: "Konto zostało usunięte",
+            variant: "default",
+          });
+          setIsOpen(false);
+          signOut({ callbackUrl: "/" });
+        }
+      })
+      .catch((error) => {
+        toast({
+          title: "Error",
+          description: "Nie udało się usunąć konta, spróbuj ponownie później",
+          variant: "destructive",
+        });
+      });
+  }
+
   return (
     <>
       <h1 className="text-2xl font-bold leading-none text-neo-gray-hover md:text-neo-castleton">
         Edytuj profil
       </h1>
 
-      <div className="flex h-full flex-row justify-stretch pb-10">
+      <div className="flex h-full flex-row justify-stretch pb-10 max-xl:flex-col">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -244,12 +285,58 @@ export default function GreenProfileEditWithShadcnForms() {
             </div>
           </form>
         </Form>
-        <div className="hidden w-full justify-end xl:block">
+        <div className="w-full flex-col items-center justify-between xl:ml-20 xl:flex">
           <Image
             src={profile}
             alt="man"
-            className="ml-20 hidden h-full w-max object-cover xl:block"
+            className="ml-20 hidden h-3/4 w-max object-cover xl:block"
           />
+          <AlertDialog open={isOpen}>
+            <Button
+              variant="outline"
+              className="w-1/2 max-xl:mt-4 max-xl:w-full"
+              type="submit"
+              onClick={() => {
+                setIsOpen(true);
+              }}
+            >
+              Usuń konto
+            </Button>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-xl">
+                  Czy jesteś tego pewien?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-lg">
+                  Ta akcja jest nieodwracalna. Pernamentnie usunie twoje dane z
+                  naszych serwerów.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-col items-center gap-4 max-sm:flex">
+                <Button
+                  variant="outline"
+                  className="w-1/2"
+                  type="submit"
+                  onClick={() => {
+                    onDelete();
+                  }}
+                >
+                  Tak
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="w-1/2"
+                  type="submit"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  Nie
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </>

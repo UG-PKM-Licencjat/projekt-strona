@@ -3,39 +3,39 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useConversationsStore } from "~/stores";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
-import { trpc } from "~/trpc/react";
 import { useSession } from "next-auth/react";
+import { useToast } from "~/components/ui/use-toast";
 
 export default function GlobalBehaviours({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const path = usePathname();
-  const log = trpc.clientLog.useMutation();
   const conversations = useConversationsStore();
   const { data } = useSession();
+  const store = useConversationsStore();
+  const { toast } = useToast();
 
   useEffect(() => {
-    const user = data && data.user ? data.user.id : "anonymous";
-
-    log.mutate({
-      message: `User ${user} visited ${path}`,
-      additionalInfo: "",
-      tags: ["ROUTER", "CLICKSTREAM"],
-    });
-  }, [path, data]);
+    if (!data) return;
+    void store.fetchSampleMessages(data);
+  }, []);
 
   useEffect(() => {
     if (!data) return;
     const socketConnection = new WebSocket(
-      `wss://chat-swxn.onrender.com/connect?id=${data.user.id}&token=Bearer ${data.user.providerAccountId}`,
+      `wss://chat-swxn.onrender.com/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
     );
 
     socketConnection.onmessage = (event: MessageEvent<string>) => {
       const newMessage = JSON.parse(event.data) as Message; // TODO: Validate const
-      conversations.addMessage(data.user.id, newMessage);
+      conversations.addMessage(newMessage.from, newMessage);
+      toast({
+        title: "Chat",
+        description: "Otrzymałeś nową wiadomość!",
+        variant: "default",
+      });
     };
-  }, [data?.user?.id]);
+  }, [data, data?.user.id]);
   return <>{children}</>;
 }

@@ -118,8 +118,8 @@ export const Navbar = ({
               )}
             </DrawerTrigger>
             <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle className="font-header text-2xl text-black">
+              <DrawerHeader className="flex justify-center">
+                <DrawerTitle className="max-w-60 break-words font-header text-2xl text-black">
                   {session?.user.firstName} {session?.user.lastName}
                 </DrawerTitle>
                 <DrawerDescription></DrawerDescription>

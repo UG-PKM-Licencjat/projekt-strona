@@ -40,7 +40,7 @@ export const env = createEnv({
     MONGO_URL: z.string().url(),
     LOG: z.string().default("true"),
     UPLOADTHING_TOKEN: z.string(),
-    CHAT_BASE_URL: z.string().url(),
+    CHAT_BASE_URL: z.string(),
   },
 
   /**

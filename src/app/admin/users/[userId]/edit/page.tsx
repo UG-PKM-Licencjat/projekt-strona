@@ -38,7 +38,6 @@ export default function Page({ params }: { params: { userId: string } }) {
     if (data) {
       form.setValue("firstname", data.firstName ?? "");
       form.setValue("lastname", data.lastName ?? "");
-      form.setValue("nickname", data.nickname ?? "");
       form.setValue("image", data.image ?? "");
       // form.setValue("location", data.location ?? "");
     }
@@ -50,7 +49,6 @@ export default function Page({ params }: { params: { userId: string } }) {
       id: data?.id ?? "",
       firstname: data?.firstName ?? "",
       lastname: data?.lastName ?? "",
-      nickname: data?.nickname ?? "",
       image: data?.image ?? "",
       // location: data?.location ?? "",
     },

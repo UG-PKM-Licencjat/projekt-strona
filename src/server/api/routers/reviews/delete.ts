@@ -1,5 +1,4 @@
 import { procedure } from "~/server/api/trpc";
-import { db } from "~/server/db";
 import { offers, reviews } from "~/server/db/schema";
 import { z } from "zod";
 import logEvent, { LogType } from "~/server/log";
@@ -13,11 +12,10 @@ export const deleteProcedure = procedure
       id: z.number().int(),
     }),
   )
-  .mutation(async (opts) => {
-    const { input } = opts;
+  .mutation(async ({ ctx, input }) => {
     const { id } = input;
 
-    const ok = await db.transaction(async (tx) => {
+    const ok = await ctx.db.transaction(async (tx) => {
       const [returned] = await tx
         .delete(reviews)
         .where(eq(reviews.id, id))

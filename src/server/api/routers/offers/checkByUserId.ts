@@ -1,5 +1,4 @@
 import { authedProcedure } from "~/server/api/trpc";
-import { db } from "~/server/db";
 import { offers, users } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -7,7 +6,7 @@ import { z } from "zod";
 
 const checkByUserIdProcedure = authedProcedure
   .input(z.object({ userId: z.string() }))
-  .query(async ({ input }) => {
+  .query(async ({ ctx, input }) => {
     if (!input.userId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
@@ -15,7 +14,7 @@ const checkByUserIdProcedure = authedProcedure
       });
     }
 
-    const [user] = await db
+    const [user] = await ctx.db
       .select()
       .from(users)
       .where(eq(users.id, input.userId))
@@ -28,7 +27,7 @@ const checkByUserIdProcedure = authedProcedure
       });
     }
 
-    const [offer] = await db
+    const [offer] = await ctx.db
       .select()
       .from(offers)
       .where(eq(offers.userId, input.userId))

@@ -1,16 +1,14 @@
 import { procedure } from "~/server/api/trpc";
 import { sessions, users, accounts, offers } from "~/server/db/schema";
 import { eq, count, getTableColumns } from "drizzle-orm";
-import { db } from "~/server/db";
 import logEvent, { LogType } from "~/server/log";
 
 const getProcedure = procedure.query(async ({ ctx }) => {
   // TODO: implement with pagination etc
-  // console.log(ctx.session);
   try {
     const columns = getTableColumns(users);
     logEvent({ message: "Fetching users" });
-    const fetchedUsers = await db
+    const fetchedUsers = await ctx.db
       .select({
         ...columns,
         sessions_count: count(sessions.sessionToken),

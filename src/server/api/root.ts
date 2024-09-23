@@ -40,15 +40,6 @@ export const appRouter = createTRPCRouter({
         tags: opts.input.tags,
       });
     }),
-  testProcedure: procedure.query(() => {
-    logEvent({
-      message: "Test procedure",
-      additionalInfo: "Test procedure",
-      logType: LogType.INFO,
-      tags: ["FRONTEND"],
-    });
-    return "Hello";
-  }),
 });
 
 // export type definition of API

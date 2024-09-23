@@ -1,121 +1,136 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { Tag } from "~/components/Tag/Tag";
-import { redirect } from "next/navigation";
-import { OfferSegment } from "~/components/ui/OfferSegment/OfferSegment";
-import { StarRating } from "~/components/ui/StarRating/StarRating";
+import React from "react";
 import { trpc } from "~/trpc/react";
 import Image from "next/image";
+import { Card, CardContent } from "~/components/ui/card";
+import { Tag } from "~/components/Tag/Tag";
+import { ArrowLeftIcon, DollarSign, MapPin } from "lucide-react";
+import { Button } from "~/components/ui/Button/Button";
+import APIProviderWrapper from "~/components/LocationGoogle/APIProviderWrapper";
+import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
+import { Circle } from "~/components/LocationGoogle/Circle";
+import TipTap from "~/components/RichTextEditor/Tiptap";
 import Link from "next/link";
+import { OfferFilePreview } from "~/components/OfferFilePreview";
 
-export default function OfferPage({ params }: { params: { offerId: string } }) {
-  const [tags, setTags] = useState<{ name: string; id: number }[]>([
-    { name: "hashtag1", id: 0 },
-    { name: "hashtag2", id: 1 },
-    { name: "hashtag3", id: 2 },
-  ]);
-  const description = [
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos eum fugit ex sed saepe quo consectetur nostrum illo autem recusandae.",
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat alias facere itaque natus repellendus debitis voluptas facilis maiores quia rerum.",
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut inventore, libero dignissimos rerum quos, dolorem amet consectetur labore sint odio vero itaque obcaecati earum? Recusandae odio laborum aut voluptatum nesciunt?",
-  ];
-  let uriDecoded: string;
-  try {
-    uriDecoded = decodeURIComponent(params.offerId);
-  } catch (e) {
-    redirect("/offers");
+export default function OfferView({ params }: { params: { offerId: string } }) {
+  const { offerId } = params;
+
+  const { data } = trpc.offers.getById.useQuery(offerId);
+
+  if (!data) {
+    return <div>Loading...</div>;
   }
-  const { data } = trpc.offers.get.useQuery({ id: uriDecoded });
 
-  useEffect(() => {
-    console.log(data);
-    if (data) {
-      data?.offerTags ? setTags(data?.offerTags) : null;
-    }
-  }, [data]);
+  const position = { lat: data.location.y, lng: data.location.x };
 
   return (
-    <div className="flex flex-col items-start gap-20 px-16 py-8">
-      <div className="fixed bottom-10 right-10 cursor-pointer rounded-full bg-primary p-4">
-        <Link
-          href={`/chat/${data?.userOffers ? data.userOffers[0]?.userId : ""}`}
-        >
-          <Icon
-            name="message-square"
-            className="size-8 stroke-primary-foreground"
-          />
-        </Link>
+    <div className="container relative flex flex-1 flex-col justify-between gap-2 bg-neo-gray px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:rounded-lg">
+      <div className="flex w-full items-center justify-start">
+        <Button variant="link" className="flex items-center gap-2 px-0">
+          <ArrowLeftIcon className="size-6" />
+          Cofnij
+        </Button>
       </div>
-      {/* HEADER */}
-      <div className="flex items-start gap-10">
-        <div className="relative size-64">
-          <Image
-            src="https://utfs.io/f/2d3da5b8-2b91-40b1-801a-f17f936fd1e3-n92lk7.jpg"
-            alt="avatar"
-            fill={true}
-            sizes="(max-width: 768px) 100vw, 640px"
-            className="rounded-full"
-          />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {/* Offer header */}
+        <div className="flex flex-col items-center gap-2">
+          <h1 className="text-3xl font-bold leading-none">{data.name}</h1>
+          <p className="flex text-lg text-muted-foreground">
+            {data.shortDescription}
+          </p>
         </div>
 
-        <div className="mt-4 flex flex-col items-start justify-center gap-4">
-          <div className="flex items-end justify-center gap-12">
-            <h1 className="break-all text-4xl font-semibold uppercase text-blue-950">
-              Offer {uriDecoded}
-              {/* MICHAŁ MATCZAK */}
-            </h1>
-            <h3 className="text-2xl font-bold capitalize text-black/40">
-              {/* Warszawa */}
-              Location
-            </h3>
+        {/* Offer location & price */}
+        <APIProviderWrapper>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center gap-2">
+                <DollarSign className="size-8 text-neo-dark-gray" />
+                <span className="text-xl font-semibold">123123123 zł</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="size-8 text-neo-dark-gray" />
+                <span className="text-lg">Gdańsk</span>
+              </div>
+            </div>
+            <div className="h-full min-h-[200px] w-full overflow-hidden rounded-md max-lg:aspect-[21/9]">
+              <Map
+                defaultCenter={position}
+                defaultZoom={10}
+                gestureHandling={"greedy"}
+                streetViewControl={false}
+                mapId="OFFER_MAP"
+              >
+                {data.distance > 0 && (
+                  <Circle
+                    radius={data.distance * 1000} // m to km
+                    center={position}
+                    strokeColor={"#0c4cb3"}
+                    strokeOpacity={1}
+                    strokeWeight={3}
+                    fillColor={"#3b82f6"}
+                    fillOpacity={0.3}
+                  />
+                )}
+                <AdvancedMarker position={position} />
+              </Map>
+            </div>
           </div>
-          <div className="flex items-center justify-center gap-4">
-            <StarRating currentRating={3.4} />
-            <Icon name="badge-check" className="size-12" />
+        </APIProviderWrapper>
+      </div>
+
+      <Card className="w-full">
+        <CardContent className="space-y-6 pt-6">
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">Główny opis</h2>
+            <TipTap
+              placeholder=""
+              charLimit={1}
+              content={data.longDescription}
+              toolbarActive={false}
+              editable={false}
+            />
           </div>
-          <div className="flex items-start justify-center gap-4">
-            {!tags && (
-              <div className="animate-pulse rounded-md bg-muted-foreground px-40 py-6" />
+
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">Tagi</h2>
+            <div className="flex flex-wrap gap-2">
+              {data.offerTags?.map((el) => <Tag key={el.id}>{el.name}</Tag>)}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">Galeria</h2>
+            <div className="flex flex-wrap gap-4">
+              {data.files?.map((file, index) => (
+                <OfferFilePreview key={index} file={file} />
+              ))}
+            </div>
+            {data.files?.length === 0 && (
+              <div className="flex h-36 w-full items-center justify-center rounded-md bg-gray-200">
+                <span className="text-gray-400">Brak zdjęć</span>
+              </div>
             )}
-            {tags?.map((tag, index) => <Tag label={tag.name} key={index} />)}
           </div>
-          {/* TODO quick placeholder - get someone to design this */}
-          <div className="flex items-center gap-3 rounded-full border bg-primary stroke-primary-foreground px-4 py-2 font-semibold text-primary-foreground">
-            <Icon name="wallet" className="size-8" />
-            100 000 zł
+
+          <div className="flex w-full justify-start md:justify-end">
+            <Link href={`/chat/${data.users.id}`}>
+              <Button className="flex gap-2" size="lg" variant="secondary">
+                <Image
+                  src={data.users.image!}
+                  alt={data.users.name!}
+                  width={40}
+                  height={40}
+                  className="overflow-hidden rounded-full"
+                />
+                <span className="text-lg">Skontaktuj się</span>
+              </Button>
+            </Link>
           </div>
-        </div>
-      </div>
-
-      {/* O MNIE */}
-      <OfferSegment heading="O MNIE" info={description} />
-
-      {/* CO OFERUJĘ */}
-      <OfferSegment heading="CO OFERUJĘ" info={description} />
-
-      {/* MOJE PORTFOLIO */}
-      <OfferSegment
-        heading="MOJE PORTFOLIO"
-        info={[
-          "https://www.youtube.com/embed/F2YpXC1itEE",
-          "https://www.youtube.com/embed/F2YpXC1itEE",
-        ]}
-        type="video"
-      />
-
-      {/* LINKI */}
-      <OfferSegment
-        heading="LINKI"
-        info={["https://www.youtube.com/embed/F2YpXC1itEE"]}
-        type="link"
-      />
-
-      {/* OPINIE */}
-      <OfferSegment heading="OPINIE">
-        TUTAJ IDĄ KOMENTARZE I OPINIE
-      </OfferSegment>
+        </CardContent>
+      </Card>
     </div>
   );
 }

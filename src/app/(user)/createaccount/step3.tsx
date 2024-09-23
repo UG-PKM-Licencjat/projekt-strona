@@ -1,12 +1,18 @@
+"use client";
+
 import { Button } from "~/components/ui/Button/Button";
-import { Icon } from "~/components/ui/Icon/Icon";
-import { redirect } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import forest from "public/svg/forest.svg";
 import forestmini from "public/svg/forestmini.svg";
+import { useRouter } from "next/navigation";
 
 export default function Step3() {
+  const router = useRouter();
+
+  const onClick = () => {
+    router.push("/");
+    router.refresh();
+  };
   return (
     <>
       <div className="mb-6 h-4 w-auto self-start rounded-lg bg-secondary md:bg-neo-castleton">
@@ -30,11 +36,12 @@ export default function Step3() {
               alt="forest mini"
             />
           </div>
-          <Link href="/">
-            <Button className="mt-10 w-min justify-center xl:w-auto">
-              Przejdź do strony głównej
-            </Button>
-          </Link>
+          <Button
+            className="mt-10 w-min justify-center xl:w-auto"
+            onClick={onClick}
+          >
+            Przejdź do strony głównej
+          </Button>
         </div>
         <div className="fle col-start-2 col-end-4 hidden h-full items-end xl:flex">
           <Image

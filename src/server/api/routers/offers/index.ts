@@ -1,15 +1,19 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 
 import CreateProcedure from "./create";
-import GetProcedure from "./get";
+import GetByIdProcedure from "./getById";
 import GetAllTagsProcedure from "./getAllTags";
 import searchProcedure from "./search";
 import countSearchProcedure from "./countSearch";
+import checkByUserIdProcedure from "./checkByUserId";
+import getByUserIdProcedure from "./getByUserId";
 
 export const OffersRouter = createTRPCRouter({
-  get: GetProcedure,
+  getById: GetByIdProcedure,
   create: CreateProcedure,
   getAllTags: GetAllTagsProcedure,
   search: searchProcedure,
   countSearch: countSearchProcedure,
+  checkByUserId: checkByUserIdProcedure,
+  getByUserId: getByUserIdProcedure,
 });

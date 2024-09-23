@@ -9,42 +9,30 @@ const f = createUploadthing();
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
-  // Define as many FileRoutes as you like, each with a unique routeSlug
-  createImageUploader: f(
+  galleryUploader: f(
     {
-      image: { maxFileCount: 3 },
+      image: { maxFileCount: 5 },
+      video: { maxFileCount: 5 },
     },
-    { awaitServerData: false },
-  )
-    // Set permissions and file types for this FileRoute
-    // .middleware(async ({ req }) => {
-    //   // This code runs on your server before upload
-    //   const user = await auth(req);
-
-    //   // If you throw, the user will not be able to upload
-    //   if (!user) throw new UploadThingError("Unauthorized");
-
-    //   // Whatever is returned here is accessible in onUploadComplete as `metadata`
-    //   return { userId: user.id };
-    // })
-    .onUploadComplete(async ({ file }) => {
-      // This code RUNS ON YOUR SERVER after upload
-      //   console.log("Upload complete for userId:", metadata.userId);
-
-      console.log("file url", file.url);
-
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      //   return { uploadedBy: metadata.userId };
-    }),
-  createVideoUploader: f(
     {
-      video: { maxFileCount: 2 },
+      awaitServerData: false,
     },
-    { awaitServerData: false },
-  ).onUploadComplete(async ({ file }) => {
-    console.log("file url", file.url);
-    //   return { uploadedBy: metadata.userId };
+  ).onUploadComplete(() => {
+    console.log("Gallery uploaded");
   }),
+  avatarUploader: f(
+    {
+      image: { maxFileCount: 1 },
+    },
+    {
+      awaitServerData: false,
+    },
+  ).onUploadComplete(() => {
+    console.log("Avatar uploaded");
+  }),
+  
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
+
+export type FileRouterEndpoints = keyof OurFileRouter;

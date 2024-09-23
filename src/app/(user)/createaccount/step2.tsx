@@ -23,6 +23,7 @@ import { useAvatarStore } from "~/stores/avatarStore";
 import { useState } from "react";
 import { LoaderCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { type TRPCError } from "@trpc/server";
 
 export default function Step2(props: {
   data: Data;
@@ -79,8 +80,8 @@ export default function Step2(props: {
             handleChange({ ...data, activeTab: 2 });
           }
         })
-        .catch((error) => {
-          if (error.code === " UNAUTHORIZED") {
+        .catch((error: TRPCError) => {
+          if (error.code === "UNAUTHORIZED") {
             toast({
               title: "Błąd",
               description: "Nie jesteś zalogowany",

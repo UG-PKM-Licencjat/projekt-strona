@@ -10,7 +10,6 @@ import {
   timestamp,
   varchar,
   boolean,
-  geometry,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -87,7 +86,6 @@ export const users = pgTable("user", {
   name: varchar("name", { length: 255 }),
   firstName: varchar("firstName", { length: 255 }),
   lastName: varchar("lastName", { length: 255 }),
-  nickname: varchar("nickname", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
@@ -143,11 +141,9 @@ export const offers = pgTable("offer", {
   shortDescription: varchar("shortDescription", { length: 255 }).notNull(),
   longDescription: text("longDescription").notNull(),
   locationName: varchar("locationName", { length: 255 }).notNull(),
-  location: geometry("location", {
-    type: "point",
-    mode: "xy",
-    srid: 4326,
-  }).notNull(),
+  // TODO temporary solution while drizzle has a bug with geometry type, fix eventually
+  location: jsonb("location").notNull().$type<{ x: number; y: number }>(),
+  // location: pointType("location").notNull(),
   distance: integer("distance").default(0).notNull(),
   files: jsonb("files").$type<{ url: string; type: string }[]>(),
 });

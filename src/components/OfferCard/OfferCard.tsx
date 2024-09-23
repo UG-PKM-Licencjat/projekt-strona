@@ -9,36 +9,45 @@ export interface Offer {
   votes: number | null;
   price: number | null;
   shortDescription: string;
-  files: unknown;
   locationName: string | null;
+  distance: number | null;
+  users: {
+    image: string | null;
+  };
 }
 
 const OfferCard = ({ offer }: { offer: Offer }) => (
-  <div className="h-min overflow-hidden rounded-lg bg-white shadow-md">
-    <div className="p-4">
-      <div className="mb-4 flex items-start justify-between">
-        {/* TODO CHANGE TO NEXT IMAGE WHEN IT WILL USE DB DATA HERE */}
-        <img
-          src="https://picsum.photos/200/300"
-          alt={offer.name}
-          className="h-20 w-20 rounded-full border-2 border-[#5f8d4e] object-cover"
-        />
-        {offer.price && (
-          <div className="rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-[#f0e4d7]">
-            {offer.price} zł
-          </div>
-        )}
+  <div className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-md">
+    <div className="flex h-full flex-col justify-between p-4">
+      <div>
+        <div className="mb-4 flex items-start justify-between">
+          {/* TODO CHANGE TO NEXT IMAGE WHEN IT WILL USE DB DATA HERE */}
+          <Image
+            src={offer.users.image ?? ""}
+            alt={offer.name}
+            width={40}
+            height={40}
+            className="h-20 w-20 rounded-full border-2 border-[#5f8d4e] object-cover"
+          />
+          {offer.price && (
+            <div className="rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-[#f0e4d7]">
+              {offer.price} zł
+            </div>
+          )}
+        </div>
+        <h3 className="mb-2 text-lg font-semibold text-[#2d6a4f]">
+          {offer.name}
+        </h3>
+        <p className="mb-4 line-clamp-2 text-sm text-[#4a6741]">
+          {offer.shortDescription}
+        </p>
       </div>
-      <h3 className="mb-2 text-lg font-semibold text-[#2d6a4f]">
-        {offer.name}
-      </h3>
-      <p className="mb-4 line-clamp-2 text-sm text-[#4a6741]">
-        {offer.shortDescription}
-      </p>
       <div className="flex items-center justify-between text-sm text-[#2d6a4f]">
         <div className="flex items-center gap-1">
           <MapPin size={14} />
-          <span>{offer.locationName}</span>
+          <span>
+            {offer.locationName} +{offer.distance}km
+          </span>
         </div>
         {offer.ratingsSum && offer.votes && (
           <div className="flex items-center gap-1">

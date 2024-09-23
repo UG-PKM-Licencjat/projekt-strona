@@ -13,14 +13,17 @@ export function buildSearchQuery(
       ilike(offers.shortDescription, `%${text}%`),
     );
 
-  // TODO change this when updating to geometry type
-  const stringLocation = JSON.stringify(location);
-  const isLocation = sql`${offers.location} @> ${stringLocation} AND ${stringLocation} @> ${offers.location}`;
+  // TODO possibly change this when drizzle finally fixed geometry type
+  const isInRange = sql`ST_DWithin(
+  ST_SetSRID(ST_MakePoint(
+    (${offers.location}->>'x')::float, 
+    (${offers.location}->>'y')::float
+  ), 4326)::geography, ST_SetSRID(ST_MakePoint(${location.x}, ${location.y}), 4326)::geography, ${offers.distance} * 1000)`;
 
   if (location.x !== null && location.y !== null && text === "") {
-    query = isLocation;
+    query = isInRange;
   } else if (location.x !== null && location.y !== null) {
-    query = and(query, isLocation);
+    query = and(query, isInRange);
   }
 
   return query;

@@ -159,7 +159,7 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
-    signIn: async ({ user, account, profile, email, credentials }) => {
+    signIn: async ({ user, account }) => {
       // getting new tokens from the provider
 
       if (!account) {
@@ -176,10 +176,10 @@ export const authOptions: NextAuthOptions = {
         refresh_token?: string;
         id_token: string;
       } = {
-        access_token: account.access_token || "",
-        expires_at: account.expires_at || 0,
-        refresh_token: account.refresh_token || "",
-        id_token: account.id_token || "",
+        access_token: account.access_token ?? "",
+        expires_at: account.expires_at ?? 0,
+        refresh_token: account.refresh_token ?? "",
+        id_token: account.id_token ?? "",
       };
 
       if (
@@ -189,7 +189,7 @@ export const authOptions: NextAuthOptions = {
       ) {
         logEvent({
           message: "one of newTokens value is undefined",
-          additionalInfo: `${newTokens}`,
+          additionalInfo: JSON.stringify(newTokens),
           tags: ["AUTH"],
         });
         console.error("one of newTokens value is undefined", newTokens);

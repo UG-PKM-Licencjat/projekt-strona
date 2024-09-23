@@ -41,6 +41,12 @@ export const appRouter = createTRPCRouter({
       });
     }),
   testProcedure: procedure.query(() => {
+    logEvent({
+      message: "Test procedure",
+      additionalInfo: "Test procedure",
+      logType: LogType.INFO,
+      tags: ["FRONTEND"],
+    });
     return "Hello";
   }),
 });

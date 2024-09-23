@@ -27,7 +27,6 @@ export function OfferFilePreview({
               alt={file.url}
               width={150}
               height={150}
-              sizes="20vw"
               className="h-full w-full object-contain"
             />
             <Dialog>
@@ -46,7 +45,6 @@ export function OfferFilePreview({
                   alt={file.url}
                   width={150}
                   height={150}
-                  sizes="20vw"
                   className="h-full w-full rounded-md object-contain"
                 />
               </DialogContent>

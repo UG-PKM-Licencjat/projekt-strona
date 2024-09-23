@@ -15,22 +15,20 @@ const createContext = async (req: NextRequest) => {
   });
 };
 
-export const runtime = "edge";
-
 const handler = (req: NextRequest) =>
   fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
     router: appRouter,
     createContext: () => createContext(req),
-    onError: ({ path, error }) => {
-      console.error(
-        `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
-      );
-    },
-    // env.NODE_ENV === "development"
-    //   ?
-    //   : undefined,
+    onError:
+      env.NODE_ENV === "development"
+        ? ({ path, error }) => {
+            console.error(
+              `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
+            );
+          }
+        : undefined,
   });
 
 export { handler as GET, handler as POST };

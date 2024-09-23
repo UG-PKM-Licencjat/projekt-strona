@@ -21,21 +21,21 @@ export default function GlobalBehaviours({
     void store.fetchSampleMessages(data);
   }, []);
 
-  useEffect(() => {
-    if (!data) return;
-    const socketConnection = new WebSocket(
-      `wss://chat-swxn.onrender.com/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
-    );
+  // useEffect(() => {
+  //   if (!data) return;
+  //   const socketConnection = new WebSocket(
+  //     `wss://chat-swxn.onrender.com/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
+  //   );
 
-    socketConnection.onmessage = (event: MessageEvent<string>) => {
-      const newMessage = JSON.parse(event.data) as Message; // TODO: Validate const
-      conversations.addMessage(newMessage.from, newMessage);
-      toast({
-        title: "Chat",
-        description: "Otrzymałeś nową wiadomość!",
-        variant: "default",
-      });
-    };
-  }, [data, data?.user.id]);
+  //   socketConnection.onmessage = (event: MessageEvent<string>) => {
+  //     const newMessage = JSON.parse(event.data) as Message; // TODO: Validate const
+  //     conversations.addMessage(newMessage.from, newMessage);
+  //     toast({
+  //       title: "Chat",
+  //       description: "Otrzymałeś nową wiadomość!",
+  //       variant: "default",
+  //     });
+  //   };
+  // }, [data, data?.user.id]);
   return <>{children}</>;
 }

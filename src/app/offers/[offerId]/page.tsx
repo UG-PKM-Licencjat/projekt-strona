@@ -70,7 +70,7 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="size-8 text-neo-dark-gray" />
-                <span className="text-lg">Gdańsk</span>
+                <span className="text-lg">{data.locationName}</span>
               </div>
             </div>
             <div className="h-full min-h-[200px] w-full overflow-hidden rounded-md max-lg:aspect-[21/9]">

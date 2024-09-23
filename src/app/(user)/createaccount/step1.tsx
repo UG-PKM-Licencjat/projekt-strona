@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { type Data } from "./page";
 import Image from "next/image";
 import man from "public/svg/man.svg";
@@ -75,6 +75,7 @@ export default function Step1(props: {
       state.gotSessionImage,
     ],
   );
+  const [avatarError, setAvatarError] = useState("");
 
   useEffect(() => {
     if (gotSessionImage) return;
@@ -129,7 +130,11 @@ export default function Step1(props: {
               className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-6 pt-6"
             >
               <div className="flex flex-col items-center">
-                <UploadWrapper endpoint="avatarUploader" onChange={setAvatar}>
+                <UploadWrapper
+                  endpoint="avatarUploader"
+                  onChange={setAvatar}
+                  onError={(error) => setAvatarError(error.message)}
+                >
                   <div className="grid size-44 cursor-pointer place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
                     {avatarUrl && (
                       <Image
@@ -146,6 +151,7 @@ export default function Step1(props: {
                     </div>
                   </div>
                 </UploadWrapper>
+                <div className="text-sm text-destructive">{avatarError}</div>
               </div>
               <FormField
                 control={form.control}

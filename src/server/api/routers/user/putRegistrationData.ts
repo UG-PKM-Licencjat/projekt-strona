@@ -4,7 +4,7 @@ import { authedProcedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import logEvent from "~/server/log";
+// import logEvent from "~/server/log";
 
 const putRegistrationData = authedProcedure
   .input(
@@ -31,19 +31,19 @@ const putRegistrationData = authedProcedure
         })
         .where(eq(users.id, ctx.session?.user.id));
       if (!putRegistrationData) {
-        logEvent({
-          message: `User ${ctx.session?.user.id} does not exist`,
-          additionalInfo: JSON.stringify(putRegistrationData),
-        });
+        // logEvent({
+        //   message: `User ${ctx.session?.user.id} does not exist`,
+        //   additionalInfo: JSON.stringify(putRegistrationData),
+        // });
         return new TRPCError({
           code: "NOT_FOUND",
           message: "User with provided Id does not exist",
         });
       }
-      logEvent({
-        message: `User ${ctx.session?.user.id} created profile`,
-        additionalInfo: JSON.stringify(input),
-      });
+      // logEvent({
+      //   message: `User ${ctx.session?.user.id} created profile`,
+      //   additionalInfo: JSON.stringify(input),
+      // });
       return putRegistrationData;
     } catch (error) {
       throw new TRPCError({

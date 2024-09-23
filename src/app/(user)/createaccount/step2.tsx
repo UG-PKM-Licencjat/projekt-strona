@@ -94,6 +94,7 @@ export default function Step2(props: {
               variant: "destructive",
             });
           }
+          setIsProcessing(false);
         });
     }
   }

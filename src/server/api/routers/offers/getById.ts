@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { offers } from "~/server/db/schema";
-import { authedProcedure } from "~/server/api/trpc";
+import { procedure } from "~/server/api/trpc";
 
-const getByIdProcedure = authedProcedure
+const getByIdProcedure = procedure
   .input(z.string())
   .query(async ({ ctx, input: offerId }) => {
     const fetchedOffer = await ctx.db.query.offers.findFirst({

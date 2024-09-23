@@ -133,16 +133,17 @@ export function ArtistProfileMultiform({
     createOffer
       .mutateAsync(profileData)
       .then((result) => {
-        toast({
-          title: "Submitted form",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">
-                {JSON.stringify(result, null, 2)}
-              </code>
-            </pre>
-          ),
-        });
+        // Maybe useful for debugging?
+        // toast({
+        //   title: "Submitted form",
+        //   description: (
+        //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+        //       <code className="text-white">
+        //         {JSON.stringify(result, null, 2)}
+        //       </code>
+        //     </pre>
+        //   ),
+        // });
         setIsSubmitting(false);
         setProfileCreated(true);
       })

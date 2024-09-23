@@ -1,13 +1,12 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { db } from "~/server/db";
 import { offers } from "~/server/db/schema";
 import { authedProcedure } from "~/server/api/trpc";
 
 const getByUserIdProcedure = authedProcedure
   .input(z.string())
-  .query(async ({ input: userId }) => {
-    const fetchedOffer = await db.query.offers.findFirst({
+  .query(async ({ ctx, input: userId }) => {
+    const fetchedOffer = await ctx.db.query.offers.findFirst({
       with: {
         offerTags: {
           columns: {

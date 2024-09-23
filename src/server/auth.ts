@@ -17,6 +17,7 @@ import {
   verificationTokens,
   offers,
 } from "src/server/db/schema";
+import logEvent from "./log";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -128,7 +129,7 @@ export const authOptions: NextAuthOptions = {
           await db
             .update(accounts)
             .set({
-              access_token: newTokens.access_token,
+              access_token: newTokens.access_token as string,
               id_token: newTokens.id_token,
               expires_at: Math.floor(Date.now() / 1000) + newTokens.expires_in,
               refresh_token:
@@ -158,7 +159,42 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
+    signIn: async ({ user, account, profile, email, credentials }) => {
+      // getting new tokens from the provider
+
+      const newTokens = {
+        access_token: account!.access_token,
+        expires_at: account!.expires_at as number,
+        refresh_token: account!.refresh_token,
+        id_token: account!.id_token,
+      };
+
+      if (
+        Object.values(newTokens).some((value) => value === undefined) ||
+        Object.values(newTokens).some((value) => value === "")
+      ) {
+        logEvent({
+          message: "one of newTokens value is undefined",
+          additionalInfo: `${newTokens}`,
+          tags: ["AUTH"],
+        });
+        console.error("one of newTokens value is undefined", newTokens);
+        return true;
+      }
+
+      await db
+        .update(accounts)
+        .set({
+          access_token: newTokens.access_token as string,
+          id_token: newTokens.id_token as string,
+          expires_at: newTokens.expires_at as number,
+          refresh_token: newTokens.refresh_token as string,
+        })
+        .where(eq(accounts.userId, user.id));
+      return true;
+    },
   },
+
   pages: {
     newUser: "/createaccount",
   },
@@ -189,6 +225,7 @@ export const authOptions: NextAuthOptions = {
           access_type: "offline",
         },
       },
+      idToken: true,
     }),
 
     /**

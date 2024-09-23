@@ -119,7 +119,7 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
 async function fetchSampleMessagesRest(session: Session) {
   const messages: Array<Message> = (await (
     await fetch(
-      `https://${env.CHAT_BASE_URL}/messages/sample?user=${session.user.id}`,
+      `https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages/sample?user=${session.user.id}`,
       {
         headers: {
           Authorization: `Bearer ${session.user.idToken}`,
@@ -134,7 +134,7 @@ async function fetchSampleMessagesRest(session: Session) {
 
 async function fetchMessagesRest(session: Session, otherUserId: string) {
   const response = await fetch(
-    `https://${env.CHAT_BASE_URL}/messages?userA=${session.user.id}&userB=${otherUserId}`,
+    `https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages?userA=${session.user.id}&userB=${otherUserId}`,
     {
       headers: {
         Authorization: `Bearer ${session.user.idToken}`,
@@ -153,7 +153,7 @@ async function sendMessageRest(
   otherUserId: string,
   otherUserProviderId: string,
 ) {
-  const response = await fetch(`https://${env.CHAT_BASE_URL}/messages`, {
+  const response = await fetch(`https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

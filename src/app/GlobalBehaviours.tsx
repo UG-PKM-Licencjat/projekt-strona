@@ -25,7 +25,7 @@ export default function GlobalBehaviours({
   useEffect(() => {
     if (!data) return;
     const socketConnection = new WebSocket(
-      `wss://${env.CHAT_BASE_URL}/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
+      `wss://${env.NEXT_PUBLIC_CHAT_BASE_URL}/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
     );
 
     socketConnection.onmessage = (event: MessageEvent<string>) => {

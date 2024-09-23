@@ -17,6 +17,7 @@ import {
   verificationTokens,
   offers,
 } from "src/server/db/schema";
+import logEvent from "./log";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -158,7 +159,56 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
+    signIn: async ({ user, account }) => {
+      // getting new tokens from the provider
+
+      if (!account) {
+        logEvent({
+          message: "account is undefined",
+          tags: ["AUTH"],
+        });
+        return true;
+      }
+
+      const newTokens: {
+        access_token: string;
+        expires_at: number;
+        refresh_token?: string;
+        id_token: string;
+      } = {
+        access_token: account.access_token ?? "",
+        expires_at: account.expires_at ?? 0,
+        refresh_token: account.refresh_token ?? "",
+        id_token: account.id_token ?? "",
+      };
+
+      if (
+        Object.values(newTokens).some((value) => value === undefined) ||
+        Object.values(newTokens).some((value) => value === "") ||
+        newTokens.expires_at === 0
+      ) {
+        logEvent({
+          message: "one of newTokens value is undefined",
+          additionalInfo: JSON.stringify(newTokens),
+          tags: ["AUTH"],
+        });
+        console.error("one of newTokens value is undefined", newTokens);
+        return true;
+      }
+
+      await db
+        .update(accounts)
+        .set({
+          access_token: newTokens.access_token,
+          id_token: newTokens.id_token,
+          expires_at: newTokens.expires_at,
+          refresh_token: newTokens.refresh_token,
+        })
+        .where(eq(accounts.userId, user.id));
+      return true;
+    },
   },
+
   pages: {
     newUser: "/createaccount",
   },

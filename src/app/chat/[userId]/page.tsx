@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { Button } from "src/components/ui/Button/Button";
 import { Input } from "src/components/ui/Input/Input";
-import Message from "src/components/chat/Message/Message";
+import Message from "~/components/chat/Message/Message";
 import { useConversationsStore } from "~/stores";
 import { trpc } from "~/trpc/react";
 
@@ -48,18 +48,18 @@ export default function Conversation({
     await store.sendMessage(message, session, userId, otherProviderId);
   }
 
-  // scroll pagination
-  const observerRef = useRef(null);
-  const observer = new IntersectionObserver(
-    (entries: IntersectionObserverEntry[]) => {
-      if (entries[0]?.isIntersecting && store.conversations[userId]) {
-        if (store.conversations[userId].length > 0) {
-          fetchNextMessages();
-        }
-      }
-    },
-    { threshold: 0.5 },
-  );
+  // // scroll pagination
+  // const observerRef = useRef(null);
+  // const observer = new IntersectionObserver(
+  //   (entries: IntersectionObserverEntry[]) => {
+  //     if (entries[0]?.isIntersecting && store.conversations[userId]) {
+  //       if (store.conversations[userId].length > 0) {
+  //         void fetchNextMessages();
+  //       }
+  //     }
+  //   },
+  //   { threshold: 0.5 },
+  // );
 
   const fetchNextMessages = async () => {
     // fetch next messages
@@ -69,12 +69,12 @@ export default function Conversation({
   };
 
   return (
-    <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden bg-neo-gray-hover md:p-6">
-      <div className="flex-1 overflow-y-scroll p-4">
+    <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden md:p-6">
+      <div className="flex flex-1 flex-col overflow-y-scroll p-4">
         {(store.conversations[userId] ?? []).map((message, ind) => (
-          <Message key={ind} message={message} />
+          <Message key={ind} message={{ ...message }} />
         ))}
-        <div ref={observerRef}></div>
+        {/* <div ref={observerRef}></div> */}
       </div>
       <div className="bg-neo-gray">
         <div className="flex">

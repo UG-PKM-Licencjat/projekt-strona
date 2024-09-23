@@ -1,6 +1,15 @@
-import { type Message } from "src/components/chat/ConversationWindow/ConversationWindow";
+import { CircleCheck, Loader2 } from "lucide-react"; // Icons for status
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+
+export interface Message {
+  from: string;
+  to: string;
+  timestamp: string;
+  message: string;
+  read: boolean;
+  sending?: boolean; // Optional field for indicating if the message is still sending
+}
 
 export default function Message({ message }: MessageProps) {
   const { data: session } = useSession();
@@ -9,30 +18,56 @@ export default function Message({ message }: MessageProps) {
   const timeParsed = new Date(message.timestamp).toLocaleTimeString();
 
   return (
-    <div className={`mb-5 flex gap-4 ${isUser ? "flex-row-reverse" : ""}`}>
-      {/* TODO CHANGE ALL ANOTHERS HERE */}
-      <Avatar className={`h-12 w-12 ${isUser ? "ml-2" : "mr-2"}`}>
-        <AvatarImage
-          src="/placeholder.svg?height=40&width=40"
-          alt={isUser ? "Twoje zdjęcie awataru" : "ANOTHER"}
-        />
-        <AvatarFallback>{isUser ? "Y" : "ANOTHER"}</AvatarFallback>
-      </Avatar>
+    <div className={`mb-5 flex ${isUser ? "flex-row-reverse self-end" : ""}`}>
+      {/* Status Icons for User */}
+      {isUser && (
+        <div className="ml-2 flex items-end gap-1 text-neo-dark-gray">
+          {/* Sending Icon */}
+          {message.sending && <Loader2 className="animate-spin" size={16} />}
+
+          {/* Sent and Unread Icon */}
+          {!message.sending && !message.read && (
+            <CircleCheck className="bg-transparent opacity-80" size={16} />
+          )}
+
+          {/* Read Icon */}
+          {!message.sending && message.read && (
+            <CircleCheck className="fill-current" size={16} />
+          )}
+        </div>
+      )}
       <div
-        className={`flex min-w-[100px] max-w-[70%] flex-col rounded-md px-2 ${
-          isUser
-            ? "items-end bg-neo-sea text-white"
-            : "bg-neo-gray text-neo-castleton"
+        className={`flex w-fit gap-2 rounded-xl p-2 shadow-lg ${
+          isUser ? "flex-row-reverse bg-neo-sea" : "bg-white"
         }`}
       >
-        <p className={`text-md overflow-x-auto p-2 ${isUser ? "mr-2" : ""}`}>
-          {message.message}
-        </p>
-        <p
-          className={`text-sm ${isUser ? "mb-1 mr-2" : "ml-2 text-neo-dark-gray"}`}
+        {/* Avatar */}
+        <Avatar className={`h-12 w-12 ${isUser ? "ml-2" : "mr-2"}`}>
+          <AvatarImage
+            src="/placeholder.svg?height=40&width=40"
+            alt={isUser ? "Twoje zdjęcie awataru" : "ANOTHER"}
+          />
+          <AvatarFallback>{isUser ? "Y" : "A"}</AvatarFallback>
+        </Avatar>
+
+        {/* Message bubble */}
+        <div
+          className={`flex min-w-[100px] max-w-[70%] flex-col justify-between rounded-md ${
+            isUser ? "items-end text-white" : "text-black"
+          }`}
         >
-          {timeParsed}
-        </p>
+          {/* Message content */}
+          <p className={`text-md overflow-x-auto ${isUser ? "ml-3" : "mr-3"}`}>
+            {message.message}
+          </p>
+
+          {/* Time and status */}
+          <div className="flex items-center justify-between">
+            <p className={`text-sm ${isUser ? "mb-1" : "text-neo-dark-gray"}`}>
+              {timeParsed}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -225,7 +225,6 @@ export const authOptions: NextAuthOptions = {
           access_type: "offline",
         },
       },
-      idToken: true,
     }),
 
     /**

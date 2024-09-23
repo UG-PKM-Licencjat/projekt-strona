@@ -1,4 +1,3 @@
-import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 import { authedProcedure } from "~/server/api/trpc";
 import { z } from "zod";
@@ -11,9 +10,9 @@ const isRegistered = authedProcedure
       userId: z.string(),
     }),
   )
-  .query(async ({ input }) => {
+  .query(async ({ ctx, input }) => {
     try {
-      const [isRegistered] = await db
+      const [isRegistered] = await ctx.db
         .select({
           registered: users.registered,
         })

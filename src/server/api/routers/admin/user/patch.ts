@@ -1,8 +1,7 @@
 import { adminProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { sessions, users } from "~/server/db/schema";
+import { users } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
-import { db } from "~/server/db";
 import { z } from "zod";
 import logEvent, { LogType } from "~/server/log";
 
@@ -19,9 +18,11 @@ const patchProcedure = adminProcedure
       location: z.string().optional(),
     }),
   )
-  .mutation(async ({ input }) => {
+  .mutation(async ({ ctx, input }) => {
     logEvent({ message: "Deleting user", additionalInfo: input.id });
-    const user = db.query.users.findFirst({ where: eq(users.id, input.id) });
+    const user = ctx.db.query.users.findFirst({
+      where: eq(users.id, input.id),
+    });
     if (user === undefined) {
       logEvent({
         message: "User not found",
@@ -43,7 +44,7 @@ const patchProcedure = adminProcedure
       updateData.longDescription = input.longDescription;
     if (input.image) updateData.image = input.image;
     if (input.location) updateData.location = input.location;
-    return await db
+    return await ctx.db
       .update(users)
       .set(updateData)
       .where(eq(users.id, input.id))

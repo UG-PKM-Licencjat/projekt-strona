@@ -13,7 +13,7 @@ export function buildSearchQuery(
       ilike(offers.shortDescription, `%${text}%`),
     );
 
-  // TODO possibly change this when drizzle finally fixed geometry type
+  // TODO possibly change this when drizzle finally fixes geometry type
   const isInRange = sql`ST_DWithin(
   ST_SetSRID(ST_MakePoint(
     (${offers.location}->>'x')::float, 

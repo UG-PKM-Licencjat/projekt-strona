@@ -19,6 +19,10 @@ const mockSession: Session = {
     firstName: "John",
     lastName: "Doe",
     name: "John Doe",
+    providerAccountId: "123456789",
+    idToken: "asdasdasdasd",
+    isArtist: false,
+    registered: true,
     email: "john@doe.com",
     image: "https://utfs.io/f/2d3da5b8-2b91-40b1-801a-f17f936fd1e3-n92lk7.jpg",
   },
@@ -28,5 +32,5 @@ const mockSession: Session = {
 export const Default: Story = {
   args: {
     session: mockSession,
-  }
+  },
 };

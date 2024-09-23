@@ -11,26 +11,10 @@ const meta: Meta<typeof TipTap> = {
       description: "Tekst wyświetlany jako placeholder w edytorze.",
       defaultValue: "Wpisz tekst...",
     },
-    returnFormat: {
-      control: {
-        type: "select",
-        options: ["html", "json", "text"],
-      },
-      description: "Format zwracanej wartości (HTML, JSON, lub tekst).",
-      defaultValue: "html",
-    },
     charLimit: {
       control: "number",
       description: "Limit liczby znaków w edytorze.",
       defaultValue: 200,
-    },
-    variant: {
-      control: {
-        type: "select",
-        options: ["full", "textOnly"],
-      },
-      description: "Wariant edytora: pełny lub tylko tekstowy.",
-      defaultValue: "full",
     },
     toolbarActive: {
       control: "boolean",
@@ -61,9 +45,7 @@ export const Default: Story = {
   args: {
     placeholder: "Wpisz tutaj swoją treść...",
     charLimit: 200,
-    returnFormat: "html",
     toolbarActive: true,
-    variant: "full",
     content: "",
   },
 };
@@ -73,9 +55,7 @@ export const WithoutToolbar: Story = {
   args: {
     placeholder: "Edytor bez paska narzędzi...",
     charLimit: 150,
-    returnFormat: "html",
     toolbarActive: false,
-    variant: "full",
     content: "",
   },
 };
@@ -85,9 +65,7 @@ export const TextOnly: Story = {
   args: {
     placeholder: "Edytor tekstowy...",
     charLimit: 100,
-    returnFormat: "text",
     toolbarActive: true,
-    variant: "textOnly",
     content: "",
   },
 };
@@ -97,10 +75,8 @@ export const WithJSONOutput: Story = {
   args: {
     placeholder: "Edytor z formatem JSON...",
     charLimit: 250,
-    returnFormat: "json",
     toolbarActive: true,
-    variant: "full",
     content: "",
-    onChange: (jsonContent) => console.log("JSON Output:", jsonContent),
+    onChangeJSON: (jsonContent) => console.log("JSON Output:", jsonContent),
   },
 };

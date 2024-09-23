@@ -1,6 +1,7 @@
 import { type Session } from "next-auth";
 import { create } from "zustand";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
+import { env } from "~/env";
 
 interface ConversationsStore {
   conversations: Record<string, Message[]>;
@@ -118,7 +119,7 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
 async function fetchSampleMessagesRest(session: Session) {
   const messages: Array<Message> = (await (
     await fetch(
-      `https://chat-swxn.onrender.com/messages/sample?user=${session.user.id}`,
+      `https://${env.CHAT_BASE_URL}/messages/sample?user=${session.user.id}`,
       {
         headers: {
           Authorization: `Bearer ${session.user.idToken}`,
@@ -133,7 +134,7 @@ async function fetchSampleMessagesRest(session: Session) {
 
 async function fetchMessagesRest(session: Session, otherUserId: string) {
   const response = await fetch(
-    `https://chat-swxn.onrender.com/messages?userA=${session.user.id}&userB=${otherUserId}`,
+    `https://${env.CHAT_BASE_URL}/messages?userA=${session.user.id}&userB=${otherUserId}`,
     {
       headers: {
         Authorization: `Bearer ${session.user.idToken}`,
@@ -152,7 +153,7 @@ async function sendMessageRest(
   otherUserId: string,
   otherUserProviderId: string,
 ) {
-  const response = await fetch("https://chat-swxn.onrender.com/messages", {
+  const response = await fetch(`https://${env.CHAT_BASE_URL}/messages`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -174,15 +175,6 @@ async function sendMessageRest(
   const newMessage = (await response.json()) as Message;
 
   return newMessage;
-}
-
-function compareMessages(a: Message, b: Message): boolean {
-  return (
-    a.timestamp === b.timestamp &&
-    a.from === b.from &&
-    a.to === b.to &&
-    a.message === b.message
-  );
 }
 
 export { useConversationsStore };

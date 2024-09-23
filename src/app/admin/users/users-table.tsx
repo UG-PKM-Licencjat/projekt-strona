@@ -43,17 +43,12 @@ export function UsersTable({
               <TableHead className="max-w-[150px]">Id</TableHead>
               <TableHead className="md:table-cell">Firstname</TableHead>
               <TableHead className="md:table-cell">Lastname</TableHead>
-              <TableHead className="md:table-cell">Nickname</TableHead>
               <TableHead className="md:table-cell">Email</TableHead>
               <TableHead className="md:table-cell">EmailVerified</TableHead>
               <TableHead className="md:table-cell">Image</TableHead>
               <TableHead className="md:table-cell">isPremium</TableHead>
               <TableHead className="md:table-cell">isAdmin</TableHead>
               <TableHead className="md:table-cell">isActive</TableHead>
-              {/* <TableHead className="md:table-cell">Location</TableHead>
-              <TableHead className="md:table-cell">
-                RegistrationStatus
-              </TableHead> */}
               <TableHead className="md:table-cell">Sessions</TableHead>
               <TableHead className="md:table-cell">Accounts</TableHead>
               <TableHead className="md:table-cell">Offers</TableHead>
@@ -87,7 +82,6 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
   const id = user.id ?? "null";
   const firstname = user.firstName ?? "null";
   const lastname = user.lastName ?? "null";
-  const nickname = user.nickname ?? "null";
   const email = user.email ?? "null";
   const emailVerified = user.emailVerified ?? "null";
   const image = user.image ?? "null";
@@ -105,9 +99,10 @@ function UserRow({ user, refetch }: { user: SelectUser; refetch: () => void }) {
       <TableCell className="font-medium">{id}</TableCell>
       <TableCell className="md:table-cell">{firstname}</TableCell>
       <TableCell className="md:table-cell">{lastname}</TableCell>
-      <TableCell className="md:table-cell">{nickname}</TableCell>
       <TableCell className="md:table-cell">{email}</TableCell>
-      <TableCell className="md:table-cell">{emailVerified.toLocaleString()}</TableCell>
+      <TableCell className="md:table-cell">
+        {emailVerified.toLocaleString()}
+      </TableCell>
       <TableCell className="md:table-cell">
         {image === "null" ? <a href={image}>image</a> : "null"}
       </TableCell>

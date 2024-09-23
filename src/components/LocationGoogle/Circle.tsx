@@ -101,8 +101,8 @@ function useCircle(props: CircleProps) {
       ["mouseover", "onMouseOver"],
       ["mouseout", "onMouseOut"],
     ].forEach(([eventName, eventCallback]) => {
-      gme.addListener(circle, eventName, (e: google.maps.MapMouseEvent) => {
-        const callback = callbacks.current[eventCallback];
+      gme.addListener(circle, eventName!, (e: google.maps.MapMouseEvent) => {
+        const callback = callbacks.current[eventCallback!];
         if (callback) callback(e);
       });
     });

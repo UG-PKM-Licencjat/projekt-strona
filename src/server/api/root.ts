@@ -5,7 +5,6 @@ import {
   procedure,
 } from "~/server/api/trpc";
 import logEvent, { LogType, tagValues } from "../log";
-import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 
 import { AdminRouter } from "./routers/admin";
 import { OffersRouter } from "./routers/offers";

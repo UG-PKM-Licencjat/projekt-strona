@@ -14,10 +14,13 @@ import TipTap from "~/components/RichTextEditor/Tiptap";
 import Link from "next/link";
 import { OfferFilePreview } from "~/components/OfferFilePreview";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { Icon } from "~/components/ui/Icon/Icon";
 
 export default function OfferView({ params }: { params: { offerId: string } }) {
   const { offerId } = params;
   const router = useRouter();
+  const { data: session } = useSession();
 
   const { data } = trpc.offers.getById.useQuery(offerId);
 
@@ -122,18 +125,28 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
           </div>
 
           <div className="flex w-full justify-start md:justify-end">
-            <Link href={`/chat/${data.users.id}`}>
-              <Button className="flex gap-2" size="lg" variant="secondary">
-                <Image
-                  src={data.users.image!}
-                  alt={data.users.name!}
-                  width={40}
-                  height={40}
-                  className="overflow-hidden rounded-full"
-                />
-                <span className="text-lg">Skontaktuj się</span>
-              </Button>
-            </Link>
+            {session ? (
+              <Link href={`/chat/${data.users.id}`}>
+                <Button className="flex gap-2" size="lg" variant="secondary">
+                  <Image
+                    src={data.users.image!}
+                    alt={data.users.name!}
+                    width={40}
+                    height={40}
+                    className="size-10 shrink-0 overflow-hidden rounded-full"
+                  />
+                  <span className="text-lg">Skontaktuj się</span>
+                </Button>
+              </Link>
+            ) : (
+              <button
+                className="flex items-center gap-4 rounded-full bg-neo-gray px-6 py-3.5 text-lg font-semibold text-black shadow-md transition-colors hover:bg-neo-gray-hover"
+                onClick={() => signIn("google")}
+              >
+                <Icon name="google" className="size-8 stroke-none" />
+                Zaloguj się aby móc się skontaktować
+              </button>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -129,7 +129,7 @@ export const authOptions: NextAuthOptions = {
           await db
             .update(accounts)
             .set({
-              access_token: newTokens.access_token as string,
+              access_token: newTokens.access_token,
               id_token: newTokens.id_token,
               expires_at: Math.floor(Date.now() / 1000) + newTokens.expires_in,
               refresh_token:
@@ -162,16 +162,30 @@ export const authOptions: NextAuthOptions = {
     signIn: async ({ user, account, profile, email, credentials }) => {
       // getting new tokens from the provider
 
-      const newTokens = {
-        access_token: account!.access_token,
-        expires_at: account!.expires_at as number,
-        refresh_token: account!.refresh_token,
-        id_token: account!.id_token,
+      if (!account) {
+        logEvent({
+          message: "account is undefined",
+          tags: ["AUTH"],
+        });
+        return true;
+      }
+
+      const newTokens: {
+        access_token: string;
+        expires_at: number;
+        refresh_token?: string;
+        id_token: string;
+      } = {
+        access_token: account.access_token || "",
+        expires_at: account.expires_at || 0,
+        refresh_token: account.refresh_token || "",
+        id_token: account.id_token || "",
       };
 
       if (
         Object.values(newTokens).some((value) => value === undefined) ||
-        Object.values(newTokens).some((value) => value === "")
+        Object.values(newTokens).some((value) => value === "") ||
+        newTokens.expires_at === 0
       ) {
         logEvent({
           message: "one of newTokens value is undefined",
@@ -185,10 +199,10 @@ export const authOptions: NextAuthOptions = {
       await db
         .update(accounts)
         .set({
-          access_token: newTokens.access_token as string,
-          id_token: newTokens.id_token as string,
-          expires_at: newTokens.expires_at as number,
-          refresh_token: newTokens.refresh_token as string,
+          access_token: newTokens.access_token,
+          id_token: newTokens.id_token,
+          expires_at: newTokens.expires_at,
+          refresh_token: newTokens.refresh_token,
         })
         .where(eq(accounts.userId, user.id));
       return true;

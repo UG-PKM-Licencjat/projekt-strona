@@ -7,21 +7,43 @@ import {
   List,
   ChevronRight,
   ChevronLeft,
+  XIcon,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import OfferCard, { type Offer } from "~/components/OfferCard/OfferCard";
+import { useState } from "react";
+import OfferCard from "~/components/OfferCard/OfferCard";
 import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
 import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { trpc } from "~/trpc/react";
+import {
+  useQueryStates,
+  useQueryState,
+  parseAsFloat,
+  parseAsInteger,
+  parseAsString,
+} from "nuqs";
+import { PlaceAutocompleteClassic } from "~/components/LocationGoogle/autocomplete-classic";
+import { cn } from "~/lib/utils";
+
+type PlaceResult = google.maps.places.PlaceResult;
 
 export default function SearchPage() {
   const LIMIT = 6;
   const [viewMode, setViewMode] = useState("grid");
 
-  const [location, setLocation] = useState("");
-  const [searchText, setSearchText] = useState("");
-  const [skip, setSkip] = useState(0);
+  const [location, setLocation] = useQueryStates({
+    x: parseAsFloat,
+    y: parseAsFloat,
+    placeName: parseAsString.withDefault(""),
+  });
+
+  const [placeholderName, setPlaceholderName] = useState(location.placeName);
+
+  const [searchText, setSearchText] = useQueryState(
+    "q",
+    parseAsString.withDefault(""),
+  );
+  const [skip, setSkip] = useQueryState("skip", parseAsInteger.withDefault(0));
 
   const { data, refetch } = trpc.offers.search.useQuery({
     text: searchText,
@@ -30,30 +52,41 @@ export default function SearchPage() {
     limit: LIMIT,
   });
 
-  const { data: offerCount } = trpc.offers.countSearch.useQuery({
-    text: searchText,
-    location: location,
-  });
-
-  function onLocationChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setLocation(event.target.value);
+  async function onLocationChange(place: PlaceResult | null) {
+    if (!place?.geometry && place?.name !== "") return;
+    const name = place?.name ?? "";
+    const lat = place?.geometry?.location?.lat() ?? null;
+    const lng = place?.geometry?.location?.lng() ?? null;
+    console.log("place", place);
+    await setLocation({ placeName: name, x: lng, y: lat });
+    setPlaceholderName(name);
   }
 
-  function onSearchTextChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSearchText(event.target.value);
+  async function resetLocation() {
+    await setLocation({ placeName: null, x: null, y: null });
+    setPlaceholderName("");
+    void refetch();
+  }
+
+  async function onSearchTextChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    await setSearchText(event.target.value);
   }
 
   function search() {
     void refetch();
   }
 
-  const handlePageClick = (page: number) => {
-    setSkip((page - 1) * LIMIT);
+  const handlePageClick = async (page: number) => {
+    await setSkip((page - 1) * LIMIT);
   };
 
   const getPaginationButtons = () => {
     const currentPage = skip / LIMIT + 1;
-    const totalPages = offerCount ? Math.ceil(offerCount / LIMIT) : 0;
+    const totalPages = data?.offerCount
+      ? Math.ceil(data?.offerCount / LIMIT)
+      : 0;
 
     const buttons = [];
 
@@ -138,25 +171,32 @@ export default function SearchPage() {
                 size={35}
               />
             </div>
-            <div className="relative">
-              <Input
-                placeholder="Warszawa"
-                onChange={onLocationChange}
+            <div className="group relative">
+              <PlaceAutocompleteClassic
+                value={placeholderName}
+                onBlur={() => setPlaceholderName(location.placeName)}
+                onChange={(e) => setPlaceholderName(e.target.value)}
+                onPlaceSelect={onLocationChange}
                 className="appearance-none rounded-md border border-[#97b085] bg-white px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#5f8d4e]"
-                value={location}
               />
+              <div
+                className={cn(
+                  "absolute right-0 top-0 flex h-full items-center justify-end pr-14 transition-all md:opacity-0",
+                  location.placeName && "group-hover:opacity-100",
+                )}
+              >
+                <XIcon
+                  className="size-6 cursor-pointer text-neo-castleton"
+                  onClick={resetLocation}
+                />
+              </div>
               <MapPin
                 className="absolute right-3 top-2.5 text-neo-castleton"
                 size={35}
               />
             </div>
 
-            <Button
-              onClick={search}
-              className="rounded-md bg-neo-pink px-4 py-2 text-white transition duration-300 hover:bg-[#4a6741]"
-            >
-              Szukaj
-            </Button>
+            <Button onClick={search}>Szukaj</Button>
           </div>
         </div>
         <div className="mb-4 flex items-center justify-between">
@@ -210,14 +250,16 @@ export default function SearchPage() {
           } gap-6`}
         >
           {data
-            ? data.map((offer) => <OfferCard key={offer.id} offer={offer} />)
+            ? data.offers.map((offer) => (
+                <OfferCard key={offer.id} offer={offer} />
+              ))
             : Array.from({ length: LIMIT }).map((_, ind) => (
                 <SkeletonCard key={ind} className="h-40" randomColor />
               ))}
         </div>
 
         {/* Pagination Buttons */}
-        {offerCount && (
+        {data?.offerCount && (
           <div className="mt-8 flex items-center justify-center space-x-2">
             {
               <Button
@@ -240,7 +282,9 @@ export default function SearchPage() {
                 size="icon"
                 variant="ghost"
                 className={`size-12 ${skip > 0 ? "disabled" : ""}`}
-                disabled={skip / LIMIT + 1 >= Math.ceil(offerCount / LIMIT)}
+                disabled={
+                  skip / LIMIT + 1 >= Math.ceil(data?.offerCount / LIMIT)
+                }
                 // className="rounded-md px-3 py-1 text-white transition-colors duration-200 hover:bg-neo-castleton"
               >
                 <ChevronRight />

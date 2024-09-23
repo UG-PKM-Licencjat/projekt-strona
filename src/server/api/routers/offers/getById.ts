@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "~/server/db";
 import { offers } from "~/server/db/schema";
-import { authedProcedure, procedure } from "~/server/api/trpc";
+import { authedProcedure } from "~/server/api/trpc";
 
 const getByIdProcedure = authedProcedure
   .input(z.string())

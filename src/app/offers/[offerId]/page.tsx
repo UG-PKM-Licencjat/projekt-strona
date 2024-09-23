@@ -13,9 +13,11 @@ import { Circle } from "~/components/LocationGoogle/Circle";
 import TipTap from "~/components/RichTextEditor/Tiptap";
 import Link from "next/link";
 import { OfferFilePreview } from "~/components/OfferFilePreview";
+import { useRouter } from "next/navigation";
 
 export default function OfferView({ params }: { params: { offerId: string } }) {
   const { offerId } = params;
+  const router = useRouter();
 
   const { data } = trpc.offers.getById.useQuery(offerId);
 
@@ -28,7 +30,11 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
   return (
     <div className="container relative flex flex-1 flex-col justify-between gap-2 bg-neo-gray px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:rounded-lg">
       <div className="flex w-full items-center justify-start">
-        <Button variant="link" className="flex items-center gap-2 px-0">
+        <Button
+          variant="link"
+          className="flex items-center gap-2 px-0"
+          onClick={() => router.back()}
+        >
           <ArrowLeftIcon className="size-6" />
           Cofnij
         </Button>
@@ -108,7 +114,7 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
                 <OfferFilePreview key={index} file={file} />
               ))}
             </div>
-            {data.files?.length === 0 && (
+            {!data.files && (
               <div className="flex h-36 w-full items-center justify-center rounded-md bg-gray-200">
                 <span className="text-gray-400">Brak zdjęć</span>
               </div>

@@ -1,5 +1,4 @@
 import { authedProcedure } from "../../trpc";
-import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -8,7 +7,7 @@ import { sessions } from "~/server/db/schema";
 
 const deleteAccount = authedProcedure.mutation(async ({ ctx }) => {
   try {
-    const deleteSession = await db
+    const deleteSession = await ctx.db
       .delete(sessions)
       .where(eq(sessions.userId, ctx.session?.user.id))
       .returning();
@@ -24,7 +23,7 @@ const deleteAccount = authedProcedure.mutation(async ({ ctx }) => {
         message: "Session with provided Id does not exist",
       });
     }
-    const deleteAccount = await db
+    const deleteAccount = await ctx.db
       .delete(users)
       .where(eq(users.id, ctx.session?.user.id))
       .returning();

@@ -1,5 +1,4 @@
 import { authedProcedure } from "../../trpc";
-import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
@@ -16,7 +15,7 @@ const updateData = authedProcedure
   )
   .mutation(async ({ ctx, input }) => {
     try {
-      const updateResult = await db
+      const updateResult = await ctx.db
         .update(users)
         .set({
           firstName: input.firstName,

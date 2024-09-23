@@ -49,6 +49,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_GOOGLE_MAPS_KEY: z.string(),
+    NEXT_PUBLIC_CHAT_BASE_URL: z.string(),
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
@@ -74,6 +75,7 @@ export const env = createEnv({
     LOG: process.env.LOG,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     NEXT_PUBLIC_GOOGLE_MAPS_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
+    NEXT_PUBLIC_CHAT_BASE_URL: process.env.NEXT_PUBLIC_CHAT_BASE_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

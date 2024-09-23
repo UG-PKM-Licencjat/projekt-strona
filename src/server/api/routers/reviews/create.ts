@@ -1,5 +1,4 @@
 import { procedure } from "~/server/api/trpc";
-import { db } from "~/server/db";
 import { reviews, users, offers } from "~/server/db/schema";
 import { z } from "zod";
 import logEvent, { LogType } from "~/server/log";
@@ -18,11 +17,10 @@ export const createProcedure = procedure
       comment: z.string().max(COMMENT_LENGTH).optional(),
     }),
   )
-  .mutation(async (opts) => {
-    const { input } = opts;
-    const { offerId, userId, comment, rating } = input;
+  .mutation(async ({ ctx, input }) => {
+    const { offerId, userId, rating } = input;
 
-    const [userIdResult] = await db
+    const [userIdResult] = await ctx.db
       .select()
       .from(users)
       .where(eq(users.id, userId))
@@ -40,7 +38,7 @@ export const createProcedure = procedure
       });
     }
 
-    const [offerResult] = await db
+    const [offerResult] = await ctx.db
       .select()
       .from(offers)
       .where(eq(offers.id, offerId))
@@ -58,7 +56,7 @@ export const createProcedure = procedure
       });
     }
 
-    const { ok, data } = await db.transaction(async (tx) => {
+    const { ok, data } = await ctx.db.transaction(async (tx) => {
       const [returned] = await tx.insert(reviews).values(input).returning();
       if (!returned) {
         tx.rollback();

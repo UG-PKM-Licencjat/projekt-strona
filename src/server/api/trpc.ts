@@ -4,7 +4,6 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
-import type { Session } from "next-auth";
 import { users } from "~/server/db/schema";
 import logEvent, { LogType } from "../log";
 import { eq } from "drizzle-orm";
@@ -82,20 +81,19 @@ export const createTRPCRouter = t.router;
  */
 export const procedure = t.procedure;
 
-export const authMiddleware = t.middleware(async ({ next }) => {
-  const session: Session | null = await getServerAuthSession();
-  if (!session) {
+export const authMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
-  const [userIdResult] = await db
+  const [userIdResult] = await ctx.db
     .select()
     .from(users)
-    .where(eq(users.id, session.user.id))
+    .where(eq(users.id, ctx.session.user.id))
     .limit(1);
 
   if (!userIdResult) {
     logEvent({
-      message: `User ${session.user.id} does not exist`,
+      message: `User ${ctx.session.user.id} does not exist`,
       additionalInfo: JSON.stringify(userIdResult),
       logType: LogType.ERROR,
     });
@@ -105,14 +103,18 @@ export const authMiddleware = t.middleware(async ({ next }) => {
     });
   }
 
-  // return session in context
-  return next({ ctx: { session } });
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
 });
 
 export const authedProcedure = t.procedure.use(authMiddleware);
 
 export const adminProcedure = authedProcedure.use(async ({ ctx, next }) => {
-  if (ctx.session?.user.admin !== true) {
+  if (ctx.session.user.admin !== true) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next();

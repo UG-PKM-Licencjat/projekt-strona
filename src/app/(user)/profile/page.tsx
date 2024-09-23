@@ -93,6 +93,8 @@ export default function GreenProfileEditWithShadcnForms() {
     ],
   );
 
+  const [avatarError, setAvatarError] = useState("");
+
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -139,7 +141,7 @@ export default function GreenProfileEditWithShadcnForms() {
         avatar: avatar,
       })
       .then(async () => {
-        void update({
+        await update({
           user: {
             firstName: values.firstName,
             lastName: values.lastName,
@@ -212,7 +214,7 @@ export default function GreenProfileEditWithShadcnForms() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="gap-y-auto left bottom-0 flex h-full flex-col justify-center space-y-8 pt-6 xl:w-3/4"
+            className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-8 pt-6 xl:w-3/4"
           >
             <div className="h-3/8 flex flex-col items-center gap-8">
               <div className="grid size-44 place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
@@ -232,11 +234,13 @@ export default function GreenProfileEditWithShadcnForms() {
                   endpoint="avatarUploader"
                   onChange={setAvatar}
                   className="flex cursor-pointer items-center gap-2"
+                  onError={(error) => setAvatarError(error.message)}
                 >
                   <CameraIcon className="size-6" />
                   Zmień zdjęcie
                 </UploadWrapper>
               </Button>
+              <div className="text-sm text-destructive">{avatarError}</div>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <FormField
@@ -285,7 +289,7 @@ export default function GreenProfileEditWithShadcnForms() {
             </div>
           </form>
         </Form>
-        <div className="w-full flex-col items-center justify-between xl:ml-20 xl:flex">
+        <div className="w-full flex-col items-center justify-end space-y-8 xl:ml-20 xl:flex">
           <Image
             src={profile}
             alt="man"

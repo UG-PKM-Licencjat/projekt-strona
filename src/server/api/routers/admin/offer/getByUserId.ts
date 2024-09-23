@@ -1,7 +1,6 @@
 import { procedure } from "~/server/api/trpc";
 import { offers } from "~/server/db/schema";
 import { eq, getTableColumns } from "drizzle-orm";
-import { db } from "~/server/db";
 import { z } from "zod";
 import logEvent from "~/server/log";
 
@@ -11,14 +10,14 @@ const getByUserIdProcedure = procedure
       userId: z.string(),
     }),
   )
-  .query(async ({ input }) => {
+  .query(async ({ ctx, input }) => {
     logEvent({
       message: "Fetching offers by userId",
       additionalInfo: input.userId,
     });
     const columns = getTableColumns(offers);
 
-    const fetchedOffers = await db
+    const fetchedOffers = await ctx.db
       .select({
         ...columns,
       })

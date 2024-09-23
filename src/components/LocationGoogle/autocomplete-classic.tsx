@@ -43,9 +43,14 @@ export const PlaceAutocompleteClassic = ({
 
   useEffect(() => {
     if (!placeAutocomplete) return;
-    placeAutocomplete.addListener("place_changed", () => {
+    const onChange = () => {
       onPlaceSelect(placeAutocomplete.getPlace());
-    });
+    };
+    placeAutocomplete.addListener("place_changed", onChange);
+
+    return () => {
+      google.maps.event.clearInstanceListeners(placeAutocomplete);
+    };
   }, [onPlaceSelect, placeAutocomplete]);
 
   return (

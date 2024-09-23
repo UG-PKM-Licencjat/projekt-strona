@@ -1,5 +1,4 @@
 import { authedProcedure } from "~/server/api/trpc";
-import { db } from "~/server/db";
 import { offers, offerTags, users, tags } from "~/server/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -32,7 +31,7 @@ const createProcedure = authedProcedure
     }
 
     const userId = ctx.session.user.id;
-    const [userIdResult] = await db
+    const [userIdResult] = await ctx.db
       .select()
       .from(users)
       .where(eq(users.id, userId))
@@ -52,7 +51,7 @@ const createProcedure = authedProcedure
 
     const { tags: selectedTags, ...filteredInput } = input;
 
-    const [offerResult] = await db
+    const [offerResult] = await ctx.db
       .select()
       .from(offers)
       .where(eq(offers.userId, userId))
@@ -71,7 +70,7 @@ const createProcedure = authedProcedure
       });
     }
 
-    const { data, error } = await db.transaction(async (tx) => {
+    const { data, error } = await ctx.db.transaction(async (tx) => {
       const [offerReturned] = await tx
         .insert(offers)
         .values({ userId, ...filteredInput })

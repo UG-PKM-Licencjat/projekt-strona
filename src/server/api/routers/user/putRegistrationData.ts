@@ -1,4 +1,3 @@
-import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 import { authedProcedure } from "~/server/api/trpc";
 import { z } from "zod";
@@ -20,7 +19,7 @@ const putRegistrationData = authedProcedure
       if (!ctx.session?.user.id) {
         return [];
       }
-      const putRegistrationData = await db
+      const putRegistrationData = await ctx.db
         .update(users)
         .set({
           name: input.firstName + " " + input.lastName,

@@ -5,6 +5,7 @@ import { useConversationsStore } from "~/stores";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 import { useSession } from "next-auth/react";
 import { useToast } from "~/components/ui/use-toast";
+import { env } from "~/env";
 
 export default function GlobalBehaviours({
   children,
@@ -24,7 +25,7 @@ export default function GlobalBehaviours({
   useEffect(() => {
     if (!data) return;
     const socketConnection = new WebSocket(
-      `wss://chat-swxn.onrender.com/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
+      `wss://${env.NEXT_PUBLIC_CHAT_BASE_URL}/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
     );
 
     socketConnection.onmessage = (event: MessageEvent<string>) => {

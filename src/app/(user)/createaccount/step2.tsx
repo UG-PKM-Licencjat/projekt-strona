@@ -23,6 +23,8 @@ import { useAvatarStore } from "~/stores/avatarStore";
 import { useState } from "react";
 import { LoaderCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { type TRPCError } from "@trpc/server";
+import { useSession } from "next-auth/react";
 
 export default function Step2(props: {
   data: Data;
@@ -41,6 +43,7 @@ export default function Step2(props: {
   });
   const uploadAvatar = useAvatarStore((state) => state.uploadAvatar);
   const [isProcessing, setIsProcessing] = useState(false);
+  const { update } = useSession();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -73,14 +76,21 @@ export default function Step2(props: {
           registered: true,
         })
         .then(async () => {
+          await update({
+            user: {
+              firstName: data.firstName,
+              lastName: data.lastName,
+              image: avatar,
+            },
+          });
           if (isArtist) {
             router.push("/profile/create");
           } else {
             handleChange({ ...data, activeTab: 2 });
           }
         })
-        .catch((error) => {
-          if (error.code === " UNAUTHORIZED") {
+        .catch((error: TRPCError) => {
+          if (error.code === "UNAUTHORIZED") {
             toast({
               title: "Błąd",
               description: "Nie jesteś zalogowany",
@@ -93,6 +103,7 @@ export default function Step2(props: {
               variant: "destructive",
             });
           }
+          setIsProcessing(false);
         });
     }
   }

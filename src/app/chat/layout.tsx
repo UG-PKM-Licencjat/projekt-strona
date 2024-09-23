@@ -1,13 +1,12 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { type UserWithMessage } from "~/components/chat/ConversationsNav/ConversationsNav";
 
 import { trpc } from "~/trpc/react";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 import { useConversationsStore } from "~/stores";
 
 export default function ChatLayout({

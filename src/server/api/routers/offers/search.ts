@@ -1,30 +1,56 @@
 import { z } from "zod";
 import { procedure } from "../../trpc";
-import { db } from "~/server/db";
 import { offers } from "~/server/db/schema";
 import { buildSearchQuery } from "./util";
+import { count } from "drizzle-orm";
 
 const searchProcedure = procedure
   .input(
     z.object({
       text: z.string(),
-      location: z.object({ x: z.number(), y: z.number() }),
+      location: z.object({
+        x: z.number().nullable(),
+        y: z.number().nullable(),
+      }),
       skip: z.number(),
       limit: z.number(),
     }),
   )
-  .query(async (opts) => {
+  .query(async ({ ctx, input }) => {
     // TODO improve searching algorithm if time allows
-    const query = buildSearchQuery(opts.input.text, opts.input.location);
+    const query = buildSearchQuery(input.text, input.location);
 
-    const dbOffers = await db
-      .select()
+    const offerCount = await ctx.db
+      .select({ count: count() })
       .from(offers)
       .where(query)
-      .limit(opts.input.limit)
-      .offset(opts.input.skip);
+      .limit(1);
 
-    return dbOffers;
+    const dbOffers2 = await ctx.db.query.offers.findMany({
+      where: query,
+      columns: {
+        id: true,
+        userId: true,
+        name: true,
+        price: true,
+        shortDescription: true,
+        locationName: true,
+        distance: true,
+        ratingsSum: true,
+        votes: true,
+      },
+      with: {
+        users: {
+          columns: {
+            image: true,
+          },
+        },
+      },
+      limit: input.limit,
+      offset: input.skip,
+    });
+
+    return { offerCount: offerCount[0]?.count, offers: dbOffers2 };
   });
 
 export default searchProcedure;

@@ -15,6 +15,10 @@ const createContext = async (req: NextRequest) => {
   });
 };
 
+export const config = {
+  runtime: "edge",
+};
+
 const handler = (req: NextRequest) =>
   fetchRequestHandler({
     endpoint: "/api/trpc",

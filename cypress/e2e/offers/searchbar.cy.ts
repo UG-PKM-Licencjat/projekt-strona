@@ -1,7 +1,7 @@
 describe("Search Page - Initial Load", () => {
   beforeEach(() => {
     // Otwieramy stronę wyszukiwania
-    cy.visit("/offers"); // Upewnij się, że ścieżka jest poprawna
+    cy.visit("/search"); // Upewnij się, że ścieżka jest poprawna
   });
 
   it("should load the search page with all elements", () => {

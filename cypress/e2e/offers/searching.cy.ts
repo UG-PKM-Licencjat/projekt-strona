@@ -1,6 +1,6 @@
 describe("Search Page - Searching for Offers", () => {
   beforeEach(() => {
-    cy.visit("/offers");
+    cy.visit("/searcj");
   });
 
   it("should search offers based on text and location", () => {
@@ -27,7 +27,7 @@ describe("Search Page - Searching for Offers", () => {
 describe("Search Page - mobile", () => {
   beforeEach(() => {
     cy.viewport("iphone-6");
-    cy.visit("/offers");
+    cy.visit("/search");
   });
   it("should search offers based on text and location", () => {
     // Wpisz tekst wyszukiwania

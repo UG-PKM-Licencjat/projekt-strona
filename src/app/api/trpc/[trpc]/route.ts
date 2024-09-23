@@ -15,9 +15,7 @@ const createContext = async (req: NextRequest) => {
   });
 };
 
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "edge";
 
 const handler = (req: NextRequest) =>
   fetchRequestHandler({

@@ -4,7 +4,7 @@ import { Icon } from "src/components/ui/Icon/Icon";
 // import { useSession } from "next-auth/react";
 // import { redirect } from "next/navigation";
 // import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
-import { trpc } from "~/trpc/react";
+// import { trpc } from "~/trpc/react";
 // import { useEffect } from "react";
 import playingpiano from "public/svg/playingpiano.svg";
 import Image from "next/image";
@@ -27,8 +27,6 @@ export default function Home() {
   //   }
   // }, [isLoading]);
 
-  const { data } = trpc.testProcedure.useQuery();
-
   // const session = useSession();
 
   return (
@@ -42,8 +40,7 @@ export default function Home() {
         />
         <div className="relative flex w-full flex-1 flex-col justify-center gap-10 px-10 max-md:gap-0 max-md:bg-white">
           <h1 className="mt-4 text-5xl font-bold max-lg:text-4xl max-md:text-3xl max-md:text-black">
-            Poczuj {data}
-            <span className="text-neo-sage">rytm...</span>
+            Poczuj <span className="text-neo-sage">rytm...</span>
           </h1>
           <h2 className="mt-2 flex w-2/3 justify-end pl-10 text-4xl text-black max-lg:text-3xl max-md:w-full max-md:pl-0 max-md:pr-4 max-md:text-left max-md:text-xl max-md:text-neo-castleton">
             <span className="text-neo-sage">...</span>

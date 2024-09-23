@@ -5,7 +5,12 @@ import { trpc } from "~/trpc/react";
 import Image from "next/image";
 import { Card, CardContent } from "~/components/ui/card";
 import { Tag } from "~/components/Tag/Tag";
-import { ArrowLeftIcon, DollarSign, MapPin } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  DollarSign,
+  LoaderCircleIcon,
+  MapPin,
+} from "lucide-react";
 import { Button } from "~/components/ui/Button/Button";
 import APIProviderWrapper from "~/components/LocationGoogle/APIProviderWrapper";
 import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
@@ -25,7 +30,11 @@ export default function OfferView({ params }: { params: { offerId: string } }) {
   const { data } = trpc.offers.getById.useQuery(offerId);
 
   if (!data) {
-    return <div>Loading...</div>;
+    return (
+      <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center">
+        <LoaderCircleIcon className="size-10 animate-spin text-white" />
+      </div>
+    );
   }
 
   const position = { lat: data.location.y, lng: data.location.x };

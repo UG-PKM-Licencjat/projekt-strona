@@ -40,18 +40,18 @@ export const Navbar = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
   const pathname = usePathname();
-  const store = useConversationsStore();
+  const conversations = useConversationsStore((state) => state.conversations);
   const [unreadNotification, setUnreadNotification] = useState(false);
 
 
   useEffect(() => { // Checks if user has some unread messages
-    const hasUnreadMessages = Object.values(store.conversations).some(conversation =>
+    const hasUnreadMessages = Object.values(conversations).some(conversation =>
       conversation.some(msg => !msg.read)
     );
     
     setUnreadNotification(hasUnreadMessages);
 
-  }, [store.conversations])
+  }, [conversations])
 
   if (filterList.includes(pathname))
     return (

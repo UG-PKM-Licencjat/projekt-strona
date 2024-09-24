@@ -7,4 +7,9 @@ export default defineConfig({
     },
     baseUrl: "http://localhost:3000",
   },
+  // env: {
+  //   googleClientId: process.env.GOOGLE_CLIENT_ID,
+  //   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  //   googleRefreshToken: process.env.GOOGLE_REFREESH_TOKEN,
+  // },
 });

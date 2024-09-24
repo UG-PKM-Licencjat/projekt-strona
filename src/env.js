@@ -40,6 +40,7 @@ export const env = createEnv({
     MONGO_URL: z.string().url(),
     LOG: z.string().default("true"),
     UPLOADTHING_TOKEN: z.string(),
+    GOOGLE_REFRESH_TOKEN: z.string(),
   },
 
   /**
@@ -75,6 +76,7 @@ export const env = createEnv({
     LOG: process.env.LOG,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     NEXT_PUBLIC_GOOGLE_MAPS_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
+    GOOGLE_REFRESH_TOKEN: process.env.GOOGLE_REFRESH_TOKEN,
     NEXT_PUBLIC_CHAT_BASE_URL: process.env.NEXT_PUBLIC_CHAT_BASE_URL,
   },
   /**

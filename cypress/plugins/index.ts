@@ -1,7 +1,7 @@
-const { GoogleSocialLogin } = require("cypress-social-logins").plugins;
+import { plugins } from "cypress-social-logins";
 
 module.exports = (on, config) => {
   on("task", {
-    GoogleSocialLogin: GoogleSocialLogin,
+    GoogleSocialLogin: plugins.GoogleSocialLogin,
   });
 };

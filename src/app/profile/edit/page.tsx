@@ -8,6 +8,7 @@ import { type ArtistFormData } from "~/lib/artistSchema";
 
 export default async function CreateArtistProfilePage() {
   const session = await getServerAuthSession();
+  if (!session) return;
   const isArtist = session?.user.isArtist;
   if (!isArtist) redirect("/");
   const rawOffer = await api.offers.getByUserId(session.user.id);
@@ -31,6 +32,7 @@ export default async function CreateArtistProfilePage() {
       title="Edytuj profil"
       edit={true}
       defaultData={offer}
+      session={session}
     />
   );
 }

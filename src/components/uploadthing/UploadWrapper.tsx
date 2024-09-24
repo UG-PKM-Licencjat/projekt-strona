@@ -68,6 +68,7 @@ export default function UploadWrapper({
             onChange(file);
             onError({ message: "" });
           }
+          e.target.value = "";
         }}
       />
       {children}

@@ -10,7 +10,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
-import OfferCard from "~/components/OfferCard/OfferCard";
+import OfferCard from "~/components/Offer/OfferCard";
 import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
 import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";

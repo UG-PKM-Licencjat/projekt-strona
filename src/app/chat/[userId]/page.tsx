@@ -21,11 +21,16 @@ export default function Conversation({
   const { data: otherProviderId } =
     trpc.accounts.getProviderId.useQuery(userId);
 
-  const store = useConversationsStore();
+  const [conversations, fetchMessagesForUser, sendMessage] =
+    useConversationsStore((state) => [
+      state.conversations,
+      state.fetchMessagesForUser,
+      state.sendMessage,
+    ]);
 
   void useMemo(async () => {
     if (!session) return;
-    await store.fetchMessagesForUser(session, userId);
+    await fetchMessagesForUser(session, userId);
   }, []);
 
   useEffect(() => {
@@ -45,13 +50,13 @@ export default function Conversation({
   async function handleSubmit() {
     if (!otherProviderId || !session) return;
     setMessage("");
-    await store.sendMessage(message, session, userId, otherProviderId);
+    await sendMessage(message, session, userId, otherProviderId);
   }
 
   return (
     <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden bg-neo-gray-hover md:p-6">
       <div className="flex-1 overflow-y-scroll p-4">
-        {(store.conversations[userId] ?? []).map((message, ind) => (
+        {(conversations[userId] ?? []).sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map((message, ind) => (
           <Message key={ind} message={message} />
         ))}
       </div>

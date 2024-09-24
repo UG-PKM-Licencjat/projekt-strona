@@ -17,7 +17,7 @@ import { type Data } from "./page";
 import Image from "next/image";
 import man from "public/svg/man.svg";
 import { useSession } from "next-auth/react";
-import { CameraIcon, UploadIcon } from "lucide-react";
+import { CameraIcon, XIcon } from "lucide-react";
 import { useAvatarStore } from "~/stores/avatarStore";
 import UploadWrapper from "~/components/uploadthing/UploadWrapper";
 
@@ -67,14 +67,21 @@ export default function Step1(props: {
   const { data, handleChange } = props;
   const { data: session } = useSession();
 
-  const [avatarUrl, setAvatarUrl, setAvatar, gotSessionImage] = useAvatarStore(
-    (state) => [
-      state.avatarUrl,
-      state.setAvatarUrl,
-      state.setAvatar,
-      state.gotSessionImage,
-    ],
-  );
+  const [
+    avatarUrl,
+    setAvatarUrl,
+    setAvatar,
+    gotSessionImage,
+    clearAvatar,
+    avatarChanged,
+  ] = useAvatarStore((state) => [
+    state.avatarUrl,
+    state.setAvatarUrl,
+    state.setAvatar,
+    state.gotSessionImage,
+    state.clearAvatar,
+    state.avatarChanged,
+  ]);
   const [avatarError, setAvatarError] = useState("");
 
   useEffect(() => {
@@ -130,19 +137,32 @@ export default function Step1(props: {
               className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-6 pt-6"
             >
               <div className="flex flex-col items-center gap-2">
-                <div className="grid size-44 place-items-center overflow-hidden rounded-full [&>*]:col-start-1 [&>*]:row-start-1">
-                  {!avatarUrl && (
-                    <div className="flex size-full animate-pulse items-center justify-center rounded-full bg-neo-sage-hover"></div>
-                  )}
-                  {avatarUrl && (
-                    <Image
-                      src={avatarUrl}
-                      alt="avatar"
-                      height={100}
-                      width={100}
-                      referrerPolicy="no-referrer"
-                      className="h-full w-full overflow-hidden object-cover"
-                    />
+                <div className="relative">
+                  <div className="grid size-44 place-items-center overflow-hidden rounded-full [&>*]:col-start-1 [&>*]:row-start-1">
+                    {!avatarUrl && (
+                      <div className="flex size-full animate-pulse items-center justify-center rounded-full bg-neo-sage-hover"></div>
+                    )}
+                    {avatarUrl && (
+                      <Image
+                        src={avatarUrl}
+                        alt="avatar"
+                        height={100}
+                        width={100}
+                        referrerPolicy="no-referrer"
+                        className="h-full w-full overflow-hidden object-cover"
+                      />
+                    )}
+                  </div>
+                  {avatarChanged && (
+                    <div
+                      className="absolute right-1 top-1 z-30 cursor-pointer rounded-full bg-neo-pink p-3 transition-colors hover:bg-neo-pink-hover"
+                      onClick={() => {
+                        clearAvatar();
+                        setAvatarUrl(session?.user.image ?? "");
+                      }}
+                    >
+                      <XIcon className="size-5 text-neo-gray" />
+                    </div>
                   )}
                 </div>
                 <UploadWrapper

@@ -216,7 +216,7 @@ export default function GreenProfileEditWithShadcnForms() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-8 pt-6 xl:w-3/4"
           >
-            <div className="h-3/8 flex flex-col items-center gap-8">
+            <div className="h-3/8 flex flex-col items-center gap-2">
               <div className="grid size-44 place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
                 {avatarUrl && (
                   <Image
@@ -224,6 +224,7 @@ export default function GreenProfileEditWithShadcnForms() {
                     alt="avatar"
                     height={100}
                     width={100}
+                    priority
                     referrerPolicy="no-referrer"
                     className="h-full w-full overflow-hidden object-cover"
                   />
@@ -240,7 +241,7 @@ export default function GreenProfileEditWithShadcnForms() {
                   Zmień zdjęcie
                 </UploadWrapper>
               </Button>
-              <div className="text-sm text-destructive">{avatarError}</div>
+              <div className="h-4 text-sm text-destructive">{avatarError}</div>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <FormField
@@ -256,7 +257,9 @@ export default function GreenProfileEditWithShadcnForms() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <div className="h-2">
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -273,7 +276,9 @@ export default function GreenProfileEditWithShadcnForms() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <div className="h-2">
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -293,6 +298,7 @@ export default function GreenProfileEditWithShadcnForms() {
           <Image
             src={profile}
             alt="man"
+            priority
             className="ml-20 hidden h-3/4 w-max object-cover xl:block"
           />
           <AlertDialog open={isOpen}>

@@ -35,8 +35,9 @@ export default function UploadWrapper({
   const multiple = maxFileCount.some((v) => v && v > 1);
 
   return (
-    <label className={className}>
+    <label htmlFor={endpoint} className={className}>
       <input
+        id={endpoint}
         className="sr-only"
         type="file"
         multiple={multiple}

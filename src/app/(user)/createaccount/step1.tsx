@@ -17,7 +17,7 @@ import { type Data } from "./page";
 import Image from "next/image";
 import man from "public/svg/man.svg";
 import { useSession } from "next-auth/react";
-import { UploadIcon } from "lucide-react";
+import { CameraIcon, UploadIcon } from "lucide-react";
 import { useAvatarStore } from "~/stores/avatarStore";
 import UploadWrapper from "~/components/uploadthing/UploadWrapper";
 
@@ -129,29 +129,36 @@ export default function Step1(props: {
               onSubmit={form.handleSubmit(onSubmit)}
               className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-6 pt-6"
             >
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center gap-2">
+                <div className="grid size-44 place-items-center overflow-hidden rounded-full [&>*]:col-start-1 [&>*]:row-start-1">
+                  {!avatarUrl && (
+                    <div className="flex size-full animate-pulse items-center justify-center rounded-full bg-neo-sage-hover"></div>
+                  )}
+                  {avatarUrl && (
+                    <Image
+                      src={avatarUrl}
+                      alt="avatar"
+                      height={100}
+                      width={100}
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full overflow-hidden object-cover"
+                    />
+                  )}
+                </div>
                 <UploadWrapper
                   endpoint="avatarUploader"
                   onChange={setAvatar}
                   onError={(error) => setAvatarError(error.message)}
+                  className="flex flex-col items-center"
                 >
-                  <div className="grid size-44 cursor-pointer place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
-                    {avatarUrl && (
-                      <Image
-                        src={avatarUrl}
-                        alt="avatar"
-                        height={100}
-                        width={100}
-                        referrerPolicy="no-referrer"
-                        className="h-full w-full overflow-hidden object-cover"
-                      />
-                    )}
-                    <div className="z-50 flex size-full items-center justify-center bg-black/20 transition-all hover:opacity-100 md:opacity-0">
-                      <UploadIcon className="size-20 text-white" />
-                    </div>
+                  <div className="flex cursor-pointer items-center gap-2 rounded bg-neo-pink px-2.5 py-1.5 text-base text-white transition-colors hover:bg-neo-pink-hover">
+                    <CameraIcon className="size-6" />
+                    Zmień zdjęcie
                   </div>
                 </UploadWrapper>
-                <div className="text-sm text-destructive">{avatarError}</div>
+                <div className="h-4 text-sm text-destructive">
+                  {avatarError}
+                </div>
               </div>
               <FormField
                 control={form.control}
@@ -162,7 +169,9 @@ export default function Step1(props: {
                     <FormControl>
                       <Input placeholder="Podaj imię" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <div className="h-2">
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -175,7 +184,9 @@ export default function Step1(props: {
                     <FormControl>
                       <Input placeholder="Podaj nazwisko" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <div className="h-2">
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />

@@ -42,7 +42,7 @@ export default function Home() {
     text: "",
     location: { x: null, y: null },
     skip: 0,
-    limit: 10,
+    limit: 3,
   });
 
   return (

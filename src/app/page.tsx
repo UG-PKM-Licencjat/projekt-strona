@@ -5,7 +5,7 @@ import playingpiano from "public/svg/playingpiano.svg";
 import Image from "next/image";
 import SearchBar from "../components/SearchBar/seachbar";
 import { trpc } from "~/trpc/react";
-import OfferCard from "~/components/OfferCard/OfferCard";
+import OfferCard from "~/components/Offer/OfferCard";
 import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { Button } from "~/components/ui/Button/Button";
 import {

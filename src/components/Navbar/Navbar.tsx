@@ -83,7 +83,7 @@ export const Navbar = ({
                   {session.user.registered && (
                     <>
                       <NavbarLink href="/chat">
-                        {!unreadNotification ? (
+                        {unreadNotification ? (
                           <MessageSquareDotIcon className="size-6 animate-pulse duration-1000 repeat-[2]" />
                         ) : (
                           <MessageSquare className="size-6" />
@@ -176,7 +176,7 @@ export const Navbar = ({
                         onClick={closeDrawer}
                         className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-sage p-4 text-white"
                       >
-                        {!unreadNotification ? (
+                        {unreadNotification ? (
                           <MessageSquareDotIcon className="size-14 animate-pulse duration-1000 repeat-[2]" />
                         ) : (
                           <MessageSquare className="size-14" />

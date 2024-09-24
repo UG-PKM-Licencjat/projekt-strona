@@ -8,7 +8,6 @@ import { trpc } from "~/trpc/react";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useConversationsStore } from "~/stores";
-import { BellDot } from "lucide-react";
 
 export default function ChatLayout({
   children,
@@ -44,7 +43,10 @@ export default function ChatLayout({
                 userId: userData.id,
                 name: userData.name ?? "",
                 lastMessage: "", //message.message,
-                unread: store.conversations[userData.id]?.some(msg => msg.to === session?.user.id && !msg.read) ?? false,
+                unread:
+                  store.conversations[userData.id]?.some(
+                    (msg) => msg.to === session?.user.id && !msg.read,
+                  ) ?? false,
                 image: userData.image ?? "",
               }) satisfies UserWithMessage,
           )
@@ -57,14 +59,21 @@ export default function ChatLayout({
                 router.push(`/chat/${conversation.userId}`);
               }}
               key={index}
-              className={`mb-2 flex cursor-pointer items-center rounded p-2 text-white transition-colors hover:bg-neo-sea ${(pathUserId ?? "") == conversation.userId ? "bg-neo-sea" : ""}`}
+              className={`mb-2 flex cursor-pointer items-center justify-between rounded p-2 text-white transition-colors hover:bg-neo-sea ${(pathUserId ?? "") == conversation.userId ? "bg-neo-sea" : ""}`}
             >
-              <Avatar className="mr-2 h-8 w-8">
-                <AvatarImage src={conversation.image} alt={conversation.name} />
-                <AvatarFallback>{conversation.name}</AvatarFallback>
-              </Avatar>
-              <span>{conversation.name}</span>
-              {conversation.unread && <BellDot className="text-neo-pink ml-2"/>}
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage
+                    src={conversation.image}
+                    alt={conversation.name}
+                  />
+                  <AvatarFallback>{conversation.name}</AvatarFallback>
+                </Avatar>
+                <span>{conversation.name}</span>
+              </div>
+              {conversation.unread && (
+                <div className="size-2.5 rounded-full bg-neo-gray"></div>
+              )}
             </div>
           ))}
       </div>

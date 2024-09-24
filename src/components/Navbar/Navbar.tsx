@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
 import { signIn, signOut } from "next-auth/react";
@@ -83,11 +83,13 @@ export const Navbar = ({
                   {session.user.registered && (
                     <>
                       <NavbarLink href="/chat">
-                        {unreadNotification ? (
-                          <MessageSquareDotIcon className="size-6 animate-pulse duration-1000 repeat-[2]" />
-                        ) : (
-                          <MessageSquare className="size-6" />
-                        )}
+                        <Suspense fallback={<MessageSquare className="size-6" />}>
+                          {unreadNotification ? (
+                            <MessageSquareDotIcon className="size-6 animate-pulse duration-1000 repeat-[2]" />
+                          ) : (
+                            <MessageSquare className="size-6" />
+                          )}
+                        </Suspense>
                         Czat
                       </NavbarLink>
                     </>

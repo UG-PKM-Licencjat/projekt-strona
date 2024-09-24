@@ -1,8 +1,15 @@
-export default function RootLayout({
+import { redirect } from "next/navigation";
+import { getServerAuthSession } from "~/server/auth";
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
+  if (!session) {
+    redirect("/");
+  }
   return (
     <>
       <div className="flex w-full flex-1 items-center justify-center bg-neo-castleton">

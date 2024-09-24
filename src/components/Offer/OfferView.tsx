@@ -16,8 +16,7 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { Icon } from "~/components/ui/Icon/Icon";
 
-type OfferData = {
-  id: string;
+export type OfferData = {
   name: string;
   ratingsSum: number | null;
   votes: number | null;
@@ -60,7 +59,7 @@ export default function OfferView({
   const position = { lat: data.location.y, lng: data.location.x };
 
   return (
-    <div className="container relative flex flex-1 flex-col justify-between gap-2 bg-neo-gray px-6 py-10 align-middle sm:w-9/12 sm:px-12 md:rounded-lg">
+    <div className="container relative flex flex-1 flex-col justify-between gap-2 rounded-lg bg-neo-gray px-6 py-10 align-middle">
       <div className="flex w-full items-center justify-start">
         <Button
           variant="link"

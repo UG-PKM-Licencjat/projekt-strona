@@ -19,7 +19,7 @@ export const artistSchema = z.object({
     .max(4000, { message: "Opis nie może przekraczać 4000 znaków." }),
   longDescriptionHTML: z.string(),
   locationName: z
-    .string({ message: "Lokalizacja jest wymagane." })
+    .string({ message: "Lokalizacja jest wymagana." })
     .min(1, { message: "Lokalizacja jest wymagana." }),
   locationPlaceholder: z.string(),
   location: z.object({
@@ -38,12 +38,13 @@ export const artistSchema = z.object({
     .max(5, { message: "Możesz wybrać maksymalnie 5 tagów." }),
   files: z.array(fileSchema).optional(),
   price: z
-    .string()
+    .string({
+      message: "Cena jest wymagana.",
+    })
     .regex(/^\d{1,9}(\,\d{1,2})?$/, {
       message:
         "Cena powinna być podana w formacie 12345,50 i nie przekraczać 999 999 999,99 zł",
-    })
-    .optional(),
+    }),
 });
 
 export type ArtistFormData = z.infer<typeof artistSchema>;

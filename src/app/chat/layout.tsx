@@ -19,10 +19,13 @@ export default function ChatLayout({
   const router = useRouter();
   const pathname = usePathname();
   const pathUserId = pathname.split("/")[2]; // Needed as this layout doesnt have [userId]
-  const store = useConversationsStore();
+  const [conversations, markAsRead] = useConversationsStore((state) => [
+    state.conversations,
+    state.markAsRead,
+  ]);
 
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
-    Object.entries(store.conversations)
+    Object.entries(conversations)
       .map((entry) => entry[0])
       .filter((e) => e !== session?.user.id),
   );
@@ -44,7 +47,7 @@ export default function ChatLayout({
                 name: userData.name ?? "",
                 lastMessage: "", //message.message,
                 unread:
-                  store.conversations[userData.id]?.some(
+                  conversations[userData.id]?.some(
                     (msg) => msg.to === session?.user.id && !msg.read,
                   ) ?? false,
                 image: userData.image ?? "",
@@ -54,7 +57,7 @@ export default function ChatLayout({
             <div
               onClick={() => {
                 if (conversation.unread && session) {
-                  store.markAsRead(conversation.userId, session);
+                  markAsRead(conversation.userId, session);
                 }
                 router.push(`/chat/${conversation.userId}`);
               }}

@@ -53,6 +53,7 @@ export default function ChatLayout({
                 image: userData.image ?? "",
               }) satisfies UserWithMessage,
           )
+          .sort((a, b) => (a.unread === b.unread)? 0 : a.unread ? -1 : 1) // TODO currently sort by unread but should be timestamp
           .map((conversation, index) => (
             <div
               onClick={() => {

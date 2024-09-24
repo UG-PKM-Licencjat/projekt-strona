@@ -28,8 +28,9 @@ export default function GlobalBehaviours({
       `wss://${env.NEXT_PUBLIC_CHAT_BASE_URL}/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
     );
 
+    // TODO maybe request also here but timedout
     socketConnection.onmessage = (event: MessageEvent<string>) => {
-      const newMessage = JSON.parse(event.data) as Message; // TODO: Validate const
+      const newMessage = JSON.parse(event.data) as Message;
       conversations.addMessage(newMessage.from, newMessage);
       toast({
         title: "Chat",

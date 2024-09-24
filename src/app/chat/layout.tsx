@@ -8,6 +8,7 @@ import { trpc } from "~/trpc/react";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useConversationsStore } from "~/stores";
+import { AlertCircle } from "lucide-react";
 
 export default function ChatLayout({
   children,
@@ -17,12 +18,12 @@ export default function ChatLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
   const { data: session } = useSession();
   const router = useRouter();
-  const store = useConversationsStore();
   const pathname = usePathname();
   const pathUserId = pathname.split("/")[2]; // Needed as this layout doesnt have [userId]
+  const conversations = useConversationsStore((state) => state.conversations);
 
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
-    Object.entries(store.conversations)
+    Object.entries(conversations)
       .map((entry) => entry[0])
       .filter((e) => e !== session?.user.id),
   );
@@ -43,6 +44,7 @@ export default function ChatLayout({
                 userId: userData.id,
                 name: userData.name ?? "",
                 lastMessage: "", //message.message,
+                unread: conversations[userData.id]?.some(msg => !msg.read) ?? false,
                 image: userData.image ?? "",
               }) satisfies UserWithMessage,
           )
@@ -59,6 +61,7 @@ export default function ChatLayout({
                 <AvatarFallback>{conversation.name}</AvatarFallback>
               </Avatar>
               <span>{conversation.name}</span>
+              {conversation.unread && <AlertCircle className="text-neo-pink ml-2"/>}
             </div>
           ))}
       </div>

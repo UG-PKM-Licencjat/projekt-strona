@@ -15,30 +15,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "~/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 export default function Home() {
-  // // TO DO WHEN OFFERS FETCHING IS READY
-  // const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   if (isLoading) {
-  //     const intervalId = setInterval(() => {
-  //       // Symulacja zmiany stanu isLoading po pewnym czasie
-  //       if (Math.random() > 0.8) {
-  //         setIsLoading(false);
-  //       }
-  //     }, 1000); // Powtarzanie co 1 sekundę
-
-  //     // Czyszczenie interwału po zmianie isLoading
-  //     return () => clearInterval(intervalId);
-  //   }
-  // }, [isLoading]);
-
-  // const session = useSession();
-
-  // get params
-
-  const { data, refetch } = trpc.offers.search.useQuery({
+  const { data } = trpc.offers.search.useQuery({
     text: "",
     location: { x: null, y: null },
     skip: 0,
@@ -107,20 +87,24 @@ export default function Home() {
               <OfferCard key={offer.id} offer={offer} />
             ))
           : Array.from({ length: 3 }).map((_, ind) => (
-              <SkeletonCard key={ind} className="h-40" randomColor />
+              <SkeletonCard key={ind} className="h-64" randomColor />
             ))}
       </div>
-      <Carousel opts={{ loop: true }} className="w-3/4 xl:hidden">
+      <Carousel
+        opts={{ loop: true }}
+        plugins={[Autoplay({ delay: 10000 })]}
+        className="w-3/4 xl:hidden"
+      >
         <CarouselContent>
           {data
             ? data.offers.map((offer) => (
-                <CarouselItem className="h-40 lg:basis-1/2" key={offer.id}>
+                <CarouselItem className="lg:basis-1/2" key={offer.id}>
                   <OfferCard key={offer.id} offer={offer} />
                 </CarouselItem>
               ))
             : Array.from({ length: 3 }).map((_, ind) => (
-                <CarouselItem key={ind}>
-                  <SkeletonCard key={ind} className="h-40" randomColor />
+                <CarouselItem key={ind} className="lg:basis-1/2">
+                  <SkeletonCard key={ind} className="h-64" randomColor />
                 </CarouselItem>
               ))}
         </CarouselContent>

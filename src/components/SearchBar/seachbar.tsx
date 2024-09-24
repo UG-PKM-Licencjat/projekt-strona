@@ -21,7 +21,13 @@ export default function SearchBar() {
 
   return (
     <div className="mb-8 rounded-lg bg-neo-castleton p-4 shadow-md">
-      <form className="flex flex-col gap-4 md:flex-row">
+      <form
+        className="flex flex-col gap-4 md:flex-row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          search();
+        }}
+      >
         <div className="relative flex-grow">
           <Input
             type="text"

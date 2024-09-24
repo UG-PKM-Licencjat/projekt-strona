@@ -1,39 +1,15 @@
 {
   "user": {
-    "name": "Tester Testowy",
-    "email": "test@gmail.com",
-
-    "image": "https://avatars.githubusercontent.com/u/112759319?v=4"
+      "id": "userId",
+      "providerAccountId": "103221263883597573662",
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJm0SuZ4R0nRx-FO9C50yCixDvY59FH5tZLPncKash1JZa5Ce8=s96-c",
+      "name": "Test User",
+      "idToken": "testIdToken",
+      "firstName": "Test",
+      "lastName": "User",
+      "admin": false,
+      "isArtist": false,
+      "registered": false
   },
-  "userInfo": {
-    "bio": "Lorem Testum",
-    "name": "test",
-    "email": "test@test.com",
-    "slug": "test0000",
-    "id": "strasnedlouhejstring",
-    "isActive": "true"
-  },
-  "expires": "3000-01-01T00:00:00.000Z",
-  "accessToken": "test"
+  "expires": "2024-10-24T18:32:59.454Z"
 }
-
-
-export const users = pgTable("user", {
-  id: varchar("id", { length: 255 })
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: varchar("name", { length: 255 }),
-  firstName: varchar("firstName", { length: 255 }),
-  lastName: varchar("lastName", { length: 255 }),
-  nickname: varchar("nickname", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-    withTimezone: true,
-  }).default(sql`CURRENT_TIMESTAMP`),
-  image: varchar("image", { length: 255 }),
-  isPremium: boolean("isPremium").default(false).notNull(),
-  isAdmin: boolean("isAdmin").default(false).notNull(),
-  isActive: boolean("isActive").default(true).notNull(),
-  registered: boolean("registered").default(false).notNull(),
-});

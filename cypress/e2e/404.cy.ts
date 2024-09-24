@@ -1,21 +1,18 @@
-describe("404 Page iphone", () => {
+describe("404 redirections", () => {
   beforeEach(() => {
-    cy.viewport("iphone-6");
+    cy.viewport("macbook-16");
     cy.visit("/");
   });
-  it("should show and go to home page", () => {
+
+  it("desktop - should show and go to home page", () => {
     cy.visit("/asdsadasd", { failOnStatusCode: false });
     cy.contains("Nie znaleźliśmy strony").should("be.visible");
     cy.get(".inline-flex > a").contains("Wróć na stronę główną").click();
     cy.url().should("eq", `${Cypress.config().baseUrl}/`);
   });
-});
-describe("404 Page macbook", () => {
-  beforeEach(() => {
-    cy.viewport("macbook-16");
-    cy.visit("/");
-  });
-  it("should show and go to home page", () => {
+
+  it("mobile - should show and go to home page", () => {
+    cy.viewport("iphone-6");
     cy.visit("/asdsadasd", { failOnStatusCode: false });
     cy.contains("Nie znaleźliśmy strony").should("be.visible");
     cy.get(".inline-flex > a").contains("Wróć na stronę główną").click();

@@ -26,7 +26,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
       on("task", {
-        async "db:seed-session"() {
+        async "db:seed-session"(accountCreated = false) {
           // drop session, account and user records
           await db
             .delete(sessions)
@@ -34,8 +34,14 @@ export default defineConfig({
           await db
             .delete(accounts)
             .where(eq(accounts.providerAccountId, "test-provider-account-id"));
-          await db.delete(users).where(eq(users.email, "testuser@example.com"));
-          await db.transaction(async (tx) => {
+          const [user] = await db
+            .delete(users)
+            .where(eq(users.email, "testuser@example.com"))
+            .returning();
+          // if (!user) {
+          //   await db.delete(u);
+          // }
+          const userId = await db.transaction(async (tx) => {
             // Dodanie testowego użytkownika
             const [returning] = await tx
               .insert(users)
@@ -50,7 +56,7 @@ export default defineConfig({
                 isPremium: false,
                 isAdmin: false,
                 isActive: true,
-                registered: false,
+                registered: accountCreated,
               })
               .returning();
 
@@ -82,8 +88,9 @@ export default defineConfig({
               userId: userId,
               expires: new Date(Date.now() + 60 * 60 * 1000), // 1 godzina
             });
+            return userId;
           });
-          return null;
+          return userId;
         },
       });
     },

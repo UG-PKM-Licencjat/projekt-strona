@@ -52,6 +52,7 @@ export default function Step2(props: {
   const writenames = trpc.user.putRegistrationData.useMutation();
 
   const { toast } = useToast();
+  const type = form.watch("type");
 
   async function onSubmit(isArtistString: z.infer<typeof FormSchema>) {
     const isArtist = isArtistString.type === "true" ? true : false;
@@ -185,12 +186,14 @@ export default function Step2(props: {
                   className="sm:w-1/2"
                   type="submit"
                   onClick={() => onSubmit(form.getValues())}
-                  disabled={isProcessing}
+                  disabled={isProcessing || !type}
                 >
                   {isProcessing ? (
                     <LoaderCircleIcon className="size-8 animate-spin" />
-                  ) : (
+                  ) : type === "false" ? (
                     "Zakończ"
+                  ) : (
+                    "Kontynuuj"
                   )}
                 </Button>
               </div>

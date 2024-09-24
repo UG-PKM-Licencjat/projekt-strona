@@ -52,7 +52,7 @@ export default function Result() {
       </div>
       <div className="flex items-center gap-2">
         <h3>Tagi: </h3>
-        {data.tags.map((tag) => (
+        {data.tags?.map((tag) => (
           <Tag
             key={tag.id}
             className="h-auto rounded bg-neo-mantis px-1.5 py-1 text-base"

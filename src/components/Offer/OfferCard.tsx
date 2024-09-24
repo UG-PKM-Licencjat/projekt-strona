@@ -21,7 +21,6 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
     <div className="flex h-full flex-col justify-between p-4">
       <div>
         <div className="mb-4 flex items-start justify-between">
-          {/* TODO CHANGE TO NEXT IMAGE WHEN IT WILL USE DB DATA HERE */}
           <Image
             src={offer.users.image ?? ""}
             alt={offer.name}

@@ -17,7 +17,7 @@ import { type Data } from "./page";
 import Image from "next/image";
 import man from "public/svg/man.svg";
 import { useSession } from "next-auth/react";
-import { CameraIcon, UploadIcon } from "lucide-react";
+import { CameraIcon } from "lucide-react";
 import { useAvatarStore } from "~/stores/avatarStore";
 import UploadWrapper from "~/components/uploadthing/UploadWrapper";
 

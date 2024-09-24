@@ -83,17 +83,16 @@ export default function GreenProfileEditWithShadcnForms() {
     },
   });
 
-  const [avatarChanged, setAvatarChanged] = useState(false);
-
   const { data: session, update } = useSession();
 
-  const [avatarUrl, setAvatarUrl, setAvatar, uploadAvatar, clearAvatar] =
+  const [avatarUrl, setAvatarUrl, setAvatar, uploadAvatar, clearAvatar, avatarChanged] =
     useAvatarStore((state) => [
       state.avatarUrl,
       state.setAvatarUrl,
       state.setAvatar,
       state.uploadAvatar,
       state.clearAvatar,
+      state.avatarChanged,
     ]);
 
   const [avatarError, setAvatarError] = useState("");
@@ -148,7 +147,6 @@ export default function GreenProfileEditWithShadcnForms() {
           },
         });
         setIsProcessing(false);
-        setAvatarChanged(false);
         router.refresh();
       })
       .catch((error) => {
@@ -218,7 +216,10 @@ export default function GreenProfileEditWithShadcnForms() {
           >
             <div className="h-3/8 flex flex-col items-center gap-2">
               <div className="relative">
-                <div className="grid size-44 place-items-center overflow-hidden rounded-full bg-neo-sage">
+                <div className="grid size-44 place-items-center overflow-hidden rounded-full [&>*]:col-start-1 [&>*]:row-start-1">
+                  {!avatarUrl && (
+                    <div className="flex size-full animate-pulse items-center justify-center rounded-full bg-neo-sage-hover"></div>
+                  )}
                   {avatarUrl && (
                     <Image
                       src={avatarUrl}
@@ -241,7 +242,6 @@ export default function GreenProfileEditWithShadcnForms() {
                       if (isProcessing) return;
                       clearAvatar();
                       setAvatarUrl(session?.user.image ?? "");
-                      setAvatarChanged(false);
                     }}
                   >
                     <XIcon className="size-5 text-neo-gray" />
@@ -253,7 +253,6 @@ export default function GreenProfileEditWithShadcnForms() {
                   endpoint="avatarUploader"
                   onChange={(avatar) => {
                     setAvatar(avatar);
-                    setAvatarChanged(true);
                   }}
                   className="flex cursor-pointer items-center gap-2"
                   onError={(error) => setAvatarError(error.message)}

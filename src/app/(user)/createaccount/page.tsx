@@ -8,6 +8,7 @@ export interface Data {
   firstName: string;
   lastName: string;
   activeTab: number;
+  type: string;
 }
 
 const MainForm = () => {
@@ -16,6 +17,7 @@ const MainForm = () => {
     firstName: "",
     lastName: "",
     activeTab: 0,
+    type: "",
   });
   const handleChange = (change: Data) => {
     console.log("change", change);

@@ -20,7 +20,7 @@ import Image from "next/image";
 import womangoing from "public/svg/woman-going.svg";
 import { useToast } from "~/components/ui/use-toast";
 import { useAvatarStore } from "~/stores/avatarStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoaderCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type TRPCError } from "@trpc/server";
@@ -47,12 +47,19 @@ export default function Step2(props: {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      type: data.type,
+    },
   });
 
   const writenames = trpc.user.putRegistrationData.useMutation();
 
   const { toast } = useToast();
   const type = form.watch("type");
+
+  useEffect(() => {
+    handleChange({ ...data, type });
+  }, [type]);
 
   async function onSubmit(isArtistString: z.infer<typeof FormSchema>) {
     const isArtist = isArtistString.type === "true" ? true : false;

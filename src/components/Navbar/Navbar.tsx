@@ -22,7 +22,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
 import type { Session } from "next-auth";
 import {
-  BellDot,
   BrushIcon,
   MessageSquare,
   MessageSquareDotIcon,

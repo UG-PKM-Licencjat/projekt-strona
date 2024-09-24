@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useConversationsStore } from "~/stores";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 import { useSession } from "next-auth/react";
@@ -12,24 +12,25 @@ export default function GlobalBehaviours({
 }: {
   children: React.ReactNode;
 }) {
-  const conversations = useConversationsStore();
+  const [fetchSampleMessages, markAsRead, addMessage] = useConversationsStore(
+    (state) => [state.fetchSampleMessages, state.markAsRead, state.addMessage],
+  );
   const { data } = useSession();
-  const store = useConversationsStore();
   const { toast } = useToast();
   const pathName = usePathname();
   const ws = useRef<WebSocket>();
 
   useEffect(() => {
     if (!data) return;
-    void store.fetchSampleMessages(data);
-    console.log(pathName)
+    void fetchSampleMessages(data);
+    console.log(pathName);
   }, []);
-  
+
   useEffect(() => {
     if (!data) return;
     ws.current = new WebSocket(
       `wss://${env.NEXT_PUBLIC_CHAT_BASE_URL}/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
-    )
+    );
   }, [data, data?.user.id]);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export default function GlobalBehaviours({
 
       if (pathName === `/chat/${newMessage.from}`) {
         newMessage.read = true;
-        void store.markAsRead(newMessage.from, data);
+        void markAsRead(newMessage.from, data);
       } else {
         toast({
           title: "Chat",
@@ -48,8 +49,7 @@ export default function GlobalBehaviours({
           variant: "default",
         });
       }
-      conversations.addMessage(newMessage.from, newMessage);
-      
+      addMessage(newMessage.from, newMessage);
     };
   }, [data, data?.user.id, pathName]);
   return <>{children}</>;

@@ -17,6 +17,7 @@ interface ConversationsStore {
   ) => Promise<void>;
   fetchSampleMessages: (session: Session) => Promise<void>;
   addMessage: (userId: string, message: Message) => void;
+  markAsRead: (otherUserId: string, session: Session) => void;
 }
 
 const useConversationsStore = create<ConversationsStore>((set) => ({
@@ -114,7 +115,44 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
         },
       };
     }),
+  markAsRead: (otherUserId: string, session: Session) => {
+    void markAsReadRest(session, otherUserId);
+
+    set((state) => {
+      const userConvs = state.conversations[otherUserId];
+
+      if (!userConvs)
+        throw new Error("There is no such user in messages store.")
+
+      return {
+        conversations: {
+          ...state.conversations,
+          [otherUserId]: userConvs.map((message) => ({ 
+            ...message,
+            read: true
+          } satisfies Message)),
+        },
+      };
+    });
+  },
 }));
+
+async function markAsReadRest(session: Session, otherUserId: string) {
+  const response = await fetch(`https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/message/readConversation`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.user.idToken}`,
+    },
+    body: JSON.stringify({
+      userFrom: otherUserId, userTo: session.user.id
+    }),
+  });
+
+  if (response.status >= 400) {
+    return;
+  }
+}
 
 async function fetchSampleMessagesRest(session: Session) {
   const messages: Array<Message> = (await (

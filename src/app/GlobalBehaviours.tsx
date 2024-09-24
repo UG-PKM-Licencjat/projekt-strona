@@ -16,12 +16,14 @@ export default function GlobalBehaviours({
   const { data } = useSession();
   const store = useConversationsStore();
   const { toast } = useToast();
+  const pathName = usePathname();
 
   useEffect(() => {
     if (!data) return;
     void store.fetchSampleMessages(data);
+    console.log(pathName)
   }, []);
-
+  
   useEffect(() => {
     if (!data) return;
     const socketConnection = new WebSocket(
@@ -31,12 +33,19 @@ export default function GlobalBehaviours({
     // TODO maybe request also here but timedout
     socketConnection.onmessage = (event: MessageEvent<string>) => {
       const newMessage = JSON.parse(event.data) as Message;
+
+      if (pathName === `/chat/${newMessage.from}`) {
+        newMessage.read = true;
+        void store.markAsRead(newMessage.from, data);
+      } else {
+        toast({
+          title: "Chat",
+          description: "Otrzymałeś nową wiadomość!",
+          variant: "default",
+        });
+      }
       conversations.addMessage(newMessage.from, newMessage);
-      toast({
-        title: "Chat",
-        description: "Otrzymałeś nową wiadomość!",
-        variant: "default",
-      });
+      
     };
   }, [data, data?.user.id]);
   return <>{children}</>;

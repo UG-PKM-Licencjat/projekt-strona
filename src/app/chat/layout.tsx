@@ -8,7 +8,7 @@ import { trpc } from "~/trpc/react";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useConversationsStore } from "~/stores";
-import { AlertCircle } from "lucide-react";
+import { BellDot } from "lucide-react";
 
 export default function ChatLayout({
   children,
@@ -20,10 +20,10 @@ export default function ChatLayout({
   const router = useRouter();
   const pathname = usePathname();
   const pathUserId = pathname.split("/")[2]; // Needed as this layout doesnt have [userId]
-  const conversations = useConversationsStore((state) => state.conversations);
+  const store = useConversationsStore();
 
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
-    Object.entries(conversations)
+    Object.entries(store.conversations)
       .map((entry) => entry[0])
       .filter((e) => e !== session?.user.id),
   );
@@ -44,13 +44,16 @@ export default function ChatLayout({
                 userId: userData.id,
                 name: userData.name ?? "",
                 lastMessage: "", //message.message,
-                unread: conversations[userData.id]?.some(msg => !msg.read) ?? false,
+                unread: store.conversations[userData.id]?.some(msg => msg.to === session?.user.id && !msg.read) ?? false,
                 image: userData.image ?? "",
               }) satisfies UserWithMessage,
           )
           .map((conversation, index) => (
             <div
               onClick={() => {
+                if (conversation.unread && session) {
+                  store.markAsRead(conversation.userId, session);
+                }
                 router.push(`/chat/${conversation.userId}`);
               }}
               key={index}
@@ -61,7 +64,7 @@ export default function ChatLayout({
                 <AvatarFallback>{conversation.name}</AvatarFallback>
               </Avatar>
               <span>{conversation.name}</span>
-              {conversation.unread && <AlertCircle className="text-neo-pink ml-2"/>}
+              {conversation.unread && <BellDot className="text-neo-pink ml-2"/>}
             </div>
           ))}
       </div>

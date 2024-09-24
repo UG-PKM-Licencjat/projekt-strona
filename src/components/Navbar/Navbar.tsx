@@ -21,7 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
 import type { Session } from "next-auth";
-import { AlertCircle, BrushIcon } from "lucide-react";
+import { AlertCircle, Bell, BellDot, BrushIcon } from "lucide-react";
 import { useConversationsStore } from "~/stores";
 
 const filterList: Array<string> = [
@@ -45,13 +45,13 @@ export const Navbar = ({
 
 
   useEffect(() => { // Checks if user has some unread messages
+    if (!session) return;
     const hasUnreadMessages = Object.values(conversations).some(conversation =>
-      conversation.some(msg => !msg.read)
+      conversation.some(msg => msg.to === session.user.id && !msg.read)
     );
-    
     setUnreadNotification(hasUnreadMessages);
 
-  }, [conversations])
+  }, [conversations, session?.user.id])
 
   if (filterList.includes(pathname))
     return (
@@ -79,7 +79,7 @@ export const Navbar = ({
                       <NavbarLink href="/chat" icon="message-square">
                         Czat
                         {unreadNotification && (
-                        <AlertCircle className="text-neo-pink"/>
+                        <BellDot className="text-neo-pink"/>
                       )}
                       </NavbarLink>
                     </>
@@ -169,7 +169,8 @@ export const Navbar = ({
                         className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-sage p-4 text-white"
                       >
                         <Icon name="message-square" className="size-14" />
-                        Czat
+                        Czat 
+                        {unreadNotification && <BellDot className="text-neo-castleton-hover"/>}
                       </Link>
                       <Link
                         href={

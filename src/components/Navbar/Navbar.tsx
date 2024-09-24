@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
 import { signIn, signOut } from "next-auth/react";
@@ -21,7 +21,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
 import type { Session } from "next-auth";
-import { BrushIcon } from "lucide-react";
+import { AlertCircle, BrushIcon } from "lucide-react";
+import { useConversationsStore } from "~/stores";
 
 const filterList: Array<string> = [
   "/createaccount",
@@ -39,6 +40,18 @@ export const Navbar = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
   const pathname = usePathname();
+  const store = useConversationsStore();
+  const [unreadNotification, setUnreadNotification] = useState(false);
+
+
+  useEffect(() => { // Checks if user has some unread messages
+    const hasUnreadMessages = Object.values(store.conversations).some(conversation =>
+      conversation.some(msg => !msg.read)
+    );
+    
+    setUnreadNotification(hasUnreadMessages);
+
+  }, [store.conversations])
 
   if (filterList.includes(pathname))
     return (
@@ -65,6 +78,9 @@ export const Navbar = ({
                     <>
                       <NavbarLink href="/chat" icon="message-square">
                         Czat
+                        {unreadNotification && (
+                        <AlertCircle className="text-neo-pink"/>
+                      )}
                       </NavbarLink>
                     </>
                   )}

@@ -59,4 +59,5 @@ export interface Message {
   to: string;
   timestamp: string;
   message: string;
+  read: boolean
 }

@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center">
       <div className="w-full md:bg-neo-castleton">
-        <header className="flex flex-col items-center md:container md:h-[500px]">
+        <div className="flex flex-col items-center md:container md:h-[500px]">
           <Image
             src={playingpiano}
             alt="playing piano"
@@ -60,7 +60,7 @@ export default function Home() {
           <div className="my-10 w-3/4 md:hidden">
             <Button className="w-full">Przejdź do wyszukiwarki</Button>
           </div>
-        </header>
+        </div>
       </div>
       <div className="w-max-[1000px] mt-10 w-3/4 max-md:hidden">
         <h2 className="text-2xl font-bold">
@@ -111,8 +111,6 @@ export default function Home() {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-
-      <footer className="mt-16 flex-grow bg-black"></footer>
     </div>
   );
 }

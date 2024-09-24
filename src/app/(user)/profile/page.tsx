@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "~/components/ui/Button/Button";
 import { Input } from "~/components/ui/Input/Input";
-import { CameraIcon, LoaderCircleIcon } from "lucide-react";
+import { CameraIcon, LoaderCircleIcon, XIcon } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -31,6 +31,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useAvatarStore } from "~/stores/avatarStore";
 import UploadWrapper from "~/components/uploadthing/UploadWrapper";
+import { cn } from "~/lib/utils";
 
 const formSchema = z.object({
   //   ^: Asserts the start of the string.
@@ -84,14 +85,15 @@ export default function GreenProfileEditWithShadcnForms() {
 
   const { data: session, update } = useSession();
 
-  const [avatarUrl, setAvatarUrl, setAvatar, uploadAvatar] = useAvatarStore(
-    (state) => [
+  const [avatarUrl, setAvatarUrl, setAvatar, uploadAvatar, clearAvatar, avatarChanged] =
+    useAvatarStore((state) => [
       state.avatarUrl,
       state.setAvatarUrl,
       state.setAvatar,
       state.uploadAvatar,
-    ],
-  );
+      state.clearAvatar,
+      state.avatarChanged,
+    ]);
 
   const [avatarError, setAvatarError] = useState("");
 
@@ -105,30 +107,26 @@ export default function GreenProfileEditWithShadcnForms() {
     }
   }, [session]);
 
+  const formState = form.watch();
+  const isDataChanged = useMemo(() => {
+    if (!session) return false;
+    return (
+      session.user.firstName !== formState.firstName ||
+      session.user.lastName !== formState.lastName ||
+      avatarChanged
+    );
+  }, [session, formState, avatarChanged]);
+
   const updateValues = trpc.user.updateData.useMutation();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("test");
-    if (
-      values.firstName === session?.user?.firstName &&
-      values.lastName === session?.user?.lastName &&
-      avatarUrl === session?.user?.image
-    ) {
-      toast({
-        title: "Error",
-        description: "Nie wprowadzono zmian",
-        variant: "destructive",
-      });
-      return;
-    }
-    console.log("formValues", values);
-    console.log("session", session?.user);
     setIsProcessing(true);
     const avatar = await uploadAvatar();
     if (!avatar) {
       toast({
-        title: "Error uploading avatar",
-        description: "Avatar upload failed",
+        title: "Error",
+        description:
+          "Wystąpił błąd podczas wysyłania zdjęcia profilowego, spróbuj ponownie lub zmień zdjęcie profilowe.",
         variant: "destructive",
       });
       setIsProcessing(false);
@@ -181,9 +179,9 @@ export default function GreenProfileEditWithShadcnForms() {
       .then(async (response) => {
         if (!response) {
           toast({
-            title: "Destructive",
+            title: "Error",
             description: "Konto nie istnieje",
-            variant: "default",
+            variant: "destructive",
           });
         } else {
           toast({
@@ -217,23 +215,45 @@ export default function GreenProfileEditWithShadcnForms() {
             className="gap-y-auto left bottom-0 flex h-full flex-col justify-end space-y-8 pt-6 xl:w-3/4"
           >
             <div className="h-3/8 flex flex-col items-center gap-2">
-              <div className="grid size-44 place-items-center overflow-hidden rounded-full bg-neo-sage [&>*]:col-start-1 [&>*]:row-start-1">
-                {avatarUrl && (
-                  <Image
-                    src={avatarUrl}
-                    alt="avatar"
-                    height={100}
-                    width={100}
-                    priority
-                    referrerPolicy="no-referrer"
-                    className="h-full w-full overflow-hidden object-cover"
-                  />
+              <div className="relative">
+                <div className="grid size-44 place-items-center overflow-hidden rounded-full [&>*]:col-start-1 [&>*]:row-start-1">
+                  {!avatarUrl && (
+                    <div className="flex size-full animate-pulse items-center justify-center rounded-full bg-neo-sage-hover"></div>
+                  )}
+                  {avatarUrl && (
+                    <Image
+                      src={avatarUrl}
+                      alt="avatar"
+                      height={100}
+                      width={100}
+                      priority
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full overflow-hidden object-cover"
+                    />
+                  )}
+                </div>
+                {avatarChanged && (
+                  <div
+                    className={cn(
+                      "absolute right-1 top-1 z-30 cursor-pointer rounded-full bg-neo-pink p-3 transition-colors hover:bg-neo-pink-hover",
+                      isProcessing && "hidden",
+                    )}
+                    onClick={() => {
+                      if (isProcessing) return;
+                      clearAvatar();
+                      setAvatarUrl(session?.user.image ?? "");
+                    }}
+                  >
+                    <XIcon className="size-5 text-neo-gray" />
+                  </div>
                 )}
               </div>
               <Button size="sm" type="button" disabled={isProcessing}>
                 <UploadWrapper
                   endpoint="avatarUploader"
-                  onChange={setAvatar}
+                  onChange={(avatar) => {
+                    setAvatar(avatar);
+                  }}
                   className="flex cursor-pointer items-center gap-2"
                   onError={(error) => setAvatarError(error.message)}
                 >
@@ -284,7 +304,11 @@ export default function GreenProfileEditWithShadcnForms() {
               />
             </div>
             <div className="flex w-full place-self-end">
-              <Button className="w-full" type="submit" disabled={isProcessing}>
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={isProcessing || !isDataChanged}
+              >
                 {isProcessing ? (
                   <LoaderCircleIcon className="size-8 animate-spin" />
                 ) : (

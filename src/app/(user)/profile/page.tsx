@@ -224,6 +224,7 @@ export default function GreenProfileEditWithShadcnForms() {
                     alt="avatar"
                     height={100}
                     width={100}
+                    priority
                     referrerPolicy="no-referrer"
                     className="h-full w-full overflow-hidden object-cover"
                   />
@@ -297,6 +298,7 @@ export default function GreenProfileEditWithShadcnForms() {
           <Image
             src={profile}
             alt="man"
+            priority
             className="ml-20 hidden h-3/4 w-max object-cover xl:block"
           />
           <AlertDialog open={isOpen}>

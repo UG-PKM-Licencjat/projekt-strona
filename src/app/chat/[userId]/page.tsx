@@ -56,7 +56,7 @@ export default function Conversation({
   return (
     <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden bg-neo-gray-hover md:p-6">
       <div className="flex-1 overflow-y-scroll p-4">
-        {(conversations[userId] ?? []).map((message, ind) => (
+        {(conversations[userId] ?? []).sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map((message, ind) => (
           <Message key={ind} message={message} />
         ))}
       </div>

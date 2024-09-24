@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useConversationsStore } from "~/stores";
 import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
 import { useSession } from "next-auth/react";
@@ -17,6 +17,7 @@ export default function GlobalBehaviours({
   const store = useConversationsStore();
   const { toast } = useToast();
   const pathName = usePathname();
+  const ws = useRef<WebSocket>();
 
   useEffect(() => {
     if (!data) return;
@@ -26,12 +27,15 @@ export default function GlobalBehaviours({
   
   useEffect(() => {
     if (!data) return;
-    const socketConnection = new WebSocket(
+    ws.current = new WebSocket(
       `wss://${env.NEXT_PUBLIC_CHAT_BASE_URL}/connect?id=${data.user.id}&token=Bearer ${data.user.idToken}`,
-    );
+    )
+  }, [data, data?.user.id]);
 
-    // TODO maybe request also here but timedout
-    socketConnection.onmessage = (event: MessageEvent<string>) => {
+  useEffect(() => {
+    if (!data || !ws.current) return;
+
+    ws.current.onmessage = (event: MessageEvent<string>) => {
       const newMessage = JSON.parse(event.data) as Message;
 
       if (pathName === `/chat/${newMessage.from}`) {
@@ -47,6 +51,6 @@ export default function GlobalBehaviours({
       conversations.addMessage(newMessage.from, newMessage);
       
     };
-  }, [data, data?.user.id]);
+  }, [data, data?.user.id, pathName]);
   return <>{children}</>;
 }

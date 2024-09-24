@@ -17,12 +17,15 @@ export default function ChatLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to manage sidebar visibility
   const { data: session } = useSession();
   const router = useRouter();
-  const store = useConversationsStore();
   const pathname = usePathname();
   const pathUserId = pathname.split("/")[2]; // Needed as this layout doesnt have [userId]
+  const [conversations, markAsRead] = useConversationsStore((state) => [
+    state.conversations,
+    state.markAsRead,
+  ]);
 
   const { data: userDataForSample } = trpc.user.fetchManyUsers.useQuery(
-    Object.entries(store.conversations)
+    Object.entries(conversations)
       .map((entry) => entry[0])
       .filter((e) => e !== session?.user.id),
   );
@@ -43,22 +46,37 @@ export default function ChatLayout({
                 userId: userData.id,
                 name: userData.name ?? "",
                 lastMessage: "", //message.message,
+                unread:
+                  conversations[userData.id]?.some(
+                    (msg) => msg.to === session?.user.id && !msg.read,
+                  ) ?? false,
                 image: userData.image ?? "",
               }) satisfies UserWithMessage,
           )
           .map((conversation, index) => (
             <div
               onClick={() => {
+                if (conversation.unread && session) {
+                  markAsRead(conversation.userId, session);
+                }
                 router.push(`/chat/${conversation.userId}`);
               }}
               key={index}
-              className={`mb-2 flex cursor-pointer items-center rounded p-2 text-white transition-colors hover:bg-neo-sea ${(pathUserId ?? "") == conversation.userId ? "bg-neo-sea" : ""}`}
+              className={`mb-2 flex cursor-pointer items-center justify-between rounded p-2 text-white transition-colors hover:bg-neo-sea ${(pathUserId ?? "") == conversation.userId ? "bg-neo-sea" : ""}`}
             >
-              <Avatar className="mr-2 h-8 w-8">
-                <AvatarImage src={conversation.image} alt={conversation.name} />
-                <AvatarFallback>{conversation.name}</AvatarFallback>
-              </Avatar>
-              <span>{conversation.name}</span>
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage
+                    src={conversation.image}
+                    alt={conversation.name}
+                  />
+                  <AvatarFallback>{conversation.name}</AvatarFallback>
+                </Avatar>
+                <span>{conversation.name}</span>
+              </div>
+              {conversation.unread && (
+                <div className="size-2.5 rounded-full bg-neo-gray"></div>
+              )}
             </div>
           ))}
       </div>

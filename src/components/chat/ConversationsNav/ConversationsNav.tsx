@@ -43,5 +43,6 @@ export interface UserWithMessage {
   userId: string;
   name: string;
   lastMessage: string;
+  unread: boolean;
   image: string;
 }

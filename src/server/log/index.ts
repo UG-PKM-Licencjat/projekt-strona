@@ -1,8 +1,14 @@
+import type { Collection } from "mongodb";
 import { getServerAuthSession } from "../auth";
-import mongo from "./mongo";
+import { getDB } from "./mongo";
 import { env } from "src/env.js";
 
-const collection = mongo.collection<LogEvent>("logs");
+const mongo = await getDB();
+let collection: Collection<LogEvent> | null = null;
+
+if (mongo) {
+  collection = mongo.collection<LogEvent>("logs");
+}
 
 export enum LogType {
   INFO = "info",
@@ -51,7 +57,7 @@ const logEvent = (props: {
   // Do not await this function
   void getServerAuthSession().then((session) => {
     if (session) event.userId = session.user.id;
-    void collection.insertOne(event);
+    if (collection) void collection.insertOne(event);
   });
 };
 

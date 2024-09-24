@@ -26,7 +26,7 @@ export default function Home() {
   });
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center pb-16">
       <div className="w-full md:bg-neo-castleton">
         <div className="flex flex-col items-center md:container md:h-[500px]">
           <Image

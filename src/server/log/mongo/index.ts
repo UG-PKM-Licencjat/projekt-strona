@@ -1,11 +1,16 @@
 import { env } from "src/env.js";
-import { MongoClient } from "mongodb";
+import { type Db, MongoClient } from "mongodb";
 
-const client = new MongoClient(env.MONGO_URL);
+let mongo: Db | null = null;
 
-await client.connect().catch((err) => console.log(err));
-
-const mongo = client.db();
-
-// Export db
-export default mongo;
+export async function getDB(): Promise<Db | null> {
+  if (env.LOG === "true") {
+    if (!mongo) {
+      const client = await MongoClient.connect(env.MONGO_URL);
+      mongo = client.db();
+    }
+    return mongo;
+  } else {
+    return null;
+  }
+}

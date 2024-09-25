@@ -104,7 +104,10 @@ export default function TipTap({
       {toolbarActive && (
         <Toolbar editor={editor} className={classNameToolbar} />
       )}
-      <EditorContent editor={editor} className={classNameEditor} />
+      <EditorContent
+        editor={editor}
+        className={cn("overflow-x-auto", classNameEditor)}
+      />
       {toolbarActive && (
         <div
           className={`m-6 flex items-center gap-2 text-xs text-gray-500 ${characterCountStorage.characters() === charLimit ? "text-red-500" : ""}`}

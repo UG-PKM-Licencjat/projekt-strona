@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, LoaderCircleIcon } from "lucide-react";
+import { ChevronDown, EyeIcon, LoaderCircleIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
 import { type ClientUploadedFileData } from "uploadthing/types";
@@ -19,17 +19,31 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import forest from "public/svg/forest.svg";
 import forestmini from "public/svg/forestmini.svg";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import OfferView, { type OfferData } from "../Offer/OfferView";
+import type { Session } from "next-auth";
+import { ScrollArea } from "../ui/scroll-area";
+import { objectKeys } from "~/components/uploadthing/utils";
 
 interface ArtistProfileMultiformProps {
   defaultData?: ArtistFormData;
   title: string;
   edit?: boolean;
+  session: Session;
 }
 
 export function ArtistProfileMultiform({
   defaultData,
   title,
   edit,
+  session,
 }: ArtistProfileMultiformProps) {
   const { width } = useWindowSize();
   const isMobile = width ? width <= 1280 : window.innerWidth <= 1280;
@@ -101,8 +115,32 @@ export function ArtistProfileMultiform({
     },
   });
 
+  const formData = methods.watch();
+  const previewData: OfferData = {
+    name: formData.name,
+    price: Number.parseFloat(formData.price?.replace(",", ".") ?? "0"),
+    ratingsSum: 0,
+    votes: 0,
+    shortDescription: formData.shortDescription,
+    longDescription: formData.longDescriptionHTML,
+    locationName: formData.locationName,
+    location: {
+      x: formData.location?.x ?? 21.0122287,
+      y: formData.location?.y ?? 52.2296756,
+    },
+    distance: formData.distance,
+    files: formData.files ?? null,
+    users: {
+      id: session.user.id,
+      image: session.user.image ?? null,
+      name: `${session.user.firstName} ${session.user.lastName}`,
+    },
+    offerTags: formData.tags,
+  };
+
   const { toast } = useToast();
   const onSubmit = async (data: ArtistFormData) => {
+    methods.setValue("files", files);
     setIsSubmitting(true);
     if (edit) {
       // TODO handle updating
@@ -117,8 +155,7 @@ export function ArtistProfileMultiform({
         files,
       });
     }
-    const price = data.price?.replace(",", ".");
-    const parsedPrice = parseFloat(price!);
+    const parsedPrice = parseFloat(data.price.replace(",", "."));
     const profileData = {
       name: data.name,
       shortDescription: data.shortDescription,
@@ -158,11 +195,22 @@ export function ArtistProfileMultiform({
       });
   };
 
-  const onInvalid = (_errors: FieldErrors<ArtistFormData>) => {
+  const onInvalid = (errors: FieldErrors<ArtistFormData>) => {
+    methods.setValue("files", files);
+    const errorFields = objectKeys(errors);
+    const errorSteps = errorFields
+      .map((field) => errors[field]?.message)
+      .filter((step) => step !== "");
     toast({
-      title: "Błąd walidacji",
+      title: "Popraw błędy",
       variant: "destructive",
-      description: "Popraw błędy w formularzu i spróbuj ponownie.",
+      description: (
+        <ul className="flex list-inside list-disc flex-col">
+          {errorSteps.map((step, index) => (
+            <li key={index}>{step}</li>
+          ))}
+        </ul>
+      ),
     });
   };
 
@@ -181,7 +229,7 @@ export function ArtistProfileMultiform({
         case "number":
           return value && !error;
         case "object":
-          return Object.keys(value).length > 0 && !error;
+          return (Object.keys(value).length > 0 && !error) || field === "files";
         default:
           return false;
       }
@@ -191,7 +239,7 @@ export function ArtistProfileMultiform({
   return (
     <FormProvider {...methods}>
       {profileCreated ? (
-        <div className="container relative grid grid-cols-[40%_60%] gap-10 bg-neo-gray max-lg:grid-cols-1 sm:p-8 md:rounded-lg">
+        <div className="container relative grid grid-cols-[40%_60%] gap-10 bg-neo-gray max-lg:grid-cols-1 md:rounded-lg">
           <div className="flex shrink-0 flex-col items-center justify-center gap-2 lg:gap-20 xl:gap-32">
             <div className="flex flex-col items-start">
               <h2 className="font-header text-2xl font-semibold sm:text-3xl">
@@ -227,7 +275,7 @@ export function ArtistProfileMultiform({
       ) : (
         <form
           onSubmit={methods.handleSubmit(onSubmit, onInvalid)}
-          className="container relative flex flex-col justify-between bg-neo-gray p-8 md:rounded-lg"
+          className="container relative flex flex-col justify-between bg-neo-gray p-8 max-sm:py-4 md:rounded-lg"
         >
           <div className="flex gap-8 max-xl:flex-col">
             {/* Vertical stepper */}
@@ -240,9 +288,12 @@ export function ArtistProfileMultiform({
                     // transition={{ duration: 0.2 }}
                     className={cn(
                       "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-3 sm:p-4",
-                      hasErrors(step.fields) && "bg-neo-pink/30",
+                      hasErrors(step.fields) && "bg-destructive/30",
                       isComplete(step.fields) && "bg-neo-sea/30",
                       index === activeStep && "bg-neo-sea text-neo-gray",
+                      index === activeStep &&
+                        hasErrors(step.fields) &&
+                        "bg-destructive/90",
                     )}
                     key={index}
                     onClick={() =>
@@ -319,7 +370,7 @@ export function ArtistProfileMultiform({
             </div>
           </div>
           <div className="mt-5 flex w-full pb-10">
-            <div className="container flex w-full justify-center gap-2 sm:justify-between">
+            <div className="container flex w-full justify-center gap-2 max-sm:flex-col sm:justify-between">
               {activeStep > 0 ? (
                 <Button
                   variant="outline"
@@ -331,19 +382,57 @@ export function ArtistProfileMultiform({
               ) : (
                 <div></div>
               )}
-              {activeStep === steps.length - 1 ? (
-                <Button type="submit" key="submit-button">
-                  {edit ? "Zapisz" : "Stwórz profil"}
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => handleStepChange(activeStep + 1, 1)}
-                  type="button"
-                  key="next-button"
-                >
-                  Dalej
-                </Button>
-              )}
+              <div className="flex gap-2">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    {activeStep === steps.length - 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        key="preview-button"
+                        className="w-fit shrink-0 gap-2 max-sm:size-14 max-sm:p-0"
+                      >
+                        <EyeIcon className="size-5" />
+                        <span className="hidden sm:block">Podgląd</span>
+                      </Button>
+                    )}
+                  </DialogTrigger>
+                  <DialogContent
+                    className="size-full max-h-full max-w-full rounded-md border-neo-castleton bg-neo-castleton p-0 md:max-h-[95svh] md:max-w-[95svw]"
+                    closeButtonIconClassName="size-6 text-neo-gray"
+                  >
+                    <DialogHeader className="m-6">
+                      <DialogTitle className="text-xl text-white">
+                        Podgląd oferty
+                      </DialogTitle>
+                      <DialogDescription className="text-base text-neo-gray-hover">
+                        Tak będzie wyglądała twoja oferta.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="h-full w-full overflow-y-auto p-2 sm:p-6">
+                      <OfferView preview data={previewData} />
+                    </ScrollArea>
+                  </DialogContent>
+                </Dialog>
+                {activeStep === steps.length - 1 ? (
+                  <Button
+                    type="submit"
+                    key="submit-button"
+                    className="w-full max-sm:px-0"
+                  >
+                    {edit ? "Zapisz" : "Stwórz profil"}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => handleStepChange(activeStep + 1, 1)}
+                    type="button"
+                    key="next-button"
+                    className="w-full"
+                  >
+                    Dalej
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
           {isSubmitting && (

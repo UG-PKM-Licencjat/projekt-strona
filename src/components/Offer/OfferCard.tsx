@@ -11,9 +11,8 @@ export interface Offer {
   shortDescription: string;
   locationName: string | null;
   distance: number | null;
-  users: {
-    image: string | null;
-  };
+
+  image: string | null;
 }
 
 const OfferCard = ({ offer }: { offer: Offer }) => (
@@ -21,9 +20,8 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
     <div className="flex h-full flex-col justify-between p-4">
       <div>
         <div className="mb-4 flex items-start justify-between">
-          {/* TODO CHANGE TO NEXT IMAGE WHEN IT WILL USE DB DATA HERE */}
           <Image
-            src={offer.users.image ?? ""}
+            src={offer.image ?? ""}
             alt={offer.name}
             width={40}
             height={40}

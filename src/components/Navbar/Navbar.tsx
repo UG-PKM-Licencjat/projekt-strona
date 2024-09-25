@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { Icon } from "../ui/Icon/Icon";
 import { signIn, signOut } from "next-auth/react";
@@ -21,13 +21,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button/Button";
 import type { Session } from "next-auth";
-import { BrushIcon } from "lucide-react";
+import {
+  BrushIcon,
+  MessageSquare,
+  MessageSquareDotIcon,
+  SearchIcon,
+} from "lucide-react";
+import { useConversationsStore } from "~/stores";
 
-const filterList: Array<string> = [
-  "/createaccount",
-  "/profile/create",
-  "/profile/edit",
-];
+const filterList: Array<string> = ["/createaccount"];
 
 export const Navbar = ({
   session,
@@ -39,6 +41,18 @@ export const Navbar = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(false);
   const pathname = usePathname();
+  const conversations = useConversationsStore((state) => state.conversations);
+  const [unreadNotification, setUnreadNotification] = useState(false);
+
+  useEffect(() => {
+    // Checks if user has some unread messages
+    if (!session) return;
+    const hasUnreadMessages = Object.values(conversations).some(
+      (conversation) =>
+        conversation.some((msg) => msg.to === session.user.id && !msg.read),
+    );
+    setUnreadNotification(hasUnreadMessages);
+  }, [conversations, session?.user.id]);
 
   if (filterList.includes(pathname))
     return (
@@ -56,14 +70,24 @@ export const Navbar = ({
               <Icon name="logo" className="h-[50px]" viewBox="0 0 151 44" />
             </Link>
             <div className="flex items-center gap-6">
-              <NavbarLink href="/search" icon="magnifier">
+              <NavbarLink href="/search">
+                <SearchIcon className="size-6" />
                 <span className="hidden sm:flex">Szukaj</span>
               </NavbarLink>
               {session && (
                 <>
                   {session.user.registered && (
                     <>
-                      <NavbarLink href="/chat" icon="message-square">
+                      <NavbarLink href="/chat">
+                        <Suspense
+                          fallback={<MessageSquare className="size-6" />}
+                        >
+                          {unreadNotification ? (
+                            <MessageSquareDotIcon className="size-6 animate-pulse duration-1000 repeat-[2]" />
+                          ) : (
+                            <MessageSquare className="size-6" />
+                          )}
+                        </Suspense>
                         Czat
                       </NavbarLink>
                     </>
@@ -153,7 +177,11 @@ export const Navbar = ({
                         onClick={closeDrawer}
                         className="flex aspect-square size-full flex-col items-center justify-center rounded-lg bg-neo-sage p-4 text-white"
                       >
-                        <Icon name="message-square" className="size-14" />
+                        {unreadNotification ? (
+                          <MessageSquareDotIcon className="size-14 animate-pulse duration-1000 repeat-[2]" />
+                        ) : (
+                          <MessageSquare className="size-14" />
+                        )}
                         Czat
                       </Link>
                       <Link
@@ -209,7 +237,7 @@ export const Navbar = ({
                     <Button
                       onClick={() => signOut({ callbackUrl: "/" })}
                       variant="secondary"
-                      className="flex items-center gap-2"
+                      className="flex shrink items-center gap-2 max-sm:w-full max-sm:max-w-56 max-sm:p-0"
                     >
                       <Icon name="logout" className="size-8" />
                       Wyloguj się

@@ -83,9 +83,9 @@ export const users = pgTable("user", {
   id: varchar("id", { length: 255 })
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: varchar("name", { length: 255 }),
-  firstName: varchar("firstName", { length: 255 }),
-  lastName: varchar("lastName", { length: 255 }),
+  name: varchar("name", { length: 255 }).notNull().default(""),
+  firstName: varchar("firstName", { length: 255 }).notNull().default(""),
+  lastName: varchar("lastName", { length: 255 }).notNull().default(""),
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
@@ -141,6 +141,7 @@ export const offers = pgTable("offer", {
   shortDescription: varchar("shortDescription", { length: 255 }).notNull(),
   longDescription: text("longDescription").notNull(),
   locationName: varchar("locationName", { length: 255 }).notNull(),
+  createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
   // TODO temporary solution while drizzle has a bug with geometry type, fix eventually
   location: jsonb("location").notNull().$type<{ x: number; y: number }>(),
   // location: pointType("location").notNull(),

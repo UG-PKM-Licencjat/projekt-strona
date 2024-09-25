@@ -73,6 +73,8 @@
     "cypress-social-logins": "^1.14.2",
     "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1",
+    "embla-carousel-autoplay": "^8.3.0",
+    "embla-carousel-react": "^8.3.0",
     "framer-motion": "^11.3.28",
     "lucide-react": "^0.439.0",
     "mongodb": "^6.8.0",

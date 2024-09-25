@@ -1,11 +1,11 @@
 "use client";
 
-import { Send } from "lucide-react";
+import { LoaderCircleIcon, Send } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { Button } from "src/components/ui/Button/Button";
 import { Input } from "src/components/ui/Input/Input";
-import Message from "src/components/chat/Message/Message";
+import Message from "~/components/chat/Message/Message";
 import { useConversationsStore } from "~/stores";
 import { trpc } from "~/trpc/react";
 
@@ -21,11 +21,16 @@ export default function Conversation({
   const { data: otherProviderId } =
     trpc.accounts.getProviderId.useQuery(userId);
 
-  const store = useConversationsStore();
+  const [conversations, fetchMessagesForUser, sendMessage] =
+    useConversationsStore((state) => [
+      state.conversations,
+      state.fetchMessagesForUser,
+      state.sendMessage,
+    ]);
 
   void useMemo(async () => {
     if (!session) return;
-    await store.fetchMessagesForUser(session, userId);
+    await fetchMessagesForUser(session, userId);
   }, []);
 
   useEffect(() => {
@@ -45,34 +50,62 @@ export default function Conversation({
   async function handleSubmit() {
     if (!otherProviderId || !session) return;
     setMessage("");
-    await store.sendMessage(message, session, userId, otherProviderId);
+    await sendMessage(message, session, userId, otherProviderId);
   }
 
+  // // scroll pagination
+  // const observerRef = useRef(null);
+  // const observer = new IntersectionObserver(
+  //   (entries: IntersectionObserverEntry[]) => {
+  //     if (entries[0]?.isIntersecting && store.conversations[userId]) {
+  //       if (store.conversations[userId].length > 0) {
+  //         void fetchNextMessages();
+  //       }
+  //     }
+  //   },
+  //   { threshold: 0.5 },
+  // );
+
+  const fetchNextMessages = async () => {
+    // fetch next messages
+    setTimeout(() => {
+      alert("fetching next messages");
+    }, 1000);
+  };
+
   return (
-    <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden bg-neo-gray-hover md:p-6">
-      <div className="flex-1 overflow-y-scroll p-4">
-        {(store.conversations[userId] ?? []).map((message, ind) => (
-          <Message key={ind} message={message} />
-        ))}
+    <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden md:p-6">
+      <div className="flex flex-1 flex-col overflow-y-scroll p-4">
+        {!conversations[userId] && (
+          <div className="flex h-full w-full items-center justify-center">
+            <LoaderCircleIcon className="size-10 animate-spin text-white" />
+          </div>
+        )}
+
+        {(conversations[userId] ?? [])
+          .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+          .map((message, ind) => (
+            <Message key={ind} message={{ ...message }} />
+          ))}
+        {/* <div ref={observerRef}></div> */}
       </div>
-      <div className="bg-neo-gray">
-        <div className="flex">
-          <Input
-            value={message}
-            onChange={(event) => {
-              setMessage(event.target.value);
-            }}
-            placeholder="Tutaj wpisz treść twojej wiadomości"
-            className="mr-2 flex-1 border-[#005243] bg-white text-[#005243] placeholder-[#4a8573]"
-          />
-          <Button
-            onClick={handleSubmit}
-            className="bg-neo-pink text-white transition-colors hover:bg-neo-pink-hover"
-          >
-            <Send className="mr-2" />
-          </Button>
-        </div>
-      </div>
+      <form className="mr-5 flex" onSubmit={handleSubmit}>
+        <Input
+          value={message}
+          onChange={(event) => {
+            setMessage(event.target.value);
+          }}
+          placeholder="Tutaj wpisz treść twojej wiadomości"
+          className="mr-2 flex-1 border-[#005243] bg-white text-black placeholder-[#4a8573]"
+        />
+        <Button
+          onClick={handleSubmit}
+          type="submit"
+          className="bg-neo-pink text-white transition-colors hover:bg-neo-pink-hover"
+        >
+          <Send className="mr-2" />
+        </Button>
+      </form>
     </div>
   );
 }

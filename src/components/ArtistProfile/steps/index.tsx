@@ -37,7 +37,7 @@ export const steps: {
     description: "Przyszła pora na główną część twojej oferty.",
     content: <Step2 />,
     icon: <FileText className="size-5 sm:size-6" />,
-    fields: ["longDescriptionHTML"],
+    fields: ["longDescription"],
   },
   {
     title: "Tagi",
@@ -69,5 +69,15 @@ export const steps: {
       "Sprawdź czy jesteś zadowolony z widoku oferty. Masz możliwość powrócić do wcześniej uzupełnianych sekcji i poprawić to co Twoim zdaniem nie pasuje. Jeżeli wszystko wygląda dobrze, to to już koniec. Zapisz stworzone widoki i pozostaje czekać na kontakt od szukających 😄",
     content: <Result />,
     icon: <BadgeCheck className="size-5 sm:size-6" />,
+    fields: [
+      "name",
+      "shortDescription",
+      "longDescription",
+      "tags",
+      "files",
+      "price",
+      "locationName",
+      "distance",
+    ],
   },
 ];

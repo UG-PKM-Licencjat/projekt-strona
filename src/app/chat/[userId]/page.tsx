@@ -1,6 +1,6 @@
 "use client";
 
-import { Send } from "lucide-react";
+import { LoaderCircleIcon, Send } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { Button } from "src/components/ui/Button/Button";
@@ -76,6 +76,12 @@ export default function Conversation({
   return (
     <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden md:p-6">
       <div className="flex flex-1 flex-col overflow-y-scroll p-4">
+
+      {!conversations[userId] && (<div className="flex h-full w-full items-center justify-center">
+        <LoaderCircleIcon className="size-10 animate-spin text-white" />
+      </div>)
+      }
+
         {(conversations[userId] ?? [])
           .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
           .map((message, ind) => (

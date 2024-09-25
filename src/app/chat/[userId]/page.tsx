@@ -2,10 +2,10 @@
 
 import { Send } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { Button } from "src/components/ui/Button/Button";
 import { Input } from "src/components/ui/Input/Input";
-import Message from "src/components/chat/Message/Message";
+import Message from "~/components/chat/Message/Message";
 import { useConversationsStore } from "~/stores";
 import { trpc } from "~/trpc/react";
 
@@ -53,30 +53,51 @@ export default function Conversation({
     await sendMessage(message, session, userId, otherProviderId);
   }
 
+  // // scroll pagination
+  // const observerRef = useRef(null);
+  // const observer = new IntersectionObserver(
+  //   (entries: IntersectionObserverEntry[]) => {
+  //     if (entries[0]?.isIntersecting && store.conversations[userId]) {
+  //       if (store.conversations[userId].length > 0) {
+  //         void fetchNextMessages();
+  //       }
+  //     }
+  //   },
+  //   { threshold: 0.5 },
+  // );
+
+  const fetchNextMessages = async () => {
+    // fetch next messages
+    setTimeout(() => {
+      alert("fetching next messages");
+    }, 1000);
+  };
+
   return (
-    <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden bg-neo-gray-hover md:p-6">
-      <div className="flex-1 overflow-y-scroll p-4">
-        {(conversations[userId] ?? []).sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map((message, ind) => (
-          <Message key={ind} message={message} />
-        ))}
+    <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden md:p-6">
+      <div className="flex flex-1 flex-col overflow-y-scroll p-4">
+        {(conversations[userId] ?? [])
+          .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+          .map((message, ind) => (
+            <Message key={ind} message={{ ...message }} />
+          ))}
+        {/* <div ref={observerRef}></div> */}
       </div>
-      <div className="bg-neo-gray">
-        <div className="flex">
-          <Input
-            value={message}
-            onChange={(event) => {
-              setMessage(event.target.value);
-            }}
-            placeholder="Tutaj wpisz treść twojej wiadomości"
-            className="mr-2 flex-1 border-[#005243] bg-white text-[#005243] placeholder-[#4a8573]"
-          />
-          <Button
-            onClick={handleSubmit}
-            className="bg-neo-pink text-white transition-colors hover:bg-neo-pink-hover"
-          >
-            <Send className="mr-2" />
-          </Button>
-        </div>
+      <div className="mr-5 flex">
+        <Input
+          value={message}
+          onChange={(event) => {
+            setMessage(event.target.value);
+          }}
+          placeholder="Tutaj wpisz treść twojej wiadomości"
+          className="mr-2 flex-1 border-[#005243] bg-white text-[#005243] placeholder-[#4a8573]"
+        />
+        <Button
+          onClick={handleSubmit}
+          className="bg-neo-pink text-white transition-colors hover:bg-neo-pink-hover"
+        >
+          <Send className="mr-2" />
+        </Button>
       </div>
     </div>
   );

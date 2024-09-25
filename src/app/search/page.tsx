@@ -22,6 +22,7 @@ import {
   parseAsInteger,
   parseAsString,
 } from "nuqs";
+import { useDebounce } from "@uidotdev/usehooks";
 import { PlaceAutocompleteClassic } from "~/components/LocationGoogle/autocomplete-classic";
 import { cn } from "~/lib/utils";
 
@@ -43,10 +44,12 @@ export default function SearchPage() {
     "q",
     parseAsString.withDefault(""),
   );
+  const debouncedSearchText = useDebounce(searchText, 300);
+
   const [skip, setSkip] = useQueryState("skip", parseAsInteger.withDefault(0));
 
   const { data, refetch } = trpc.offers.search.useQuery({
-    text: searchText,
+    text: debouncedSearchText,
     location: location,
     skip: skip,
     limit: LIMIT,

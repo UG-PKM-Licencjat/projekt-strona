@@ -154,8 +154,7 @@ export function ArtistProfileMultiform({
         files,
       });
     }
-    const price = data.price?.replace(",", ".");
-    const parsedPrice = parseFloat(price);
+    const parsedPrice = parseFloat(data.price.replace(",", "."));
     const profileData = {
       name: data.name,
       shortDescription: data.shortDescription,

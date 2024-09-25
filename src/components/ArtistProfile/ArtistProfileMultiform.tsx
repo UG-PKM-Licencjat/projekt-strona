@@ -121,7 +121,7 @@ export function ArtistProfileMultiform({
     ratingsSum: 0,
     votes: 0,
     shortDescription: formData.shortDescription,
-    longDescription: formData.longDescription,
+    longDescription: formData.longDescriptionHTML,
     locationName: formData.locationName,
     location: {
       x: formData.location?.x ?? 21.0122287,
@@ -227,7 +227,7 @@ export function ArtistProfileMultiform({
   return (
     <FormProvider {...methods}>
       {profileCreated ? (
-        <div className="container relative grid grid-cols-[40%_60%] gap-10 bg-neo-gray max-lg:grid-cols-1 sm:p-8 md:rounded-lg">
+        <div className="container relative grid grid-cols-[40%_60%] gap-10 bg-neo-gray max-lg:grid-cols-1 md:rounded-lg">
           <div className="flex shrink-0 flex-col items-center justify-center gap-2 lg:gap-20 xl:gap-32">
             <div className="flex flex-col items-start">
               <h2 className="font-header text-2xl font-semibold sm:text-3xl">

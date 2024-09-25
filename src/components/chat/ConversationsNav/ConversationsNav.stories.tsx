@@ -14,6 +14,7 @@ export const Default: Story = {
   args: {
     usersWithMessages: [
       {
+        unread: true,
         userId: "1",
         name: "John",
         lastMessage: "Hello",

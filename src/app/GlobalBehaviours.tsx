@@ -2,7 +2,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useConversationsStore } from "~/stores";
-import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
+import { type Message } from "~/components/chat/Message/Message";
 import { useSession } from "next-auth/react";
 import { useToast } from "~/components/ui/use-toast";
 import { env } from "~/env";

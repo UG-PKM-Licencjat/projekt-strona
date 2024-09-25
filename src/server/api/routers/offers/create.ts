@@ -73,7 +73,7 @@ const createProcedure = authedProcedure
     const { data, error } = await ctx.db.transaction(async (tx) => {
       const [offerReturned] = await tx
         .insert(offers)
-        .values({ userId, ...filteredInput })
+        .values({ userId, ...filteredInput, createdAt: new Date().toISOString() })
         .returning();
 
       if (!offerReturned) {

@@ -3,6 +3,7 @@ import { useConversationsStore } from "~/stores";
 import { usePathname, useRouter } from "next/navigation";
 import { trpc } from "~/trpc/react";
 import { useSession } from "next-auth/react";
+import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 
 export interface UserWithMessage {
   userId: string;
@@ -42,7 +43,13 @@ export function Sidebar({
       } md:relative md:translate-x-0`}
     >
       <h2 className="mb-4 text-2xl font-bold text-white">Rozmowy</h2>
-
+      {!userDataForSample && (
+        <>
+          <SkeletonCard className="mb-2 items-center rounded p-6" randomColor />
+          <SkeletonCard className="mb-2 items-center rounded p-6" randomColor />
+          <SkeletonCard className="mb-2 items-center rounded p-6" randomColor />
+        </>
+      )}
       {userDataForSample
         ?.map(
           (userData) =>

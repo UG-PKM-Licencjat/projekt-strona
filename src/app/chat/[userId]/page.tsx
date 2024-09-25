@@ -83,7 +83,7 @@ export default function Conversation({
           ))}
         {/* <div ref={observerRef}></div> */}
       </div>
-      <div className="mr-5 flex">
+      <form className="mr-5 flex" onSubmit={handleSubmit}>
         <Input
           value={message}
           onChange={(event) => {
@@ -94,11 +94,12 @@ export default function Conversation({
         />
         <Button
           onClick={handleSubmit}
+          type="submit"
           className="bg-neo-pink text-white transition-colors hover:bg-neo-pink-hover"
         >
           <Send className="mr-2" />
         </Button>
-      </div>
+      </form>
     </div>
   );
 }

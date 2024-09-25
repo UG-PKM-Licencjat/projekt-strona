@@ -154,7 +154,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="flex-1 bg-[#f5f5f5]">
+    <div className="flex-1 bg-neo-gray">
       <main className="container mx-auto flex h-full flex-col p-4">
         <div className="mb-8 rounded-lg bg-neo-castleton p-4 shadow-md">
           <div className="flex flex-col gap-4 md:flex-row">
@@ -177,19 +177,21 @@ export default function SearchPage() {
                 onBlur={() => setPlaceholderName(location.placeName)}
                 onChange={(e) => setPlaceholderName(e.target.value)}
                 onPlaceSelect={onLocationChange}
-                className="appearance-none rounded-md border border-[#97b085] bg-white px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#5f8d4e]"
+                className="appearance-none rounded-md border border-neo-mantis bg-white px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-neo-mantis"
               />
-              <div
-                className={cn(
-                  "absolute right-0 top-0 flex h-full items-center justify-end pr-14 transition-all md:opacity-0",
-                  location.placeName && "group-hover:opacity-100",
-                )}
-              >
-                <XIcon
-                  className="size-6 cursor-pointer text-neo-castleton"
-                  onClick={resetLocation}
-                />
-              </div>
+              {location.placeName && (
+                <div
+                  className={cn(
+                    "absolute right-0 top-0 flex h-full items-center justify-end pr-14 transition-all md:opacity-0",
+                    location.placeName && "group-hover:opacity-100",
+                  )}
+                >
+                  <XIcon
+                    className="size-6 cursor-pointer text-neo-castleton"
+                    onClick={resetLocation}
+                  />
+                </div>
+              )}
               <MapPin
                 className="absolute right-3 top-2.5 text-neo-castleton"
                 size={35}
@@ -200,7 +202,7 @@ export default function SearchPage() {
           </div>
         </div>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-[#2d6a4f]">
+          <h2 className="text-xl font-semibold text-neo-castleton">
             Wyniki wyszukiwania
           </h2>
           <div className="flex gap-2">

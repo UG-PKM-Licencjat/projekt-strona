@@ -11,7 +11,7 @@ export default function ChatLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex flex-1 gap-5 bg-neo-castleton text-neo-castleton md:bg-neo-gray">
+    <div className="flex flex-1 bg-neo-castleton text-neo-castleton md:bg-neo-gray">
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}

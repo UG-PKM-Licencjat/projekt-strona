@@ -76,28 +76,28 @@ export default function Conversation({
   return (
     <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden md:p-6">
       <div className="flex flex-1 flex-col overflow-y-scroll p-4">
-        {(conversations[userId] ?? []).sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map((message, ind) => (
-          <Message key={ind} message={{ ...message }} />
-        ))}
+        {(conversations[userId] ?? [])
+          .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+          .map((message, ind) => (
+            <Message key={ind} message={{ ...message }} />
+          ))}
         {/* <div ref={observerRef}></div> */}
       </div>
-      <div className="bg-neo-gray">
-        <div className="flex">
-          <Input
-            value={message}
-            onChange={(event) => {
-              setMessage(event.target.value);
-            }}
-            placeholder="Tutaj wpisz treść twojej wiadomości"
-            className="mr-2 flex-1 border-[#005243] bg-white text-[#005243] placeholder-[#4a8573]"
-          />
-          <Button
-            onClick={handleSubmit}
-            className="bg-neo-pink text-white transition-colors hover:bg-neo-pink-hover"
-          >
-            <Send className="mr-2" />
-          </Button>
-        </div>
+      <div className="mr-5 flex">
+        <Input
+          value={message}
+          onChange={(event) => {
+            setMessage(event.target.value);
+          }}
+          placeholder="Tutaj wpisz treść twojej wiadomości"
+          className="mr-2 flex-1 border-[#005243] bg-white text-[#005243] placeholder-[#4a8573]"
+        />
+        <Button
+          onClick={handleSubmit}
+          className="bg-neo-pink text-white transition-colors hover:bg-neo-pink-hover"
+        >
+          <Send className="mr-2" />
+        </Button>
       </div>
     </div>
   );

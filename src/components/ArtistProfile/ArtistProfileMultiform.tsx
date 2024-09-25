@@ -140,6 +140,7 @@ export function ArtistProfileMultiform({
 
   const { toast } = useToast();
   const onSubmit = async (data: ArtistFormData) => {
+    methods.setValue("files", files);
     setIsSubmitting(true);
     if (edit) {
       // TODO handle updating
@@ -195,10 +196,11 @@ export function ArtistProfileMultiform({
   };
 
   const onInvalid = (errors: FieldErrors<ArtistFormData>) => {
+    methods.setValue("files", files);
     const errorFields = objectKeys(errors);
-    const errorSteps = errorFields.map((field) => {
-      return errors[field]?.message;
-    });
+    const errorSteps = errorFields
+      .map((field) => errors[field]?.message)
+      .filter((step) => step !== "");
     toast({
       title: "Popraw błędy",
       variant: "destructive",
@@ -227,7 +229,7 @@ export function ArtistProfileMultiform({
         case "number":
           return value && !error;
         case "object":
-          return Object.keys(value).length > 0 && !error;
+          return (Object.keys(value).length > 0 && !error) || field === "files";
         default:
           return false;
       }

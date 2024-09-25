@@ -42,6 +42,7 @@ const searchProcedure = procedure
       with: {
         users: {
           columns: {
+            name: true,
             image: true,
           },
         },

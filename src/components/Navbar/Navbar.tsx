@@ -29,11 +29,7 @@ import {
 } from "lucide-react";
 import { useConversationsStore } from "~/stores";
 
-const filterList: Array<string> = [
-  "/createaccount",
-  "/profile/create",
-  "/profile/edit",
-];
+const filterList: Array<string> = ["/createaccount"];
 
 export const Navbar = ({
   session,
@@ -83,7 +79,9 @@ export const Navbar = ({
                   {session.user.registered && (
                     <>
                       <NavbarLink href="/chat">
-                        <Suspense fallback={<MessageSquare className="size-6" />}>
+                        <Suspense
+                          fallback={<MessageSquare className="size-6" />}
+                        >
                           {unreadNotification ? (
                             <MessageSquareDotIcon className="size-6 animate-pulse duration-1000 repeat-[2]" />
                           ) : (

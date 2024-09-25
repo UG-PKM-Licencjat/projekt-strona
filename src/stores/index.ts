@@ -1,6 +1,6 @@
 import { type Session } from "next-auth";
 import { create } from "zustand";
-import { type Message } from "~/components/chat/ConversationWindow/ConversationWindow";
+import { type Message } from "~/components/chat/Message/Message";
 import { env } from "~/env";
 
 interface ConversationsStore {
@@ -122,15 +122,18 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
       const userConvs = state.conversations[otherUserId];
 
       if (!userConvs)
-        throw new Error("There is no such user in messages store.")
+        throw new Error("There is no such user in messages store.");
 
       return {
         conversations: {
           ...state.conversations,
-          [otherUserId]: userConvs.map((message) => ({ 
-            ...message,
-            read: true
-          } satisfies Message)),
+          [otherUserId]: userConvs.map(
+            (message) =>
+              ({
+                ...message,
+                read: true,
+              }) satisfies Message,
+          ),
         },
       };
     });
@@ -138,16 +141,20 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
 }));
 
 async function markAsReadRest(session: Session, otherUserId: string) {
-  const response = await fetch(`https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/message/readConversation`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${session?.user.idToken}`,
+  const response = await fetch(
+    `https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/message/readConversation`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.user.idToken}`,
+      },
+      body: JSON.stringify({
+        userFrom: otherUserId,
+        userTo: session.user.id,
+      }),
     },
-    body: JSON.stringify({
-      userFrom: otherUserId, userTo: session.user.id
-    }),
-  });
+  );
 
   if (response.status >= 400) {
     return;
@@ -191,20 +198,23 @@ async function sendMessageRest(
   otherUserId: string,
   otherUserProviderId: string,
 ) {
-  const response = await fetch(`https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${session?.user.idToken}`,
+  const response = await fetch(
+    `https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.user.idToken}`,
+      },
+      body: JSON.stringify({
+        message: message,
+        from: session.user.id,
+        to: otherUserId,
+        fromSub: session.user.providerAccountId,
+        toSub: otherUserProviderId,
+      }),
     },
-    body: JSON.stringify({
-      message: message,
-      from: session.user.id,
-      to: otherUserId,
-      fromSub: session.user.providerAccountId,
-      toSub: otherUserProviderId,
-    }),
-  });
+  );
 
   if (response.status >= 400) {
     return;

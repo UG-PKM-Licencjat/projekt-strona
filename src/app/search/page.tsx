@@ -258,7 +258,7 @@ export default function SearchPage() {
                 <OfferCard key={offer.id} offer={offer} />
               ))
             : Array.from({ length: LIMIT }).map((_, ind) => (
-                <SkeletonCard key={ind} className="h-40" randomColor />
+                <SkeletonCard key={ind} className="h-64" randomColor />
               ))}
         </div>
 

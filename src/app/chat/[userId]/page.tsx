@@ -76,11 +76,11 @@ export default function Conversation({
   return (
     <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden md:p-6">
       <div className="flex flex-1 flex-col overflow-y-scroll p-4">
-
-      {!conversations[userId] && (<div className="flex h-full w-full items-center justify-center">
-        <LoaderCircleIcon className="size-10 animate-spin text-white" />
-      </div>)
-      }
+        {!conversations[userId] && (
+          <div className="flex h-full w-full items-center justify-center">
+            <LoaderCircleIcon className="size-10 animate-spin text-white" />
+          </div>
+        )}
 
         {(conversations[userId] ?? [])
           .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
@@ -96,7 +96,7 @@ export default function Conversation({
             setMessage(event.target.value);
           }}
           placeholder="Tutaj wpisz treść twojej wiadomości"
-          className="mr-2 flex-1 border-[#005243] bg-white text-[#005243] placeholder-[#4a8573]"
+          className="mr-2 flex-1 border-[#005243] bg-white text-black placeholder-[#4a8573]"
         />
         <Button
           onClick={handleSubmit}

@@ -30,6 +30,7 @@ import {
 import OfferView, { type OfferData } from "../Offer/OfferView";
 import type { Session } from "next-auth";
 import { ScrollArea } from "../ui/scroll-area";
+import { objectKeys } from "~/components/uploadthing/utils";
 
 interface ArtistProfileMultiformProps {
   defaultData?: ArtistFormData;
@@ -139,6 +140,7 @@ export function ArtistProfileMultiform({
 
   const { toast } = useToast();
   const onSubmit = async (data: ArtistFormData) => {
+    methods.setValue("files", files);
     setIsSubmitting(true);
     if (edit) {
       // TODO handle updating
@@ -153,8 +155,7 @@ export function ArtistProfileMultiform({
         files,
       });
     }
-    const price = data.price?.replace(",", ".");
-    const parsedPrice = parseFloat(price);
+    const parsedPrice = parseFloat(data.price.replace(",", "."));
     const profileData = {
       name: data.name,
       shortDescription: data.shortDescription,
@@ -194,11 +195,22 @@ export function ArtistProfileMultiform({
       });
   };
 
-  const onInvalid = (_errors: FieldErrors<ArtistFormData>) => {
+  const onInvalid = (errors: FieldErrors<ArtistFormData>) => {
+    methods.setValue("files", files);
+    const errorFields = objectKeys(errors);
+    const errorSteps = errorFields
+      .map((field) => errors[field]?.message)
+      .filter((step) => step !== "");
     toast({
-      title: "Błąd walidacji",
+      title: "Popraw błędy",
       variant: "destructive",
-      description: "Popraw błędy w formularzu i spróbuj ponownie.",
+      description: (
+        <ul className="flex list-inside list-disc flex-col">
+          {errorSteps.map((step, index) => (
+            <li key={index}>{step}</li>
+          ))}
+        </ul>
+      ),
     });
   };
 
@@ -217,7 +229,7 @@ export function ArtistProfileMultiform({
         case "number":
           return value && !error;
         case "object":
-          return Object.keys(value).length > 0 && !error;
+          return (Object.keys(value).length > 0 && !error) || field === "files";
         default:
           return false;
       }
@@ -276,9 +288,12 @@ export function ArtistProfileMultiform({
                     // transition={{ duration: 0.2 }}
                     className={cn(
                       "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-3 sm:p-4",
-                      hasErrors(step.fields) && "bg-neo-pink/30",
+                      hasErrors(step.fields) && "bg-destructive/30",
                       isComplete(step.fields) && "bg-neo-sea/30",
                       index === activeStep && "bg-neo-sea text-neo-gray",
+                      index === activeStep &&
+                        hasErrors(step.fields) &&
+                        "bg-destructive/90",
                     )}
                     key={index}
                     onClick={() =>

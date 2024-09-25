@@ -61,16 +61,18 @@ export default function OfferView({
   return (
     <div className="container relative flex flex-1 flex-col justify-between gap-2 rounded-lg bg-neo-gray px-6 py-10 align-middle">
       <div className="flex w-full items-center justify-start">
-        <Button
-          variant="link"
-          className="flex items-center gap-2 px-0"
-          onClick={() => {
-            if (!preview) router.back();
-          }}
-        >
-          <ArrowLeftIcon className="size-6" />
-          Cofnij
-        </Button>
+        {!preview && (
+          <Button
+            variant="link"
+            className="flex items-center gap-2 px-0"
+            onClick={() => {
+              router.back();
+            }}
+          >
+            <ArrowLeftIcon className="size-6" />
+            Cofnij
+          </Button>
+        )}
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Offer header */}
@@ -87,7 +89,7 @@ export default function OfferView({
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
                 <DollarSign className="size-8 text-neo-dark-gray" />
-                <span className="text-xl font-semibold">123123123 zł</span>
+                <span className="text-xl font-semibold">{data.price} zł</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="size-8 text-neo-dark-gray" />

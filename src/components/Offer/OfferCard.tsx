@@ -11,9 +11,8 @@ export interface Offer {
   shortDescription: string;
   locationName: string | null;
   distance: number | null;
-  users: {
-    image: string | null;
-  };
+
+  image: string | null;
 }
 
 const OfferCard = ({ offer }: { offer: Offer }) => (
@@ -22,7 +21,7 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
       <div>
         <div className="mb-4 flex items-start justify-between">
           <Image
-            src={offer.users.image ?? ""}
+            src={offer.image ?? ""}
             alt={offer.name}
             width={40}
             height={40}

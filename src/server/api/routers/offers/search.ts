@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { procedure } from "../../trpc";
-import { offers } from "~/server/db/schema";
+import { offers, users } from "~/server/db/schema";
 import { buildSearchQuery } from "./util";
-import { count } from "drizzle-orm";
+import { count, eq, getTableColumns } from "drizzle-orm";
 
 const searchProcedure = procedure
   .input(
@@ -23,32 +23,21 @@ const searchProcedure = procedure
     const offerCount = await ctx.db
       .select({ count: count() })
       .from(offers)
+      .leftJoin(users, eq(offers.userId, users.id))
       .where(query)
       .limit(1);
 
-    const dbOffers2 = await ctx.db.query.offers.findMany({
-      where: query,
-      columns: {
-        id: true,
-        userId: true,
-        name: true,
-        price: true,
-        shortDescription: true,
-        locationName: true,
-        distance: true,
-        ratingsSum: true,
-        votes: true,
-      },
-      with: {
-        users: {
-          columns: {
-            image: true,
-          },
-        },
-      },
-      limit: input.limit,
-      offset: input.skip,
-    });
+    const dbOffers2 = await ctx.db
+      .select({
+        fullName: users.name,
+        image: users.image,
+        ...getTableColumns(offers),
+      })
+      .from(offers)
+      .leftJoin(users, eq(offers.userId, users.id))
+      .where(query)
+      .limit(input.limit)
+      .offset(input.skip);
 
     return { offerCount: offerCount[0]?.count, offers: dbOffers2 };
   });

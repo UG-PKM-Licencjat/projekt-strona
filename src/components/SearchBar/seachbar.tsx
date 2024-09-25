@@ -33,7 +33,7 @@ export default function SearchBar() {
             type="text"
             value={searchText}
             onChange={onSearchTextChange}
-            placeholder="Karol Piwowarek, gitara"
+            placeholder="zespół weselny, gitara"
             className="w-full rounded-md border border-neo-castleton py-2 pl-14 pr-4 focus:outline-none focus:ring-2 focus:ring-neo-castleton"
           />
           <Search

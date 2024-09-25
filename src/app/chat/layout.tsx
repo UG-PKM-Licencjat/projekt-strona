@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Sidebar } from "~/components/chat/Sidebar/Sidebar";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function ChatLayout({
   children,
@@ -9,6 +11,11 @@ export default function ChatLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { data: session } = useSession();
+
+  if (!session) {
+    redirect("/");
+  }
 
   return (
     <div className="flex flex-1 bg-neo-castleton text-neo-castleton md:bg-neo-gray">

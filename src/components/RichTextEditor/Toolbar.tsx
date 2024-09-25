@@ -24,9 +24,9 @@ import {
   BetweenVerticalEnd,
   FoldHorizontal,
   FoldVertical,
-  Youtube,
   EllipsisVertical,
 } from "lucide-react";
+import { Icon } from "../ui/Icon/Icon";
 
 import {
   Popover,
@@ -44,11 +44,8 @@ import {
 import { Button } from "~/components/ui/Button/Button";
 import { Toggle } from "~/components/ui/toggle";
 import {
-  cloneElement,
   useCallback,
-  useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
   type FormEvent,
@@ -77,17 +74,14 @@ type ButtonName = (typeof BUTTON_NAMES_LIST)[number];
 
 export function Toolbar({ editor, className }: Props) {
   // youtube
-  const [height, setHeight] = useState(480);
-  const [width, setWidth] = useState(640);
+  const [url, setUrl] = useState("");
 
   const addYoutubeVideo = () => {
-    const url = prompt("Podaj link do filmu YouTube");
-
     if (url) {
       editor.commands.setYoutubeVideo({
         src: url,
-        width: Math.max(320, parseInt(`${width}`, 10)) || 640,
-        height: Math.max(180, parseInt(`${height}`, 10)) || 480,
+        width: 320,
+        height: 240,
       });
     }
   };
@@ -95,8 +89,6 @@ export function Toolbar({ editor, className }: Props) {
   const mainToolbarRef = useRef<HTMLElement>(null);
   const [visibleButtons, setVisibleButtons] = useState<ButtonName[]>([]);
   const [showMore, setShowMore] = useState(false);
-
-  const button_name_list = useMemo(() => [...BUTTON_NAMES_LIST], []);
 
   const doAdapt = useCallback(() => {
     const mainToolbar = mainToolbarRef.current;
@@ -397,7 +389,7 @@ export function Toolbar({ editor, className }: Props) {
             >
               <PopoverTrigger
                 asChild
-                className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
+                className="h-9 w-9 shrink-0 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
               >
                 <Table className="h-4 w-4" />
               </PopoverTrigger>
@@ -642,36 +634,24 @@ export function Toolbar({ editor, className }: Props) {
                 visibility: isButtonVisible("youtube") ? "visible" : "hidden",
               }}
             >
-              <PopoverTrigger
-                asChild
-                className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
-              >
-                <Youtube className="h-4 w-4" />
+              <PopoverTrigger className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground">
+                <Icon
+                  name="youtube"
+                  className="size-4 fill-[#ff0000] stroke-none"
+                />
               </PopoverTrigger>
             </TooltipTrigger>
             <TooltipContent sideOffset={4}>Dodaj film z Youtube</TooltipContent>
           </Tooltip>
-          <PopoverContent className="w-80" sideOffset={4}>
-            <div className="flex justify-around">
+          <PopoverContent sideOffset={4}>
+            <div className="flex flex-col items-center gap-2">
               <input
                 className="flex rounded-md border px-2"
-                id="width"
-                type="number"
-                min="320"
-                max="1024"
-                placeholder="width"
-                value={width}
-                onChange={(event) => setWidth(parseInt(event.target.value))}
-              />
-              <input
-                className="flex rounded-md border px-2"
-                id="height"
-                type="number"
-                min="180"
-                max="720"
-                placeholder="height"
-                value={height}
-                onChange={(event) => setHeight(parseInt(event.target.value))}
+                id="url"
+                type="text"
+                placeholder="youtube.com/watch?v=XXXXXXXXXX"
+                value={url}
+                onChange={(event) => setUrl(event.target.value)}
               />
               <Button
                 id="add"
@@ -680,7 +660,7 @@ export function Toolbar({ editor, className }: Props) {
                 className="h-9 w-32 text-sm"
                 onClick={addYoutubeVideo}
               >
-                Add YouTube video
+                Dodaj filmik
               </Button>
             </div>
           </PopoverContent>
@@ -1050,38 +1030,25 @@ export function Toolbar({ editor, className }: Props) {
                       asChild
                       className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
                     >
-                      <Youtube className="h-4 w-4" />
+                      <Icon
+                        name="youtube"
+                        className="size-4 fill-[#ff0000] stroke-none"
+                      />
                     </PopoverTrigger>
                   </TooltipTrigger>
                   <TooltipContent sideOffset={4}>
                     Dodaj film z Youtube
                   </TooltipContent>
                 </Tooltip>
-                <PopoverContent className="w-80" sideOffset={4}>
-                  <div className="flex justify-around">
+                <PopoverContent sideOffset={4}>
+                  <div className="flex flex-col items-center gap-2">
                     <input
                       className="flex rounded-md border px-2"
-                      id="width"
-                      type="number"
-                      min="320"
-                      max="1024"
-                      placeholder="width"
-                      value={width}
-                      onChange={(event) =>
-                        setWidth(parseInt(event.target.value))
-                      }
-                    />
-                    <input
-                      className="flex rounded-md border px-2"
-                      id="height"
-                      type="number"
-                      min="180"
-                      max="720"
-                      placeholder="height"
-                      value={height}
-                      onChange={(event) =>
-                        setHeight(parseInt(event.target.value))
-                      }
+                      id="url"
+                      type="text"
+                      placeholder="youtube.com/watch?v=XXXXXXXXXX"
+                      value={url}
+                      onChange={(event) => setUrl(event.target.value)}
                     />
                     <Button
                       id="add"
@@ -1090,7 +1057,7 @@ export function Toolbar({ editor, className }: Props) {
                       className="h-9 w-32 text-sm"
                       onClick={addYoutubeVideo}
                     >
-                      Add YouTube video
+                      Dodaj filmik
                     </Button>
                   </div>
                 </PopoverContent>

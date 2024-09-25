@@ -1,6 +1,3 @@
-import { useCopyToClipboard } from "@uidotdev/usehooks";
-import { customType } from "drizzle-orm/mysql-core";
-
 describe("Account creation", function () {
   beforeEach(function () {
     const session = "test-session-token";

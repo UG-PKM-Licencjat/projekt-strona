@@ -141,7 +141,7 @@ export const offers = pgTable("offer", {
   shortDescription: varchar("shortDescription", { length: 255 }).notNull(),
   longDescription: text("longDescription").notNull(),
   locationName: varchar("locationName", { length: 255 }).notNull(),
-  createdAt: timestamp("createdAt", {mode: "string"}).notNull().defaultNow(),
+  createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
   // TODO temporary solution while drizzle has a bug with geometry type, fix eventually
   location: jsonb("location").notNull().$type<{ x: number; y: number }>(),
   // location: pointType("location").notNull(),

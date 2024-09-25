@@ -12,7 +12,7 @@ export default function Step1() {
       <Label className="flex flex-col justify-between gap-2">
         <span>Tytuł</span>
         <Input
-          placeholder="Nowak & Kowalski - zespół na wesele"
+          placeholder="np. Nowak & Kowalski - zespół na wesele"
           {...register("name")}
           autoComplete="off"
         />
@@ -21,7 +21,7 @@ export default function Step1() {
       <Label className="flex flex-col gap-2">
         <span>Opis</span>
         <Textarea
-          placeholder="Dwaj przyjaciele grają co czują."
+          placeholder="np. Dwaj przyjaciele grają co czują."
           {...register("shortDescription")}
         />
         <CustomError name="shortDescription" />

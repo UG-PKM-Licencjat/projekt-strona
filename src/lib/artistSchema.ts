@@ -50,6 +50,7 @@ export const artistSchema = z.object({
     .string({
       message: "Cena jest wymagana.",
     })
+    .min(1, { message: "Cena jest wymagana." })
     .regex(/^\d{1,9}(\,\d{1,2})?$/, {
       message:
         "Cena powinna być podana w formacie 12345,50 i nie przekraczać 999 999 999,99 zł",

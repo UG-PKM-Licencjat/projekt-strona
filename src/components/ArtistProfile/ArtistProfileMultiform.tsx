@@ -288,12 +288,12 @@ export function ArtistProfileMultiform({
                     // transition={{ duration: 0.2 }}
                     className={cn(
                       "flex cursor-pointer select-none items-center gap-2 rounded-md bg-neo-gray-hover p-3 sm:p-4",
-                      hasErrors(step.fields) && "bg-destructive/30",
+                      hasErrors(step.fields) && "bg-neo-pink/30",
                       isComplete(step.fields) && "bg-neo-sea/30",
                       index === activeStep && "bg-neo-sea text-neo-gray",
                       index === activeStep &&
                         hasErrors(step.fields) &&
-                        "bg-destructive/90",
+                        "bg-neo-pink/90",
                     )}
                     key={index}
                     onClick={() =>
@@ -376,6 +376,7 @@ export function ArtistProfileMultiform({
                   variant="outline"
                   onClick={() => handleStepChange(activeStep - 1, -1)}
                   type="button"
+                  className="border-neo-sea text-neo-sea hover:bg-neo-sea hover:text-white"
                 >
                   Cofnij
                 </Button>
@@ -418,6 +419,7 @@ export function ArtistProfileMultiform({
                   <Button
                     type="submit"
                     key="submit-button"
+                    variant="secondary"
                     className="w-full max-sm:px-0"
                   >
                     {edit ? "Zapisz" : "Stwórz profil"}
@@ -426,6 +428,7 @@ export function ArtistProfileMultiform({
                   <Button
                     onClick={() => handleStepChange(activeStep + 1, 1)}
                     type="button"
+                    variant="secondary"
                     key="next-button"
                     className="w-full"
                   >

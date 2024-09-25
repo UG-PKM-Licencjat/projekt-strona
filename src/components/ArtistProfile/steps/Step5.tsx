@@ -82,7 +82,7 @@ export default function Step5() {
   }, [place]);
 
   return (
-    <div className="grid grid-cols-2 place-content-center max-sm:grid-cols-1">
+    <div className="grid grid-cols-2 place-content-center gap-2 max-sm:grid-cols-1">
       <APIProviderWrapper>
         <div className="flex flex-col gap-4">
           <Label className="flex flex-col gap-2">
@@ -150,7 +150,6 @@ export default function Step5() {
               </div>
               {distance}km
             </div>
-            <CustomError name="distance" />
           </Label>
         </div>
         <div className="w-full overflow-hidden rounded-md border max-sm:aspect-video">

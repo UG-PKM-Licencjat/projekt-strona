@@ -60,7 +60,6 @@ export default function SearchPage() {
     const name = place?.name ?? "";
     const lat = place?.geometry?.location?.lat() ?? null;
     const lng = place?.geometry?.location?.lng() ?? null;
-    console.log("place", place);
     await setLocation({ placeName: name, x: lng, y: lat });
     setPlaceholderName(name);
   }

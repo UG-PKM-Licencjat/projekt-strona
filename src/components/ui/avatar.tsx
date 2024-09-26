@@ -30,7 +30,7 @@ const AvatarImage = ({ src, alt, ...props }: AvatarImageProps) => {
       height={64}
       referrerPolicy="no-referrer"
       {...props}
-      className="absolute z-50 aspect-square h-full w-full"
+      className="absolute z-50 aspect-square h-full w-full text-[0]"
     />
   );
 };

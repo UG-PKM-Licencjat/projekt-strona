@@ -17,7 +17,7 @@ export function OfferFilePreview({
   return (
     <>
       <div
-        className="flex h-44 overflow-hidden rounded-lg border-2 border-neo-gray-hover sm:h-36"
+        className="flex h-44 overflow-hidden rounded-lg border-2 border-neo-gray-hover max-sm:h-36"
         onClick={(e) => e.stopPropagation()}
       >
         {file.type.startsWith("image") ? (

@@ -1,12 +1,13 @@
 import { type SetStateAction } from "react";
 
 import type { CustomFile, ExpandedRouteConfig } from "../utils";
+import type { PreviewFile } from "~/stores/fileStore";
 
 export interface PreviewDropzoneProps {
-  files: CustomFile[];
+  files: PreviewFile[];
   setFiles: (value: SetStateAction<CustomFile[]>) => void;
+  removeFile: (fileKey: string) => void;
   routeConfig?: ExpandedRouteConfig;
-  startUpload?: (files: CustomFile[]) => void;
   isUploading?: boolean;
   className?: string;
   showUploadButton?: boolean;

@@ -24,12 +24,19 @@ import CustomError from "~/components/Form/CustomError";
 export default function Step4() {
   // TODO this lags on every render, figure out why
   const { setValue, trigger } = useFormContext<ArtistFormData>();
-  const { files, touched, setFiles } = useFileStore();
+  const {
+    previewFiles,
+    files,
+    touched,
+    setFiles,
+    setPreviewFiles,
+    removeFile,
+  } = useFileStore();
 
   useEffect(() => {
-    setValue("files", files);
+    setValue("files", previewFiles);
     if (touched) void trigger("files");
-  }, [files, setValue, touched, trigger]);
+  }, [previewFiles, setValue, touched, trigger]);
 
   const routeConfig = getRouteConfig("galleryUploader");
 
@@ -51,16 +58,18 @@ export default function Step4() {
       onDragCancel={handleDragCancel}
     >
       <SortableContext
-        items={files.map((file) => file.key)}
+        items={previewFiles.map((file) => file.key)}
         strategy={rectSortingStrategy}
       >
         <div className="flex flex-col gap-2">
           <PreviewDropzone
-            files={files}
+            files={previewFiles}
             setFiles={setFiles}
+            removeFile={removeFile}
             routeConfig={routeConfig}
             showUploadButton={false}
             className="w-full"
+            disabled={previewFiles.length >= 5}
           />
           <CustomError name="files" />
         </div>
@@ -80,7 +89,7 @@ export default function Step4() {
     const { active, over } = event;
 
     if (active.id !== over?.id) {
-      setFiles((files) => {
+      setPreviewFiles((files) => {
         const oldIndex = files.findIndex((file) => file.key === active?.id);
         const newIndex = files.findIndex((file) => file.key === over?.id);
 

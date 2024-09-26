@@ -181,8 +181,8 @@ export const Navbar = ({
                       <Link
                         href={
                           session.user.isArtist
-                            ? "/profile/edit"
-                            : "/profile/create"
+                            ? "/artist-profile/edit"
+                            : "/artist-profile/create"
                         }
                         onClick={closeDrawer}
                         className={cn(

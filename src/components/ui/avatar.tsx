@@ -1,49 +1,53 @@
-"use client";
-
-import * as React from "react";
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import Image, { type ImageProps } from "next/image";
 import { cn } from "~/lib/utils";
 
-const Avatar = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
-      className,
-    )}
-    {...props}
-  />
-));
-Avatar.displayName = AvatarPrimitive.Root.displayName;
+type AvatarProps = React.ComponentPropsWithRef<"div">;
 
-const AvatarImage = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Image>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Image
-    ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
-    {...props}
-  />
-));
-AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+const Avatar = ({ children, className, ...props }: AvatarProps) => {
+  return (
+    <div
+      className={cn(
+        "relative h-10 w-10 overflow-hidden rounded-full",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
 
-const AvatarFallback = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Fallback>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Fallback
-    ref={ref}
-    className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-neo-sage text-black",
-      className,
-    )}
-    {...props}
-  />
-));
-AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
+interface AvatarImageProps extends ImageProps {
+  fallback?: React.ReactNode;
+}
+
+const AvatarImage = ({ src, alt, ...props }: AvatarImageProps) => {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={64}
+      height={64}
+      referrerPolicy="no-referrer"
+      {...props}
+      className="absolute z-50 aspect-square h-full w-full"
+    />
+  );
+};
+
+const AvatarFallback = ({ children, className, ...props }: AvatarProps) => {
+  return (
+    <div
+      className={cn(
+        "absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-full bg-neo-sage text-black",
+        children ? "" : "animate-pulse",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
 
 export { Avatar, AvatarImage, AvatarFallback };

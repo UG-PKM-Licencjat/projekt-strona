@@ -60,6 +60,62 @@ export default function OfferView({
 
   const position = { lat: data.location.y, lng: data.location.x };
 
+  function contactButtonFactory() {
+    if (!session) {
+      return (
+        <button
+          className="flex items-center gap-4 rounded-full bg-neo-gray px-6 py-3.5 text-lg font-semibold text-black shadow-md transition-colors hover:bg-neo-gray-hover"
+          onClick={() => signIn("google")}
+        >
+          <Icon name="google" className="size-8 stroke-none" />
+          Zaloguj się aby móc się skontaktować
+        </button>
+      );
+    }
+
+    if (isUser) {
+      return <></>;
+    }
+
+    if (preview) {
+      return (
+        <Button className="flex gap-2" size="lg" variant="secondary">
+          {!data.users.image ? (
+            <div className="size-10 shrink-0 animate-pulse overflow-hidden rounded-full bg-neo-pink-hover"></div>
+          ) : (
+            <Image
+              src={data.users.image}
+              alt={data.users.name}
+              width={40}
+              height={40}
+              className="size-10 shrink-0 overflow-hidden rounded-full"
+            />
+          )}
+          <span className="text-lg">Skontaktuj się</span>
+        </Button>
+      );
+    }
+
+    return (
+      <Link href={`/chat/${data.users.id}`}>
+        <Button className="flex gap-2" size="lg" variant="secondary">
+          {!data.users.image ? (
+            <div className="size-10 shrink-0 animate-pulse overflow-hidden rounded-full bg-neo-pink-hover"></div>
+          ) : (
+            <Image
+              src={data.users.image}
+              alt={data.users.name}
+              width={40}
+              height={40}
+              className="size-10 shrink-0 overflow-hidden rounded-full"
+            />
+          )}
+          <span className="text-lg">Skontaktuj się</span>
+        </Button>
+      </Link>
+    );
+  }
+
   return (
     <div className="container relative flex flex-1 flex-col justify-between gap-2 rounded-lg bg-neo-gray px-6 py-10 align-middle">
       <div className="flex w-full items-center justify-start">
@@ -167,49 +223,7 @@ export default function OfferView({
           </div>
 
           <div className="flex w-full justify-start md:justify-end">
-            {session ? (
-              preview || isUser ? (
-                <Button className="flex gap-2" size="lg" variant="secondary">
-                  {!data.users.image ? (
-                    <div className="size-10 shrink-0 animate-pulse overflow-hidden rounded-full bg-neo-pink-hover"></div>
-                  ) : (
-                    <Image
-                      src={data.users.image}
-                      alt={data.users.name}
-                      width={40}
-                      height={40}
-                      className="size-10 shrink-0 overflow-hidden rounded-full"
-                    />
-                  )}
-                  <span className="text-lg">Skontaktuj się</span>
-                </Button>
-              ) : (
-                <Link href={`/chat/${data.users.id}`}>
-                  <Button className="flex gap-2" size="lg" variant="secondary">
-                    {!data.users.image ? (
-                      <div className="size-10 shrink-0 animate-pulse overflow-hidden rounded-full bg-neo-pink-hover"></div>
-                    ) : (
-                      <Image
-                        src={data.users.image}
-                        alt={data.users.name}
-                        width={40}
-                        height={40}
-                        className="size-10 shrink-0 overflow-hidden rounded-full"
-                      />
-                    )}
-                    <span className="text-lg">Skontaktuj się</span>
-                  </Button>
-                </Link>
-              )
-            ) : (
-              <button
-                className="flex items-center gap-4 rounded-full bg-neo-gray px-6 py-3.5 text-lg font-semibold text-black shadow-md transition-colors hover:bg-neo-gray-hover"
-                onClick={() => signIn("google")}
-              >
-                <Icon name="google" className="size-8 stroke-none" />
-                Zaloguj się aby móc się skontaktować
-              </button>
-            )}
+            {contactButtonFactory()}
           </div>
         </CardContent>
       </Card>

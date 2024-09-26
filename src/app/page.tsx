@@ -28,7 +28,6 @@ export default function Home() {
     sortBy: "createdAt",
   });
 
-  console.log(data);
   return (
     <div className="flex flex-col items-center pb-16">
       <div className="relative w-full md:bg-neo-castleton">

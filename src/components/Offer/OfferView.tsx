@@ -73,10 +73,6 @@ export default function OfferView({
       );
     }
 
-    if (isUser) {
-      return <></>;
-    }
-
     if (preview) {
       return (
         <Button className="flex gap-2" size="lg" variant="secondary">
@@ -94,6 +90,10 @@ export default function OfferView({
           <span className="text-lg">Skontaktuj się</span>
         </Button>
       );
+    }
+
+    if (isUser) {
+      return <></>;
     }
 
     return (

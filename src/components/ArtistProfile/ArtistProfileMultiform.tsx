@@ -56,6 +56,8 @@ export function ArtistProfileMultiform({
     }),
   );
 
+  const [saveDisabled, setSaveDisabled] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profileCreated, setProfileCreated] = useState(false);
   const router = useRouter();
@@ -185,6 +187,10 @@ export function ArtistProfileMultiform({
             title: "Zaktualizowano profil",
           });
           setIsSubmitting(false);
+          setSaveDisabled(true);
+          setTimeout(() => {
+            setSaveDisabled(false);
+          }, 5000);
         })
         .catch((error: TRPCError) => {
           // TODO rethink if this is the best way to communicate errors to user
@@ -475,6 +481,7 @@ export function ArtistProfileMultiform({
                     key="submit-button"
                     variant="secondary"
                     className="w-full max-sm:px-0"
+                    disabled={saveDisabled}
                   >
                     {edit ? "Zapisz" : "Stwórz profil"}
                   </Button>

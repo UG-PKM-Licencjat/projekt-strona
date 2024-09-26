@@ -77,8 +77,16 @@ export default function OfferView({
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Offer header */}
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-3xl font-bold leading-none">{data.name}</h1>
-          <p className="flex text-lg text-muted-foreground">
+          <h1
+            className="text-3xl font-bold leading-none"
+            style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
+          >
+            {data.name}
+          </h1>
+          <p
+            className="flex text-lg text-muted-foreground"
+            style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
+          >
             {data.shortDescription}
           </p>
         </div>

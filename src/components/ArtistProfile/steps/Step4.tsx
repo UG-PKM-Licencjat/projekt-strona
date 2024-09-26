@@ -72,11 +72,6 @@ export default function Step4() {
             disabled={previewFiles.length >= 5}
           />
           <CustomError name="files" />
-          Pliki
-          {JSON.stringify(files)}
-          <br />
-          Preview
-          {JSON.stringify(previewFiles)}
         </div>
       </SortableContext>
     </DndContext>

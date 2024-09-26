@@ -13,7 +13,12 @@ import { EyeIcon } from "lucide-react";
 import TipTap from "~/components/RichTextEditor/Tiptap";
 
 const Value = ({ children }: { children: React.ReactNode }) => (
-  <span className="font-semibold">{children}</span>
+  <span
+    className="font-semibold"
+    style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
+  >
+    {children}
+  </span>
 );
 
 export default function Result() {

@@ -161,7 +161,7 @@ export default function GreenProfileEditWithShadcnForms() {
         setIsProcessing(false);
         router.refresh();
       })
-      .catch((error) => {
+      .catch(() => {
         if (!session) {
           toast({
             title: "Error",
@@ -205,7 +205,7 @@ export default function GreenProfileEditWithShadcnForms() {
           await signOut({ callbackUrl: "/" });
         }
       })
-      .catch((error) => {
+      .catch(() => {
         toast({
           title: "Error",
           description: "Nie udało się usunąć konta, spróbuj ponownie później",

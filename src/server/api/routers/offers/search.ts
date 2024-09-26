@@ -41,7 +41,7 @@ const searchProcedure = procedure
         fullName: users.name,
         image: users.image,
         ...getTableColumns(offers),
-        tags: sql`array_agg(${tags.name})`.as("tags"),
+        tags: sql<string[]>`array_agg(${tags.name})`.as("tags"),
       })
       .from(offers)
       .leftJoin(offerTags, eq(offers.id, offerTags.offerId))

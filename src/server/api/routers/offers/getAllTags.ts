@@ -3,7 +3,6 @@ import { procedure } from "~/server/api/trpc";
 
 const getAllTagsProcedure = procedure.query(async ({ ctx }) => {
   const allTags = await ctx.db.select().from(tags);
-  // TODO delete this before deploying
   if (!allTags || allTags.length === 0) {
     console.log("No tags found, adding some");
     const newTags = await ctx.db

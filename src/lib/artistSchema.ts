@@ -1,8 +1,11 @@
 import { z } from "zod";
 
-const fileSchema = z
-  .instanceof(File)
-  .and(z.object({ url: z.string(), key: z.string() }));
+const fileSchema = z.object({
+  url: z.string(),
+  key: z.string(),
+  type: z.string(),
+  name: z.string(),
+});
 
 export const artistSchema = z.object({
   name: z
@@ -32,7 +35,8 @@ export const artistSchema = z.object({
   distance: z
     .number({ message: "" })
     .min(0, { message: "Odległość musi być dodatnia." })
-    .max(600, { message: "Odległość nie może przekraczać 600 km." }),
+    .max(600, { message: "Odległość nie może przekraczać 600 km." })
+    .default(0),
   tags: z
     .array(
       z.object({

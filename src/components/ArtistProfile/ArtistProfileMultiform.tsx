@@ -47,7 +47,16 @@ export function ArtistProfileMultiform({
 }: ArtistProfileMultiformProps) {
   const { width } = useWindowSize();
   const isMobile = width ? width <= 1280 : window.innerWidth <= 1280;
-  const files = useFileStore((state) => state.files);
+  const { files, clearFiles, previewFiles, setPreviewFiles } = useFileStore(
+    (state) => ({
+      files: state.files,
+      clearFiles: state.clearFiles,
+      previewFiles: state.previewFiles,
+      setPreviewFiles: state.setPreviewFiles,
+    }),
+  );
+
+  const [saveDisabled, setSaveDisabled] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profileCreated, setProfileCreated] = useState(false);
@@ -97,8 +106,7 @@ export function ArtistProfileMultiform({
   const toggleDescription = () => setOpenDescription((open) => !open);
 
   const createOffer = trpc.offers.create.useMutation();
-  // TODO create update procedure
-  // const updateOffer = trpc.offers.update.useMutation();
+  const updateOffer = trpc.offers.update.useMutation();
 
   const handleStepChange = async (newStep: number, direction: number) => {
     if (newStep < 0) return;
@@ -114,6 +122,11 @@ export function ArtistProfileMultiform({
       distance: defaultData?.distance ?? 0,
     },
   });
+
+  useEffect(() => {
+    setPreviewFiles(defaultData?.files ?? []);
+    methods.setValue("files", defaultData?.files ?? undefined);
+  }, []);
 
   const formData = methods.watch();
   const previewData: OfferData = {
@@ -139,64 +152,111 @@ export function ArtistProfileMultiform({
   };
 
   const { toast } = useToast();
-  const onSubmit = async (data: ArtistFormData) => {
-    methods.setValue("files", files);
-    setIsSubmitting(true);
-    if (edit) {
-      // TODO handle updating
-      setIsSubmitting(false);
-      router.push("/");
-      return;
-    }
-    // TODO cache the responses here to avoid multiple uploads
-    let uploadedFiles: ClientUploadedFileData<null>[] | undefined;
-    if (files.length > 0) {
-      uploadedFiles = await uploadFiles("galleryUploader", {
-        files,
-      });
-    }
-    const parsedPrice = parseFloat(data.price.replace(",", "."));
-    const profileData = {
-      name: data.name,
-      shortDescription: data.shortDescription,
-      longDescription: data.longDescriptionHTML,
-      files: uploadedFiles,
-      locationName: data.locationName,
-      location: data.location,
-      distance: data.distance,
-      price: parsedPrice,
-      tags: data.tags,
-    };
-    createOffer
-      .mutateAsync(profileData)
-      .then((result) => {
-        // Maybe useful for debugging?
-        // toast({
-        //   title: "Submitted form",
-        //   description: (
-        //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        //       <code className="text-white">
-        //         {JSON.stringify(result, null, 2)}
-        //       </code>
-        //     </pre>
-        //   ),
-        // });
-        setIsSubmitting(false);
-        setProfileCreated(true);
-      })
-      .catch((error: TRPCError) => {
-        // TODO rethink if this is the best way to communicate errors to user
-        toast({
-          title: "Wystąpił błąd",
-          description: error.message,
-          variant: "destructive",
+  let onSubmit: (data: ArtistFormData) => Promise<void>;
+  if (edit) {
+    onSubmit = async (data: ArtistFormData) => {
+      setIsSubmitting(true);
+      let updatedFiles = previewFiles;
+      if (files.length > 0) {
+        let newFiles = await uploadFiles("galleryUploader", {
+          files,
         });
-        setIsSubmitting(false);
-      });
-  };
+        newFiles = newFiles.reverse();
+        updatedFiles = updatedFiles.map((file) =>
+          file.url.startsWith("blob:") ? newFiles.pop()! : file,
+        );
+        setPreviewFiles(updatedFiles);
+        clearFiles();
+      }
+      const parsedPrice = parseFloat(data.price.replace(",", "."));
+      const profileData = {
+        name: data.name,
+        shortDescription: data.shortDescription,
+        longDescription: data.longDescriptionHTML,
+        files: updatedFiles,
+        locationName: data.locationName,
+        location: data.location,
+        distance: data.distance,
+        price: parsedPrice,
+        tags: data.tags,
+      };
+      updateOffer
+        .mutateAsync(profileData)
+        .then((result) => {
+          toast({
+            title: "Zaktualizowano profil",
+          });
+          setIsSubmitting(false);
+          setSaveDisabled(true);
+          setTimeout(() => {
+            setSaveDisabled(false);
+          }, 5000);
+        })
+        .catch((error: TRPCError) => {
+          // TODO rethink if this is the best way to communicate errors to user
+          toast({
+            title: "Wystąpił błąd",
+            description: error.message,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+        });
+    };
+  } else {
+    onSubmit = async (data: ArtistFormData) => {
+      methods.setValue("files", previewFiles);
+      setIsSubmitting(true);
+      // TODO cache the responses here to avoid multiple uploads
+      let uploadedFiles: ClientUploadedFileData<null>[] | undefined;
+      if (files.length > 0) {
+        uploadedFiles = await uploadFiles("galleryUploader", {
+          files,
+        });
+      }
+      const parsedPrice = parseFloat(data.price.replace(",", "."));
+      const profileData = {
+        name: data.name,
+        shortDescription: data.shortDescription,
+        longDescription: data.longDescriptionHTML,
+        files: uploadedFiles,
+        locationName: data.locationName,
+        location: data.location,
+        distance: data.distance,
+        price: parsedPrice,
+        tags: data.tags,
+      };
+      createOffer
+        .mutateAsync(profileData)
+        .then((result) => {
+          // Maybe useful for debugging?
+          // toast({
+          //   title: "Submitted form",
+          //   description: (
+          //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          //       <code className="text-white">
+          //         {JSON.stringify(result, null, 2)}
+          //       </code>
+          //     </pre>
+          //   ),
+          // });
+          setIsSubmitting(false);
+          setProfileCreated(true);
+          clearFiles();
+        })
+        .catch((error: TRPCError) => {
+          // TODO rethink if this is the best way to communicate errors to user
+          toast({
+            title: "Wystąpił błąd",
+            description: error.message,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+        });
+    };
+  }
 
   const onInvalid = (errors: FieldErrors<ArtistFormData>) => {
-    methods.setValue("files", files);
+    methods.setValue("files", previewFiles);
     const errorFields = objectKeys(errors);
     const errorSteps = errorFields
       .map((field) => errors[field]?.message)
@@ -227,7 +287,7 @@ export function ArtistProfileMultiform({
       switch (typeof value) {
         case "string":
         case "number":
-          return value && !error;
+          return (value && !error) || field === "distance";
         case "object":
           return (Object.keys(value).length > 0 && !error) || field === "files";
         default:
@@ -421,6 +481,7 @@ export function ArtistProfileMultiform({
                     key="submit-button"
                     variant="secondary"
                     className="w-full max-sm:px-0"
+                    disabled={saveDisabled}
                   >
                     {edit ? "Zapisz" : "Stwórz profil"}
                   </Button>

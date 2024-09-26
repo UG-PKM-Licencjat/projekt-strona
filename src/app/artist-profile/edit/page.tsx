@@ -4,8 +4,6 @@ import { redirect } from "next/navigation";
 import { api } from "~/trpc/server";
 import { type ArtistFormData } from "~/lib/artistSchema";
 
-// TODO fetch offer data
-
 export default async function CreateArtistProfilePage() {
   const session = await getServerAuthSession();
   if (!session) return;
@@ -24,8 +22,14 @@ export default async function CreateArtistProfilePage() {
     distance: rawOffer?.distance,
     tags: rawOffer?.offerTags,
     price: rawOffer?.price.toString().replace(".", ","),
-    // TODO: add files editing
-    // files: rawOffer?.files,
+    files: rawOffer?.files?.map((file) => {
+      const fileName = file.url.split("/").pop() ?? file.url;
+      return {
+        ...file,
+        key: fileName,
+        name: file.name ?? fileName,
+      };
+    }),
   };
   return (
     <ArtistProfileMultiform

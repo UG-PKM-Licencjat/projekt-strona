@@ -107,6 +107,7 @@ export default function Result() {
             </DialogDescription>
           </DialogHeader>
           <OfferCard
+            preview
             offer={{
               ...data,
               price: parseFloat(data.price.replace(",", ".")),

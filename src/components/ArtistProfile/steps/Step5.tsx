@@ -64,8 +64,9 @@ export default function Step5() {
   };
 
   // Set place position (coords)
-  useEffect(() => {
+  const onPlaceSelect = (place: PlaceResult | null) => {
     if (!place) return;
+    setPlace(place);
     const placeLocation = place.geometry?.location;
     if (!placeLocation) {
       // error handling na brak kordów (to sie na 99,9 nie wydarzy nigdy z tego co rozumiem)
@@ -79,7 +80,7 @@ export default function Step5() {
       lat: placeLocation.lat(),
       lng: placeLocation.lng(),
     });
-  }, [place]);
+  };
 
   return (
     <div className="grid grid-cols-2 place-content-center gap-2 max-sm:grid-cols-1">
@@ -108,7 +109,7 @@ export default function Step5() {
                 }
                 setValue("locationPlaceholder", locationName ?? "");
               }}
-              onPlaceSelect={setPlace}
+              onPlaceSelect={onPlaceSelect}
               placeholder={"Wpisz lokalizację..."}
             />
             <CustomError name="locationName" />

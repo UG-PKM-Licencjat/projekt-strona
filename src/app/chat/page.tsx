@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Button } from "~/components/ui/Button/Button";
+
 export default function Chat() {
   return (
     <div className="flex w-full items-center justify-center">
@@ -9,9 +12,16 @@ export default function Chat() {
           Skontaktuj się z artystą poprzez oferty lub wybierz konwersację z
           panelu z boku.
         </p>
-        <button className="bg-neo-green hover:bg-neo-green-dark rounded px-4 py-2 font-bold text-white">
-          Skontaktuj się z artystą
-        </button>
+        <Link href="/search">
+          <Button className="w-full">Wyszukaj ofertę</Button>
+        </Link>
+        <p className="mt-3 text-red-500">
+          <strong>UWAGA</strong>
+          <br />
+          Serwis czatu korzysta z darmowego deployu w serwisie render. W
+          przypadku nie używania serwisu deploy zostaje uśpiony i przy pierwszym
+          użyciu potrzeba chwili na jego uruchomienie (~5min)
+        </p>
       </div>
     </div>
   );

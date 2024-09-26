@@ -92,7 +92,7 @@ export default function Step2(props: {
             },
           });
           if (isArtist) {
-            router.push("/profile/create");
+            router.push("/artist-profile/create");
           } else {
             handleChange({ ...data, activeTab: 2 });
           }

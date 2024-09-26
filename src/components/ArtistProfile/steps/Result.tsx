@@ -13,7 +13,12 @@ import { EyeIcon } from "lucide-react";
 import TipTap from "~/components/RichTextEditor/Tiptap";
 
 const Value = ({ children }: { children: React.ReactNode }) => (
-  <span className="font-semibold">{children}</span>
+  <span
+    className="font-semibold"
+    style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
+  >
+    {children}
+  </span>
 );
 
 export default function Result() {
@@ -74,7 +79,7 @@ export default function Result() {
         <Value>{data.distance}km</Value>
       </div>
       <div className="flex items-center gap-2">
-        <h3>Zdjęcia: </h3>
+        <h3>Galeria: </h3>
         <Value>{data.files?.map((file) => file.name).join(", ")}</Value>
       </div>
     </div>

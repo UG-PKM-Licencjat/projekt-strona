@@ -5,7 +5,6 @@ import { useDropzone, type FileRejection } from "react-dropzone";
 import { v4 as uuidv4 } from "uuid";
 import { SortableItem } from "~/components/Sortable/SortableItem";
 import { Button } from "~/components/ui/Button/Button";
-import { Icon } from "~/components/ui/Icon/Icon";
 import { FilePreview } from "~/components/uploadthing/FilePreview";
 import { cn } from "~/lib/utils";
 import { type PreviewDropzoneProps } from "../PreviewDropzone";
@@ -20,8 +19,8 @@ import {
 export default function PreviewDropzone({
   files,
   setFiles,
+  removeFile,
   routeConfig,
-  startUpload,
   isUploading,
   className,
   showUploadButton = true,
@@ -62,10 +61,6 @@ export default function PreviewDropzone({
     },
     [setFiles, maxFileCount],
   );
-
-  const removeFile = (fileKey: string) => {
-    setFiles((files) => files.filter((file) => file.key !== fileKey));
-  };
 
   const { fileTypes } = generatePermittedFileTypes(routeConfig);
 
@@ -169,29 +164,6 @@ export default function PreviewDropzone({
                 {allowedContentTextLabelGenerator(routeConfig)}
               </p>
             </div>
-            {files.length > 0 && showUploadButton && startUpload && (
-              <div className="mt-4 flex items-center justify-center">
-                <Button
-                  variant="secondary"
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (!files || isUploading) return;
-
-                    void startUpload(files);
-                  }}
-                >
-                  <span className="px-3 py-2 text-white">
-                    {isUploading ? (
-                      <Icon name="spinner" className="size-6 animate-spin" />
-                    ) : (
-                      `Prześlij ${files.length} plik${files.length >= 5 ? "ów" : files.length >= 2 ? "i" : ""}`
-                    )}
-                  </span>
-                </Button>
-              </div>
-            )}
             {files.length === 0 && showUploadButton && (
               <div className="mt-4 flex items-center justify-center">
                 <Button variant="secondary" type="button">

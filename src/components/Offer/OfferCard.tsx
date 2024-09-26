@@ -6,8 +6,8 @@ import { Tag } from "../Tag/Tag";
 export interface Offer {
   id: string;
   name: string;
-  ratingsSum: number | null;
-  votes: number | null;
+  ratingsSum?: number | null;
+  votes?: number | null;
   price: number | null;
   shortDescription: string;
   locationName: string | null;
@@ -16,8 +16,7 @@ export interface Offer {
   tags: string[];
 }
 
-const OfferCard = ({ offer }: { offer: Offer }) => (
-  // console.log(tags);
+const OfferCard = ({ offer, preview }: { offer: Offer; preview?: boolean }) => (
   <div className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-md">
     <div className="flex h-full flex-col justify-between p-4">
       <div>
@@ -71,11 +70,17 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
         )}
       </div>
     </div>
-    <Link href={`/offers/${offer.id}`}>
+    {preview ? (
       <div className="w-full bg-neo-castleton py-2 text-center text-white transition duration-300 hover:bg-neo-castleton-hover">
         Sprawdź
       </div>
-    </Link>
+    ) : (
+      <Link href={`/offers/${offer.id}`}>
+        <div className="w-full bg-neo-castleton py-2 text-center text-white transition duration-300 hover:bg-neo-castleton-hover">
+          Sprawdź
+        </div>
+      </Link>
+    )}
   </div>
 );
 

@@ -11,6 +11,7 @@ export interface UserWithMessage {
   lastMessage: string;
   image: string;
   unread: boolean;
+  offerId: string | null;
 }
 
 export function Sidebar({
@@ -62,6 +63,7 @@ export function Sidebar({
                   (msg) => msg.to === session?.user.id && !msg.read,
                 ) ?? false,
               image: userData.image ?? "",
+              offerId: userData.offerId,
             }) satisfies UserWithMessage,
         )
         .sort((a, b) => (a.unread === b.unread ? 0 : a.unread ? -1 : 1)) // TODO currently sort by unread but should be timestamp
@@ -82,7 +84,12 @@ export function Sidebar({
                 <AvatarImage src={conversation.image} alt={conversation.name} />
                 <AvatarFallback>{conversation.name}</AvatarFallback>
               </Avatar>
-              <span>{conversation.name}</span>
+              <div className="flex flex-col">
+                <span>{conversation.name}</span>
+                <p className={`text-sm`}>
+                  {conversation.offerId ? "Artysta" : "Użytkownik"}
+                </p>
+              </div>
             </div>
             {conversation.unread && (
               <div className="size-2.5 rounded-full bg-neo-gray"></div>

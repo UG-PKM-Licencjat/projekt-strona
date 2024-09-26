@@ -24,6 +24,7 @@ export default function Home() {
     location: { x: null, y: null },
     skip: 0,
     limit: 3,
+    sortBy: "createdAt",
   });
 
   return (
@@ -87,7 +88,7 @@ export default function Home() {
       </div>
 
       <div className="w-max-[1000px] mt-10 h-max w-3/4">
-        <h2 className="text-2xl font-bold">Przykładowe oferty</h2>
+        <h2 className="text-2xl font-bold">Najnowsze oferty</h2>
       </div>
       <div className="w-max-[1000px] mt-10 grid w-3/4 grid-cols-1 gap-6 max-xl:hidden sm:grid-cols-2 lg:grid-cols-3">
         {data

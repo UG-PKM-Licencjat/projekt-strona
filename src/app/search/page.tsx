@@ -262,8 +262,19 @@ export default function SearchPage() {
               ))}
         </div>
 
+        {!data?.offerCount || data?.offerCount === 0 ? (
+          <div className="mx-auto max-w-lg rounded-xl bg-white p-8 shadow-lg">
+            <h1 className="text-neo-green-dark mb-4 text-2xl font-semibold">
+              Nie znaleźliśmy tego czego szukasz.
+            </h1>
+            <p className="mb-6 text-lg text-gray-600">
+              Spróbuj dostosować parametry wyszukiwania.
+            </p>
+          </div>
+        ) : null}
+
         {/* Pagination Buttons */}
-        {data?.offerCount && (
+        {data?.offerCount ? (
           <div className="mt-8 flex items-center justify-center space-x-2">
             {
               <Button
@@ -295,7 +306,7 @@ export default function SearchPage() {
               </Button>
             }
           </div>
-        )}
+        ) : null}
       </main>
     </div>
   );

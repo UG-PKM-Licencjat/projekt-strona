@@ -16,6 +16,7 @@ interface FileStore<T> {
   setFiles: (action: SetStateAction<T>) => void;
   setPreviewFiles: (action: SetStateAction<PreviewFile[]>) => void;
   removeFile: (fileKey: string) => void;
+  clearAll: () => void;
   clearFiles: () => void;
 }
 
@@ -63,12 +64,19 @@ export const useFileStore = create<FileStore<CustomFile[]>>((set) => ({
         previewFiles: newPreviewFiles,
       };
     }),
-  clearFiles: () =>
+  clearAll: () =>
     set(() => {
       return {
         touched: false,
         files: [],
         previewFiles: [],
+      };
+    }),
+  clearFiles: () =>
+    set(() => {
+      return {
+        touched: false,
+        files: [],
       };
     }),
 }));

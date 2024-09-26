@@ -104,8 +104,7 @@ export function ArtistProfileMultiform({
   const toggleDescription = () => setOpenDescription((open) => !open);
 
   const createOffer = trpc.offers.create.useMutation();
-  // TODO create update procedure
-  // const updateOffer = trpc.offers.update.useMutation();
+  const updateOffer = trpc.offers.update.useMutation();
 
   const handleStepChange = async (newStep: number, direction: number) => {
     if (newStep < 0) return;
@@ -154,7 +153,6 @@ export function ArtistProfileMultiform({
   let onSubmit: (data: ArtistFormData) => Promise<void>;
   if (edit) {
     onSubmit = async (data: ArtistFormData) => {
-      // TODO handle updating
       setIsSubmitting(true);
       let updatedFiles = previewFiles;
       if (files.length > 0) {
@@ -165,6 +163,8 @@ export function ArtistProfileMultiform({
         updatedFiles = updatedFiles.map((file) =>
           file.url.startsWith("blob:") ? newFiles.pop()! : file,
         );
+        setPreviewFiles(updatedFiles);
+        clearFiles();
       }
       const parsedPrice = parseFloat(data.price.replace(",", "."));
       const profileData = {
@@ -178,19 +178,23 @@ export function ArtistProfileMultiform({
         price: parsedPrice,
         tags: data.tags,
       };
-      setIsSubmitting(false);
-      toast({
-        title: "Submitted form",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">
-              {JSON.stringify(profileData, null, 2)}
-            </code>
-          </pre>
-        ),
-      });
-      // router.push("/");
-      return;
+      updateOffer
+        .mutateAsync(profileData)
+        .then((result) => {
+          toast({
+            title: "Zaktualizowano profil",
+          });
+          setIsSubmitting(false);
+        })
+        .catch((error: TRPCError) => {
+          // TODO rethink if this is the best way to communicate errors to user
+          toast({
+            title: "Wystąpił błąd",
+            description: error.message,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+        });
     };
   } else {
     onSubmit = async (data: ArtistFormData) => {

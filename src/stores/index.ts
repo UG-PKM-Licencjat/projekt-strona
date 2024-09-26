@@ -162,18 +162,21 @@ async function markAsReadRest(session: Session, otherUserId: string) {
 }
 
 async function fetchSampleMessagesRest(session: Session) {
-  const messages: Array<Message> = (await (
-    await fetch(
-      `https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages/sample?user=${session.user.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.idToken}`,
-        },
+  const result = await fetch(
+    `https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages/sample?user=${session.user.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.user.idToken}`,
       },
-    )
-  ).json()) as Array<Message>;
+    },
+  );
 
-  // TODO what if error?
+  if (result.status >= 400) {
+    throw new Error("IdToken you're sending doesn't work.");
+  }
+
+  const messages: Array<Message> = (await result.json()) as Array<Message>;
+
   return messages;
 }
 

@@ -18,7 +18,7 @@ export default function Chat() {
         <p className="mt-3 text-red-500">
           <strong>UWAGA</strong>
           <br />
-          serwis czatu korzysta z darmowego deployu w serwisie render. W
+          Serwis czatu korzysta z darmowego deployu w serwisie render. W
           przypadku nie używania serwisu deploy zostaje uśpiony i przy pierwszym
           użyciu potrzeba chwili na jego uruchomienie (~5min)
         </p>

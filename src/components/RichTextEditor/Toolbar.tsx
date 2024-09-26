@@ -1026,10 +1026,7 @@ export function Toolbar({ editor, className }: Props) {
               <Popover>
                 <Tooltip>
                   <TooltipTrigger>
-                    <PopoverTrigger
-                      asChild
-                      className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground"
-                    >
+                    <PopoverTrigger className="h-9 w-9 cursor-pointer appearance-none rounded-md bg-transparent px-2.5 py-2 transition-colors hover:bg-muted hover:text-muted-foreground">
                       <Icon
                         name="youtube"
                         className="size-4 fill-[#ff0000] stroke-none"

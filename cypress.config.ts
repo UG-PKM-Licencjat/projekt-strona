@@ -103,7 +103,7 @@ export default defineConfig({
     },
     baseUrl: "http://localhost:3000",
     retries: {
-      runMode: 2,
+      runMode: 3,
       openMode: 0,
     },
     watchForFileChanges: false,

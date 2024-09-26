@@ -1,6 +1,7 @@
 import { MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Tag } from "../Tag/Tag";
 
 export interface Offer {
   id: string;
@@ -11,15 +12,16 @@ export interface Offer {
   shortDescription: string;
   locationName: string | null;
   distance: number | null;
-
   image: string | null;
+  tags: string[];
 }
 
 const OfferCard = ({ offer }: { offer: Offer }) => (
+  // console.log(tags);
   <div className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-md">
     <div className="flex h-full flex-col justify-between p-4">
       <div>
-        <div className="mb-4 flex items-start justify-between">
+        <div className="mb-4 flex h-20 items-start justify-between">
           <Image
             src={offer.image ?? ""}
             alt={offer.name}
@@ -28,11 +30,23 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
             sizes="100px"
             className="h-20 w-20 rounded-full border-2 border-neo-sea object-cover"
           />
-          {offer.price && (
-            <div className="rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-white">
-              {offer.price} zł
-            </div>
-          )}
+          <div className="flex h-20 flex-1 flex-col items-end justify-between">
+            {offer.price && (
+              <div className="w-fit rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-white">
+                {offer.price} zł
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex h-20 flex-row flex-wrap gap-2">
+          {offer.tags.map((tag) => (
+            <Tag
+              className="h-fit w-max text-nowrap rounded bg-neo-mantis px-1.5 py-1 text-base"
+              key={tag}
+            >
+              {tag}
+            </Tag>
+          ))}
         </div>
         <h3 className="mb-2 line-clamp-1 text-lg font-semibold text-neo-castleton">
           {offer.name}

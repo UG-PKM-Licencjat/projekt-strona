@@ -130,10 +130,7 @@ export function Toolbar({ editor, className }: Props) {
 
   return (
     <nav
-      className={cn(
-        "flex flex-grow gap-1 overflow-x-hidden rounded-md bg-white p-1",
-        className,
-      )}
+      className={cn("flex flex-grow gap-1 rounded-md bg-white p-1", className)}
       ref={mainToolbarRef}
     >
       <TooltipProvider>

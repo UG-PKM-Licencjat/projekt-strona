@@ -14,6 +14,8 @@ interface ConversationsStore {
   fetchMessagesForUser: (
     session: Session,
     otherUserId: string,
+    skip: number,
+    limit: number,
   ) => Promise<void>;
   fetchSampleMessages: (session: Session) => Promise<void>;
   addMessage: (userId: string, message: Message) => void;
@@ -57,8 +59,13 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
     });
   },
   // TODO sort if needed
-  fetchMessagesForUser: async (session: Session, otherUserId: string) => {
-    const messages = await fetchMessagesRest(session, otherUserId);
+  fetchMessagesForUser: async (
+    session: Session,
+    otherUserId: string,
+    skip: number,
+    limit: number,
+  ) => {
+    const messages = await fetchMessagesRest(session, otherUserId, skip, limit);
 
     set((state) => {
       const filtered = messages.filter((msg) => {
@@ -73,8 +80,8 @@ const useConversationsStore = create<ConversationsStore>((set) => ({
         conversations: {
           ...state.conversations,
           [otherUserId]: [
-            ...(state.conversations[otherUserId] ?? []),
             ...filtered,
+            ...(state.conversations[otherUserId] ?? []),
           ],
         },
       };
@@ -180,18 +187,22 @@ async function fetchSampleMessagesRest(session: Session) {
   return messages;
 }
 
-async function fetchMessagesRest(session: Session, otherUserId: string) {
+async function fetchMessagesRest(
+  session: Session,
+  otherUserId: string,
+  skip: number,
+  limit: number,
+) {
   const response = await fetch(
-    `https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages?userA=${session.user.id}&userB=${otherUserId}`,
+    `https://${env.NEXT_PUBLIC_CHAT_BASE_URL}/messages?userA=${session.user.id}&userB=${otherUserId}&skip=${skip}&limit=${limit}`,
     {
       headers: {
         Authorization: `Bearer ${session.user.idToken}`,
       },
     },
-  ); // TODO what if error
+  );
 
   const messages = (await response.json()) as Array<Message>;
-
   return messages;
 }
 

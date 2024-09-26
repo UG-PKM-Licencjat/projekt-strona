@@ -11,12 +11,19 @@ export default function Step1() {
     <div className="flex flex-col gap-4">
       <Label className="flex flex-col justify-between gap-2">
         <span>Tytuł</span>
-        <Input placeholder="Tytuł" {...register("name")} autoComplete="off" />
+        <Input
+          placeholder="np. Nowak & Kowalski - zespół na wesele"
+          {...register("name")}
+          autoComplete="off"
+        />
         <CustomError name="name" />
       </Label>
       <Label className="flex flex-col gap-2">
         <span>Opis</span>
-        <Textarea placeholder="Opis" {...register("shortDescription")} />
+        <Textarea
+          placeholder="np. Dwaj przyjaciele grają co czują."
+          {...register("shortDescription")}
+        />
         <CustomError name="shortDescription" />
       </Label>
     </div>

@@ -97,7 +97,6 @@ export const Navbar = ({
               )}
               {!session && (
                 <button
-                    id="nextAuthLogin"
                   className="flex items-center gap-2 rounded-full bg-neo-gray px-4 py-2.5 font-semibold text-black shadow-md transition-colors hover:bg-neo-gray-hover"
                   onClick={() => signIn("google")}
                 >

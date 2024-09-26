@@ -17,6 +17,7 @@ import {
   CarouselPrevious,
 } from "~/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import Link from "next/link";
 
 export default function Home() {
   const { data } = trpc.offers.search.useQuery({
@@ -55,9 +56,9 @@ export default function Home() {
             </h2>
           </div>
           <div className="my-10 w-3/4 md:hidden">
-            <a href="/search">
+            <Link href="/search">
               <Button className="w-full">Wyszukaj już teraz!</Button>
-            </a>
+            </Link>
           </div>
         </div>
         <Image

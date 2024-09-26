@@ -45,7 +45,7 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
             </Tag>
           ))}
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-neo-castleton">
+        <h3 className="mb-2 line-clamp-1 text-lg font-semibold text-neo-castleton">
           {offer.name}
         </h3>
         <p className="mb-4 line-clamp-2 text-sm text-neo-castleton">

@@ -22,7 +22,7 @@ const offersSchema = createInsertSchema(offers, {
   })
   .omit({ userId: true });
 
-const createProcedure = authedProcedure
+const updateProcedure = authedProcedure
   .input(offersSchema)
   .mutation(async ({ ctx, input }) => {
     if (!ctx.session.user.id) {
@@ -59,28 +59,30 @@ const createProcedure = authedProcedure
       .where(eq(offers.userId, userId))
       .limit(1);
 
-    if (offerResult) {
+    if (!offerResult) {
       logEvent({
-        message: `User has already created an offer.`,
-        additionalInfo: JSON.stringify(offerResult),
+        message: `User has not created an offer.`,
+        additionalInfo: `User ${userId} tried updating an offer.`,
         logType: LogType.ERROR,
       });
       throw new TRPCError({
-        code: "CONFLICT",
-        message:
-          "User has already created an offer. If you want to update it, please use the update endpoint.",
+        code: "NOT_FOUND",
+        message: "User has not created an offer.",
       });
     }
 
-    const { data, error } = await ctx.db.transaction(async (tx) => {
+    const data = await ctx.db.transaction(async (tx) => {
       const [offerReturned] = await tx
-        .insert(offers)
-        .values({ userId, ...filteredInput })
+        .update(offers)
+        .set(filteredInput)
+        .where(eq(offers.id, offerResult.id))
         .returning();
 
       if (!offerReturned) {
-        tx.rollback();
-        return { data: null, error: "Failed to create offer" };
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update offer",
+        });
       }
 
       const offerId = offerReturned.id;
@@ -96,11 +98,22 @@ const createProcedure = authedProcedure
         );
 
       if (existingTags.length !== selectedTags.length) {
-        tx.rollback();
-        return {
-          data: null,
-          error: "Some tags do not exist in the database",
-        };
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Some tags do not exist in the database",
+        });
+      }
+
+      const tagsDeleted = await tx
+        .delete(offerTags)
+        .where(eq(offerTags.offerId, offerId))
+        .returning();
+
+      if (tagsDeleted.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Failed to delete tags relation",
+        });
       }
 
       const [tagsReturned] = await tx
@@ -109,24 +122,16 @@ const createProcedure = authedProcedure
         .returning();
 
       if (!tagsReturned) {
-        tx.rollback();
-        return { data: null, error: "Failed to establish tags relation" };
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to establish tags relation",
+        });
       }
 
-      return { data: offerReturned, error: null };
+      return offerReturned;
     });
 
-    if (error) {
-      logEvent({
-        message: error,
-        logType: LogType.ERROR,
-      });
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: error,
-      });
-    }
     return data;
   });
 
-export default createProcedure;
+export default updateProcedure;

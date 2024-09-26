@@ -53,7 +53,9 @@ const UserMenu = ({ session }: UserMenuProps) => {
             <DropdownMenuItem asChild>
               <Link
                 href={
-                  session.user.isArtist ? "/profile/edit" : "/profile/create"
+                  session.user.isArtist
+                    ? "/artist-profile/edit"
+                    : "/artist-profile/create"
                 }
                 className="flex cursor-pointer items-center gap-2"
               >

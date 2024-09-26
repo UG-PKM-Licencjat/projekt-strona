@@ -1,6 +1,5 @@
 import { FileImageIcon, FileVideoIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { type ClientUploadedFileData } from "uploadthing/types";
 import {
   Tooltip,
   TooltipContent,
@@ -12,7 +11,7 @@ export function FilePreview({
   file,
   deleteFile,
 }: {
-  file: ClientUploadedFileData<null> | (File & { url: string; key: string });
+  file: { url: string; key: string; name: string; type: string };
   deleteFile: (fileKey: string) => void;
 }) {
   return (

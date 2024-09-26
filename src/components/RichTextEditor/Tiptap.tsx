@@ -107,6 +107,7 @@ export default function TipTap({
       <EditorContent
         editor={editor}
         className={cn("overflow-x-auto", classNameEditor)}
+        style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
       />
       {toolbarActive && (
         <div

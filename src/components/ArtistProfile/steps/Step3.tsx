@@ -17,13 +17,17 @@ import {
 
 export default function Step3() {
   const { setValue, trigger, getValues } = useFormContext<ArtistFormData>();
-  const { data: tags } = trpc.offers.getAllTags.useQuery();
+  const { data: rawTags } = trpc.offers.getAllTags.useQuery();
 
   const [inputText, setInputText] = useState("");
   const [open, setOpen] = useState(false);
   const [touched, setTouched] = useState(false);
   const [resultTags, setResultTags] = useState<{ id: number; name: string }[]>(
     getValues("tags") ?? [],
+  );
+
+  const tags = rawTags?.filter(
+    (tag) => !resultTags.some((resultTag) => resultTag.id === tag.id),
   );
 
   function onInputChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -83,7 +87,8 @@ export default function Step3() {
           }}
           onInteractOutside={() => void trigger("tags")}
         >
-          {filteredTags && filteredTags?.length > 0 &&
+          {filteredTags &&
+            filteredTags?.length > 0 &&
             filteredTags?.map((tag) => (
               <div
                 key={tag.id}

@@ -146,7 +146,7 @@ export const offers = pgTable("offer", {
   location: jsonb("location").notNull().$type<{ x: number; y: number }>(),
   // location: pointType("location").notNull(),
   distance: integer("distance").default(0).notNull(),
-  files: jsonb("files").$type<{ url: string; type: string }[]>(),
+  files: jsonb("files").$type<{ url: string; type: string; name: string }[]>(),
 });
 
 export const offersRelations = relations(offers, ({ many, one }) => ({

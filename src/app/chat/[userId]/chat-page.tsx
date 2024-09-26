@@ -80,15 +80,19 @@ export default function Conversation({
           }
           setLoadingMore(true);
           setSkip((prev) => prev + 5);
-          fetchMessagesForUser(session, userId, skip, limit).then(() => {
-            setLoadingMore(false);
-            if (conversations[userId]) {
-              if (lastNumber === conversations[userId].length) {
-                setDoPagination(false);
+          fetchMessagesForUser(session, userId, skip, limit)
+            .then(() => {
+              setLoadingMore(false);
+              if (conversations[userId]) {
+                if (lastNumber === conversations[userId].length) {
+                  setDoPagination(false);
+                }
+                setLastNumber(conversations[userId].length);
               }
-              setLastNumber(conversations[userId].length);
-            }
-          });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       },
       { threshold: 0.5 },

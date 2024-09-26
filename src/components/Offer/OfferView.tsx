@@ -56,6 +56,8 @@ export default function OfferView({
   const router = useRouter();
   const { data: session } = useSession();
 
+  const isUser = session?.user.id === data.users.id;
+
   const position = { lat: data.location.y, lng: data.location.x };
 
   return (
@@ -166,7 +168,7 @@ export default function OfferView({
 
           <div className="flex w-full justify-start md:justify-end">
             {session ? (
-              preview ? (
+              preview || isUser ? (
                 <Button className="flex gap-2" size="lg" variant="secondary">
                   {!data.users.image ? (
                     <div className="size-10 shrink-0 animate-pulse overflow-hidden rounded-full bg-neo-pink-hover"></div>

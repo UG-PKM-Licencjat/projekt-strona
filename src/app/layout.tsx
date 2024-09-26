@@ -13,6 +13,7 @@ import { ourFileRouter } from "~/app/api/uploadthing/core";
 import { Toaster } from "~/components/ui/toaster";
 import { Navbar } from "~/components/Navbar/Navbar";
 import { type Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Bebop",
@@ -33,6 +34,10 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await getServerAuthSession();
+
+  if (session?.error) {
+    redirect("/api/auth/signin");
+  }
   return (
     <html lang="pl">
       <body

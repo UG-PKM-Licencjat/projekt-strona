@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { procedure } from "../../trpc";
-import { offers, users } from "~/server/db/schema";
+import { offers, offerTags, tags, users } from "~/server/db/schema";
 import { buildSearchQuery } from "./util";
 import { asc, count, desc, eq, getTableColumns, sql } from "drizzle-orm";
 
@@ -26,7 +26,10 @@ const searchProcedure = procedure
       .select({ count: count() })
       .from(offers)
       .leftJoin(users, eq(offers.userId, users.id))
+      .leftJoin(offerTags, eq(offers.id, offerTags.offerId))
+      .leftJoin(tags, eq(offerTags.tagId, tags.id))
       .where(query)
+      .groupBy(offers.id)
       .limit(1);
 
     const orderByColumn = input.sortBy
@@ -44,7 +47,10 @@ const searchProcedure = procedure
       })
       .from(offers)
       .leftJoin(users, eq(offers.userId, users.id))
+      .leftJoin(offerTags, eq(offers.id, offerTags.offerId))
+      .leftJoin(tags, eq(offerTags.tagId, tags.id))
       .where(query)
+      .groupBy(offers.id, users.name, users.image)
       .orderBy(orderDirection)
       .limit(input.limit)
       .offset(input.skip);

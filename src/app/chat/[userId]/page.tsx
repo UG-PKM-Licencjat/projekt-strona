@@ -53,26 +53,6 @@ export default function Conversation({
     );
   }
 
-  // // scroll pagination
-  // const observerRef = useRef(null);
-  // const observer = new IntersectionObserver(
-  //   (entries: IntersectionObserverEntry[]) => {
-  //     if (entries[0]?.isIntersecting && store.conversations[userId]) {
-  //       if (store.conversations[userId].length > 0) {
-  //         void fetchNextMessages();
-  //       }
-  //     }
-  //   },
-  //   { threshold: 0.5 },
-  // );
-
-  const fetchNextMessages = async () => {
-    // fetch next messages
-    setTimeout(() => {
-      alert("fetching next messages");
-    }, 1000);
-  };
-
   return (
     <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden md:p-6">
       <div className="flex items-center justify-between rounded-lg bg-neo-castleton p-4 shadow-lg">
@@ -85,9 +65,14 @@ export default function Conversation({
             <AvatarFallback>Y</AvatarFallback>
           </Avatar>
           {otherUserData ? (
-            <span className="text-lg font-semibold text-white">
-              {otherUserData?.name}
-            </span>
+            <>
+              <span className="text-lg font-semibold text-white">
+                {otherUserData?.name}
+              </span>
+              <span className="text-base font-semibold text-white">
+                {otherUserData?.offerId ? "Artysta" : "Użytkownik"}
+              </span>
+            </>
           ) : (
             <SkeletonCard className="h-8 w-44 rounded" />
           )}
@@ -97,12 +82,14 @@ export default function Conversation({
             href={`/offers/${otherUserData?.offerId}`}
             className="mr-6 text-base font-medium text-white transition-colors duration-200 hover:text-gray-300 hover:underline"
           >
-            Oferta
+            <Button variant="secondary" size="sm">
+              Zobacz ofertę artysty
+            </Button>
           </Link>
         )}
       </div>
 
-      <div className="flex flex-1 flex-col overflow-y-scroll p-4">
+      <div className="flex flex-1 flex-col overflow-y-auto p-4">
         {!conversations[userId] && (
           <div className="flex h-full w-full items-center justify-center">
             <LoaderCircleIcon className="size-10 animate-spin text-white" />
@@ -123,7 +110,6 @@ export default function Conversation({
               }}
             />
           ))}
-        {/* <div ref={observerRef}></div> */}
       </div>
       <form className="mr-5 flex" onSubmit={handleSubmit}>
         <Input

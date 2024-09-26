@@ -85,15 +85,21 @@ export default function GreenProfileEditWithShadcnForms() {
 
   const { data: session, update } = useSession();
 
-  const [avatarUrl, setAvatarUrl, setAvatar, uploadAvatar, clearAvatar, avatarChanged] =
-    useAvatarStore((state) => [
-      state.avatarUrl,
-      state.setAvatarUrl,
-      state.setAvatar,
-      state.uploadAvatar,
-      state.clearAvatar,
-      state.avatarChanged,
-    ]);
+  const [
+    avatarUrl,
+    setAvatarUrl,
+    setAvatar,
+    uploadAvatar,
+    clearAvatar,
+    avatarChanged,
+  ] = useAvatarStore((state) => [
+    state.avatarUrl,
+    state.setAvatarUrl,
+    state.setAvatar,
+    state.uploadAvatar,
+    state.clearAvatar,
+    state.avatarChanged,
+  ]);
 
   const [avatarError, setAvatarError] = useState("");
 
@@ -329,7 +335,6 @@ export default function GreenProfileEditWithShadcnForms() {
             <Button
               variant="outline"
               className="w-1/2 max-xl:mt-4 max-xl:w-full"
-              type="submit"
               onClick={() => {
                 setIsOpen(true);
               }}
@@ -351,7 +356,6 @@ export default function GreenProfileEditWithShadcnForms() {
                 <Button
                   variant="outline"
                   className="w-1/2"
-                  type="submit"
                   onClick={() => {
                     void onDelete();
                   }}
@@ -361,7 +365,6 @@ export default function GreenProfileEditWithShadcnForms() {
                 <Button
                   variant="secondary"
                   className="w-1/2"
-                  type="submit"
                   onClick={() => {
                     setIsOpen(false);
                   }}

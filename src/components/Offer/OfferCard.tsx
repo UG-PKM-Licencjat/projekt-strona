@@ -26,22 +26,22 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
             width={100}
             height={100}
             sizes="100px"
-            className="h-20 w-20 rounded-full border-2 border-[#5f8d4e] object-cover"
+            className="h-20 w-20 rounded-full border-2 border-neo-sea object-cover"
           />
           {offer.price && (
-            <div className="rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-[#f0e4d7]">
+            <div className="rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-white">
               {offer.price} zł
             </div>
           )}
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-[#2d6a4f]">
+        <h3 className="mb-2 text-lg font-semibold text-neo-castleton">
           {offer.name}
         </h3>
-        <p className="mb-4 line-clamp-2 text-sm text-[#4a6741]">
+        <p className="mb-4 line-clamp-2 text-sm text-neo-castleton">
           {offer.shortDescription}
         </p>
       </div>
-      <div className="flex items-center justify-between text-sm text-[#2d6a4f]">
+      <div className="flex items-center justify-between text-sm text-neo-castleton">
         <div className="flex items-center gap-1">
           <MapPin size={14} />
           <span>

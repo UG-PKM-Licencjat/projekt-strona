@@ -187,11 +187,7 @@ export default function Step1(props: {
                   <FormItem className="box-border flex w-full flex-col">
                     <FormLabel>Imię</FormLabel>
                     <FormControl>
-                      <Input
-                        className="firstName"
-                        placeholder="Podaj imię"
-                        {...field}
-                      />
+                      <Input placeholder="Podaj imię" {...field} />
                     </FormControl>
                     <div className="h-2">
                       <FormMessage />
@@ -206,11 +202,7 @@ export default function Step1(props: {
                   <FormItem className="box-content flex flex-col">
                     <FormLabel>Nazwisko</FormLabel>
                     <FormControl>
-                      <Input
-                        className="lastName"
-                        placeholder="Podaj nazwisko"
-                        {...field}
-                      />
+                      <Input placeholder="Podaj nazwisko" {...field} />
                     </FormControl>
                     <div className="h-2">
                       <FormMessage />

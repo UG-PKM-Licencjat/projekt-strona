@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import { env } from "../../env.js"; // has bo like that!!! DONT ALIAS
+import { env } from "~/env"; // has bo like that!!! DONT ALIAS
 import * as schema from "./schema";
 
 /**

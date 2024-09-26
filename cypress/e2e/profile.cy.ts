@@ -20,7 +20,7 @@ describe("Edit profile", function () {
   });
 
   it("desktop - should edit profile", () => {
-    cy.get("#radix-\\:R1abj6\\: > .relative > .aspect-square").click();
+    cy.get("#radix-\\:R1abcq\\:").click();
     cy.get("a[href='/profile']").click();
     cy.contains("Edytuj profil");
     cy.get("#\\:r3\\:-form-item").clear();
@@ -34,9 +34,7 @@ describe("Edit profile", function () {
 
   it("mobile - should edit profile", () => {
     cy.viewport("iphone-se2");
-    cy.get(
-      ".bottom-0 > .items-center > button > .relative > .aspect-square",
-    ).click();
+    cy.get(".bottom-0 > .items-center > button >").click();
     cy.get("a[href='/profile']").click();
     cy.get("#\\:r0\\:-form-item").clear();
     cy.get("#\\:r0\\:-form-item").type("nowytest");
@@ -48,7 +46,7 @@ describe("Edit profile", function () {
   });
 
   it("desktop - should delete profile", () => {
-    cy.get("#radix-\\:R1abj6\\: > .relative > .aspect-square").click();
+    cy.get("#radix-\\:R1abcq\\:").click();
     cy.get("a[href='/profile']").click();
     cy.contains("Usuń konto");
     cy.get("#delete-account").click();
@@ -57,17 +55,17 @@ describe("Edit profile", function () {
     cy.get("#delete-account").click();
     cy.get("button").contains("Tak").click();
     cy.intercept("GET", "/api/auth/session", []);
+    cy.clearCookie("next-auth.session-token");
     cy.visit("/");
-    cy.get("#radix-\\:R1abj6\\: > .relative > .aspect-square").should(
-      "not.exist",
-    );
+    cy.get("#radix-\\:R1abcq\\:").should("not.exist");
   });
 
   it("mobile - should delete profile", () => {
+    cy.intercept("POST", "/api/trpc/user.delete/*", []);
+    cy.intercept("GET", "/api/auth/session", []);
+
     cy.viewport("iphone-se2");
-    cy.get(
-      ".bottom-0 > .items-center > button > .relative > .aspect-square",
-    ).click();
+    cy.get(".bottom-0 > .items-center > button >").click();
     cy.get("a[href='/profile']").click();
     cy.contains("Usuń konto");
     cy.get("#delete-account").click();
@@ -75,13 +73,10 @@ describe("Edit profile", function () {
     cy.get("button").contains("Nie").click();
     cy.get("#delete-account").click();
     cy.get("button").contains("Tak").click();
-    cy.intercept("GET", "/api/auth/session", []);
-    cy.intercept("GET", "/api/auth/csrf", []);
+    cy.clearCookie("next-auth.session-token");
     cy.visit("/");
-    cy.get(
-      ".bottom-0 > .items-center > button > .relative > .aspect-square",
-    ).click();
-    cy.get("a[href='/profile']").click();
+    cy.get(".bottom-0 > .items-center > button > ").click();
+    cy.get("a[href='/profile']").should("not.exist");
     cy.contains("Usuń konto").should("not.exist");
   });
 });

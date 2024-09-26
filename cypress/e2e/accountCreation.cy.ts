@@ -22,7 +22,7 @@ describe("Account creation", function () {
   });
 
   it("desktop - should create account", () => {
-    cy.get("#radix-\\:R1abj6\\: > .relative > .aspect-square").click();
+    cy.get("#radix-\\:R1abcq\\:").click();
     cy.get("a[href='/createaccount']").click();
     cy.contains("Cieszymy się, że jesteś z nami!");
     cy.get("#\\:r2\\:-form-item").clear();
@@ -41,7 +41,7 @@ describe("Account creation", function () {
     cy.get(".justify-between > .bg-neo-pink").click();
     cy.contains("To już wszystko!");
     cy.get(".select-none").click();
-    cy.get("#radix-\\:re\\: > .relative > .aspect-square").click();
+    cy.get("#radix-\\:re\\: >").click();
     cy.get("a[href='/createaccount']").should("not.exist");
     cy.visit("/createaccount");
     cy.intercept("GET", "/api/auth/session", {
@@ -52,9 +52,7 @@ describe("Account creation", function () {
 
   it("mobile - should create account", () => {
     cy.viewport("iphone-se2");
-    cy.get(
-      ".bottom-0 > .items-center > button > .relative > .aspect-square",
-    ).click();
+    cy.get(".bottom-0 > .items-center > button >").click();
     cy.get("a[href='/createaccount']").click();
     cy.get("#\\:r0\\:-form-item").clear();
     cy.get(".select-none").click();
@@ -72,9 +70,7 @@ describe("Account creation", function () {
     cy.get(".justify-between > .bg-neo-pink").click();
     cy.contains("To już wszystko!");
     cy.get(".select-none").click();
-    cy.get(
-      ".bottom-0 > .items-center > button > .relative > .aspect-square",
-    ).click();
+    cy.get(".bottom-0 > .items-center > button >").click();
     cy.get("a[href='/createaccount']").should("not.exist");
     cy.visit("/createaccount");
     cy.intercept("GET", "/api/auth/session", {

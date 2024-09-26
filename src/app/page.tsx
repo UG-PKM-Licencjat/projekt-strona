@@ -55,7 +55,9 @@ export default function Home() {
             </h2>
           </div>
           <div className="my-10 w-3/4 md:hidden">
-            <Button className="w-full">Wyszukaj już teraz!</Button>
+            <a href="/search">
+              <Button className="w-full">Wyszukaj już teraz!</Button>
+            </a>
           </div>
         </div>
         <Image

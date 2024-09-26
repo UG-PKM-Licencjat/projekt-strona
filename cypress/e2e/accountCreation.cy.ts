@@ -1,7 +1,9 @@
 describe("Account creation", function () {
   beforeEach(function () {
     const session = "test-session-token";
-    cy.task("db:seed-session");
+    cy.clearCookies();
+
+    cy.task("db:seed-session", false);
     cy.setCookie("next-auth.session-token", session, {
       domain: "localhost",
       path: "/",

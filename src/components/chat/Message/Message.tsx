@@ -8,6 +8,7 @@ export interface Message {
   timestamp: string;
   message: string;
   read: boolean;
+  image?: string | null;
   sending?: boolean; // Optional field for indicating if the message is still sending
 }
 
@@ -44,7 +45,7 @@ export default function Message({ message }: MessageProps) {
         {/* Avatar */}
         <Avatar className={`h-12 w-12 ${isUser ? "ml-2" : "mr-2"}`}>
           <AvatarImage
-            src="/placeholder.svg?height=40&width=40"
+            src={message.image ?? ""}
             alt={isUser ? "Twoje zdjęcie awataru" : "ANOTHER"}
           />
           <AvatarFallback>{isUser ? "Y" : "A"}</AvatarFallback>

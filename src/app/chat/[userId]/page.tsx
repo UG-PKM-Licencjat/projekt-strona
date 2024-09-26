@@ -36,21 +36,8 @@ export default function Conversation({
     await fetchMessagesForUser(session, userId);
   }, []);
 
-  useEffect(() => {
-    const listener = (ev: KeyboardEvent) => {
-      if (ev.code === "Enter" || ev.code === "NumpadEnter") {
-        console.log("Enter key was pressed. Run your function.");
-        ev.preventDefault();
-        void handleSubmit();
-      }
-    };
-    document.addEventListener("keydown", listener);
-    return () => {
-      document.removeEventListener("keydown", listener);
-    };
-  }, []);
-
-  async function handleSubmit() {
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
     if (!otherUserData || !session) return;
     setMessage("");
     await sendMessage(
@@ -120,7 +107,16 @@ export default function Conversation({
         {(conversations[userId] ?? [])
           .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
           .map((message, ind) => (
-            <Message key={ind} message={{ ...message }} />
+            <Message
+              key={ind}
+              message={{
+                ...message,
+                image:
+                  message.from === session?.user.id
+                    ? session.user.image
+                    : otherUserData?.image,
+              }}
+            />
           ))}
         {/* <div ref={observerRef}></div> */}
       </div>

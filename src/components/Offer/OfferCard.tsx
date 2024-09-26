@@ -23,8 +23,9 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
           <Image
             src={offer.image ?? ""}
             alt={offer.name}
-            width={40}
-            height={40}
+            width={100}
+            height={100}
+            sizes="100px"
             className="h-20 w-20 rounded-full border-2 border-[#5f8d4e] object-cover"
           />
           {offer.price && (

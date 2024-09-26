@@ -70,7 +70,6 @@
     "class-variance-authority": "^0.7.0",
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",
-    "cypress-social-logins": "^1.14.2",
     "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1",
     "embla-carousel-autoplay": "^8.3.0",

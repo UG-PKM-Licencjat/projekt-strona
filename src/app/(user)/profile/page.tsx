@@ -51,6 +51,9 @@ const formSchema = z.object({
     })
     .min(2, {
       message: "Imię musi mieć co najmniej 2 znaki.",
+    })
+    .max(25, {
+      message: "Imię nie może mieć więcej niż 25 znaków.",
     }),
   //     ^: Asserts the start of the string.
   // [\p{L}\p{M}]: Matches one or more Unicode letter (\p{L}) or mark (\p{M}) characters.
@@ -69,6 +72,9 @@ const formSchema = z.object({
     })
     .min(2, {
       message: "Nazwisko musi mieć co najmniej 2 znaki.",
+    })
+    .max(25, {
+      message: "Nazwisko nie może mieć więcej niż 25 znaków.",
     }),
 });
 

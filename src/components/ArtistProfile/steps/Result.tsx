@@ -110,6 +110,7 @@ export default function Result() {
             preview
             offer={{
               ...data,
+              tags: data.tags.map((tag) => tag.name),
               price: parseFloat(data.price.replace(",", ".")),
               id: "123",
               image: session?.user.image ?? "",

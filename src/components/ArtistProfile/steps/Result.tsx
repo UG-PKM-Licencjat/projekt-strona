@@ -74,7 +74,7 @@ export default function Result() {
         <Value>{data.distance}km</Value>
       </div>
       <div className="flex items-center gap-2">
-        <h3>Zdjęcia: </h3>
+        <h3>Galeria: </h3>
         <Value>{data.files?.map((file) => file.name).join(", ")}</Value>
       </div>
     </div>

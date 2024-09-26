@@ -7,7 +7,9 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 const offersSchema = createInsertSchema(offers, {
-  files: z.array(z.object({ url: z.string(), type: z.string() })),
+  files: z.array(
+    z.object({ url: z.string(), type: z.string(), name: z.string() }),
+  ),
   location: z.object({ x: z.number(), y: z.number() }),
 })
   .extend({
@@ -73,7 +75,7 @@ const createProcedure = authedProcedure
     const { data, error } = await ctx.db.transaction(async (tx) => {
       const [offerReturned] = await tx
         .insert(offers)
-        .values({ userId, ...filteredInput})
+        .values({ userId, ...filteredInput })
         .returning();
 
       if (!offerReturned) {

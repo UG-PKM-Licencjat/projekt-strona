@@ -12,7 +12,7 @@ export default async function Layout({
   }
   return (
     <div className="flex flex-1 flex-col bg-neo-castleton">
-      <div className="flex flex-1 md:p-20">{children}</div>
+      <div className="flex flex-1 md:p-8">{children}</div>
     </div>
   );
 }

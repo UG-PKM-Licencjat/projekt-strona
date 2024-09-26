@@ -26,7 +26,7 @@ export default function Step2() {
     onBlurHTML();
   };
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <TipTap
         placeholder="Opis"
         onChange={onChange}

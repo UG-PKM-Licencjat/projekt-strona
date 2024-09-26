@@ -1,5 +1,5 @@
 import { type SQL, or, ilike, and, sql } from "drizzle-orm";
-import { offers, users } from "~/server/db/schema";
+import { offers, tags, users } from "~/server/db/schema";
 
 export function buildSearchQuery(
   text: string,
@@ -12,6 +12,7 @@ export function buildSearchQuery(
       ilike(offers.name, `%${text}%`),
       ilike(offers.shortDescription, `%${text}%`),
       ilike(users.name, `%${text}%`),
+      ilike(tags.name, `%${text}%`),
     );
 
   // TODO possibly change this when drizzle finally fixes geometry type

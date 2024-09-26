@@ -9,8 +9,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import { EyeIcon } from "lucide-react";
+import { EyeIcon, RectangleHorizontalIcon } from "lucide-react";
 import TipTap from "~/components/RichTextEditor/Tiptap";
+import { Button } from "~/components/ui/Button/Button";
+import OfferCard from "~/components/Offer/OfferCard";
+import { useSession } from "next-auth/react";
 
 const Value = ({ children }: { children: React.ReactNode }) => (
   <span
@@ -24,6 +27,7 @@ const Value = ({ children }: { children: React.ReactNode }) => (
 export default function Result() {
   const { getValues } = useFormContext<ArtistFormData>();
   const data = getValues();
+  const { data: session } = useSession();
   return (
     <div className="flex flex-col gap-2 text-lg">
       <div className="flex items-center gap-2">
@@ -31,7 +35,7 @@ export default function Result() {
         <Value>{data.name}</Value>
       </div>
       <div className="flex items-center gap-2">
-        <h3>Opis: </h3>
+        <h3>Krótki opis: </h3>
         <Value>{data.shortDescription}</Value>
       </div>
       <div className="flex items-center gap-2">
@@ -82,6 +86,38 @@ export default function Result() {
         <h3>Galeria: </h3>
         <Value>{data.files?.map((file) => file.name).join(", ")}</Value>
       </div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            className="flex w-fit gap-2 self-center"
+          >
+            <RectangleHorizontalIcon className="size-5" />
+            Podgląd kafelka oferty
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-xl">
+              Podgląd kafelka oferty
+            </DialogTitle>
+            <DialogDescription className="text-base">
+              Tak będzie wyglądała twoja oferta w wyszukiwarce.
+            </DialogDescription>
+          </DialogHeader>
+          <OfferCard
+            preview
+            offer={{
+              ...data,
+              tags: data.tags.map((tag) => tag.name),
+              price: parseFloat(data.price.replace(",", ".")),
+              id: "123",
+              image: session?.user.image ?? "",
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

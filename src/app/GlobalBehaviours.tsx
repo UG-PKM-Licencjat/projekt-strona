@@ -23,7 +23,6 @@ export default function GlobalBehaviours({
   useEffect(() => {
     if (!data) return;
     void fetchSampleMessages(data);
-    console.log(pathName);
   }, []);
 
   useEffect(() => {

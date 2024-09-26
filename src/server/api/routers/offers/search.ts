@@ -4,6 +4,11 @@ import { offers, users } from "~/server/db/schema";
 import { buildSearchQuery } from "./util";
 import { asc, count, desc, eq, getTableColumns, sql } from "drizzle-orm";
 
+enum sortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+
 const searchProcedure = procedure
   .input(
     z.object({
@@ -15,7 +20,7 @@ const searchProcedure = procedure
       skip: z.number(),
       limit: z.number(),
       sortBy: z.string().optional(),
-      sortDirection: z.string().optional(),
+      sortDirection: z.nativeEnum(sortDirection).optional(),
     }),
   )
   .query(async ({ ctx, input }) => {
@@ -34,7 +39,9 @@ const searchProcedure = procedure
       : offers.id;
 
     const orderDirection =
-      input.sortDirection === "asc" ? asc(orderByColumn) : desc(orderByColumn);
+      input.sortDirection === sortDirection.asc
+        ? asc(orderByColumn)
+        : desc(orderByColumn);
 
     const dbOffers2 = await ctx.db
       .select({

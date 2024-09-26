@@ -454,9 +454,7 @@ export function ArtistProfileMultiform({
                         className="w-fit shrink-0 gap-2 max-sm:size-14 max-sm:p-0"
                       >
                         <EyeIcon className="size-5" />
-                        <span className="hidden sm:block">
-                          Podgląd oferty
-                        </span>
+                        <span className="hidden sm:block">Podgląd</span>
                       </Button>
                     )}
                   </DialogTrigger>
@@ -466,7 +464,7 @@ export function ArtistProfileMultiform({
                   >
                     <DialogHeader className="m-6">
                       <DialogTitle className="text-xl text-white">
-                        Podgląd pełnej oferty
+                        Podgląd oferty
                       </DialogTitle>
                       <DialogDescription className="text-base text-neo-gray-hover">
                         Tak będzie wyglądała twoja oferta.

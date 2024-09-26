@@ -8,6 +8,7 @@ import { Button } from "src/components/ui/Button/Button";
 import { Input } from "src/components/ui/Input/Input";
 import Message from "~/components/chat/Message/Message";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import SkeletonCard from "~/components/ui/SkeletonCard/SkeletonCard";
 import { useConversationsStore } from "~/stores";
 import { trpc } from "~/trpc/react";
 
@@ -91,9 +92,13 @@ export default function Conversation({
             />
             <AvatarFallback>Y</AvatarFallback>
           </Avatar>
-          <span className="text-lg font-semibold text-white">
-            {otherUserData?.name}
-          </span>
+          {otherUserData ? (
+            <span className="text-lg font-semibold text-white">
+              {otherUserData?.name}
+            </span>
+          ) : (
+            <SkeletonCard className="h-8 w-44 rounded" />
+          )}
         </div>
         {otherUserData?.offerId && (
           <Link

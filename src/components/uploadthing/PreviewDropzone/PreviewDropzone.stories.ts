@@ -3,16 +3,14 @@ import type { SetStateAction } from "react";
 import { PreviewDropzone } from ".";
 import { type CustomFile, type ExpandedRouteConfig } from "../utils";
 
-// TODO figure out how to show files in the preview
-
 let files: SetStateAction<CustomFile[]> = [];
 
 const setFiles = (value: SetStateAction<CustomFile[]>) => {
   files = value;
 };
 
-const startUpload = (files: CustomFile[]) => {
-  console.log("Uploading files", files);
+const removeFile = (fileKey: string) => {
+  setFiles((prev) => prev.filter((f) => f.key !== fileKey));
 };
 
 const routeConfig = {
@@ -43,8 +41,8 @@ export const Default: Story = {
   args: {
     files,
     setFiles,
+    removeFile,
     routeConfig,
-    startUpload,
     isUploading: false,
     className: "",
     showUploadButton: true,

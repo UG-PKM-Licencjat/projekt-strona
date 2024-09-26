@@ -22,7 +22,6 @@ export default function Step1() {
         <span>Opis</span>
         <Textarea
           placeholder="np. Dwaj przyjaciele grają co czują."
-          rows={3}
           {...register("shortDescription")}
         />
         <CustomError name="shortDescription" />

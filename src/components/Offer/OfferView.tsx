@@ -149,8 +149,8 @@ export default function OfferView({
                 <OfferFilePreview key={index} file={file} />
               ))}
             </div>
-            {!data.files && (
-              <div className="flex h-36 w-full items-center justify-center rounded-md bg-gray-200">
+            {(!data.files || data.files.length === 0) && (
+              <div className="flex h-44 w-full items-center justify-center rounded-md bg-gray-200 max-sm:h-36">
                 <span className="text-gray-400">Brak zdjęć</span>
               </div>
             )}

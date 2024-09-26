@@ -1,6 +1,8 @@
 import { MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { tags } from "~/server/db/schema";
+import { Tag } from "../Tag/Tag";
 
 export interface Offer {
   id: string;
@@ -11,11 +13,12 @@ export interface Offer {
   shortDescription: string;
   locationName: string | null;
   distance: number | null;
-
   image: string | null;
+  tags: string[];
 }
 
 const OfferCard = ({ offer }: { offer: Offer }) => (
+  // console.log(tags);
   <div className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-md">
     <div className="flex h-full flex-col justify-between p-4">
       <div>
@@ -28,11 +31,19 @@ const OfferCard = ({ offer }: { offer: Offer }) => (
             sizes="100px"
             className="h-20 w-20 rounded-full border-2 border-neo-sea object-cover"
           />
+
           {offer.price && (
             <div className="rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-white">
               {offer.price} zł
             </div>
           )}
+        </div>
+        <div className="flex flex-row gap-2">
+          {offer.tags.map((tag) => (
+            <Tag className="w-max" key={tag}>
+              {tag}
+            </Tag>
+          ))}
         </div>
         <h3 className="mb-2 text-lg font-semibold text-neo-castleton">
           {offer.name}

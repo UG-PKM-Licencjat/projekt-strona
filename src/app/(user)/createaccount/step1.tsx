@@ -39,6 +39,9 @@ const formSchema = z.object({
     })
     .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}'][\p{L}\p{M}]+){0,2}$/u, {
       message: "Pseudonim zawiera nieprawidłowe znaki.",
+    })
+    .max(25, {
+      message: "Imię nie może mieć więcej niż 25 znaków.",
     }),
   //     ^: Asserts the start of the string.
   // [\p{L}\p{M}]: Matches one or more Unicode letter (\p{L}) or mark (\p{M}) characters.
@@ -57,6 +60,9 @@ const formSchema = z.object({
     })
     .regex(/^[\p{L}\p{M}]+(?:[\p{Pd}' ][\p{L}\p{M}]+){0,2}$/u, {
       message: "Nazwisko zawiera nieprawidłowe znaki.",
+    })
+    .max(25, {
+      message: "Nazwisko nie może mieć więcej niż 25 znaków.",
     }),
 });
 

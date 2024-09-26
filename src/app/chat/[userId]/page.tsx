@@ -1,7 +1,9 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import { LoaderCircleIcon, Send } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
 import Link from "next/link";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { Button } from "src/components/ui/Button/Button";
@@ -20,6 +22,13 @@ export default function Conversation({
   const { userId } = params;
   const [message, setMessage] = useState("");
   const { data: session } = useSession();
+
+  useEffect(() => {
+    if (!session) return;
+    if (userId === session.user.id) {
+      redirect("/chat");
+    }
+  });
 
   const { data: otherUserData } =
     trpc.accounts.getProviderIdWithUserInfo.useQuery(userId);

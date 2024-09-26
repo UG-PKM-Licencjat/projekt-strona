@@ -8,8 +8,8 @@ import logEvent, { LogType } from "~/server/log";
 const updateData = authedProcedure
   .input(
     z.object({
-      firstName: z.string().max(25),
-      lastName: z.string().max(25),
+      firstName: z.string().max(40),
+      lastName: z.string().max(40),
       avatar: z.string().optional(),
     }),
   )

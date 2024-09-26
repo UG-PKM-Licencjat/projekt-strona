@@ -8,8 +8,8 @@ import logEvent from "~/server/log";
 const putRegistrationData = authedProcedure
   .input(
     z.object({
-      firstName: z.string().max(25),
-      lastName: z.string().max(25),
+      firstName: z.string().max(40),
+      lastName: z.string().max(40),
       image: z.string(),
       registered: z.boolean(),
     }),

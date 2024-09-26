@@ -45,7 +45,7 @@ export default function Message({ message }: MessageProps) {
         {/* Avatar */}
         <Avatar className={`h-12 w-12 ${isUser ? "ml-2" : "mr-2"}`}>
           <AvatarImage
-            src={message.image ?? ""}
+            src={message.image!}
             alt={isUser ? "Twoje zdjęcie awataru" : "ANOTHER"}
           />
           <AvatarFallback>{isUser ? "Y" : "A"}</AvatarFallback>

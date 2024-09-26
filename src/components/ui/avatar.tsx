@@ -22,7 +22,7 @@ interface AvatarImageProps extends ImageProps {
 }
 
 const AvatarImage = ({ src, alt, ...props }: AvatarImageProps) => {
-  return (
+  return !src ? null : (
     <Image
       src={src}
       alt={alt}

@@ -39,7 +39,7 @@ export default function Home() {
             className="w-screen md:hidden"
             sizes="(max-width: 768px) 100vw, 200px"
           />
-          <div className="relative z-20 flex w-full flex-1 flex-col justify-center gap-10 max-md:items-center max-sm:w-full">
+          <div className="relative z-20 flex w-full flex-1 flex-col justify-center gap-10 max-md:items-center max-sm:w-full lg:w-3/4">
             <h1 className="mt-4 text-5xl font-bold max-lg:text-4xl max-md:w-3/4 max-md:text-3xl max-md:text-black">
               Poczuj <span className="text-neo-sage">rytm...</span>
             </h1>

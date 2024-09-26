@@ -7,9 +7,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await getServerAuthSession();
-  if (!session) {
-    redirect("/");
-  }
+
   const isRegistered = session?.user.registered;
   if (isRegistered) redirect("/");
   return <>{children}</>;

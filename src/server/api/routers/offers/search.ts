@@ -4,7 +4,6 @@ import { offers, offerTags, tags, users } from "~/server/db/schema";
 import { buildSearchQuery } from "./util";
 import {
   asc,
-  count,
   countDistinct,
   desc,
   eq,
@@ -30,14 +29,13 @@ const searchProcedure = procedure
     // TODO improve searching algorithm if time allows
     const query = buildSearchQuery(input.text, input.location);
 
-    const offerCount = await ctx.db
+    const [offerCount] = await ctx.db
       .select({ count: countDistinct(offers.id) })
       .from(offers)
       .leftJoin(users, eq(offers.userId, users.id))
       .leftJoin(offerTags, eq(offers.id, offerTags.offerId))
       .leftJoin(tags, eq(offerTags.tagId, tags.id))
       .where(query)
-      .groupBy(offers.id, users.id)
       .limit(1);
 
     const orderByColumn = input.sortBy
@@ -64,7 +62,7 @@ const searchProcedure = procedure
       .limit(input.limit)
       .offset(input.skip);
 
-    return { offerCount: offerCount[0]?.count, offers: dbOffers2 };
+    return { offerCount: offerCount?.count, offers: dbOffers2 };
   });
 
 export default searchProcedure;

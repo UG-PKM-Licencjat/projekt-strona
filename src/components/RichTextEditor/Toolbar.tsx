@@ -674,10 +674,10 @@ export function Toolbar({ editor, className }: Props) {
           <Tooltip>
             <TooltipTrigger
               asChild
-              className="h-9 w-9 shrink-0 cursor-pointer rounded-md px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
+              className="h-9 w-9 shrink-0 cursor-pointer rounded-md bg-white px-2.5 transition-colors hover:bg-muted hover:text-muted-foreground"
               style={{
                 position: "absolute",
-                right: 10,
+                right: 15,
                 visibility: showMore ? "visible" : "hidden",
               }}
             >

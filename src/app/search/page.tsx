@@ -156,7 +156,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="flex bg-neo-gray">
+    <div className="flex h-full bg-neo-gray">
       <main className="container flex flex-col p-4">
         <div className="mb-8 rounded-lg bg-neo-castleton p-4 shadow-md">
           <div className="flex flex-col gap-4 md:flex-row">

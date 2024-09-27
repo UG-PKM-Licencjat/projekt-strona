@@ -108,7 +108,9 @@ export const Navbar = ({
           </div>
         </div>
       </nav>
-      <div className="flex flex-1 flex-col overflow-auto">{children}</div>
+      <div className="flex h-full flex-1 flex-col overflow-auto bg-neo-gray">
+        {children}
+      </div>
       <nav className="sticky bottom-0 z-50 flex w-full items-center justify-center transition-transform sm:hidden">
         <div className="flex w-full items-center justify-around bg-neo-castleton p-4">
           <MobileNavLink href="/">

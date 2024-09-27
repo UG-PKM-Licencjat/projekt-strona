@@ -444,39 +444,6 @@ export function ArtistProfileMultiform({
                 <div></div>
               )}
               <div className="flex gap-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    {activeStep === steps.length - 1 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        key="preview-button"
-                        className="w-fit shrink-0 gap-2 max-sm:size-14 max-sm:p-0"
-                      >
-                        <EyeIcon className="size-5" />
-                        <span className="hidden sm:block">
-                          Podgląd oferty
-                        </span>
-                      </Button>
-                    )}
-                  </DialogTrigger>
-                  <DialogContent
-                    className="size-full max-h-full max-w-full rounded-md border-neo-castleton bg-neo-castleton p-0 md:max-h-[95svh] md:max-w-[95svw]"
-                    closeButtonIconClassName="size-6 text-neo-gray"
-                  >
-                    <DialogHeader className="m-6">
-                      <DialogTitle className="text-xl text-white">
-                        Podgląd pełnej oferty
-                      </DialogTitle>
-                      <DialogDescription className="text-base text-neo-gray-hover">
-                        Tak będzie wyglądała twoja oferta.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <ScrollArea className="h-full w-full overflow-y-auto p-2 sm:p-6">
-                      <OfferView preview data={previewData} />
-                    </ScrollArea>
-                  </DialogContent>
-                </Dialog>
                 {activeStep === steps.length - 1 ? (
                   <Button
                     type="submit"

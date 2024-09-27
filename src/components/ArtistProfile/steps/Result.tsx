@@ -14,6 +14,8 @@ import TipTap from "~/components/RichTextEditor/Tiptap";
 import { Button } from "~/components/ui/Button/Button";
 import OfferCard from "~/components/Offer/OfferCard";
 import { useSession } from "next-auth/react";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import OfferView from "~/components/Offer/OfferView";
 
 const Value = ({ children }: { children: React.ReactNode }) => (
   <span
@@ -61,14 +63,16 @@ export default function Result() {
       </div>
       <div className="flex items-center gap-2">
         <h3>Tagi: </h3>
-        {data.tags?.map((tag) => (
-          <Tag
-            key={tag.id}
-            className="h-auto rounded bg-neo-mantis px-1.5 py-1 text-base"
-          >
-            {tag.name}
-          </Tag>
-        ))}
+        <div className="flex flex-wrap gap-2">
+          {data.tags?.map((tag) => (
+            <Tag
+              key={tag.id}
+              className="h-auto rounded bg-neo-mantis px-1.5 py-1 text-base"
+            >
+              {tag.name}
+            </Tag>
+          ))}
+        </div>
       </div>
       <div className="flex items-center gap-2">
         <h3>Cena: </h3>
@@ -86,38 +90,84 @@ export default function Result() {
         <h3>Galeria: </h3>
         <Value>{data.files?.map((file) => file.name).join(", ")}</Value>
       </div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            type="button"
-            variant="ghost"
-            className="flex w-fit gap-2 self-center"
+      <div className="grid w-full grid-cols-1 gap-4 max-lg:px-8 sm:grid-cols-2">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              key="preview-button"
+              className="shrink-0 gap-2"
+            >
+              <EyeIcon className="size-5" />
+              <span>Podgląd oferty</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent
+            className="size-full max-h-full max-w-full rounded-md border-neo-castleton bg-neo-castleton p-0 md:max-h-[95svh] md:max-w-[95svw]"
+            closeButtonIconClassName="size-6 text-neo-gray"
           >
-            <RectangleHorizontalIcon className="size-5" />
-            Podgląd kafelka oferty
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="text-xl">
+            <DialogHeader className="m-6">
+              <DialogTitle className="text-xl text-white">
+                Podgląd pełnej oferty
+              </DialogTitle>
+              <DialogDescription className="text-base text-neo-gray-hover">
+                Tak będzie wyglądała twoja oferta.
+              </DialogDescription>
+            </DialogHeader>
+            <ScrollArea className="h-full w-full overflow-y-auto p-2 sm:p-6">
+              <OfferView
+                preview
+                data={{
+                  ...data,
+                  ratingsSum: 0,
+                  votes: 0,
+                  offerTags: data.tags,
+                  price: parseFloat(data.price.replace(",", ".")),
+                  files:
+                    data.files?.map((file) => ({
+                      type: file.type,
+                      url: file.url,
+                    })) ?? [],
+                  users: {
+                    id: session?.user.id ?? "123",
+                    image: session?.user.image ?? "",
+                    name: `${session?.user.firstName} ${session?.user.lastName}`,
+                  },
+                }}
+              />
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button type="button" variant="outline" className="flex gap-2">
+              <RectangleHorizontalIcon className="size-5 shrink-0" />
               Podgląd kafelka oferty
-            </DialogTitle>
-            <DialogDescription className="text-base">
-              Tak będzie wyglądała twoja oferta w wyszukiwarce.
-            </DialogDescription>
-          </DialogHeader>
-          <OfferCard
-            preview
-            offer={{
-              ...data,
-              tags: data.tags.map((tag) => tag.name),
-              price: parseFloat(data.price.replace(",", ".")),
-              id: "123",
-              image: session?.user.image ?? "",
-            }}
-          />
-        </DialogContent>
-      </Dialog>
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-xl">
+                Podgląd kafelka oferty
+              </DialogTitle>
+              <DialogDescription className="text-base">
+                Tak będzie wyglądała twoja oferta w wyszukiwarce.
+              </DialogDescription>
+            </DialogHeader>
+            <OfferCard
+              preview
+              offer={{
+                ...data,
+                tags: data.tags.map((tag) => tag.name),
+                price: parseFloat(data.price.replace(",", ".")),
+                id: "123",
+                image: session?.user.image ?? "",
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }

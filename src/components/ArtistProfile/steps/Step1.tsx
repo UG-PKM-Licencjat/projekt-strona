@@ -21,8 +21,10 @@ export default function Step1() {
       <Label className="flex flex-col gap-2">
         <span>Opis</span>
         <Textarea
+          className="overflow-hidden max-md:resize-none"
           placeholder="np. Dwaj przyjaciele grają co czują."
           rows={3}
+          maxLength={400}
           {...register("shortDescription")}
         />
         <CustomError name="shortDescription" />

@@ -30,11 +30,9 @@ const OfferCard = ({ offer, preview }: { offer: Offer; preview?: boolean }) => (
             className="h-20 w-20 rounded-full border-2 border-neo-sea object-cover"
           />
           <div className="flex h-20 flex-1 flex-col items-end justify-between">
-            {offer.price && (
-              <div className="w-fit rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-white">
-                {offer.price} zł
-              </div>
-            )}
+            <div className="w-fit rounded-full bg-neo-castleton px-3 py-1 text-sm font-semibold text-white">
+              {offer?.price ?? 0} zł
+            </div>
           </div>
         </div>
         <div className="flex flex-row flex-wrap gap-2">

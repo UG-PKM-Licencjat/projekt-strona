@@ -30,6 +30,8 @@ export default function Result() {
   const { getValues } = useFormContext<ArtistFormData>();
   const data = getValues();
   const { data: session } = useSession();
+  const price = data?.price ? parseFloat(data?.price?.replace(",", ".")) : 0;
+  const location = data?.location ?? { x: 21.0122287, y: 52.2296756 };
   return (
     <div className="flex flex-col gap-2 text-lg">
       <div className="flex items-center gap-2">
@@ -122,8 +124,9 @@ export default function Result() {
                   ...data,
                   ratingsSum: 0,
                   votes: 0,
-                  offerTags: data.tags,
-                  price: parseFloat(data.price.replace(",", ".")),
+                  offerTags: data?.tags ?? [],
+                  price,
+                  location,
                   files:
                     data.files?.map((file) => ({
                       type: file.type,
@@ -159,8 +162,8 @@ export default function Result() {
               preview
               offer={{
                 ...data,
-                tags: data.tags.map((tag) => tag.name),
-                price: parseFloat(data.price.replace(",", ".")),
+                tags: data?.tags?.map((tag) => tag.name) ?? [],
+                price,
                 id: "123",
                 image: session?.user.image ?? "",
               }}

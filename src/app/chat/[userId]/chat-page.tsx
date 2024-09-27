@@ -111,24 +111,25 @@ export default function Conversation({
 
   return (
     <div className="flex max-h-[89vh] flex-1 flex-col overflow-y-hidden md:p-6">
-      <div className="flex items-center justify-between rounded-lg bg-neo-castleton p-4 shadow-lg">
-        <div className="flex items-center space-x-4">
-          <Avatar className={`h-12 w-12`}>
+      <div className="flex items-center justify-between gap-2 rounded-lg bg-neo-castleton p-4 shadow-lg">
+        <div className="flex items-center gap-4">
+          <Avatar className={`h-12 w-12 shrink-0`}>
             <AvatarImage
               src={otherUserData?.image ?? ""}
               alt={"Zdjęcie awataru"}
+              className="shrink-0"
             />
             <AvatarFallback>Y</AvatarFallback>
           </Avatar>
           {otherUserData ? (
-            <>
+            <div className="flex items-center max-lg:flex-col max-lg:items-start lg:gap-2">
               <span className="text-lg font-semibold text-white">
                 {otherUserData?.name}
               </span>
               <span className="text-base font-semibold text-white">
                 {otherUserData?.offerId ? "Artysta" : "Użytkownik"}
               </span>
-            </>
+            </div>
           ) : (
             <SkeletonCard className="h-8 w-44 rounded" />
           )}
@@ -138,8 +139,13 @@ export default function Conversation({
             href={`/offers/${otherUserData?.offerId}`}
             className="mr-6 text-base font-medium text-white transition-colors duration-200 hover:text-gray-300 hover:underline"
           >
-            <Button variant="secondary" size="sm">
-              Zobacz ofertę artysty
+            <Button
+              variant="secondary"
+              size="sm"
+              className="flex h-auto flex-wrap gap-1 py-2"
+            >
+              <span>Zobacz</span>
+              <span>ofertę</span>
             </Button>
           </Link>
         )}
@@ -148,7 +154,7 @@ export default function Conversation({
       <div className="flex flex-1 flex-col-reverse overflow-y-auto p-4">
         {!conversations[userId] && (
           <div className="flex h-full w-full items-center justify-center">
-            <LoaderCircleIcon className="size-10 animate-spin text-neo-castleton" />
+            <LoaderCircleIcon className="size-10 animate-spin text-neo-castleton max-md:text-white" />
           </div>
         )}
         <div ref={endOfChatRef}></div>
@@ -168,7 +174,7 @@ export default function Conversation({
           ))}
         {loadingMore && (
           <div className="flex w-full justify-center">
-            <LoaderCircleIcon className="size-10 animate-spin text-neo-castleton" />
+            <LoaderCircleIcon className="size-10 animate-spin text-neo-castleton max-md:text-white" />
           </div>
         )}
         <div ref={topOfChatRef}></div>

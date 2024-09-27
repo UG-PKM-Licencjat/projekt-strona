@@ -30,7 +30,7 @@ const AvatarImage = ({ src, alt, ...props }: AvatarImageProps) => {
       height={64}
       referrerPolicy="no-referrer"
       {...props}
-      className="absolute z-50 aspect-square h-full w-full text-[0]"
+      className="absolute z-10 aspect-square h-full w-full text-[0]"
     />
   );
 };
@@ -39,7 +39,7 @@ const AvatarFallback = ({ children, className, ...props }: AvatarProps) => {
   return (
     <div
       className={cn(
-        "absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-full bg-neo-sage text-black",
+        "absolute inset-0 z-0 flex h-full w-full items-center justify-center rounded-full bg-neo-sage text-black",
         children ? "" : "animate-pulse",
         className,
       )}

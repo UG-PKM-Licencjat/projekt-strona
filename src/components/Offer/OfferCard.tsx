@@ -37,7 +37,7 @@ const OfferCard = ({ offer, preview }: { offer: Offer; preview?: boolean }) => (
             )}
           </div>
         </div>
-        <div className="flex h-20 flex-row flex-wrap gap-2">
+        <div className="flex flex-row flex-wrap gap-2">
           {offer.tags.map((tag) => (
             <Tag
               className="h-fit w-max text-nowrap rounded bg-neo-mantis px-1.5 py-1 text-base"

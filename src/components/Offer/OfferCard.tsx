@@ -17,7 +17,7 @@ export interface Offer {
 }
 
 const OfferCard = ({ offer, preview }: { offer: Offer; preview?: boolean }) => (
-  <div className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-md">
+  <div className="flex h-full flex-col rounded-lg bg-white shadow-md">
     <div className="flex h-full flex-col justify-between p-4">
       <div>
         <div className="mb-4 flex h-20 items-start justify-between">
@@ -71,12 +71,12 @@ const OfferCard = ({ offer, preview }: { offer: Offer; preview?: boolean }) => (
       </div>
     </div>
     {preview ? (
-      <div className="w-full bg-neo-castleton py-2 text-center text-white transition duration-300 hover:bg-neo-castleton-hover">
+      <div className="w-full rounded-b-lg bg-neo-castleton py-2 text-center text-white transition duration-300 hover:bg-neo-castleton-hover">
         Sprawdź
       </div>
     ) : (
       <Link href={`/offers/${offer.id}`}>
-        <div className="w-full bg-neo-castleton py-2 text-center text-white transition duration-300 hover:bg-neo-castleton-hover">
+        <div className="w-full rounded-b-lg bg-neo-castleton py-2 text-center text-white transition duration-300 hover:bg-neo-castleton-hover">
           Sprawdź
         </div>
       </Link>

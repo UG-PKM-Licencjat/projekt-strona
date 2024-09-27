@@ -156,8 +156,8 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="flex-1 bg-neo-gray">
-      <main className="container mx-auto flex h-full flex-col p-4">
+    <div className="flex bg-neo-gray">
+      <main className="container flex flex-col p-4">
         <div className="mb-8 rounded-lg bg-neo-castleton p-4 shadow-md">
           <div className="flex flex-col gap-4 md:flex-row">
             <div className="relative flex-grow">
@@ -207,7 +207,7 @@ export default function SearchPage() {
           <h2 className="text-xl font-semibold text-neo-castleton">
             Wyniki wyszukiwania
           </h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 max-md:hidden">
             <Button
               size="icon"
               variant="ghost"
@@ -247,11 +247,10 @@ export default function SearchPage() {
           </div>
         </div>
         <div
-          className={`grid flex-1 ${
-            viewMode === "grid"
-              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-              : "grid-cols-1"
-          } gap-6`}
+          className={cn(
+            "grid grid-cols-1 gap-6",
+            viewMode === "grid" ? "sm:grid-cols-2 lg:grid-cols-3" : null,
+          )}
         >
           {data
             ? data.offers.map((offer) => (

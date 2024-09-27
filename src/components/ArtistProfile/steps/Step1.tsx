@@ -24,7 +24,7 @@ export default function Step1() {
           className="overflow-hidden max-md:resize-none"
           placeholder="np. Dwaj przyjaciele grają co czują."
           rows={3}
-          maxLength={400}
+          maxLength={255}
           {...register("shortDescription")}
         />
         <CustomError name="shortDescription" />
